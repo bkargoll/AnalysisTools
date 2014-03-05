@@ -1,0 +1,8 @@
+Thin: False
+Skim: True
+HistoFile: InputData/Histo_DataOnly.txt
+Analysis: MuTauSync
+UncertType: default
+SkimInfo: InputData/SkimSummary_TauPlusX2012A.log
+Lumi: 808.411
+PlotStyle: style2

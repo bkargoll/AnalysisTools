@@ -1,0 +1,8 @@
+Thin: False
+Skim: True
+HistoFile: InputData/Histo_VBFHiggsOnly.txt
+Analysis: MuTauSync
+UncertType: default
+SkimInfo: InputData/SkimSummary_VBFHToTauTauM125.log
+Lumi: 808.411
+PlotStyle: style2
