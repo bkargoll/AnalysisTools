@@ -38,7 +38,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// OneJetHigh, OneJetLow, OneJetBoost
 	// ZeroJetHigh, ZeroJetLow
 	// NoCategory
-	categoryFlag = "NoCategory";
+	categoryFlag = "VBFTight";
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
