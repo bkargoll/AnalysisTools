@@ -43,29 +43,58 @@ class HToTaumuTauh : public Selection {
 	  CatCut2,
 	  CatCut3,
 	  CatCut4,
+	  CatCut5,
 	  NCuts};
 
   	// cuts in categories
-	enum cuts_VBF {
-		VbfNJet	= CatCut1,
-		VbfDeltaEta,
-		VbfNJetRapGap,
-		VbfJetInvM,
-		VbfNCuts
+	enum cuts_VBFTight {
+		VbfTight_NJet	= CatCut1,
+		VbfTight_DeltaEta,
+		VbfTight_NJetRapGap,
+		VbfTight_JetInvM,
+		VbfTight_HiggsPt,
+		VbfTight_NCuts
+	};
+	enum cuts_VBFLoose {
+		VbfLoose_NJet	= CatCut1,
+		VbfLoose_DeltaEta,
+		VbfLoose_NJetRapGap,
+		VbfLoose_JetInvM,
+		VbfLoose_NotVbfTight,
+		VbfLoose_NCuts
+	};
+	enum cuts_OneJetLow {
+		OneJetLow_NJet = CatCut1,
+		OneJetLow_NotVbf,
+		OneJetLow_TauPt,
+		OneJetLow_NCuts
 	};
 	enum cuts_OneJetHigh {
-		OneJetNJet = CatCut1,
-		OneJetNoVBF,
-		OneJetTauPt,
-		OneJetNCuts
+		OneJetHigh_NJet = CatCut1,
+		OneJetHigh_NotVbf,
+		OneJetHigh_TauPt,
+		OneJetHigh_HiggsPt,
+		OneJetHigh_NCuts
+	};
+	enum cuts_OneJetBoost {
+		OneJetBoost_NJet = CatCut1,
+		OneJetBoost_NotVbf,
+		OneJetBoost_TauPt,
+		OneJetBoost_HiggsPt,
+		OneJetBoost_NCuts
 	};
 	enum cuts_ZeroJetHigh {
-		ZeroJetNJet = CatCut1,
-		ZeroJetTauPt,
-		ZeroJetNCuts
+		ZeroJetHigh_NJet = CatCut1,
+		ZeroJetHigh_TauPt,
+		ZeroJetHigh_NCuts
+	};
+	enum cuts_ZeroJetLow {
+		ZeroJetLow_NJet = CatCut1,
+		ZeroJetLow_TauPt,
+		ZeroJetLow_NCuts
 	};
 	enum cuts_NoCategory {
-		NoCategoryNCuts = CatCut1
+		NoCategory_NCuts = CatCut1
 	};
 
  protected:
@@ -203,26 +232,36 @@ class HToTaumuTauh : public Selection {
   }
 
   // categories
-  std::vector<float> cut_VBF, cut_OneJet, cut_ZeroJet, cut_NoCategory;
+  std::vector<float> cut_VBFTight, cut_VBFLoose;
+  std::vector<float> cut_OneJetHigh, cut_OneJetLow, cut_OneJetBoost;
+  std::vector<float> cut_ZeroJetHigh, cut_ZeroJetLow;
+  std::vector<float> cut_NoCategory;
 
-  void configure_VBF();
-  bool category_VBF(std::vector<int> jetCollection);
+  bool migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, int categoryNCuts);
+
+  void configure_VBFTight();
+  bool category_VBFTight(unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
+
+  void configure_VBFLoose();
+  bool category_VBFLoose(unsigned NJets, double DEta, int NJetsInGap, double Mjj, bool passedVBFTight);
 
   void configure_OneJetHigh();
-  bool category_OneJetHigh(int selTau, std::vector<int> jetCollection, bool passedVBF);
+  bool category_OneJetHigh(unsigned NJets, double TauPt, double higgsPt, bool passedVBF);
 
   void configure_OneJetLow();
-  bool category_OneJetLow(int selTau, std::vector<int> jetCollection, bool passedVBF);
+  bool category_OneJetLow(unsigned NJets, double TauPt, bool passedVBF);
+
+  void configure_OneJetBoost();
+  bool category_OneJetBoost(unsigned NJets, double TauPt, double higgsPt, bool passedVBF);
 
   void configure_ZeroJetHigh();
-  bool category_ZeroJetHigh(int selTau, std::vector<int> jetCollection);
+  bool category_ZeroJetHigh(unsigned NJets, double TauPt);
 
   void configure_ZeroJetLow();
-  bool category_ZeroJetLow(int selTau, std::vector<int> jetCollection);
+  bool category_ZeroJetLow(unsigned NJets, double TauPt);
 
   void configure_NoCategory();
   bool category_NoCategory();
-
 
  private:
   // everything is in protected to be accessible by derived classes
