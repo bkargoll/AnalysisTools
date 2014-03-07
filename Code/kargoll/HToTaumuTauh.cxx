@@ -177,7 +177,9 @@ void  HToTaumuTauh::Configure(){
     }
     else if(i_cut==DiMuonVeto){
     	title.at(i_cut)="$\\Delta R(\\mu_{veto}^{+},\\mu_{veto}^{-}) <$";
-    	title.at(i_cut)+=cut.at(DiMuonVeto);
+        char buffer[50];
+        sprintf(buffer,"%5.1f",cut.at(DiMuonVeto));
+    	title.at(i_cut)+=buffer;
     	htitle=title.at(i_cut);
     	htitle.ReplaceAll("$","");
     	htitle.ReplaceAll("\\","#");
@@ -308,6 +310,7 @@ void  HToTaumuTauh::Configure(){
   TauSelEta=HConfig.GetTH1D(Name+"_TauSelEta","TauSelEta",50,-2.5,2.5,"#eta(#tau_{sel})");
   TauSelPhi=HConfig.GetTH1D(Name+"_TauSelPhi","TauSelPhi",50,-3.14159,3.14159,"#phi(#tau_{sel})");
   TauSelDrHlt=HConfig.GetTH1D(Name+"_TauSelDrHlt","TauSelDrHLT",50,0.,1.,"#DeltaR(#tau_{sel},#tau_{HLT})");
+  TauSelDecayMode=HConfig.GetTH1D(Name+"_TauSelDecayMode","TauSelDecayMode",16,-0.5,15.5,"#tau_{sel} decay mode");
 
   MuVetoDPtSelMuon=HConfig.GetTH1D(Name+"_MuVetoDPtSelMuon","MuVetoDPtSelMuon",100,-100.,100.,"#Deltap_{T}(#mu_{veto},#mu)/GeV");
   MuVetoInvM=HConfig.GetTH1D(Name+"_MuVetoInvM","MuVetoInvM",100,0.,200,"m_{inv}(#mu_{veto}^{1},#mu_{veto}^{2})/GeV");
@@ -354,6 +357,12 @@ void  HToTaumuTauh::Configure(){
   BJet1Pt = HConfig.GetTH1D(Name+"_BJet1Pt","BJet1Pt",50,0.,200.,"p_{T}(b^{1})/GeV");
   BJet1Eta = HConfig.GetTH1D(Name+"_BJet1Eta","BJet1Eta",100,-5.0,5.0,"#eta(b^{1})");
   BJet1Phi = HConfig.GetTH1D(Name+"_BJet1Phi","BJet1Phi",50,-3.14159,3.14159,"#phi(b^{1})");
+
+  HiggsPt = HConfig.GetTH1D(Name+"_HiggsPt","HiggsPt",50,0.,200.,"p_{T}(H)/GeV");
+  HiggsPhi = HConfig.GetTH1D(Name+"_HiggsPhi","HiggsPhi",50,-3.14159,3.14159,"#phi(H)");
+  JetsDEta = HConfig.GetTH1D(Name+"_JetsDEta","JetsDEta",100,-10.,10.,"#Delta#eta(j^{1},j^{2})");
+  JetsInEtaGap = HConfig.GetTH1D(Name+"_JetsInEtaGap","JetsInEtaGap",6,-0.5,5.5,"N(j in #eta gap)");
+  JetsInvM = HConfig.GetTH1D(Name+"_JetsInvM","JetsInvM",100,0.,2000.,"m_{inv}(j^{1},j^{2})");
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
@@ -404,6 +413,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&TauSelPt  );
  Extradist1d.push_back(&TauSelEta  );
  Extradist1d.push_back(&TauSelPhi  );
+ Extradist1d.push_back(&TauSelDecayMode  );
 
  Extradist1d.push_back(&MuVetoDPtSelMuon);
  Extradist1d.push_back(&MuVetoInvM);
@@ -450,6 +460,12 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&BJet1Pt);
  Extradist1d.push_back(&BJet1Eta);
  Extradist1d.push_back(&BJet1Phi);
+
+ Extradist1d.push_back(&HiggsPt);
+ Extradist1d.push_back(&HiggsPhi);
+ Extradist1d.push_back(&JetsDEta);
+ Extradist1d.push_back(&JetsInEtaGap);
+ Extradist1d.push_back(&JetsInvM);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -597,15 +613,18 @@ void  HToTaumuTauh::doEvent(){
   if (selMuon != -1 && selTau != -1){
 	  value.at(OppCharge) = Ntp->Muon_Charge(selMuon) + Ntp->PFTau_Charge(selTau);
   }
-  else value.at(OppCharge) = -9;
+  else {
+	  value.at(OppCharge) = -9;
+	  pass.at(OppCharge) = true;
+  }
   if (cut.at(OppCharge) == 999) // set to 999 to disable oppcharge cut
 	  pass.at(OppCharge) = true;
   else
 	  pass.at(OppCharge) = (value.at(OppCharge) == cut.at(OppCharge));
 
   // Transverse mass
-  if(selMuon == -1){ // no good muon in event: set MT to high value -> fail MT cut
-	  value.at(MT) = 500.0;
+  if(selMuon == -1){ // no good muon in event: set MT to small dummy value -10 -> pass cut
+	  value.at(MT) = -10.0;
   }
   else{
 	  double pT 	= Ntp->Muon_p4(selMuon).Pt();
@@ -660,12 +679,14 @@ void  HToTaumuTauh::doEvent(){
 
   // calculate pt of higgs candidate
   double higgsPt = -10;
+  double higgsPhi = -10;
   if (selMuon != -1 && selTau != -1){
 	  TVector3 muon3Vec = Ntp->Muon_p4(selMuon).Vect();
 	  TVector3 tau3Vec = Ntp->PFTau_p4(selTau).Vect();
 	  TVector3 met3Vec = TVector3(Ntp->MET_CorrMVA_ex(),Ntp->MET_CorrMVA_ey(),0);
 
 	  higgsPt = (muon3Vec + tau3Vec + met3Vec).Pt();
+	  higgsPhi = (muon3Vec + tau3Vec + met3Vec).Phi();
   }
 
   // calculate jet-related variables used by categories
@@ -791,6 +812,7 @@ void  HToTaumuTauh::doEvent(){
 		  TauSelPt.at(t).Fill(Ntp->PFTau_p4(selTau).Pt(), w);
 		  TauSelEta.at(t).Fill(Ntp->PFTau_p4(selTau).Eta(), w);
 		  TauSelPhi.at(t).Fill(Ntp->PFTau_p4(selTau).Phi(), w);
+		  TauSelDecayMode.at(t).Fill(Ntp->PFTau_hpsDecayMode(selTau), w);
 	  }
   }
 
@@ -870,6 +892,13 @@ void  HToTaumuTauh::doEvent(){
 		  BJet1Eta.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Eta(), w);
 		  BJet1Phi.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Phi(), w);
 	  }
+
+	  // variables for categorization
+	  HiggsPt.at(t).Fill(higgsPt , w);
+	  HiggsPhi.at(t).Fill(higgsPhi , w);
+	  JetsDEta.at(t).Fill(selJetdeta , w);
+	  JetsInEtaGap.at(t).Fill(selNjetingap , w);
+	  JetsInvM.at(t).Fill(selMjj , w);
   }
 
   //////// plots filled after full selection
@@ -1205,6 +1234,11 @@ bool HToTaumuTauh::category_VBFTight(unsigned NJets, double DEta, int NJetsInGap
 		value_VBFTight.at(VbfTight_JetInvM) = Mjj;
 		pass_VBFTight.at(VbfTight_JetInvM) = (value_VBFTight.at(VbfTight_JetInvM) > cut_VBFTight.at(VbfTight_JetInvM));
 	}
+	else{
+		pass_VBFTight.at(VbfTight_DeltaEta) = true;
+		pass_VBFTight.at(VbfTight_NJetRapGap) = true;
+		pass_VBFTight.at(VbfTight_JetInvM) = true;
+	}
 
 	value_VBFTight.at(VbfTight_HiggsPt) = higgsPt;
 	pass_VBFTight.at(VbfTight_HiggsPt) = (value_VBFTight.at(VbfTight_HiggsPt) > cut_VBFTight.at(VbfTight_HiggsPt));
@@ -1302,6 +1336,11 @@ bool HToTaumuTauh::category_VBFLoose(unsigned NJets, double DEta, int NJetsInGap
 		value_VBFLoose.at(VbfLoose_JetInvM) = Mjj;
 		pass_VBFLoose.at(VbfLoose_JetInvM) = (value_VBFLoose.at(VbfLoose_JetInvM) > cut_VBFLoose.at(VbfLoose_JetInvM));
 	}
+	else{
+		pass_VBFLoose.at(VbfLoose_DeltaEta) = true;
+		pass_VBFLoose.at(VbfLoose_NJetRapGap) = true;
+		pass_VBFLoose.at(VbfLoose_JetInvM) = true;
+	}
 
 	value_VBFLoose.at(VbfLoose_NotVbfTight) = !passedVBFTight;
 	pass_VBFLoose.at(VbfLoose_NotVbfTight) = ( value_VBFLoose.at(VbfLoose_NotVbfTight) == cut_VBFLoose.at(VbfLoose_NotVbfTight) );
@@ -1355,6 +1394,7 @@ void HToTaumuTauh::configure_OneJetLow(){
 	Nminus0.at(OneJetLow_TauPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetLow_TauPt_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_OneJetLow(unsigned NJets, double TauPt, bool passedVBF){
+	bool categoryPass = true;
 	std::vector<float> value_OneJetLow;
 	std::vector<float> pass_OneJetLow;
 
@@ -1371,8 +1411,11 @@ bool HToTaumuTauh::category_OneJetLow(unsigned NJets, double TauPt, bool passedV
 	pass_OneJetLow.at(OneJetLow_NotVbf) = ( value_OneJetLow.at(OneJetLow_NotVbf) == cut_OneJetLow.at(OneJetLow_NotVbf) );
 
 	if (selTau == -1){
+		// TauPt cut is set to true for nice N-0 and N-1 plots
 		value_OneJetLow.at(OneJetLow_TauPt) = -10.;
-		pass_OneJetLow.at(OneJetLow_TauPt) = false;
+		pass_OneJetLow.at(OneJetLow_TauPt) = true;
+		// whole category is failing selection, to avoid NCat > 1
+		categoryPass = false;
 	}
 	else{
 		value_OneJetLow.at(OneJetLow_TauPt) = TauPt;
@@ -1381,7 +1424,8 @@ bool HToTaumuTauh::category_OneJetLow(unsigned NJets, double TauPt, bool passedV
 
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("OneJetLow",value_OneJetLow, pass_OneJetLow,OneJetLow_NCuts);
+	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetLow",value_OneJetLow, pass_OneJetLow,OneJetLow_NCuts);
+	return categoryPass;
 }
 
 void HToTaumuTauh::configure_OneJetHigh(){
@@ -1441,6 +1485,7 @@ void HToTaumuTauh::configure_OneJetHigh(){
 	Nminus0.at(OneJetHigh_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetHigh_HiggsPtM_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_OneJetHigh(unsigned NJets, double TauPt, double higgsPt, bool passedVBF){
+	bool categoryPass = true;
 	std::vector<float> value_OneJetHigh;
 	std::vector<float> pass_OneJetHigh;
 
@@ -1457,8 +1502,11 @@ bool HToTaumuTauh::category_OneJetHigh(unsigned NJets, double TauPt, double higg
 	pass_OneJetHigh.at(OneJetHigh_NotVbf) = ( value_OneJetHigh.at(OneJetHigh_NotVbf) == cut_OneJetHigh.at(OneJetHigh_NotVbf) );
 
 	if (selTau == -1){
+		// TauPt cut is set to true for nice N-0 and N-1 plots
 		value_OneJetHigh.at(OneJetHigh_TauPt) = -10.;
-		pass_OneJetHigh.at(OneJetHigh_TauPt) = false;
+		pass_OneJetHigh.at(OneJetHigh_TauPt) = true;
+		// whole category is failing selection, to avoid NCat > 1
+		categoryPass = false;
 	}
 	else{
 		value_OneJetHigh.at(OneJetHigh_TauPt) = TauPt;
@@ -1469,7 +1517,8 @@ bool HToTaumuTauh::category_OneJetHigh(unsigned NJets, double TauPt, double higg
 	pass_OneJetHigh.at(OneJetHigh_HiggsPt) = (value_OneJetHigh.at(OneJetHigh_HiggsPt) < cut_OneJetHigh.at(OneJetHigh_HiggsPt));
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("OneJetHigh",value_OneJetHigh, pass_OneJetHigh,OneJetHigh_NCuts);
+	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetHigh",value_OneJetHigh, pass_OneJetHigh,OneJetHigh_NCuts);
+	return categoryPass;
 }
 
 void HToTaumuTauh::configure_OneJetBoost(){
@@ -1529,6 +1578,7 @@ void HToTaumuTauh::configure_OneJetBoost(){
 	Nminus0.at(OneJetBoost_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetBoost_HiggsPtM_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_OneJetBoost(unsigned NJets, double TauPt, double higgsPt, bool passedVBF){
+	bool categoryPass;
 	std::vector<float> value_OneJetBoost;
 	std::vector<float> pass_OneJetBoost;
 
@@ -1545,8 +1595,11 @@ bool HToTaumuTauh::category_OneJetBoost(unsigned NJets, double TauPt, double hig
 	pass_OneJetBoost.at(OneJetBoost_NotVbf) = ( value_OneJetBoost.at(OneJetBoost_NotVbf) == cut_OneJetBoost.at(OneJetBoost_NotVbf) );
 
 	if (selTau == -1){
+		// TauPt cut is set to true for nice N-0 and N-1 plots
 		value_OneJetBoost.at(OneJetBoost_TauPt) = -10.;
-		pass_OneJetBoost.at(OneJetBoost_TauPt) = false;
+		pass_OneJetBoost.at(OneJetBoost_TauPt) = true;
+		// whole category is failing selection, to avoid NCat > 1
+		categoryPass = false;
 	}
 	else{
 		value_OneJetBoost.at(OneJetBoost_TauPt) = TauPt;
@@ -1557,7 +1610,8 @@ bool HToTaumuTauh::category_OneJetBoost(unsigned NJets, double TauPt, double hig
 	pass_OneJetBoost.at(OneJetBoost_HiggsPt) = (value_OneJetBoost.at(OneJetBoost_HiggsPt) >= cut_OneJetBoost.at(OneJetBoost_HiggsPt));
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("OneJetBoost",value_OneJetBoost, pass_OneJetBoost,OneJetBoost_NCuts);
+	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetBoost",value_OneJetBoost, pass_OneJetBoost,OneJetBoost_NCuts);
+	return categoryPass;
 }
 
 void HToTaumuTauh::configure_ZeroJetHigh(){
@@ -1594,6 +1648,7 @@ void HToTaumuTauh::configure_ZeroJetHigh(){
 	Nminus0.at(ZeroJetHigh_TauPt) = HConfig.GetTH1D(Name+c+"_Nminus0_ZeroJetHigh_TauPt_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_ZeroJetHigh(unsigned NJets, double TauPt){
+	bool categoryPass;
 	std::vector<float> value_ZeroJetHigh;
 	std::vector<float> pass_ZeroJetHigh;
 
@@ -1607,8 +1662,11 @@ bool HToTaumuTauh::category_ZeroJetHigh(unsigned NJets, double TauPt){
 	pass_ZeroJetHigh.at(ZeroJetHigh_NJet) = ( value_ZeroJetHigh.at(ZeroJetHigh_NJet) <= cut_ZeroJetHigh.at(ZeroJetHigh_NJet) );
 
 	if (selTau == -1){
+		// TauPt cut is set to true for nice N-0 and N-1 plots
 		value_ZeroJetHigh.at(ZeroJetHigh_TauPt) = -10.;
-		pass_ZeroJetHigh.at(ZeroJetHigh_TauPt) = false;
+		pass_ZeroJetHigh.at(ZeroJetHigh_TauPt) = true;
+		// whole category is failing selection, to avoid NCat > 1
+		categoryPass = false;
 	}
 	else{
 		value_ZeroJetHigh.at(ZeroJetHigh_TauPt) = TauPt;
@@ -1617,7 +1675,8 @@ bool HToTaumuTauh::category_ZeroJetHigh(unsigned NJets, double TauPt){
 
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("ZeroJetHigh",value_ZeroJetHigh, pass_ZeroJetHigh,ZeroJetHigh_NCuts);
+	categoryPass = categoryPass && migrateCategoryIntoMain("ZeroJetHigh",value_ZeroJetHigh, pass_ZeroJetHigh,ZeroJetHigh_NCuts);
+	return categoryPass;
 }
 
 void HToTaumuTauh::configure_ZeroJetLow(){
@@ -1655,6 +1714,7 @@ void HToTaumuTauh::configure_ZeroJetLow(){
 }
 
 bool HToTaumuTauh::category_ZeroJetLow(unsigned NJets, double TauPt) {
+	bool categoryPass;
 	std::vector<float> value_ZeroJetLow;
 	std::vector<float> pass_ZeroJetLow;
 
@@ -1668,8 +1728,11 @@ bool HToTaumuTauh::category_ZeroJetLow(unsigned NJets, double TauPt) {
 	pass_ZeroJetLow.at(ZeroJetLow_NJet) = ( value_ZeroJetLow.at(ZeroJetLow_NJet) <= cut_ZeroJetLow.at(ZeroJetLow_NJet) );
 
 	if (selTau == -1){
+		// TauPt cut is set to true for nice N-0 and N-1 plots
 		value_ZeroJetLow.at(ZeroJetLow_TauPt) = -10.;
-		pass_ZeroJetLow.at(ZeroJetLow_TauPt) = false;
+		pass_ZeroJetLow.at(ZeroJetLow_TauPt) = true;
+		// whole category is failing selection, to avoid NCat > 1
+		categoryPass = false;
 	}
 	else{
 		value_ZeroJetLow.at(ZeroJetLow_TauPt) = TauPt;
@@ -1678,7 +1741,8 @@ bool HToTaumuTauh::category_ZeroJetLow(unsigned NJets, double TauPt) {
 
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("ZeroJetLow",value_ZeroJetLow, pass_ZeroJetLow,ZeroJetLow_NCuts);
+	categoryPass = categoryPass && migrateCategoryIntoMain("ZeroJetLow",value_ZeroJetLow, pass_ZeroJetLow,ZeroJetLow_NCuts);
+	return categoryPass;
 }
 
 void HToTaumuTauh::configure_NoCategory(){
@@ -1700,7 +1764,7 @@ bool HToTaumuTauh::category_NoCategory(){
 	pass_NoCategory.push_back(false);
 	}
 
-	// not cuts to compute
+	// no cuts to compute
 
 	// migrate into main analysis if this is chosen category
 	return migrateCategoryIntoMain("NoCategory",value_NoCategory, pass_NoCategory,NoCategory_NCuts);

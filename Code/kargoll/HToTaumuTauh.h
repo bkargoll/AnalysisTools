@@ -134,7 +134,8 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> TauSelPt;
   std::vector<TH1D> TauSelEta;
   std::vector<TH1D> TauSelPhi;
-  std::vector<TH1D> TauSelDrHlt;
+  std::vector<TH1D> TauSelDrHlt; // todo: not filled at the moment
+  std::vector<TH1D> TauSelDecayMode;
 
   std::vector<TH1D> MuVetoDPtSelMuon;
   std::vector<TH1D> MuVetoInvM;
@@ -182,6 +183,11 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> BJet1Eta;
   std::vector<TH1D> BJet1Phi;
 
+  std::vector<TH1D> HiggsPt; // todo
+  std::vector<TH1D> HiggsPhi;
+  std::vector<TH1D> JetsDEta;
+  std::vector<TH1D> JetsInEtaGap;
+  std::vector<TH1D> JetsInvM;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
