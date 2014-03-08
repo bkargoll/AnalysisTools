@@ -245,7 +245,7 @@ void  HToTaumuTauh::Configure(){
     	htitle.ReplaceAll("$","");
     	htitle.ReplaceAll("\\","#");
     	hlabel="m_{T}(#mu,E_{T}^{miss})/GeV";
-    	Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_BJetVeto_",htitle,50,0.,100.,hlabel,"Events"));
+    	Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_MT_",htitle,50,0.,100.,hlabel,"Events"));
     	Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_MT_",htitle,50,0.,100.,hlabel,"Events"));
     }
     else if(i_cut==BJetVeto){
@@ -271,6 +271,7 @@ void  HToTaumuTauh::Configure(){
     	n += (i_cut-CatCut1);
     	n += "_";
     	Nminus1.push_back(HConfig.GetTH1D(n,htitle,50,-50.,50.,hlabel,"Events"));
+    	n.ReplaceAll("Nminus1","Nminus0");
     	Nminus0.push_back(HConfig.GetTH1D(n,htitle,50,-50.,50.,hlabel,"Events"));
     }
   } 
@@ -852,7 +853,7 @@ void  HToTaumuTauh::doEvent(){
 
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
-	  TauCharge.at(t).Fill( Ntp->PFTau_Charge(selMuon), w);
+	  TauCharge.at(t).Fill( Ntp->PFTau_Charge(selTau), w);
 
 	  // MET
 	  MetPt.at(t).Fill( Ntp->MET_CorrMVA_et(), w);
