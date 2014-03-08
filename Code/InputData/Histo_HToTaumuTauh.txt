@@ -15,4 +15,4 @@ Histo: 70  245.8 MC_ttbar ttbar 600
 Histo: 71  11.1 MC_tw tw 603
 Histo: 72  11.1 MC_tbarw tbarw 596
 Histo: 20  24171.3 MC_W_lnu W#rightarrow~l#nu 876
-Histo: 23  12085.7 MC_W_lnu W#rightarrow~l#nu 874
+Histo: 23  12085.7 MC_W_taunu W#rightarrow~#tau#nu 874
