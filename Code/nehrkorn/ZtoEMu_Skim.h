@@ -20,7 +20,8 @@ class ZtoEMu_Skim : public Selection {
 		 NMu,
 		 NE,
 		 ptthreshold,
-		 charge,
+		 //diMuonVeto,
+		 //triLeptonVeto,
 	     NCuts};
 
  protected:
@@ -35,13 +36,6 @@ class ZtoEMu_Skim : public Selection {
   std::vector<TH1D> mueta;
   std::vector<TH1D> ept;
   std::vector<TH1D> eeta;
-
-  std::vector<TH1D> nontriggr20;
-  std::vector<TH1D> nontrigsm20;
-  std::vector<TH1D> triggr20;
-  std::vector<TH1D> trigsm20;
-  std::vector<TH1D> trignoipgr20;
-  std::vector<TH1D> trignoipsm20;
 
   double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax;
   int n_mu,n_e;
@@ -89,6 +83,7 @@ class ZtoEMu_Skim : public Selection {
   double ElectronHiggsIDeff(unsigned int i);
 
   double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
+  double FakerateWW(unsigned int i, std::string type);
   
   TFile* FRFile;
   TFile* EmbEffFile;

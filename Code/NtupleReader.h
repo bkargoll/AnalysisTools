@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Feb 26 13:55:40 2014 by ROOT version 5.34/14
+// Wed Mar 19 16:52:39 2014 by ROOT version 5.34/17
 // from TChain t/
 //////////////////////////////////////////////////////////
 
@@ -156,6 +156,8 @@ public :
    vector<float>   *Electron_M;
    vector<vector<float> > *Electron_par;
    vector<vector<float> > *Electron_cov;
+   vector<float>   *Electron_RegEnergy;
+   vector<float>   *Electron_RegEnergyError;
    vector<float>   *Electron_Rho_kt6PFJets;
    vector<float>   *Electron_MVA_TrigNoIP_discriminator;
    vector<float>   *Electron_MVA_NonTrig_discriminator;
@@ -463,18 +465,34 @@ public :
    Float_t         MET_CorrMVA_NeutralHadEtFraction;
    Float_t         MET_CorrMVA_Type6EtFraction;
    Float_t         MET_CorrMVA_Type7EtFraction;
+   Float_t         MET_CorrMVAMuTau_et;
+   Float_t         MET_CorrMVAMuTau_pt;
+   Float_t         MET_CorrMVAMuTau_phi;
+   Float_t         MET_CorrMVAMuTau_sumET;
+   Float_t         MET_CorrMVAMuTau_significance;
+   Float_t         MET_CorrMVAMuTau_significance_xx;
+   Float_t         MET_CorrMVAMuTau_significance_xy;
+   Float_t         MET_CorrMVAMuTau_significance_yy;
+   Float_t         MET_CorrMVAMuTau_MuonEtFraction;
+   Float_t         MET_CorrMVAMuTau_NeutralEMFraction;
+   Float_t         MET_CorrMVAMuTau_NeutralHadEtFraction;
+   Float_t         MET_CorrMVAMuTau_Type6EtFraction;
+   Float_t         MET_CorrMVAMuTau_Type7EtFraction;
    UInt_t          Event_EventNumber;
    UInt_t          Event_RunNumber;
    Int_t           Event_bunchCrossing;
    Int_t           Event_orbitNumber;
    UInt_t          Event_luminosityBlock;
    Bool_t          Event_isRealData;
-   Int_t           PileupInfo_NumInteractions_nm1;
-   Int_t           PileupInfo_NumInteractions_n0;
-   Int_t           PileupInfo_NumInteractions_np1;
-   Float_t         EvtWeight3D;
-   Float_t         EvtWeight3D_p5;
-   Float_t         EvtWeight3D_m5;
+   Int_t           PileupInfo_TrueNumInteractions_nm1;
+   Int_t           PileupInfo_TrueNumInteractions_n0;
+   Int_t           PileupInfo_TrueNumInteractions_np1;
+   Float_t         PUWeight;
+   Float_t         PUWeight_p5;
+   Float_t         PUWeight_m5;
+   Float_t         PUWeight3D;
+   Float_t         PUWeight3D_p5;
+   Float_t         PUWeight3D_m5;
    Float_t         TauSpinnerWeight;
    Float_t         SelEffWeight;
    Float_t         RadiationCorrWeight;
@@ -676,6 +694,8 @@ public :
    TBranch        *b_Electron_M;   //!
    TBranch        *b_Electron_par;   //!
    TBranch        *b_Electron_cov;   //!
+   TBranch        *b_Electron_RegEnergy;   //!
+   TBranch        *b_Electron_RegEnergyError;   //!
    TBranch        *b_Electron_Rho_kt6PFJets;   //!
    TBranch        *b_Electron_MVA_TrigNoIP_discriminator;   //!
    TBranch        *b_Electron_MVA_NonTrig_discriminator;   //!
@@ -983,18 +1003,34 @@ public :
    TBranch        *b_MET_CorrMVA_NeutralHadEtFraction;   //!
    TBranch        *b_MET_CorrMVA_Type6EtFraction;   //!
    TBranch        *b_MET_CorrMVA_Type7EtFraction;   //!
+   TBranch        *b_MET_CorrMVAMuTau_et;   //!
+   TBranch        *b_MET_CorrMVAMuTau_pt;   //!
+   TBranch        *b_MET_CorrMVAMuTau_phi;   //!
+   TBranch        *b_MET_CorrMVAMuTau_sumET;   //!
+   TBranch        *b_MET_CorrMVAMuTau_significance;   //!
+   TBranch        *b_MET_CorrMVAMuTau_significance_xx;   //!
+   TBranch        *b_MET_CorrMVAMuTau_significance_xy;   //!
+   TBranch        *b_MET_CorrMVAMuTau_significance_yy;   //!
+   TBranch        *b_MET_CorrMVAMuTau_MuonEtFraction;   //!
+   TBranch        *b_MET_CorrMVAMuTau_NeutralEMFraction;   //!
+   TBranch        *b_MET_CorrMVAMuTau_NeutralHadEtFraction;   //!
+   TBranch        *b_MET_CorrMVAMuTau_Type6EtFraction;   //!
+   TBranch        *b_MET_CorrMVAMuTau_Type7EtFraction;   //!
    TBranch        *b_Event_EventNumber;   //!
    TBranch        *b_Event_RunNumber;   //!
    TBranch        *b_Event_bunchCrossing;   //!
    TBranch        *b_Event_orbitNumber;   //!
    TBranch        *b_Event_luminosityBlock;   //!
    TBranch        *b_Event_isRealData;   //!
-   TBranch        *b_PileupInfo_NumInteractions_nm1;   //!
-   TBranch        *b_PileupInfo_NumInteractions_n0;   //!
-   TBranch        *b_PileupInfo_NumInteractions_np1;   //!
-   TBranch        *b_EvtWeight3D;   //!
-   TBranch        *b_EvtWeight3D_p5;   //!
-   TBranch        *b_EvtWeight3D_m5;   //!
+   TBranch        *b_PileupInfo_TrueNumInteractions_nm1;   //!
+   TBranch        *b_PileupInfo_TrueNumInteractions_n0;   //!
+   TBranch        *b_PileupInfo_TrueNumInteractions_np1;   //!
+   TBranch        *b_PUWeight;   //!
+   TBranch        *b_PUWeight_p5;   //!
+   TBranch        *b_PUWeight_m5;   //!
+   TBranch        *b_PUWeight3D;   //!
+   TBranch        *b_PUWeight3D_p5;   //!
+   TBranch        *b_PUWeight3D_m5;   //!
    TBranch        *b_TauSpinnerWeight;   //!
    TBranch        *b_SelEffWeight;   //!
    TBranch        *b_RadiationCorrWeight;   //!
@@ -1098,7 +1134,7 @@ NtupleReader::NtupleReader(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("t","");
-      chain->Add("/user/scratch/kargoll/TauNtuple_118_2_uzn.root/t");
+      chain->Add("/user/nehrkorn/TauNtuple_5_3_14_patch2-Mar_19_2014/CMSSW_5_3_14_patch2/src/SkimProduction/CRAB/Data0/TauNtuple.root/t");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -1266,6 +1302,8 @@ void NtupleReader::Init(TTree *tree)
    Electron_M = 0;
    Electron_par = 0;
    Electron_cov = 0;
+   Electron_RegEnergy = 0;
+   Electron_RegEnergyError = 0;
    Electron_Rho_kt6PFJets = 0;
    Electron_MVA_TrigNoIP_discriminator = 0;
    Electron_MVA_NonTrig_discriminator = 0;
@@ -1591,6 +1629,8 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("Electron_M", &Electron_M, &b_Electron_M);
    fChain->SetBranchAddress("Electron_par", &Electron_par, &b_Electron_par);
    fChain->SetBranchAddress("Electron_cov", &Electron_cov, &b_Electron_cov);
+   fChain->SetBranchAddress("Electron_RegEnergy", &Electron_RegEnergy, &b_Electron_RegEnergy);
+   fChain->SetBranchAddress("Electron_RegEnergyError", &Electron_RegEnergyError, &b_Electron_RegEnergyError);
    fChain->SetBranchAddress("Electron_Rho_kt6PFJets", &Electron_Rho_kt6PFJets, &b_Electron_Rho_kt6PFJets);
    fChain->SetBranchAddress("Electron_MVA_TrigNoIP_discriminator", &Electron_MVA_TrigNoIP_discriminator, &b_Electron_MVA_TrigNoIP_discriminator);
    fChain->SetBranchAddress("Electron_MVA_NonTrig_discriminator", &Electron_MVA_NonTrig_discriminator, &b_Electron_MVA_NonTrig_discriminator);
@@ -1898,18 +1938,34 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrMVA_NeutralHadEtFraction", &MET_CorrMVA_NeutralHadEtFraction, &b_MET_CorrMVA_NeutralHadEtFraction);
    fChain->SetBranchAddress("MET_CorrMVA_Type6EtFraction", &MET_CorrMVA_Type6EtFraction, &b_MET_CorrMVA_Type6EtFraction);
    fChain->SetBranchAddress("MET_CorrMVA_Type7EtFraction", &MET_CorrMVA_Type7EtFraction, &b_MET_CorrMVA_Type7EtFraction);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_et", &MET_CorrMVAMuTau_et, &b_MET_CorrMVAMuTau_et);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_pt", &MET_CorrMVAMuTau_pt, &b_MET_CorrMVAMuTau_pt);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_phi", &MET_CorrMVAMuTau_phi, &b_MET_CorrMVAMuTau_phi);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_sumET", &MET_CorrMVAMuTau_sumET, &b_MET_CorrMVAMuTau_sumET);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_significance", &MET_CorrMVAMuTau_significance, &b_MET_CorrMVAMuTau_significance);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_significance_xx", &MET_CorrMVAMuTau_significance_xx, &b_MET_CorrMVAMuTau_significance_xx);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_significance_xy", &MET_CorrMVAMuTau_significance_xy, &b_MET_CorrMVAMuTau_significance_xy);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_significance_yy", &MET_CorrMVAMuTau_significance_yy, &b_MET_CorrMVAMuTau_significance_yy);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_MuonEtFraction", &MET_CorrMVAMuTau_MuonEtFraction, &b_MET_CorrMVAMuTau_MuonEtFraction);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_NeutralEMFraction", &MET_CorrMVAMuTau_NeutralEMFraction, &b_MET_CorrMVAMuTau_NeutralEMFraction);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_NeutralHadEtFraction", &MET_CorrMVAMuTau_NeutralHadEtFraction, &b_MET_CorrMVAMuTau_NeutralHadEtFraction);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_Type6EtFraction", &MET_CorrMVAMuTau_Type6EtFraction, &b_MET_CorrMVAMuTau_Type6EtFraction);
+   fChain->SetBranchAddress("MET_CorrMVAMuTau_Type7EtFraction", &MET_CorrMVAMuTau_Type7EtFraction, &b_MET_CorrMVAMuTau_Type7EtFraction);
    fChain->SetBranchAddress("Event_EventNumber", &Event_EventNumber, &b_Event_EventNumber);
    fChain->SetBranchAddress("Event_RunNumber", &Event_RunNumber, &b_Event_RunNumber);
    fChain->SetBranchAddress("Event_bunchCrossing", &Event_bunchCrossing, &b_Event_bunchCrossing);
    fChain->SetBranchAddress("Event_orbitNumber", &Event_orbitNumber, &b_Event_orbitNumber);
    fChain->SetBranchAddress("Event_luminosityBlock", &Event_luminosityBlock, &b_Event_luminosityBlock);
    fChain->SetBranchAddress("Event_isRealData", &Event_isRealData, &b_Event_isRealData);
-   fChain->SetBranchAddress("PileupInfo_NumInteractions_nm1", &PileupInfo_NumInteractions_nm1, &b_PileupInfo_NumInteractions_nm1);
-   fChain->SetBranchAddress("PileupInfo_NumInteractions_n0", &PileupInfo_NumInteractions_n0, &b_PileupInfo_NumInteractions_n0);
-   fChain->SetBranchAddress("PileupInfo_NumInteractions_np1", &PileupInfo_NumInteractions_np1, &b_PileupInfo_NumInteractions_np1);
-   fChain->SetBranchAddress("EvtWeight3D", &EvtWeight3D, &b_EvtWeight3D);
-   fChain->SetBranchAddress("EvtWeight3D_p5", &EvtWeight3D_p5, &b_EvtWeight3D_p5);
-   fChain->SetBranchAddress("EvtWeight3D_m5", &EvtWeight3D_m5, &b_EvtWeight3D_m5);
+   fChain->SetBranchAddress("PileupInfo_TrueNumInteractions_nm1", &PileupInfo_TrueNumInteractions_nm1, &b_PileupInfo_TrueNumInteractions_nm1);
+   fChain->SetBranchAddress("PileupInfo_TrueNumInteractions_n0", &PileupInfo_TrueNumInteractions_n0, &b_PileupInfo_TrueNumInteractions_n0);
+   fChain->SetBranchAddress("PileupInfo_TrueNumInteractions_np1", &PileupInfo_TrueNumInteractions_np1, &b_PileupInfo_TrueNumInteractions_np1);
+   fChain->SetBranchAddress("PUWeight", &PUWeight, &b_PUWeight);
+   fChain->SetBranchAddress("PUWeight_p5", &PUWeight_p5, &b_PUWeight_p5);
+   fChain->SetBranchAddress("PUWeight_m5", &PUWeight_m5, &b_PUWeight_m5);
+   fChain->SetBranchAddress("PUWeight3D", &PUWeight3D, &b_PUWeight3D);
+   fChain->SetBranchAddress("PUWeight3D_p5", &PUWeight3D_p5, &b_PUWeight3D_p5);
+   fChain->SetBranchAddress("PUWeight3D_m5", &PUWeight3D_m5, &b_PUWeight3D_m5);
    fChain->SetBranchAddress("TauSpinnerWeight", &TauSpinnerWeight, &b_TauSpinnerWeight);
    fChain->SetBranchAddress("SelEffWeight", &SelEffWeight, &b_SelEffWeight);
    fChain->SetBranchAddress("RadiationCorrWeight", &RadiationCorrWeight, &b_RadiationCorrWeight);

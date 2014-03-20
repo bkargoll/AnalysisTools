@@ -1,5 +1,5 @@
 Thin: False
-Skim: False
+Skim: True
 HistoFile: InputData/Histo.txt
 Analysis: example
 UncertType: default

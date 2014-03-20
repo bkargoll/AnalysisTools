@@ -370,6 +370,7 @@ void  ZtoEMu_QCD::doEvent(){
   // pt thresholds
   //
   if(verbose) std::cout << "Setting pt thresholds" << std::endl;
+  bool leadingmu = false;
   value.at(ptthreshold)=0;
   if(muidx!=999 && eidx!=999){
 	  value.at(ptthreshold)=1;
@@ -379,6 +380,7 @@ void  ZtoEMu_QCD::doEvent(){
 		  if(!Ntp->TriggerAccept("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v")) value.at(ptthreshold)=0;
 	  }else if(Ntp->Electron_p4(eidx).Et()<e_pthigh){
 		  if(!Ntp->TriggerAccept("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v")) value.at(ptthreshold)=0;
+		  else leadingmu = true;
 	  }
   }
   pass.at(ptthreshold)=(value.at(ptthreshold)==cut.at(ptthreshold));
@@ -509,15 +511,11 @@ void  ZtoEMu_QCD::doEvent(){
   bool etrackjet(false);
   bool mutrackjet(false);
   std::vector<unsigned int> jetsfromvtx;
-  std::vector<unsigned int> loosejets;
-  std::vector<unsigned int> mediumjets;
-  std::vector<unsigned int> tightjets;
 
   // clean jets
   for(unsigned int i=0;i<Ntp->NPFJets();i++){
-	  if(Ntp->PFJet_PUJetID_looseWP(i)>0.5) loosejets.push_back(i);
-	  if(Ntp->PFJet_PUJetID_mediumWP(i)>0.5) mediumjets.push_back(i);
-	  if(Ntp->PFJet_PUJetID_tightWP(i)>0.5) tightjets.push_back(i);
+	  etrackjet = false;
+	  mutrackjet = false;
 	  if(eidx!=999 && muidx!=999){
 		  for(unsigned int j=0;j<Ntp->PFJet_Track_idx(i).size();j++){
 			  if(Ntp->PFJet_Track_idx(i).at(j)==Ntp->Electron_Track_idx(eidx)) etrackjet = true;

@@ -54,6 +54,7 @@ class ZtoEMu_Wjets : public Selection {
 
   double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax;
   int n_mu,n_e;
+  bool doOldJetVeto;
 
   double cosphi2d(double px1, double py1, double px2, double py2);
   double dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
@@ -80,6 +81,7 @@ class ZtoEMu_Wjets : public Selection {
   bool isMVATrigNoIPElectron(unsigned int i);
   bool isMVANonTrigElectron(unsigned int i, unsigned int j);
   bool isHiggsElectron(unsigned int i, unsigned int j);
+  bool isWWElectron(unsigned int i, unsigned int j);
   bool isTightElectron(unsigned int i);
   bool isTightElectron(unsigned int i, unsigned int j);
   bool isFakeElectron(unsigned int i);
@@ -95,6 +97,14 @@ class ZtoEMu_Wjets : public Selection {
   double ElectronNonTrigIDeff(unsigned int i);
   double ElectronHiggsIDeff(unsigned int i);
 
+  double TriggerEff(unsigned int muid, unsigned int eid, TString path);
+  double SingleEle(unsigned int i);
+  double DoubleEleLeading(unsigned int i);
+  double DoubleEleTrailing(unsigned int i);
+  double SingleMu(unsigned int i);
+  double DoubleMuLeading(unsigned int i);
+  double DoubleMuTrailing(unsigned int i);
+
   double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
   double rundependentJetPtCorrection(double jeteta, int runnumber);
 
@@ -108,6 +118,7 @@ class ZtoEMu_Wjets : public Selection {
   TFile* MuIsoEffFile;
   TFile* ETrigIdEffFile;
   TFile* ENonTrigIdEffFile;
+  TFile* TriggerEfficiencies;
 
   TH2D* ElectronTrigEff;
   TH2D* ElectronNonTrigEff;
@@ -119,6 +130,23 @@ class ZtoEMu_Wjets : public Selection {
   TGraphAsymmErrors* MuIsoEff12;
   TGraphAsymmErrors* MuIsoEff21;
   TGraphAsymmErrors* MuIsoEff24;
+
+  TGraphAsymmErrors* SingleEle15;
+  TGraphAsymmErrors* SingleEle25;
+  TGraphAsymmErrors* DoubleEleLead15;
+  TGraphAsymmErrors* DoubleEleLead25;
+  TGraphAsymmErrors* DoubleEleTrail15;
+  TGraphAsymmErrors* DoubleEleTrail25;
+  TGraphAsymmErrors* SingleMu08;
+  TGraphAsymmErrors* SingleMu12;
+  TGraphAsymmErrors* SingleMu21;
+  TGraphAsymmErrors* SingleMu25;
+  TGraphAsymmErrors* DoubleMuLead12;
+  TGraphAsymmErrors* DoubleMuLead21;
+  TGraphAsymmErrors* DoubleMuLead25;
+  TGraphAsymmErrors* DoubleMuTrail12;
+  TGraphAsymmErrors* DoubleMuTrail21;
+  TGraphAsymmErrors* DoubleMuTrail25;
 
 };
 #endif

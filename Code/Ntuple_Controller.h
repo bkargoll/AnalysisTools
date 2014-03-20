@@ -169,12 +169,15 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   int BunchCrossing(){ return Ntp->Event_bunchCrossing;}
   int OrbitNumber(){ return Ntp->Event_orbitNumber;}
   unsigned int LuminosityBlock(){return Ntp->Event_luminosityBlock;}
-  int           PileupInfo_NumInteractions_nm1(){return Ntp->PileupInfo_NumInteractions_nm1;}
-  int           PileupInfo_NumInteractions_n0(){return Ntp->PileupInfo_NumInteractions_n0;}
-  int           PileupInfo_NumInteractions_np1(){return Ntp->PileupInfo_NumInteractions_np1;}
-  double        EvtWeight3D(){return Ntp->EvtWeight3D;}
-  double        EvtWeight3D_p5(){return Ntp->EvtWeight3D_p5;}
-  double        EvtWeight3D_m5(){return Ntp->EvtWeight3D_m5;}
+  int           PileupInfo_TrueNumInteractions_nm1(){return Ntp->PileupInfo_TrueNumInteractions_nm1;}
+  int           PileupInfo_TrueNumInteractions_n0(){return Ntp->PileupInfo_TrueNumInteractions_n0;}
+  int           PileupInfo_TrueNumInteractions_np1(){return Ntp->PileupInfo_TrueNumInteractions_np1;}
+  double        PUWeight(){return Ntp->PUWeight;}
+  double        PUWeight_p5(){return Ntp->PUWeight_p5;}
+  double        PUWeight3D_m5(){return Ntp->PUWeight3D_m5;}
+  double        PUWeight3D(){return Ntp->PUWeight3D;}
+  double        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
+  double        PUWeight_m5(){return Ntp->PUWeight_m5;}
 
   TVectorT<double>      beamspot_par(){TVectorT<double> BS(NBS_par);for(unsigned int i=0;i<NBS_par;i++)BS(i)=Ntp->beamspot_par->at(i);return BS;}
 
@@ -549,6 +552,15 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              MET_CorrMVA_significance_xy(){return Ntp->MET_CorrMVA_significance_xy;}
    float              MET_CorrMVA_significance_yy(){return Ntp->MET_CorrMVA_significance_yy;}
 
+   float              MET_CorrMVAMuTau_et(){return Ntp->MET_CorrMVAMuTau_et;}
+   float              MET_CorrMVAMuTau_phi(){return Ntp->MET_CorrMVAMuTau_phi;}
+   float              MET_CorrMVAMuTau_ex(){return Ntp->MET_CorrMVAMuTau_et*cos(Ntp->MET_CorrMVAMuTau_phi);}
+   float              MET_CorrMVAMuTau_ey(){return Ntp->MET_CorrMVAMuTau_et*sin(Ntp->MET_CorrMVAMuTau_phi);}
+   float              MET_CorrMVAMuTau_significance(){return Ntp->MET_CorrMVAMuTau_significance;}
+   float              MET_CorrMVAMuTau_significance_xx(){return Ntp->MET_CorrMVAMuTau_significance_xx;}
+   float              MET_CorrMVAMuTau_significance_xy(){return Ntp->MET_CorrMVAMuTau_significance_xy;}
+   float              MET_CorrMVAMuTau_significance_yy(){return Ntp->MET_CorrMVAMuTau_significance_yy;}
+
    //Track Information
    unsigned int      NTracks(){return Ntp->Track_p4->size();}
    TLorentzVector    Track_p4(unsigned int i){return TLorentzVector(Ntp->Track_p4->at(i).at(1),Ntp->Track_p4->at(i).at(2),Ntp->Track_p4->at(i).at(3),Ntp->Track_p4->at(i).at(0));}
@@ -673,6 +685,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float    Electron_MVA_TrigNoIP_discriminator(unsigned int i){return Ntp->Electron_MVA_TrigNoIP_discriminator->at(i);}
    float    Electron_MVA_NonTrig_discriminator(unsigned int i){return Ntp->Electron_MVA_NonTrig_discriminator->at(i);}
    float    RhoIsolationAllInputTags(){return Ntp->RhoIsolationAllInputTags;}
+
+   float	Electron_RegEnergy(unsigned int i){return Ntp->Electron_RegEnergy->at(i);}
+   float	Electron_RegEnergyError(unsigned int i){return Ntp->Electron_RegEnergyError->at(i);}
 
    TrackParticle Electron_TrackParticle(unsigned int i){
      TMatrixT<double>    e_par(TrackParticle::NHelixPar,1);

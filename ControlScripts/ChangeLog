@@ -1,3 +1,7 @@
+Branch: Date: 3/19/2014
+	Authors: Ian M. Nugent (nugent@physik.rwth-aachen.de)
+	Changes: - Added option to run on the grid.
+
 Branch: Production_2013_Dec_12
 	Authors: Alexander Nehrkorn (nehrkorn@physik.rwth-aachen.de)
 		 Bastian Kargoll (kargoll@physik.rwth-aachen.de)
@@ -7,5 +11,5 @@ Branch: Production_2013_Dec_12
 	Bugs:	 - wrong JAK Id in DataMCTypes.cc
 		 - missing enumerate for WH_ZH_TTH in DataMCTypes.cc
 V00-01-00 Date: 02/28/2012
-	  Author: Iam M. Nugent (nugent@physik.rwth-aachen.de)
+	  Author: Ian M. Nugent (nugent@physik.rwth-aachen.de)
 	  Reason: Stable Release for Production for Z polarization and control samples.

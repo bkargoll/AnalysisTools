@@ -2,13 +2,15 @@
 #include <dirent.h>
 #include <errno.h>
 #include <time.h>
+#include <cstdlib>
+#include <stdlib.h> 
 
 #include <string.h>
 #include <istream>
 #include <strstream>
+
 #include "TApplication.h"
 #include "TROOT.h"
-
 #include "TSystem.h"
 #include "TChain.h"
 #include "TFile.h"
@@ -42,7 +44,10 @@ int main() {
 
   ////////////////////////////////////////////////
   // Get Input
-  Parameters Par("Input.txt");
+  TString base = std::getenv("PWD");
+  base+="/";
+  std::cout << "Working Dir: " << base << std::endl;
+  Parameters Par(base+"Input.txt");
   std::vector<TString> Files, UncertType, UncertList, Analysis;
   std::vector<double> UncertW;
   bool thin, skim;
@@ -66,11 +71,11 @@ int main() {
   // Check Input
   HistoConfig H; 
   SkimConfig SC;
-  if(!H.Load(histofile)){ 
+  if(!H.Load(base+histofile)){ 
     cout << "FATAL: No Histogram File or Histograms!!!" << endl;
     exit(6);
   }
-  if(!SC.Load(skimfile)){
+  if(!SC.Load(base+skimfile)){
     cout << "FATAL: Invalid Skim File!!!" << endl;
     exit(6);
   }
