@@ -3,8 +3,8 @@ Histo: 11  1.233664 MC_ggFHTauTauM125 H_{ggF}#rightarrow#tau#tau 633
 Histo: 12  0.0997296 MC_VBFHTauTauM125 H_{VBF}#rightarrow#tau#tau 634
 Histo: 13  0.0771792 MC_WHZHTTHTauTauM125 H_{AP}#rightarrow#tau#tau 635
 Histo: 33  1966.7 MC_tautau_DY Z/#gamma#rightarrow#tau#tau 800
-Histo: 32  1966.7 MC_mumu_DY Z/#gamma#rightarrow#mu#mu 708
-Histo: 31  1966.7 MC_ee_DY Z/#gamma#rightarrow~ee 709
+Histo: 32  1966.7 MC_mumu_DY Z/#gamma#rightarrow#mu#mu 808
+Histo: 31  1966.7 MC_ee_DY Z/#gamma#rightarrowee 809
 Histo: 56  5.824 MC_WW_2l2nu WW#rightarrow2l2#nu 417
 Histo: 57  2.207 MC_WZ_2l2q WZ#rightarrow2l2q 418
 Histo: 58  1.058 MC_WZ_3l1nu WZ#rightarrow3l1#nu 419
@@ -14,5 +14,5 @@ Histo: 55  2.502 MC_ZZ_2l2q ZZ#rightarrow2l2q 415
 Histo: 70  245.8 MC_ttbar ttbar 600
 Histo: 71  11.1 MC_tw tw 603
 Histo: 72  11.1 MC_tbarw tbarw 596
-Histo: 20  24171.3 MC_W_lnu W#rightarrow~l#nu 876
-Histo: 23  12085.7 MC_W_taunu W#rightarrow~#tau#nu 874
+Histo: 20  24171.3 MC_W_lnu W#rightarrowl#nu 876
+Histo: 23  12085.7 MC_W_taunu W#rightarrow#tau#nu 874
