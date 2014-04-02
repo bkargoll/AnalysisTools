@@ -94,7 +94,7 @@ void  Example::doEvent(){
   
   double wobs=1;
   double w;
-  if(!Ntp->isData()){w = Ntp->EvtWeight3D();}
+  if(!Ntp->isData()){w = Ntp->PUWeight();}
   else{w=1;}
 
 

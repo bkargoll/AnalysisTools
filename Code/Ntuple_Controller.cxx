@@ -183,31 +183,44 @@ void Ntuple_Controller::doMET(){
 
 //Physics get Functions
 int Ntuple_Controller::GetMCID(){
-  if((Ntp->DataMC_Type)==DataMCType::DY_ll_Signal && HistoC.hasID(DataMCType::DY_ll_Signal)){
-    for(int i=0;i<NMCSignalParticles();i++){
-      if(abs(MCSignalParticle_pdgid(i))==PDGInfo::Z0){
-	if(fabs(MCSignalParticle_p4(i).M()-PDG_Var::Z_mass())<3*PDG_Var::Z_width()){
-	  return DataMCType::Signal;
+	// define signal dependent on analysis (i.e. analyst)
+	#if defined(USE_cherepanov) || defined(USE_inugent)
+	if((Ntp->DataMC_Type)==DataMCType::DY_ll_Signal && HistoC.hasID(DataMCType::DY_ll_Signal)){
+	  for(int i=0;i<NMCSignalParticles();i++){
+		  if(abs(MCSignalParticle_pdgid(i))==PDGInfo::Z0){
+			  if(fabs(MCSignalParticle_p4(i).M()-PDG_Var::Z_mass())<3*PDG_Var::Z_width()){
+				  return DataMCType::Signal;
+			  }
+		  }
+	  }
+	  return Ntp->DataMC_Type;
 	}
-      }
-    }
-    return Ntp->DataMC_Type;
-  }
-  if(Ntp->DataMC_Type>100){
-    if(HistoC.hasID(Ntp->DataMC_Type%100)){
-      return Ntp->DataMC_Type%100;
-    }
-  }
+	if(Ntp->DataMC_Type>100){
+	  if(HistoC.hasID(Ntp->DataMC_Type%100)){
+		  return Ntp->DataMC_Type%100;
+	  }
+	}
+	#endif
 
-  // hack for Higgs production mechanisms
-  if(Ntp->DataMC_Type == DataMCType::H_tautau){
-	  if (Get_File_Name().Contains("GluGlu",TString::kIgnoreCase) && HistoC.hasID(DataMCType::H_tautau_ggF)){
-		  return DataMCType::H_tautau_ggF;
-	  }
-	  else if (Get_File_Name().Contains("VBF",TString::kIgnoreCase) && HistoC.hasID(DataMCType::H_tautau_VBF)){
-		  return DataMCType::H_tautau_VBF;
-	  }
-  }
+    #if defined(USE_nehrkorn)
+	if((Ntp->DataMC_Type)==DataMCType::DY_emu && HistoC.hasID(DataMCType::DY_emu))
+		return DataMCType::Signal;
+	#endif
+
+	#if defined(USE_kargoll)
+	if( (Ntp->DataMC_Type)==DataMCType::H_tautau && HistoC.hasID(DataMCType::H_tautau) ||
+		(Ntp->DataMC_Type)==DataMCType::H_tautau_ggF && HistoC.hasID(DataMCType::H_tautau_ggF) ||
+		(Ntp->DataMC_Type)==DataMCType::H_tautau_VBF && HistoC.hasID(DataMCType::H_tautau_VBF) ||
+		(Ntp->DataMC_Type)==DataMCType::H_tautau_WHZHTTH && HistoC.hasID(DataMCType::H_tautau_WHZHTTH) )
+			return DataMCType::Signal;
+	#endif
+
+	#if defined(USE_pistone)
+	if( (Ntp->DataMC_Type)==DataMCType::Hpm_taunu && HistoC.hasID(DataMCType::Hpm_taunu) ||
+		(Ntp->DataMC_Type)==DataMCType::HplusBWB && HistoC.hasID(DataMCType::HplusBWB) )
+			return  DataMCType::Signal;
+	#endif
+
 
   if(HConfig.hasID(Ntp->DataMC_Type))return Ntp->DataMC_Type;  
   return -999;

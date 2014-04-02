@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
+#include <sstream>
 
 Selection::Selection(TString Name_, TString id_):
   Selection_Base(Name_,id_)
@@ -381,7 +382,20 @@ void Selection::EvaluateSystematics(Selection_Base* &selectionsys, double w){
   }
 }
 
-
+TString Selection::splitString(const std::string &s, char delim, std::string splitpoint){
+	/* input string is split by given delimiter.
+	 * output string is stiched back together from string fragments including the given splitpoint but no further.
+	 */
+	std::stringstream ss(s);
+	std::string item;
+	TString outstring = "";
+	while(std::getline(ss,item,delim)){
+		outstring+=item;
+		outstring+=delim;
+		if(item.find(splitpoint)!=std::string::npos) break;
+	}
+	return outstring;
+}
 
 void Selection::ResetEvent(){
   for(int i=0; i<pass.size();i++){

@@ -38,6 +38,9 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// OneJetHigh, OneJetLow, OneJetBoost
 	// ZeroJetHigh, ZeroJetLow
 	// NoCategory
+
+	// Set it to "NoCategory" here.
+	// For each category, there should be a special class inheriting from HToTaumuTauh
 	categoryFlag = "VBFTight";
 }
 
@@ -367,13 +370,13 @@ void  HToTaumuTauh::Configure(){
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
-  if (categoryFlag == "VBFLoose")	configure_VBFLoose();
-  if (categoryFlag == "OneJetHigh")	configure_OneJetHigh();
-  if (categoryFlag == "OneJetLow")	configure_OneJetLow();
-  if (categoryFlag == "OneJetBoost")configure_OneJetBoost();
-  if (categoryFlag == "ZeroJetHigh")configure_ZeroJetHigh();
-  if (categoryFlag == "ZeroJetLow") configure_ZeroJetLow();
-  if (categoryFlag == "NoCategory")	configure_NoCategory();
+  else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
+  else if (categoryFlag == "OneJetHigh")	configure_OneJetHigh();
+  else if (categoryFlag == "OneJetLow")	configure_OneJetLow();
+  else if (categoryFlag == "OneJetBoost")configure_OneJetBoost();
+  else if (categoryFlag == "ZeroJetHigh")configure_ZeroJetHigh();
+  else if (categoryFlag == "ZeroJetLow") configure_ZeroJetLow();
+  else if (categoryFlag == "NoCategory")	configure_NoCategory();
   else{
 	  std::cout << "WARNING: category " << categoryFlag << " does not exist. Using NoCategory instead." << std::endl;
 	  configure_NoCategory();
@@ -487,7 +490,7 @@ void  HToTaumuTauh::doEvent(){
   
   double wobs=1;
   double w;
-  if(!Ntp->isData()){w = Ntp->EvtWeight3D();}
+  if(!Ntp->isData()){w = Ntp->PUWeight();}
   else{w=1;}
 
   // Apply Selection
@@ -630,8 +633,8 @@ void  HToTaumuTauh::doEvent(){
   else{
 	  double pT 	= Ntp->Muon_p4(selMuon).Pt();
 	  double phi	= Ntp->Muon_p4(selMuon).Phi();
-	  double eTmiss = Ntp->MET_CorrMVA_et();
-	  double eTmPhi = Ntp->MET_CorrMVA_phi();
+	  double eTmiss = Ntp->MET_CorrMVAMuTau_et();
+	  double eTmPhi = Ntp->MET_CorrMVAMuTau_phi();
 	  value.at(MT)	= transverseMass(pT,phi,eTmiss,eTmPhi);
   }
   if (cut.at(MT) == 999) // set to 999 to disable mt cut
@@ -673,9 +676,9 @@ void  HToTaumuTauh::doEvent(){
   pass.at(BJetVeto) = (value.at(BJetVeto) <= cut.at(BJetVeto));
 
   // store pt of selected tau for categories
-  double tauPt = -10;
+  double tauPt = -12;
   if (selTau != -1){
-	  double tauPt = Ntp->PFTau_p4(selTau).Pt();
+	  tauPt = Ntp->PFTau_p4(selTau).Pt();
   }
 
   // calculate pt of higgs candidate
@@ -684,7 +687,7 @@ void  HToTaumuTauh::doEvent(){
   if (selMuon != -1 && selTau != -1){
 	  TVector3 muon3Vec = Ntp->Muon_p4(selMuon).Vect();
 	  TVector3 tau3Vec = Ntp->PFTau_p4(selTau).Vect();
-	  TVector3 met3Vec = TVector3(Ntp->MET_CorrMVA_ex(),Ntp->MET_CorrMVA_ey(),0);
+	  TVector3 met3Vec = TVector3(Ntp->MET_CorrMVAMuTau_ex(),Ntp->MET_CorrMVAMuTau_ey(),0);
 
 	  higgsPt = (muon3Vec + tau3Vec + met3Vec).Pt();
 	  higgsPhi = (muon3Vec + tau3Vec + met3Vec).Phi();
@@ -856,8 +859,8 @@ void  HToTaumuTauh::doEvent(){
 	  TauCharge.at(t).Fill( Ntp->PFTau_Charge(selTau), w);
 
 	  // MET
-	  MetPt.at(t).Fill( Ntp->MET_CorrMVA_et(), w);
-	  MetPhi.at(t).Fill( Ntp->MET_CorrMVA_phi(), w);
+	  MetPt.at(t).Fill( Ntp->MET_CorrMVAMuTau_et(), w);
+	  MetPhi.at(t).Fill( Ntp->MET_CorrMVAMuTau_phi(), w);
 
 	  // Jets
 	  NJetsKin.at(t).Fill( selectedJetsKin.size(), w);
@@ -1167,8 +1170,8 @@ void HToTaumuTauh::configure_VBFTight(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="Number of Jet_{VBF}";
 	c="_Cut_";c+=VbfTight_NJet;
-	Nminus1.at(VbfTight_NJet) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_NJet_",htitle,11,-0.5,10.5,hlabel,"Events");
-	Nminus0.at(VbfTight_NJet) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_NJet_",htitle,11,-0.5,10.5,hlabel,"Events");
+	Nminus1.at(VbfTight_NJet) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_NJet_",htitle,6,-0.5,5.5,hlabel,"Events");
+	Nminus0.at(VbfTight_NJet) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_NJet_",htitle,6,-0.5,5.5,hlabel,"Events");
 
 	title.at(VbfTight_DeltaEta)="$\\Delta\\eta(jj) >$";
 	title.at(VbfTight_DeltaEta)+=cut.at(VbfTight_DeltaEta);
@@ -1177,8 +1180,8 @@ void HToTaumuTauh::configure_VBFTight(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="#Delta#eta(Jet_{VBF}^{1},Jet_{VBF}^{2})";
 	c="_Cut_";c+=VbfTight_DeltaEta;
-	Nminus1.at(VbfTight_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_DeltaEta_",htitle,50,-10.,10.,hlabel,"Events");
-	Nminus0.at(VbfTight_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus0__VbfTight_DeltaEta",htitle,50,-10.,10.,hlabel,"Events");
+	Nminus1.at(VbfTight_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_DeltaEta_",htitle,32,-8.,8.,hlabel,"Events");
+	Nminus0.at(VbfTight_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_DeltaEta_",htitle,32,-8.,8.,hlabel,"Events");
 
 	title.at(VbfTight_NJetRapGap)="Number Jets in $\\eta$ gap $<=$";
 	title.at(VbfTight_NJetRapGap)+=cut.at(VbfTight_NJetRapGap);
@@ -1187,8 +1190,8 @@ void HToTaumuTauh::configure_VBFTight(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="Number of Jet_{VBF} in rapidity gap";
 	c="_Cut_";c+=VbfTight_NJetRapGap;
-	Nminus1.at(VbfTight_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_NJetRapGap_",htitle,11,-0.5,10.5,hlabel,"Events");
-	Nminus0.at(VbfTight_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_NJetRapGap_",htitle,11,-0.5,10.5,hlabel,"Events");
+	Nminus1.at(VbfTight_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_NJetRapGap_",htitle,6,-0.5,5.5,hlabel,"Events");
+	Nminus0.at(VbfTight_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_NJetRapGap_",htitle,6,-0.5,5.5,hlabel,"Events");
 
 	title.at(VbfTight_JetInvM)="$m_{jj}(VBF) >$";
 	title.at(VbfTight_JetInvM)+=cut.at(VbfTight_JetInvM);
@@ -1198,8 +1201,8 @@ void HToTaumuTauh::configure_VBFTight(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="m_{inv}(jj) of VBF-jets";
 	c="_Cut_";c+=VbfTight_JetInvM;
-	Nminus1.at(VbfTight_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_JetInvM_",htitle,50,0.,2000.,hlabel,"Events");
-	Nminus0.at(VbfTight_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_JetInvM_",htitle,50,0.,2000.,hlabel,"Events");
+	Nminus1.at(VbfTight_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_JetInvM_",htitle,25,0.,2000.,hlabel,"Events");
+	Nminus0.at(VbfTight_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_JetInvM_",htitle,25,0.,2000.,hlabel,"Events");
 
 	title.at(VbfTight_HiggsPt)="$p_{T}(H) >$";
 	title.at(VbfTight_HiggsPt)+=cut.at(VbfTight_HiggsPt);
@@ -1209,8 +1212,8 @@ void HToTaumuTauh::configure_VBFTight(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="p_{T} of Higgs candidate";
 	c="_Cut_";c+=VbfTight_HiggsPt;
-	Nminus1.at(VbfTight_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_HiggsPt_",htitle,50,0.,200.,hlabel,"Events");
-	Nminus0.at(VbfTight_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_HiggsPtM_",htitle,50,0.,200.,hlabel,"Events");
+	Nminus1.at(VbfTight_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfTight_HiggsPt_",htitle,25,0.,250.,hlabel,"Events");
+	Nminus0.at(VbfTight_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfTight_HiggsPt_",htitle,25,0.,250.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_VBFTight(unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt){
 	std::vector<float> value_VBFTight;
@@ -1270,8 +1273,8 @@ void HToTaumuTauh::configure_VBFLoose(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="Number of Jet_{VBF}";
 	c="_Cut_";c+=VbfLoose_NJet;
-	Nminus1.at(VbfLoose_NJet) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_NJet_",htitle,11,-0.5,10.5,hlabel,"Events");
-	Nminus0.at(VbfLoose_NJet) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_NJet_",htitle,11,-0.5,10.5,hlabel,"Events");
+	Nminus1.at(VbfLoose_NJet) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_NJet_",htitle,6,-0.5,5.5,hlabel,"Events");
+	Nminus0.at(VbfLoose_NJet) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_NJet_",htitle,6,-0.5,5.5,hlabel,"Events");
 
 	title.at(VbfLoose_DeltaEta)="$\\Delta\\eta(jj) >$";
 	title.at(VbfLoose_DeltaEta)+=cut.at(VbfLoose_DeltaEta);
@@ -1280,8 +1283,8 @@ void HToTaumuTauh::configure_VBFLoose(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="#Delta#eta(Jet_{VBF}^{1},Jet_{VBF}^{2})";
 	c="_Cut_";c+=VbfLoose_DeltaEta;
-	Nminus1.at(VbfLoose_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_DeltaEta_",htitle,50,-10.,10.,hlabel,"Events");
-	Nminus0.at(VbfLoose_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus0__VbfLoose_DeltaEta",htitle,50,-10.,10.,hlabel,"Events");
+	Nminus1.at(VbfLoose_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_DeltaEta_",htitle,32,-8.,8.,hlabel,"Events");
+	Nminus0.at(VbfLoose_DeltaEta) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_DeltaEta_",htitle,32,-8.,8.,hlabel,"Events");
 
 	title.at(VbfLoose_NJetRapGap)="Number Jets in $\\eta$ gap $<=$";
 	title.at(VbfLoose_NJetRapGap)+=cut.at(VbfLoose_NJetRapGap);
@@ -1290,8 +1293,8 @@ void HToTaumuTauh::configure_VBFLoose(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="Number of Jet_{VBF} in rapidity gap";
 	c="_Cut_";c+=VbfLoose_NJetRapGap;
-	Nminus1.at(VbfLoose_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_NJetRapGap_",htitle,11,-0.5,10.5,hlabel,"Events");
-	Nminus0.at(VbfLoose_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_NJetRapGap_",htitle,11,-0.5,10.5,hlabel,"Events");
+	Nminus1.at(VbfLoose_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_NJetRapGap_",htitle,6,-0.5,5.5,hlabel,"Events");
+	Nminus0.at(VbfLoose_NJetRapGap) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_NJetRapGap_",htitle,6,-0.5,5.5,hlabel,"Events");
 
 	title.at(VbfLoose_JetInvM)="$m_{jj}(VBF) >$";
 	title.at(VbfLoose_JetInvM)+=cut.at(VbfLoose_JetInvM);
@@ -1301,8 +1304,8 @@ void HToTaumuTauh::configure_VBFLoose(){
 	htitle.ReplaceAll("\\","#");
 	hlabel="m_{inv}(jj) of VBF-jets";
 	c="_Cut_";c+=VbfLoose_JetInvM;
-	Nminus1.at(VbfLoose_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_JetInvM_",htitle,50,0.,2000.,hlabel,"Events");
-	Nminus0.at(VbfLoose_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_JetInvM_",htitle,50,0.,2000.,hlabel,"Events");
+	Nminus1.at(VbfLoose_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus1_VbfLoose_JetInvM_",htitle,25,0.,2000.,hlabel,"Events");
+	Nminus0.at(VbfLoose_JetInvM) = HConfig.GetTH1D(Name+c+"_Nminus0_VbfLoose_JetInvM_",htitle,25,0.,2000.,hlabel,"Events");
 
 	title.at(VbfLoose_NotVbfTight)="Not VBFTight $==$";
 	title.at(VbfLoose_NotVbfTight)+=cut.at(VbfLoose_NotVbfTight);
@@ -1425,7 +1428,7 @@ bool HToTaumuTauh::category_OneJetLow(unsigned NJets, double TauPt, bool passedV
 
 
 	// migrate into main analysis if this is chosen category
-	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetLow",value_OneJetLow, pass_OneJetLow,OneJetLow_NCuts);
+	categoryPass = migrateCategoryIntoMain("OneJetLow",value_OneJetLow, pass_OneJetLow,OneJetLow_NCuts) && categoryPass;
 	return categoryPass;
 }
 
@@ -1483,7 +1486,7 @@ void HToTaumuTauh::configure_OneJetHigh(){
 	hlabel="p_{T} of Higgs candidate";
 	c="_Cut_";c+=OneJetHigh_HiggsPt;
 	Nminus1.at(OneJetHigh_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus1_OneJetHigh_HiggsPt_",htitle,50,0.,200.,hlabel,"Events");
-	Nminus0.at(OneJetHigh_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetHigh_HiggsPtM_",htitle,50,0.,200.,hlabel,"Events");
+	Nminus0.at(OneJetHigh_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetHigh_HiggsPt_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_OneJetHigh(unsigned NJets, double TauPt, double higgsPt, bool passedVBF){
 	bool categoryPass = true;
@@ -1518,7 +1521,7 @@ bool HToTaumuTauh::category_OneJetHigh(unsigned NJets, double TauPt, double higg
 	pass_OneJetHigh.at(OneJetHigh_HiggsPt) = (value_OneJetHigh.at(OneJetHigh_HiggsPt) < cut_OneJetHigh.at(OneJetHigh_HiggsPt));
 
 	// migrate into main analysis if this is chosen category
-	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetHigh",value_OneJetHigh, pass_OneJetHigh,OneJetHigh_NCuts);
+	categoryPass = migrateCategoryIntoMain("OneJetHigh",value_OneJetHigh, pass_OneJetHigh,OneJetHigh_NCuts) && categoryPass;
 	return categoryPass;
 }
 
@@ -1576,10 +1579,10 @@ void HToTaumuTauh::configure_OneJetBoost(){
 	hlabel="p_{T} of Higgs candidate";
 	c="_Cut_";c+=OneJetBoost_HiggsPt;
 	Nminus1.at(OneJetBoost_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus1_OneJetBoost_HiggsPt_",htitle,50,0.,200.,hlabel,"Events");
-	Nminus0.at(OneJetBoost_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetBoost_HiggsPtM_",htitle,50,0.,200.,hlabel,"Events");
+	Nminus0.at(OneJetBoost_HiggsPt) = HConfig.GetTH1D(Name+c+"_Nminus0_OneJetBoost_HiggsPt_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_OneJetBoost(unsigned NJets, double TauPt, double higgsPt, bool passedVBF){
-	bool categoryPass;
+	bool categoryPass = true;
 	std::vector<float> value_OneJetBoost;
 	std::vector<float> pass_OneJetBoost;
 
@@ -1611,7 +1614,7 @@ bool HToTaumuTauh::category_OneJetBoost(unsigned NJets, double TauPt, double hig
 	pass_OneJetBoost.at(OneJetBoost_HiggsPt) = (value_OneJetBoost.at(OneJetBoost_HiggsPt) >= cut_OneJetBoost.at(OneJetBoost_HiggsPt));
 
 	// migrate into main analysis if this is chosen category
-	categoryPass = categoryPass && migrateCategoryIntoMain("OneJetBoost",value_OneJetBoost, pass_OneJetBoost,OneJetBoost_NCuts);
+	categoryPass = migrateCategoryIntoMain("OneJetBoost",value_OneJetBoost, pass_OneJetBoost,OneJetBoost_NCuts) && categoryPass;
 	return categoryPass;
 }
 
@@ -1649,13 +1652,13 @@ void HToTaumuTauh::configure_ZeroJetHigh(){
 	Nminus0.at(ZeroJetHigh_TauPt) = HConfig.GetTH1D(Name+c+"_Nminus0_ZeroJetHigh_TauPt_",htitle,50,0.,200.,hlabel,"Events");
 }
 bool HToTaumuTauh::category_ZeroJetHigh(unsigned NJets, double TauPt){
-	bool categoryPass;
+	bool categoryPass = true;
 	std::vector<float> value_ZeroJetHigh;
 	std::vector<float> pass_ZeroJetHigh;
 
 	// cut implementation
 	for(int i=0; i<NCuts;i++){
-	value_ZeroJetHigh.push_back(-10.);
+	value_ZeroJetHigh.push_back(-11.);
 	pass_ZeroJetHigh.push_back(false);
 	}
 
@@ -1676,7 +1679,7 @@ bool HToTaumuTauh::category_ZeroJetHigh(unsigned NJets, double TauPt){
 
 
 	// migrate into main analysis if this is chosen category
-	categoryPass = categoryPass && migrateCategoryIntoMain("ZeroJetHigh",value_ZeroJetHigh, pass_ZeroJetHigh,ZeroJetHigh_NCuts);
+	categoryPass = migrateCategoryIntoMain("ZeroJetHigh",value_ZeroJetHigh, pass_ZeroJetHigh,ZeroJetHigh_NCuts) && categoryPass;
 	return categoryPass;
 }
 
@@ -1715,15 +1718,10 @@ void HToTaumuTauh::configure_ZeroJetLow(){
 }
 
 bool HToTaumuTauh::category_ZeroJetLow(unsigned NJets, double TauPt) {
-	bool categoryPass;
-	std::vector<float> value_ZeroJetLow;
-	std::vector<float> pass_ZeroJetLow;
+	bool categoryPass = true;
+	std::vector<float> value_ZeroJetLow(NCuts,-10);
+	std::vector<float> pass_ZeroJetLow(NCuts,false);
 
-	// cut implementation
-	for(int i=0; i<NCuts;i++){
-	value_ZeroJetLow.push_back(-10.);
-	pass_ZeroJetLow.push_back(false);
-	}
 
 	value_ZeroJetLow.at(ZeroJetLow_NJet) = NJets;
 	pass_ZeroJetLow.at(ZeroJetLow_NJet) = ( value_ZeroJetLow.at(ZeroJetLow_NJet) <= cut_ZeroJetLow.at(ZeroJetLow_NJet) );
@@ -1742,7 +1740,7 @@ bool HToTaumuTauh::category_ZeroJetLow(unsigned NJets, double TauPt) {
 
 
 	// migrate into main analysis if this is chosen category
-	categoryPass = categoryPass && migrateCategoryIntoMain("ZeroJetLow",value_ZeroJetLow, pass_ZeroJetLow,ZeroJetLow_NCuts);
+	categoryPass = migrateCategoryIntoMain("ZeroJetLow",value_ZeroJetLow, pass_ZeroJetLow,ZeroJetLow_NCuts) && categoryPass;
 	return categoryPass;
 }
 
@@ -1776,6 +1774,7 @@ bool HToTaumuTauh::category_NoCategory(){
 bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, int categoryNCuts) {
 	bool catPassed = true;
 	for (unsigned i_cut = CatCut1; i_cut < NCuts; i_cut++) {
+
 		// migrate only if this category is the chosen one
 		if (categoryFlag == thisCategory) {
 			if (i_cut < categoryNCuts) {
@@ -1787,8 +1786,10 @@ bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<flo
 				pass.at(i_cut) = true;
 			}
 		}
-		// calculate if category passed
-		catPassed = catPassed && categoryPassVector.at(i_cut);
+		if (i_cut < categoryNCuts) {
+			catPassed = catPassed && categoryPassVector.at(i_cut);
+		}
 	}
+
 	return catPassed;
 }

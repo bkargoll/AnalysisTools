@@ -15,10 +15,10 @@ fi
 
 touch jobs_complete
 touch jobs_get
-cat jobs_submitted | awk '{system("glite-wms-job-status " $1 " | grep -i done | wc -l |awk \x27{sum++}END{if($1 == 0) print  \" glite-wms-job-output --dir "$2 " " $1 " ; mv " $2 "/$USER*/* "$2 "; rm -rf " $2 "/$USER* ; echo " $1 " " $2 "  >> jobs_complete; source " $2 "/GRIDRetrieve.sh  \"}\x27 >> jobs_get ")}'
+cat jobs_submitted | awk '{system("glite-wms-job-status " $1 " | grep -i done | wc -l |awk \x27{sum++}END{if($1 == 1) print  \" glite-wms-job-output --dir "$2 " " $1 " ; mv " $2 "/$USER*/* "$2 "; rmdir " $2 "/$USER* ; echo " $1 " " $2 "  >> jobs_complete; source " $2 "/GRIDRetrieve.sh  \"}\x27 >> jobs_get ")}'
 
-#source jobs_get 
-#rm jobs_get
+source jobs_get 
+rm jobs_get
 echo 'Number of jobs produced:'  
 cat  jobs_submitted  | wc -l
 echo 'Number of jobs Complete and Downloaded:'

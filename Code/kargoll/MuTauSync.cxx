@@ -53,11 +53,11 @@ void MuTauSync::doEvent(){
 		evt = Ntp->EventNumber();
 		 // Event Variables
 		npv = Ntp->NVtx();
-		npu = Ntp->PileupInfo_NumInteractions_n0();
+		npu = Ntp->PileupInfo_TrueNumInteractions_n0();
 		rho = Ntp->RhoIsolationAllInputTags();
 		 // Event Weights
 		mcweight = -10;
-		puweight = Ntp->EvtWeight3D();
+		puweight = Ntp->PUWeight();
 		trigweight_1 = -10;
 		trigweight_2 = -10;
 		idweight_1 = -10;
@@ -89,7 +89,7 @@ void MuTauSync::doEvent(){
 		dZ_1 = Ntp->dz(Ntp->Muon_p4(selMuon),Ntp->Muon_Poca(selMuon),Ntp->Vtx(selVertex));
 		passid_1 = true; // passes obviously, as it was selected
 		passiso_1 = true;
-		mt_1 = transverseMass(pt_1,phi_1,Ntp->MET_CorrMVA_et(),Ntp->MET_CorrMVA_phi());
+		mt_1 = transverseMass(pt_1,phi_1,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
 		 // Second lepton : hadronic Tau for mu Tau had for e Tau, Muon for e mu, Trailing (in pT) Tau for Tau Tau
 		pt_2 = Ntp->PFTau_p4(selTau).Pt();
 		phi_2 = Ntp->PFTau_p4(selTau).Phi();
@@ -109,7 +109,7 @@ void MuTauSync::doEvent(){
 		mva_2 = -10;
 		passid_2 = true;
 		passiso_2 = true;
-		mt_2 = transverseMass(pt_2,phi_2,Ntp->MET_CorrMVA_et(),Ntp->MET_CorrMVA_phi());
+		mt_2 = transverseMass(pt_2,phi_2,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
 		 // Met related variables
 		met = Ntp->MET_Uncorr_et();
 		metphi = Ntp->MET_Uncorr_phi();
@@ -120,8 +120,8 @@ void MuTauSync::doEvent(){
 		calometphi = -10;
 		calometcorr = Ntp->MET_CorrCaloT1T2_et();
 		calometphicorr = Ntp->MET_CorrCaloT1T2_phi();
-		mvamet = Ntp->MET_CorrMVA_et();
-		mvametphi = Ntp->MET_CorrMVA_phi();
+		mvamet = Ntp->MET_CorrMVAMuTau_et();
+		mvametphi = Ntp->MET_CorrMVAMuTau_phi();
 		pzetavis = -10;
 		pzetamiss = -10;
 		// met covariance matrices
@@ -130,10 +130,10 @@ void MuTauSync::doEvent(){
 		metcov10 = Ntp->MET_Uncorr_significance_xy();
 		metcov11 = Ntp->MET_Uncorr_significance_yy();
 		// mva met covariance matrices
-		mvacov00 = Ntp->MET_CorrMVA_significance_xx();
-		mvacov01 = Ntp->MET_CorrMVA_significance_xy();
-		mvacov10 = Ntp->MET_CorrMVA_significance_xy();
-		mvacov11 = Ntp->MET_CorrMVA_significance_yy();
+		mvacov00 = Ntp->MET_CorrMVAMuTau_significance_xx();
+		mvacov01 = Ntp->MET_CorrMVAMuTau_significance_xy();
+		mvacov10 = Ntp->MET_CorrMVAMuTau_significance_xy();
+		mvacov11 = Ntp->MET_CorrMVAMuTau_significance_yy();
 		// First jet: leading jet after applying Jet energy corrections (excluding hadronic Tau)
 		if (selJets.size() > 0){
 			jpt_1 = Ntp->PFJet_p4(selJets.at(0)).Pt();

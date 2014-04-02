@@ -13,7 +13,7 @@ class ZtoEMu : public Selection {
   ZtoEMu(TString Name_, TString id_);
   virtual ~ZtoEMu();
 
-  virtual void  Configure();
+  virtual void Configure();
   virtual void Finish();
 
   enum cuts {TriggerOk=0,

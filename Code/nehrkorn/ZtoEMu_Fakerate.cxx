@@ -268,8 +268,8 @@ void  ZtoEMu_Fakerate::doEvent(){
   if(verbose) std::cout << "do weights" << std::endl;
   double wobs(1),w(1),ww(1);
   if(!Ntp->isData() && Ntp->GetMCID()!=34){
-    w*=Ntp->EvtWeight3D();
-    ww*=Ntp->EvtWeight3D();
+    w*=Ntp->PUWeight();
+    ww*=Ntp->PUWeight();
     if(verbose)std::cout << "void  ZtoEMu_Fakerate::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;wobs=1;}

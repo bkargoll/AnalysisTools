@@ -36,6 +36,8 @@ class Selection : public Selection_Base {
 				    double data,double signal,double signalTotal, double bkg);
   virtual void EvaluateSystematics(Selection_Base* &selectionsys, double w);
 
+  static TString splitString(const std::string &s, char delim, std::string splitpoint);
+
  protected:
   virtual bool AnalysisCuts(int t,double w,double wobjs=1.0);
   virtual void Store_ExtraDist()=0;

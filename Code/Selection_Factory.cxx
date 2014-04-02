@@ -27,6 +27,13 @@
 #ifdef USE_kargoll
 #include "kargoll/HToTaumuTauh.h"
 #include "kargoll/MuTauSync.h"
+#include "kargoll/OneJetBoost.h"
+#include "kargoll/OneJetHigh.h"
+#include "kargoll/OneJetLow.h"
+#include "kargoll/VBFTight.h"
+#include "kargoll/VBFLoose.h"
+#include "kargoll/ZeroJetHigh.h"
+#include "kargoll/ZeroJetLow.h"
 #endif
 #ifdef USE_pistone
 
@@ -70,6 +77,13 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 #ifdef USE_kargoll
   else if(Analysis.Contains("htotaumutauh")) s=new HToTaumuTauh(Analysis,UncertType);
   else if(Analysis.Contains("mutausync")) s=new MuTauSync(Analysis,UncertType);
+  else if(Analysis.Contains("onejetboost")) s=new OneJetBoost(Analysis,UncertType);
+  else if(Analysis.Contains("onejethigh")) s=new OneJetHigh(Analysis,UncertType);
+  else if(Analysis.Contains("onejetlow")) s=new OneJetLow(Analysis,UncertType);
+  else if(Analysis.Contains("vbftight")) s=new VBFTight(Analysis,UncertType);
+  else if(Analysis.Contains("vbfloose")) s=new VBFLoose(Analysis,UncertType);
+  else if(Analysis.Contains("zerojethigh")) s=new ZeroJetHigh(Analysis,UncertType);
+  else if(Analysis.Contains("zerojetlow")) s=new ZeroJetLow(Analysis,UncertType);
 #endif
 #ifdef USE_pistone
 
@@ -78,9 +92,9 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
     std::cout << "WARNING: Selection_Factory::Factory INVALID ANALYSIS TYPE.... USING DEFAULT <Example.h> " << std::endl;
     s=new Example(Analysis,UncertType);
   }
-  s->Configure();
   s->SetMode(mode);
   s->SetRunType(runtype);
   s->SetLumi(lumi);
+  s->Configure();
   return s;
 }

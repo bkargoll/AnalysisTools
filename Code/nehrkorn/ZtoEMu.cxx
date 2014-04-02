@@ -1,6 +1,7 @@
 #include "ZtoEMu.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
+#include <stdlib.h>
 #include "HistoConfig.h"
 #include <iostream>
 
@@ -12,6 +13,7 @@
 #include "TMath.h"
 
 #include <TFile.h>
+#include <sstream>
 // for JEC uncertainties
 //#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 //#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
@@ -36,55 +38,6 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
   ,csvt(0.898)
 {
     //verbose=true;
-	FRFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/FakeRates_2012_19ifb_rereco.root");
-	EmbEffFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/RecHitElectronEfficiencies.root");
-	ElectronFakeRate = (TH2D*)(FRFile->Get("ElectronFakeRateHist"));
-	MuonFakeRate = (TH2D*)(FRFile->Get("MuonFakeRateHist"));
-	EmbEff = (TH2D*)(EmbEffFile->Get("hPtEtaSFL"));
-
-	MuIdEffFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/MuonEfficiencies_Run2012ReReco_53X.root");
-	MuIsoEffFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/MuonEfficiencies_ISO_Run_2012ReReco_53X.root");
-	ETrigIdEffFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/ElectronEfficiencies_Run2012ReReco_53X_Trig.root");
-	ENonTrigIdEffFile = new TFile("/net/scratch_cms/institut_3b/nehrkorn/ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root");
-	TriggerEfficiencies = new TFile("/net/scratch_cms/institut_3b/nehrkorn/TriggerEfficienciesWW.root");
-	FakeRates = new TFile("/net/scratch_cms/institut_3b/nehrkorn/FakeRatesWW.root");
-
-	ElectronTrigEff = (TH2D*)(ETrigIdEffFile->Get("electronsDATAMCratio_FO_ID_ISO"));
-	ElectronNonTrigEff = (TH2D*)(ENonTrigIdEffFile->Get("h_electronScaleFactor_IdIsoSip"));
-	MuIdEff09 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta<0.9"));
-	MuIdEff12 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta0.9-1.2"));
-	MuIdEff21 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta1.2-2.1"));
-	MuIdEff24 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta2.1-2.4"));
-	MuIsoEff09 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta<0.9"));
-	MuIsoEff12 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta0.9-1.2"));
-	MuIsoEff21 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta1.2-2.1"));
-	MuIsoEff24 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta2.1-2.4"));
-
-	SingleEle15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleEle15"));
-	SingleEle25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleEle25"));
-	DoubleEleLead15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleLead15"));
-	DoubleEleLead25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleLead25"));
-	DoubleEleTrail15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleTrail15"));
-	DoubleEleTrail25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleTrail25"));
-	SingleMu08 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu08"));
-	SingleMu12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu12"));
-	SingleMu21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu21"));
-	SingleMu25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu25"));
-	DoubleMuLead12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead12"));
-	DoubleMuLead21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead21"));
-	DoubleMuLead25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead25"));
-	DoubleMuTrail12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail12"));
-	DoubleMuTrail21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail21"));
-	DoubleMuTrail25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail25"));
-
-	EleFake1 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake1"));
-	EleFake15 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake15"));
-	EleFake2 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake2"));
-	EleFake25 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake25"));
-	MuFake1 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake1"));
-	MuFake15 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake15"));
-	MuFake2 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake2"));
-	MuFake25 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake25"));
 
 	/*gRandom->SetSeed(1234);
 	eleres=0;
@@ -294,6 +247,66 @@ void  ZtoEMu::Configure(){
   	  Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_triLeptonVeto_",htitle,40,0,20,hlabel,"Events"));
   	}
     
+    // calling external files (e.g. root files for efficiencies)
+    TString base = "";
+	if(runtype==GRID){
+		base+=std::getenv("PWD");
+		base+="/Code/nehrkorn/";
+	}
+	else if(runtype==Local){
+		base+=Selection::splitString(std::getenv("PWD"),'/',"workdir");
+		base+="/Code/nehrkorn/";
+	}
+	FRFile = new TFile(base+"FakeRates_2012_19ifb_rereco.root");
+	EmbEffFile = new TFile(base+"RecHitElectronEfficiencies.root");
+	MuIdEffFile = new TFile(base+"MuonEfficiencies_Run2012ReReco_53X.root");
+	MuIsoEffFile = new TFile(base+"MuonEfficiencies_ISO_Run_2012ReReco_53X.root");
+	ETrigIdEffFile = new TFile(base+"ElectronEfficiencies_Run2012ReReco_53X_Trig.root");
+	ENonTrigIdEffFile = new TFile(base+"ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root");
+	TriggerEfficiencies = new TFile(base+"TriggerEfficienciesWW.root");
+	FakeRates = new TFile(base+"FakeRatesWW.root");
+
+	ElectronFakeRate = (TH2D*)(FRFile->Get("ElectronFakeRateHist"));
+	MuonFakeRate = (TH2D*)(FRFile->Get("MuonFakeRateHist"));
+	EmbEff = (TH2D*)(EmbEffFile->Get("hPtEtaSFL"));
+
+	ElectronTrigEff = (TH2D*)(ETrigIdEffFile->Get("electronsDATAMCratio_FO_ID_ISO"));
+	ElectronNonTrigEff = (TH2D*)(ENonTrigIdEffFile->Get("h_electronScaleFactor_IdIsoSip"));
+	MuIdEff09 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta<0.9"));
+	MuIdEff12 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta0.9-1.2"));
+	MuIdEff21 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta1.2-2.1"));
+	MuIdEff24 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta2.1-2.4"));
+	MuIsoEff09 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta<0.9"));
+	MuIsoEff12 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta0.9-1.2"));
+	MuIsoEff21 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta1.2-2.1"));
+	MuIsoEff24 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta2.1-2.4"));
+
+	SingleEle15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleEle15"));
+	SingleEle25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleEle25"));
+	DoubleEleLead15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleLead15"));
+	DoubleEleLead25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleLead25"));
+	DoubleEleTrail15 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleTrail15"));
+	DoubleEleTrail25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleEleTrail25"));
+	SingleMu08 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu08"));
+	SingleMu12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu12"));
+	SingleMu21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu21"));
+	SingleMu25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("SingleMu25"));
+	DoubleMuLead12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead12"));
+	DoubleMuLead21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead21"));
+	DoubleMuLead25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuLead25"));
+	DoubleMuTrail12 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail12"));
+	DoubleMuTrail21 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail21"));
+	DoubleMuTrail25 = (TGraphAsymmErrors*)(TriggerEfficiencies->Get("DoubleMuTrail25"));
+
+	EleFake1 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake1"));
+	EleFake15 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake15"));
+	EleFake2 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake2"));
+	EleFake25 = (TGraphAsymmErrors*)(FakeRates->Get("EleFake25"));
+	MuFake1 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake1"));
+	MuFake15 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake15"));
+	MuFake2 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake2"));
+	MuFake25 = (TGraphAsymmErrors*)(FakeRates->Get("MuFake25"));
+
     //-----------
   }
   // Setup NPassed Histogams
@@ -849,7 +862,7 @@ void  ZtoEMu::doEvent(){
   bool mutrackjet(false);
   std::vector<int> jetsfromvtx;
   
-  if(doOldJetVeto){
+  /*if(doOldJetVeto){
 	  // loop over all jets & only save the ones that do not overlap with the selected muon/electron
 	  std::vector<int> jetidx;
 	  if(eidx!=999 && muidx!=999){
@@ -923,6 +936,24 @@ void  ZtoEMu::doEvent(){
 			  jetsfromvtx.push_back(i);
 		  }
 	  }
+  }*/
+
+  if(verbose)std::cout << "Finding jets from vtx" << std::endl;
+  for(unsigned i=0;i<Ntp->NPFJets();i++){
+	  // clean jets against signal objects
+	  if(Ntp->PFJet_p4(i).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(i).Eta(),Ntp->RunNumber())<20) continue;
+	  if(fabs(Ntp->PFJet_p4(i).Eta())>jet_eta) continue;
+	  if(muidx!=999){
+		  mutrackjet = false;
+		  if(Ntp->PFJet_p4(i).DeltaR(Ntp->Muon_p4(muidx))<0.3) mutrackjet = true;
+	  }
+	  if(eidx!=999){
+		  etrackjet = false;
+		  if(Ntp->PFJet_p4(i).DeltaR(Ntp->Electron_p4(eidx))<0.3) etrackjet = true;
+	  }
+	  if(etrackjet || mutrackjet) continue;
+	  // find jets from vertex: use pileup jet id for jets with pt>20 GeV
+	  if(Ntp->PFJet_PUJetID_tightWP(i)>0.5) jetsfromvtx.push_back(i);
   }
 
   if(verbose)std::cout<< "Find two highest pt jets" << std::endl;
@@ -932,20 +963,18 @@ void  ZtoEMu::doEvent(){
 
   // loop over jets from selected vertex & find the two jets with the highest pt
   for(unsigned i=0;i<jetsfromvtx.size();i++){
-	  if(fabs(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta())>jet_eta) continue;
-	  if(Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()>initialpt){
-		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt();
+	  if(Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())>initialpt){
+		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber());
 		  firstjet_idx=jetsfromvtx.at(i);
 	  }
   }
   initialpt=0.;
   for(unsigned i=0;i<jetsfromvtx.size();i++){
-	  if(fabs(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta())>jet_eta) continue;
 	  if(jetsfromvtx.size()>1 && firstjet_idx!=-1
-			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()>initialpt
-			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()<Ntp->PFJet_p4(firstjet_idx).Pt()
+			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())>initialpt
+			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())<Ntp->PFJet_p4(firstjet_idx).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(firstjet_idx).Eta(),Ntp->RunNumber())
 			  ){
-		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt();
+		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber());
 		  secondjet_idx=jetsfromvtx.at(i);
 	  }
   }
@@ -1040,7 +1069,7 @@ void  ZtoEMu::doEvent(){
   if(verbose) std::cout << "do weights" << std::endl;
   double wobs(1),w(1);
   if(!Ntp->isData() && Ntp->GetMCID()!=34){
-    w*=Ntp->EvtWeight3D();
+    w*=Ntp->PUWeight();
     if(pass.at(NE)){
     	if(doHiggsObjects){
     		w*=ElectronIDeff(eidx,"Higgs")*ElectronTriggerEff(eidx);
@@ -1106,6 +1135,12 @@ void  ZtoEMu::doEvent(){
 	  chargesum.at(t).Fill(fabs(Ntp->Muon_Charge(muidx)+Ntp->Electron_Charge(eidx)),w);
 	  chargesumsigned.at(t).Fill(Ntp->Muon_Charge(muidx)+Ntp->Electron_Charge(eidx),w);
 	  ptbal.at(t).Fill((Ntp->Muon_p4(muidx)+Ntp->Electron_p4(eidx)).Pt(),w);
+
+	  std::cout << "+++" << std::endl;
+	  std::cout << jetsfromvtx.size() << std::endl;
+	  std::cout << firstjet_idx << std::endl;
+	  std::cout << secondjet_idx << std::endl;
+	  std::cout << "---" << std::endl;
 	  if(jetsfromvtx.size()==1){
 		  onejet.at(t).Fill(Ntp->PFJet_p4(firstjet_idx).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(firstjet_idx).Eta(),Ntp->RunNumber()),w);
 	  }
@@ -1174,8 +1209,8 @@ void  ZtoEMu::doEvent(){
 		  ){
 	  NPV.at(t).Fill(Ntp->NVtx(),w);
 	  if(!Ntp->isData()){
-		  num_interactions.at(t).Fill(Ntp->PileupInfo_NumInteractions_n0());
-		  evtweight.at(t).Fill(Ntp->EvtWeight3D());
+		  num_interactions.at(t).Fill(Ntp->PileupInfo_TrueNumInteractions_n0());
+		  evtweight.at(t).Fill(Ntp->PUWeight());
 	  }
 	  invmass_only_object_id.at(t).Fill((Ntp->Muon_p4(muidx)+Ntp->Electron_p4(eidx)).M(),w);
 	  if(pass.at(diMuonVeto)

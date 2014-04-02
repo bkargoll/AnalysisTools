@@ -71,7 +71,7 @@ ifdef USE_inugent
 endif
 
 ifdef USE_kargoll
-	TARGETS += HToTaumuTauh MuTauSync
+	TARGETS += HToTaumuTauh MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow
 	DEFS += -DUSE_kargoll=1
 endif 
 
