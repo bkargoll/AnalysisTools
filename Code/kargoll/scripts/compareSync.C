@@ -3,8 +3,8 @@
 #include "TString.h"
 
 void runSync(){
-	compareSync("MuTau_TauPlusX","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/TauPlusX2012A/workdirAnalysis_Feb_26_2014/","MuTauSyncTree_TauPlusX2012A","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_Data_mt_2012","TauCheck");
-	compareSync("MuTau_VBF","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/VBFHToTauTauM125/workdirAnalysis_Feb_26_2014","MuTauSyncTree_VBFHToTauTauM125","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
+	compareSync("MuTau_TauPlusX","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/TauPlusX2012A/workdirAnalysis_Apr_02_2014/","MuTauSyncTree_TauPlusX2012A_2014_Mar_20","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_Data_mt_2012","TauCheck");
+	compareSync("MuTau_VBF","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/VBFHToTauTauM125/workdirAnalysis_Apr_02_2014","MuTauSyncTree_VBFHToTauTauM125_2014_Mar_20","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
 	gROOT->ProcessLine(".q");
 }
 
@@ -73,8 +73,8 @@ void drawHistos(TCanvas * C, TString filename, TString category, TTree* Tmine, T
 //   line.DrawLine(HDiff->GetXaxis()->GetXmin(),0,HDiff->GetXaxis()->GetXmax(),0);
 
   ///Draw the ratio of the historgrams
-  TH1F*HDiff=(TH1F*)Hother->Clone("HDiff");
-  HDiff->Divide(Hmine);
+  TH1F*HDiff=(TH1F*)Hmine->Clone("HDiff");
+  HDiff->Divide(Hother);
   ///HDiff->GetYaxis()->SetRangeUser(0.9,1.1);
   HDiff->GetYaxis()->SetRangeUser(0.9,1.1);
   //HDiff->GetYaxis()->SetRangeUser(0.98,1.02);
@@ -83,14 +83,15 @@ void drawHistos(TCanvas * C, TString filename, TString category, TTree* Tmine, T
   HDiff->GetYaxis()->SetLabelSize(0.1);
   HDiff->GetYaxis()->SetTitleSize(0.1);
   HDiff->GetYaxis()->SetTitleOffset(0.5);
-  //HDiff->GetYaxis()->SetTitle(myGroup + " / " + group);
-  HDiff->GetYaxis()->SetTitle("Ratio");
-  HDiff->GetXaxis()->SetNdivisions(-1);
+  HDiff->GetYaxis()->SetTitle(myGroup + " / " + group);
+  //HDiff->GetYaxis()->SetTitle("Ratio");
+  //HDiff->GetXaxis()->SetNdivisions(-1);
   HDiff->GetXaxis()->SetTitle("");
   HDiff->GetXaxis()->SetLabelSize(0.0001);
   HDiff->SetMarkerStyle(kFullDotMedium);
   HDiff->SetMarkerColor(2);
   HDiff->Draw("histp");
+  //HDiff->Draw("PE0");
   TLine line;
   line.DrawLine(HDiff->GetXaxis()->GetXmin(),1,HDiff->GetXaxis()->GetXmax(),1);
 
