@@ -41,7 +41,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 
 	// Set it to "NoCategory" here.
 	// For each category, there should be a special class inheriting from HToTaumuTauh
-	categoryFlag = "VBFTight";
+	categoryFlag = "NoCategory";
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
@@ -744,7 +744,8 @@ void  HToTaumuTauh::doEvent(){
 
   NCatFired.at(t).Fill(nCat);
 
-
+  //if (!(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
+	//	  std::cout << "************* NO CATEGORY PASSED! ****************" << std::endl;
 
   bool status=AnalysisCuts(t,w,wobs); // true only if full selection passed
 
