@@ -15,8 +15,8 @@ else
     echo "Configuring Environment...."
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/CommonUtils/lib
     ## setup variables for make files
-    export ROOTSYS=/usr/lib/root-5.34.14/
-    ROOT="/usr/lib/root-5.34.14/"
+    export ROOTSYS=/usr/lib/root-5.34.17/
+    ROOT="/usr/lib/root-5.34.17/"
     if [ "${1}"  == "--useRoot" ]; then
 	export ROOTSYS=${2}
     fi

@@ -20,6 +20,7 @@ class ZtoEMu_QCD : public Selection {
 		 NMu,
 		 NE,
 		 ptthreshold,
+		 drEMu,
 		 diMuonVeto,
  		 triLeptonVeto,
  		 charge,
@@ -80,6 +81,7 @@ class ZtoEMu_QCD : public Selection {
   bool isMVATrigNoIPElectron(unsigned int i);
   bool isMVANonTrigElectron(unsigned int i, unsigned int j);
   bool isHiggsElectron(unsigned int i, unsigned int j);
+  bool isWWElectron(unsigned int i, unsigned int j);
   bool isTightElectron(unsigned int i);
   bool isTightElectron(unsigned int i, unsigned int j);
   bool isFakeElectron(unsigned int i);
@@ -95,6 +97,14 @@ class ZtoEMu_QCD : public Selection {
   double ElectronNonTrigIDeff(unsigned int i);
   double ElectronHiggsIDeff(unsigned int i);
 
+  double TriggerEff(unsigned int muid, unsigned int eid, TString path);
+  double SingleEle(unsigned int i);
+  double DoubleEleLeading(unsigned int i);
+  double DoubleEleTrailing(unsigned int i);
+  double SingleMu(unsigned int i);
+  double DoubleMuLeading(unsigned int i);
+  double DoubleMuTrailing(unsigned int i);
+
   double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
   double rundependentJetPtCorrection(double jeteta, int runnumber);
 
@@ -108,6 +118,7 @@ class ZtoEMu_QCD : public Selection {
   TFile* MuIsoEffFile;
   TFile* ETrigIdEffFile;
   TFile* ENonTrigIdEffFile;
+  TFile* TriggerEfficiencies;
 
   TH2D* ElectronTrigEff;
   TH2D* ElectronNonTrigEff;
@@ -119,6 +130,23 @@ class ZtoEMu_QCD : public Selection {
   TGraphAsymmErrors* MuIsoEff12;
   TGraphAsymmErrors* MuIsoEff21;
   TGraphAsymmErrors* MuIsoEff24;
+
+  TGraphAsymmErrors* SingleEle15;
+  TGraphAsymmErrors* SingleEle25;
+  TGraphAsymmErrors* DoubleEleLead15;
+  TGraphAsymmErrors* DoubleEleLead25;
+  TGraphAsymmErrors* DoubleEleTrail15;
+  TGraphAsymmErrors* DoubleEleTrail25;
+  TGraphAsymmErrors* SingleMu08;
+  TGraphAsymmErrors* SingleMu12;
+  TGraphAsymmErrors* SingleMu21;
+  TGraphAsymmErrors* SingleMu25;
+  TGraphAsymmErrors* DoubleMuLead12;
+  TGraphAsymmErrors* DoubleMuLead21;
+  TGraphAsymmErrors* DoubleMuLead25;
+  TGraphAsymmErrors* DoubleMuTrail12;
+  TGraphAsymmErrors* DoubleMuTrail21;
+  TGraphAsymmErrors* DoubleMuTrail25;
 
 };
 #endif

@@ -102,6 +102,8 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
 $InputFile=$ARGV[1];
 $buildRoot=0;
 $hasroot=0;
+$ubergridsite="grid-ftp.physik.rwth-aachen.de";
+$dcapgridsite="grid-dcap.physik.rwth-aachen.de";
 $gridsite="grid-srm.physik.rwth-aachen.de";
 for($l=2;$l<$numArgs; $l++){
     if($ARGV[$l] eq "--InputDir"){
@@ -164,7 +166,9 @@ for($l=2;$l<$numArgs; $l++){
     }
     if($ARGV[$l] eq  "--GRIDSite"){
 	$l++;
-	$gridsite=$ARGV[$l];;
+	$ubergridsite="grid-ftp."+$ARGV[$l];
+	$dcapgridsite="grid-dcap."+$ARGV[$l];
+	$gridsite="grid-srm."+$ARGV[$l];
     }
 }
 
@@ -585,7 +589,7 @@ if( $ARGV[0] eq "--DCache" ){
 		    if($c =~ m/root/){
                         $myfile=$c;
                     }
-		    system(sprintf("echo \"dccp  dcap://grid-dcap.physik.rwth-aachen.de/$DS/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+		    system(sprintf("echo \"dccp  dcap://grid-dcap-extern.physik.rwth-aachen.de/$DS/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 		    system(sprintf("echo \"File:  /user/scratch/$UserID/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
 		    system(sprintf("echo \"rm -rf /user/scratch/$UserID/$myfile  \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
 		    $A++;
@@ -656,6 +660,9 @@ if( $ARGV[0] eq "--GRID" ){
 
     # Setup file to retrieve jobs
     system(sprintf("cp $dir/CheckandGet.sh $OutputDir/workdir$set/"));
+    system(sprintf("cd $OutputDir/workdir$set/; $dir/subs USERNAME $UserIDCern CheckandGet.sh; cd $dir"));
+    system(sprintf("cd $OutputDir/workdir$set/; $dir/subs WORKDIR workdir$set CheckandGet.sh; cd $dir"));
+    system(sprintf("cp $dir/Purge_Jobs.sh $OutputDir/workdir$set/"));
     
     # generate compile script 
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/compile "));
@@ -687,20 +694,33 @@ if( $ARGV[0] eq "--GRID" ){
     # Start Submit script
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
-    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/Set*/*.log ]; then \n rm $OutputDir/workdir$set/Set*/*.o; rm $OutputDir/workdir$set/Set*/*.e; rm $OutputDir/workdir$set/Set*/*.log; rm $OutputDir/workdir$set/Set*/*.tar; \n fi  \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/Set*/out ]; then \n rm $OutputDir/workdir$set/Set*/out; rm $OutputDir/workdir$set/Set*/err; rm $OutputDir/workdir$set/Set*/*.tar; \n fi  \" >> $OutputDir/workdir$set/Submit"));
 
 
     system(sprintf("echo \"echo 'Creating tarballs and installing on the GRID... '\" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"if [ -f workdir$set.tar  ]; then \n rm workdir$set.tar \n fi \n tar -cf workdir$set.tar root Code;\" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep workdir$set.tar  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \n fi \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"srmcp  file:////$OutputDir/workdir$set/workdir$set.tar srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"echo 'Complete '\" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"rm   $OutputDir/workdir$set/jobs_submitted ; touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"rm   $OutputDir/workdir$set/jobs_complete ; touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"echo 'Setting jobs to use mode GRID instead of LOCAL' \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"./subs 'RunType: LOCAL' 'RunType: GRID' Set*/Input.txt  \" >> $OutputDir/workdir$set/Submit"));
- system(sprintf("echo \"hasdir=\\\$(srmls -recursion_depth=1 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ | grep /pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/  | wc -l) \n if [ \\\$hasdir == 0 ]; then \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/jobs_submitted ]; then \n rm $OutputDir/workdir$set/jobs_submitted \n fi \n touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/jobs_complete ]; then  \n rm $OutputDir/workdir$set/jobs_complete  \n fi \n touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \" touch jobs_log \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"echo 'Configuring storage on the GRID...' \" >> $OutputDir/workdir$set/Submit"));
+ system(sprintf("echo \"hasdir=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep /pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/  | wc -l) \n if [ \\\$hasdir == 0 ]; then \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"srmmkdir srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set \n fi \" >> $OutputDir/workdir$set/Submit"));
+	# get file list from dcache
+	system(sprintf("echo \"rm listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"touch listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"filecount=0 \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"readfiles=1 \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"while [ \\\$readfiles -gt \\\$filecount ] \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"do \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"  srmls -count=999 -offset=\\\$filecount -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ >& listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"  let filecount=filecount+999 \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"  readfiles=\\`cat listOfSrmlsFileNames | wc -l\\`; \" >> $OutputDir/workdir$set/Submit")) ;
+	system(sprintf("echo \"done \" >> $OutputDir/workdir$set/Submit")) ;
+
 
     $B=0;
     for($l=0;$l<2; $l++){
@@ -720,11 +740,11 @@ if( $ARGV[0] eq "--GRID" ){
 		# find the root files for the current DataSet (DS)
 		printf("Accessing Directory  $DS \n");
 		system(sprintf("touch junk"));
-		#system(sprintf("uberftp grid-ftp.physik.rwth-aachen.de \"cd $DS; ls */  \" | grep root >& junk "));
-		#system(sprintf("cat junk | awk '{print \$8}' >& junk1")); 
-		system(sprintf("srmls -recursion_depth=3  srm://$gridsite:8443$DS >& junk"));
-		system(sprintf("cat junk | grep root | awk '{print \$2}' >& junk1"));
-		
+
+		system(sprintf("touch junk"));
+                system(sprintf("uberftp $ubergridsite \"cd $DS; ls */  \" | grep root >& junk "));
+                system(sprintf("cat junk | awk '{print \$8}' >& junk1"));
+
 		# Get list of files in dcache dir
 		@files=(); 
 		open(DAT, "junk1");
@@ -734,26 +754,13 @@ if( $ARGV[0] eq "--GRID" ){
 		}
 		close(DAT);
 
-                @filessrm=();
-                open(DAT, "junk");
-                while ($item = <DAT>) {
-                    chomp($item);
-                    push(@filessrm,$item);
-                }
-                close(DAT);
-
 		system(sprintf("rm junk"));
 		system(sprintf("rm junk1"));
 		$nfiles = @files;
 		$idx=0;
-		$nfilessrm = @filessrm;
 		
 		
-		if($nfilessrm>999){
-		    printf("Error more then 999 files in Directory! SRM does not handel this correctly -> ABORTING!");
-		    exit(0);
-		}
-
+		
 		foreach $file (@files){
 		    $idx++;
 		    printf("$DS/$file Set= $B  Index=  $A   Max.= $max N Files = $nfiles Current File = $idx \n");
@@ -762,14 +769,13 @@ if( $ARGV[0] eq "--GRID" ){
 			$B++;
 
 
-			# Add Set information to Combining scripts and Input.txt
+       		# Add Set information to Combining scripts and Input.txt
 			system(sprintf("echo \"File: $OutputDir/workdir$set/Set_$B/ \" >>  $OutputDir/workdir$set/Input.txt ")) ;
 			system(sprintf("echo \"cd $OutputDir/workdir$set/  \" >> $OutputDir/workdir$set/Submit")) ;
 			system(sprintf("echo \"echo 'Submitting Set_$B/GRIDJob.jdl' \" >> $OutputDir/workdir$set/Submit "));
-			system(sprintf("echo \"isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ | grep SKIMMED_NTUP_$B.root  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
+			system(sprintf("echo \"isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_$B.root  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
 			system(sprintf("echo \"srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_$B.root \n fi \" >> $OutputDir/workdir$set/Submit "));
-			system(sprintf("echo \"glite-wms-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_$B/GRIDJob.jdl  |  grep -A 5 \\\"glite-wms-job-submit Success\\\" | grep https | awk '{print \\\$1 \\\" $OutputDir/workdir$set/Set_$B \\\" }' >>  $OutputDir/workdir$set/jobs_submitted \" >> $OutputDir/workdir$set/Submit")) ;
-
+			system(sprintf("echo \"glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_$B/GRIDJob.jdl  | tee junk ; cat junk >> jobs_log; cat junk |  grep https | awk '{print \\\$1 \\\" $OutputDir/workdir$set/Set_$B \\\" }' >>  $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit")) ;
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
@@ -797,13 +803,14 @@ if( $ARGV[0] eq "--GRID" ){
                         # Setup Set_$B-GRID.sh 
                         system(sprintf("echo \"echo 'Starting Job'; ls; echo \\\$PWD \" > $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo 'srmcp  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar file:////\$PWD/workdir$set.tar ; tar -xf workdir$set.tar; ' >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh  "));
+			system(sprintf("echo \"cp \\\$PWD/Inputgrid.txt \\\$PWD/Input.txt\" >>  $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh  "));
 			system(sprintf("echo \"cp -r \\\$PWD/Code/InputData/ \\\$PWD/InputData \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("chmod +x $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
-			system(sprintf("echo \"source \\\$PWD/Set_$B-getGRID.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+			#system(sprintf("echo \"source \\\$PWD/Set_$B-getGRID.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
                         system(sprintf("echo \"cd Code/; chmod +x  \\\$PWD/config  \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
                         system(sprintf("echo \"echo \\\$PWD | awk '{split(\\\$1,a,\\\"Code\\\"); print \\\"#! /bin/bash  \\n source \\\" \\\$1 \\\"/config --useRoot \\\" a[1] \\\"root/ \\\"}'  > \\\$PWD/junk; source \\\$PWD/junk; \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \" cd ../; echo \\\$PWD; ls  \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
-			system(sprintf("echo \"chmod +x \\\$PWD/subs; \\\$PWD/subs '/user/scratch/$UserID' \\\$PWD Input.txt \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+			#system(sprintf("echo \"chmod +x \\\$PWD/subs; \\\$PWD/subs '/user/scratch/$UserID' \\\$PWD Input.txt \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \"export LD_LIBRARY_PATH=\\\$LD_LIBRARY_PATH:\\\$ROOTSYS/lib/\" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \"echo 'System Configured.'; printenv; ls ; echo \\\$PWD ; \\\$PWD/Code/Analysis.exe \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			#
@@ -813,9 +820,13 @@ if( $ARGV[0] eq "--GRID" ){
 			system(sprintf("echo \"echo 'Completed Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
                         #
 			system(sprintf("echo \"#! /bin/bash \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
-			system(sprintf("echo \"isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ | grep SKIMMED_NTUP_$B.root  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+			system(sprintf("echo \"if [ -f $OutputDir/workdir$set/fileListOnGrid ]; then \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+			system(sprintf("echo \"isSkim=\\\$(cat $OutputDir/workdir$set/fileListOnGrid | grep SKIMMED_NTUP_$B.root  | wc -l) \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+			system(sprintf("echo \"else \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+    		system(sprintf("echo \"isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ | grep SKIMMED_NTUP_$B.root  | wc -l) \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+			system(sprintf("echo \"fi \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
+			system(sprintf("echo \"if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B; srmcp  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_$B.root  file:////\\\$PWD/SKIMMED_NTUP.root; cd $OutputDir/workdir$set/ \n fi \" >> $OutputDir/workdir$set/Set_$B/GRIDRetrieve.sh "));
-
 			
                         # Setup Set_$B_get.sh Set_$B-getGRID and Set_$B_clean.sh
 			system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
@@ -823,28 +834,35 @@ if( $ARGV[0] eq "--GRID" ){
 			system(sprintf("echo \"cd /user/scratch/$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh")); 
                         system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
                         system(sprintf("echo \"cd /user/scratch/$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
-                        system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-getGRID.sh"));
+                        #system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-getGRID.sh"));
 
 			# Setup Input.txt
 			system(sprintf("cp   $InputFile $OutputDir/workdir$set/Set_$B/Input.txt ")); 
 			system(sprintf("echo \"Mode: ANALYSIS\" >> $OutputDir/workdir$set/Set_$B/Input.txt")); 
 			system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Set_$B/Input.txt"));
-			
+			system(sprintf("cp   $InputFile $OutputDir/workdir$set/Set_$B/Inputgrid.txt "));
+                        system(sprintf("echo \"Mode: ANALYSIS\" >> $OutputDir/workdir$set/Set_$B/Inputgrid.txt"));
+                        system(sprintf("echo \"RunType: GRID\" >> $OutputDir/workdir$set/Set_$B/Inputgrid.txt"));
+
 			# Setup .jdl file
-			system(sprintf("echo '['  >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-                        system(sprintf("echo ' Executable    = \"Set_$B-GRID.sh\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' Arguments     = \"42\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' StdOutput     = \"out\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' StdError      = \"err\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' InputSandbox  = {\"Set_$B/Set_$B-GRID.sh\",\"Set_$B/Set_$B-getGRID.sh\",\"subs\",\"Set_$B/Input.txt\"}; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' OutputSandbox = {\"out\",\"err\",\"*_ANALYSIS_*.root\"}; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' Requirements  = \"\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' Rank          = -other.GlueCEStateEstimatedResponseTime; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ' Retry         = 1; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
-			system(sprintf("echo ']' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+                        system(sprintf("echo '['  >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'JobType = \"Normal\";'  >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+                        system(sprintf("echo 'Executable    = \"Set_$B-GRID.sh\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'Arguments     = \" \"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'StdOutput     = \"out\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'StdError      = \"err\"; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'InputSandbox  = {\"Set_$B/Set_$B-GRID.sh\",\"subs\",\"Set_$B/Inputgrid.txt\"}; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'OutputSandbox = {\"out\",\"err\",\"*_ANALYSIS_*.root\"}; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'Requirements  = (RegExp(\"rwth-aachen.de\", other.GlueCEUniqueId)) && (RegExp(\"cream\", other.GlueCEUniqueId)); ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			system(sprintf("echo 'OutputSandboxBaseDestUri=\"gsiftp://localhost\" '  >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl"));
+			#system(sprintf("echo ' Retry         = 0; ' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl")); 
+			system(sprintf("echo ']' >> $OutputDir/workdir$set/Set_$B/GRIDJob.jdl")); 
 			
 		    }
 		    ($x,$y)=split($DS,$file);
+		    if($x =~ m/root/){
+			$y=$x;
+		    }
 		    ($a,$b,$c,$d,$e)=split('/',$y);
 		    $file=$y;
 		    if($a =~ m/root/){
@@ -864,9 +882,9 @@ if( $ARGV[0] eq "--GRID" ){
                         $myfile=$e;
                     }
 
-		    system(sprintf("echo \"dccp  dcap://grid-dcap.physik.rwth-aachen.de/$DS$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-		    system(sprintf("echo 'srmcp  srm://$gridsite:8443/$DS$file file:////\$PWD/$myfile '  >> $OutputDir/workdir$set/Set_$B/Set_$B-getGRID.sh"));
+		    system(sprintf("echo \"dccp  dcap://grid-dcap-extern.physik.rwth-aachen.de/$DS/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 		    system(sprintf("echo \"File:  /user/scratch/$UserID/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
+		    system(sprintf("echo \"File:  dcap://$dcapgridsite/$DS/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Inputgrid.txt")) ;
 		    $A++;
 		}
 	    }
@@ -890,6 +908,11 @@ if( $ARGV[0] eq "--GRID" ){
     
     # Finish Submit script
     system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"rm  listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"echo 'number of jobs submitted:'\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"cat jobs_submitted | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"echo 'total number of sets in this directory:'\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"ls -l | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"rm -rf /user/scratch/$UserID/$myfile  \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
 
     # print Instructions

@@ -19,6 +19,7 @@ class HistoConfig {
 
 
   std::vector<TH1D> GetTH1D(TString name,TString title, int nbins, double min, double max, TString xaxis="",TString yaxis="Events");
+  std::vector<TH1D> GetTH1D(TString name,TString title, int nbins, double* xbins, TString xaxis="",TString yaxis="Events");
   std::vector<TH2D> GetTH2D(TString name,TString title, int nbinsx, double minx, double maxx, 
 			    int nbinsy,double miny, double maxy, TString xaxis="", TString yaxis="");
 

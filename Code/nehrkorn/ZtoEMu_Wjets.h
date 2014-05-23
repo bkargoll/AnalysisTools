@@ -20,6 +20,7 @@ class ZtoEMu_Wjets : public Selection {
 		 NMu,
 		 NE,
 		 ptthreshold,
+		 drEMu,
 		 diMuonVeto,
  		 triLeptonVeto,
  		 charge,

@@ -150,6 +150,18 @@ std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, do
   return histos;
 }
 
+std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, double* xbins, TString xaxis,TString yaxis){
+  std::vector<TH1D> histos;
+  std::cout << "Adding TH1D " << name << " " << title << std::endl;
+  for(int i=0;i<HistoName.size();i++){
+    histos.push_back(TH1D(name+HistoName.at(i),HistoLegend.at(i),nbins,xbins));
+    histos.at(i).Sumw2();
+    histos.at(i).SetXTitle(xaxis);
+    histos.at(i).SetYTitle(yaxis);
+  }
+  return histos;
+}
+
 std::vector<TH2D> HistoConfig::GetTH2D(TString name,TString title,int nbinsx, double minx, double maxx, 
 				       int nbinsy, double miny, double maxy, TString xaxis, TString yaxis){
   std::vector<TH2D> histos;

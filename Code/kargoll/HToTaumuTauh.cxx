@@ -368,6 +368,30 @@ void  HToTaumuTauh::Configure(){
   JetsInEtaGap = HConfig.GetTH1D(Name+"_JetsInEtaGap","JetsInEtaGap",6,-0.5,5.5,"N(j in #eta gap)");
   JetsInvM = HConfig.GetTH1D(Name+"_JetsInvM","JetsInvM",100,0.,2000.,"m_{inv}(j^{1},j^{2})");
 
+  Cat0JetLowMt = HConfig.GetTH1D(Name+"_Cat0JetLowMt","Cat0JetLowMt",125,0.,250.,"0JL: m_{T}/GeV");
+  Cat0JetLowMtSideband = HConfig.GetTH1D(Name+"_Cat0JetLowMtSideband","Cat0JetLowMtSideband",90,70.,250.,"0JL: m_{T}/GeV");
+  Cat0JetLowMtExtrapolation = HConfig.GetTH1D(Name+"_Cat0JetLowMtExtrapolation","Cat0JetLowMtExtrapolation",2,0.5,2.5,"0JL: m_{T} signal and sideband");
+  Cat0JetHighMt = HConfig.GetTH1D(Name+"_Cat0JetHighMt","Cat0JetHighMt",125,0.,250.,"0JH: m_{T}/GeV");
+  Cat0JetHighMtSideband = HConfig.GetTH1D(Name+"_Cat0JetHighMtSideband","Cat0JetHighMtSideband",90,70.,250.,"0JH: m_{T}/GeV");
+  Cat0JetHighMtExtrapolation = HConfig.GetTH1D(Name+"_Cat0JetHighMtExtrapolation","Cat0JetHighMtExtrapolation",2,0.5,2.5,"0JH: m_{T} signal and sideband");
+  Cat1JetLowMt = HConfig.GetTH1D(Name+"_Cat1JetLowMt","Cat1JetLowMt",125,0.,250.,"1JL: m_{T}/GeV");
+  Cat1JetLowMtSideband = HConfig.GetTH1D(Name+"_Cat1JetLowMtSideband","Cat1JetLowMtSideband",90,70.,250.,"1JL: m_{T}/GeV");
+  Cat1JetLowMtExtrapolation = HConfig.GetTH1D(Name+"_Cat1JetLowMtExtrapolation","Cat1JetLowMtExtrapolation",2,0.5,2.5,"1JL: m_{T} signal and sideband");
+  Cat1JetHighMt = HConfig.GetTH1D(Name+"_Cat1JetHighMt","Cat1JetHighMt",125,0.,250.,"1JH: m_{T}/GeV");
+  Cat1JetHighMtSideband = HConfig.GetTH1D(Name+"_Cat1JetHighMtSideband","Cat1JetHighMtSideband",90,70.,250.,"1JH: m_{T}/GeV");
+  Cat1JetHighMtExtrapolation = HConfig.GetTH1D(Name+"_Cat1JetHighMtExtrapolation","Cat1JetHighMtExtrapolation",2,0.5,2.5,"1JH: m_{T} signal and sideband");
+  Cat1JetBoostMt = HConfig.GetTH1D(Name+"_Cat1JetBoostMt","Cat1JetBoostMt",125,0.,250.,"1JB: m_{T}/GeV");
+  Cat1JetBoostMtSideband = HConfig.GetTH1D(Name+"_Cat1JetBoostMtSideband","Cat1JetBoostMtSideband",90,70.,250.,"1JB: m_{T}/GeV");
+  Cat1JetBoostMtExtrapolation = HConfig.GetTH1D(Name+"_Cat1JetBoostMtExtrapolation","Cat1JetBoostMtExtrapolation",2,0.5,2.5,"1JB: m_{T} signal and sideband");
+  CatVBFLooseMt = HConfig.GetTH1D(Name+"_CatVBFLooseMt","CatVBFLooseMt",125,0.,250.,"VBFL: m_{T}/GeV");
+  CatVBFLooseMtSideband = HConfig.GetTH1D(Name+"_CatVBFLooseMtSideband","CatVBFLooseMtSideband",30,60.,120.,"VBFL: m_{T}/GeV");
+  CatVBFLooseRelaxMt = HConfig.GetTH1D(Name+"_CatVBFLooseRelaxMt","CatVBFLooseRelaxMt",125,0.,250.,"VBFLRelax: m_{T}/GeV");
+  CatVBFLooseRelaxMtExtrapolation = HConfig.GetTH1D(Name+"_CatVBFLooseRelaxMtExtrapolation","CatVBFLooseRelaxMtExtrapolation",2,0.5,2.5,"VBFLRelax: m_{T} signal and sideband");
+  CatVBFTightMt = HConfig.GetTH1D(Name+"_CatVBFTightMt","CatVBFTightMt",125,0.,250.,"VBFT: m_{T}/GeV");
+  CatVBFTightMtSideband = HConfig.GetTH1D(Name+"_CatVBFTightMtSideband","CatVBFTightMtSideband",30,60.,120.,"VBFT: m_{T}/GeV");
+  CatVBFTightRelaxMt = HConfig.GetTH1D(Name+"_CatVBFTightRelaxMt","CatVBFTightRelaxMt",125,0.,250.,"VBFTRelax: m_{T}/GeV");
+  CatVBFTightRelaxMtExtrapolation = HConfig.GetTH1D(Name+"_CatVBFTightRelaxMtExtrapolation","CatVBFTightRelaxMtExtrapolation",2,0.5,2.5,"VBFTRelax: m_{T} signal and sideband");
+
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
   else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
@@ -470,6 +494,30 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&JetsDEta);
  Extradist1d.push_back(&JetsInEtaGap);
  Extradist1d.push_back(&JetsInvM);
+
+ Extradist1d.push_back(&Cat0JetLowMt);
+ Extradist1d.push_back(&Cat0JetLowMtSideband);
+ Extradist1d.push_back(&Cat0JetLowMtExtrapolation);
+ Extradist1d.push_back(&Cat0JetHighMt);
+ Extradist1d.push_back(&Cat0JetHighMtSideband);
+ Extradist1d.push_back(&Cat0JetHighMtExtrapolation);
+ Extradist1d.push_back(&Cat1JetLowMt);
+ Extradist1d.push_back(&Cat1JetLowMtSideband);
+ Extradist1d.push_back(&Cat1JetLowMtExtrapolation);
+ Extradist1d.push_back(&Cat1JetHighMt);
+ Extradist1d.push_back(&Cat1JetHighMtSideband);
+ Extradist1d.push_back(&Cat1JetHighMtExtrapolation);
+ Extradist1d.push_back(&Cat1JetBoostMt);
+ Extradist1d.push_back(&Cat1JetBoostMtSideband);
+ Extradist1d.push_back(&Cat1JetBoostMtExtrapolation);
+ Extradist1d.push_back(&CatVBFLooseMt);
+ Extradist1d.push_back(&CatVBFLooseMtSideband);
+ Extradist1d.push_back(&CatVBFLooseRelaxMt);
+ Extradist1d.push_back(&CatVBFLooseRelaxMtExtrapolation);
+ Extradist1d.push_back(&CatVBFTightMt);
+ Extradist1d.push_back(&CatVBFTightMtSideband);
+ Extradist1d.push_back(&CatVBFTightRelaxMt);
+ Extradist1d.push_back(&CatVBFTightRelaxMtExtrapolation);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -744,6 +792,10 @@ void  HToTaumuTauh::doEvent(){
 
   NCatFired.at(t).Fill(nCat);
 
+  // run relaxed categories for background methods
+  bool passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed(nJets, selJetdeta, selNjetingap, selMjj);
+  bool passed_VBFTightRelaxed = helperCategory_VBFTightRelaxed(passed_VBFLooseRelaxed, higgsPt);
+
   //if (!(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
 	//	  std::cout << "************* NO CATEGORY PASSED! ****************" << std::endl;
 
@@ -911,11 +963,140 @@ void  HToTaumuTauh::doEvent(){
     NVtxFullSelection.at(t).Fill(Ntp->NVtx(),w);
     //std::cout << "ID after = " << id << std::endl;
   }
+
+  //////// category specific plots, especially for background methods
+  bool fullSelNoMt = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge);
+  bool fullSelNoMtNoOS = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto);
+  bool isWJetMC = (Ntp->GetMCID() >= 20) && (Ntp->GetMCID() <= 23);
+  // 0-Jet Low
+  if(fullSelNoMt && passed_ZeroJetLow){
+	  Cat0JetLowMt.at(t).Fill(value.at(MT), w);
+	  Cat0JetLowMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  Cat0JetLowMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 70.)
+			  Cat0JetLowMtExtrapolation.at(t).Fill(2, w);
+	  }
+  }
+  // 0-Jet High
+  if(fullSelNoMt && passed_ZeroJetHigh){
+	  Cat0JetHighMt.at(t).Fill(value.at(MT), w);
+	  Cat0JetHighMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  Cat0JetHighMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 70.)
+			  Cat0JetHighMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
+  // 1-Jet Low
+  if(fullSelNoMt && passed_OneJetLow){
+	  Cat1JetLowMt.at(t).Fill(value.at(MT), w);
+	  Cat1JetLowMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  Cat1JetLowMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 70.)
+			  Cat1JetLowMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
+  // 1-Jet High
+  if(fullSelNoMt && passed_OneJetHigh){
+	  Cat1JetHighMt.at(t).Fill(value.at(MT), w);
+	  Cat1JetHighMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  Cat1JetHighMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 70.)
+			  Cat1JetHighMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
+  // 1-Jet Boost
+  if(fullSelNoMt && passed_OneJetBoost){
+	  Cat1JetBoostMt.at(t).Fill(value.at(MT), w);
+	  Cat1JetBoostMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  Cat1JetBoostMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 70.)
+			  Cat1JetBoostMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
+  // VBF Loose
+  if(fullSelNoMt && passed_VBFLoose){
+	  CatVBFLooseMt.at(t).Fill(value.at(MT), w);
+	  CatVBFLooseMtSideband.at(t).Fill(value.at(MT), w);
+  }
+  if(fullSelNoMtNoOS && passed_VBFLooseRelaxed){
+	  CatVBFLooseRelaxMt.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 60. && value.at(MT) < 120.)
+			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
+  // VBF Tight
+  if(fullSelNoMt && passed_VBFTight){
+	  CatVBFTightMt.at(t).Fill(value.at(MT), w);
+	  CatVBFTightMtSideband.at(t).Fill(value.at(MT), w);
+  }
+  if(fullSelNoMtNoOS && passed_VBFTightRelaxed){
+	  CatVBFTightRelaxMt.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(1); // fill w/o weight
+		  if(value.at(MT) > 60. && value.at(MT) < 120.)
+			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(2); // fill w/o weight
+	  }
+  }
 }
 
 
 void  HToTaumuTauh::Finish(){
-  Selection::Finish();
+	// calculate W+Jet yield for categories
+	unsigned histo;
+	double sig0JL, side0JL, sig0JH, side0JH, sig1JL, side1JL, sig1JH, side1JH, sig1JB, side1JB, sigVBFL, sideVBFL, sigVBFT, sideVBFT;
+	for (unsigned id = 20; id < 24; id++){
+		if (HConfig.GetHisto(false,id,histo)){
+			sig0JL += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(1);
+			side0JL += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(2);
+
+			sig0JH += Cat0JetHighMtExtrapolation.at(histo).GetBinContent(1);
+			side0JH+= Cat0JetHighMtExtrapolation.at(histo).GetBinContent(2);
+
+			sig1JL += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(1);
+			side1JL += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(2);
+
+			sig1JH += Cat1JetHighMtExtrapolation.at(histo).GetBinContent(1);
+			side1JH += Cat1JetHighMtExtrapolation.at(histo).GetBinContent(2);
+
+			sig1JB += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(1);
+			side1JB += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(2);
+
+			sigVBFL += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(1);
+			sideVBFL += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(2);
+
+			sigVBFT += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(1);
+			sideVBFT += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(2);
+		}
+	}
+	std::cout << "  ##########################################################" << std::endl;
+	std::cout << "  ############# W+Jets MC extrapolation factor #############" << std::endl;
+	printf("%12s : %13s | %13s || %12s \n","Category","Signal Region", "Sideband", "Extr. factor");
+	const char* format = "%12s : %12.1f | %12.1f || %12f \n";
+	printf(format,"0-Jet Low", sig0JL, side0JL, sig0JL/side0JL);
+	printf(format,"0-Jet High", sig0JH, side0JH, sig0JH/side0JH);
+	printf(format,"1-Jet Low", sig1JL, side1JL, sig1JL/side1JL);
+	printf(format,"1-Jet High", sig1JH, side1JH, sig1JH/side1JH);
+	printf(format,"1-Jet Boost", sig1JB, side1JB, sig1JB/side1JB);
+	printf(format,"VBF Loose", sigVBFL, sideVBFL, sigVBFL/sideVBFL);
+	printf(format,"VBF Tight", sigVBFT, sideVBFT, sigVBFT/sideVBFT);
+	std::cout << "  ##########################################################" << std::endl;
+	std::cout << "  ##########################################################" << std::endl;
+
+	Selection::Finish();
 }
 
 
@@ -1150,6 +1331,7 @@ bool HToTaumuTauh::selectBJet(unsigned i, int selectedMuon, int selectedTau){
 //// *****functions defining the categories*****
 
 void HToTaumuTauh::configure_VBFTight(){
+	//todo: move to category classes
 	// to be called only if VBFTight is chosen category
 
 	// set cut values to be the cut values of this category
@@ -1793,4 +1975,21 @@ bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<flo
 	}
 
 	return catPassed;
+}
+
+// helper category definitions for background methods
+bool HToTaumuTauh::helperCategory_VBFLooseRelaxed(unsigned NJets, double DEta, int NJetsInGap, double Mjj){
+	bool passNJets = ( NJets >=  cut_VBFLoose.at(VbfLoose_NJet) );
+	if (!passNJets) return false;
+
+	bool passDEta = ( fabs(DEta) > 2.0 );
+	bool passCJV = ( NJetsInGap <= cut_VBFLoose.at(VbfLoose_NJetRapGap));
+	bool passMjj = ( Mjj > 200.0 );
+
+	return passDEta && passCJV && passMjj;
+}
+bool HToTaumuTauh::helperCategory_VBFTightRelaxed(bool passVBFLooseRelaxed, double higgsPt){
+	if (!passVBFLooseRelaxed) return false;
+
+	return ( higgsPt > cut_VBFTight.at(VbfTight_HiggsPt));
 }

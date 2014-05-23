@@ -183,11 +183,35 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> BJet1Eta;
   std::vector<TH1D> BJet1Phi;
 
-  std::vector<TH1D> HiggsPt; // todo
+  std::vector<TH1D> HiggsPt;
   std::vector<TH1D> HiggsPhi;
   std::vector<TH1D> JetsDEta;
   std::vector<TH1D> JetsInEtaGap;
   std::vector<TH1D> JetsInvM;
+
+  std::vector<TH1D> Cat0JetLowMt;
+  std::vector<TH1D> Cat0JetLowMtSideband;
+  std::vector<TH1D> Cat0JetLowMtExtrapolation;
+  std::vector<TH1D> Cat0JetHighMt;
+  std::vector<TH1D> Cat0JetHighMtSideband;
+  std::vector<TH1D> Cat0JetHighMtExtrapolation;
+  std::vector<TH1D> Cat1JetLowMt;
+  std::vector<TH1D> Cat1JetLowMtSideband;
+  std::vector<TH1D> Cat1JetLowMtExtrapolation;
+  std::vector<TH1D> Cat1JetHighMt;
+  std::vector<TH1D> Cat1JetHighMtSideband;
+  std::vector<TH1D> Cat1JetHighMtExtrapolation;
+  std::vector<TH1D> Cat1JetBoostMt;
+  std::vector<TH1D> Cat1JetBoostMtSideband;
+  std::vector<TH1D> Cat1JetBoostMtExtrapolation;
+  std::vector<TH1D> CatVBFLooseMt;
+  std::vector<TH1D> CatVBFLooseMtSideband;
+  std::vector<TH1D> CatVBFLooseRelaxMt;
+  std::vector<TH1D> CatVBFLooseRelaxMtExtrapolation;
+  std::vector<TH1D> CatVBFTightMt;
+  std::vector<TH1D> CatVBFTightMtSideband;
+  std::vector<TH1D> CatVBFTightRelaxMt;
+  std::vector<TH1D> CatVBFTightRelaxMtExtrapolation;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
@@ -268,6 +292,9 @@ class HToTaumuTauh : public Selection {
 
   void configure_NoCategory();
   bool category_NoCategory();
+
+  bool helperCategory_VBFLooseRelaxed(unsigned NJets, double DEta, int NJetsInGap, double Mjj);
+  bool helperCategory_VBFTightRelaxed(bool passVBFLooseRelaxed, double higgsPt);
 
  private:
   // everything is in protected to be accessible by derived classes

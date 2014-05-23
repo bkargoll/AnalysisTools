@@ -1,6 +1,7 @@
 #include "ZtoEMu_Wjets.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
+#include <stdlib.h>
 #include "HistoConfig.h"
 #include <iostream>
 
@@ -12,6 +13,10 @@
 #include "TMath.h"
 
 #include <TFile.h>
+#include <sstream>
+// for JEC uncertainties
+//#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+//#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
 ZtoEMu_Wjets::ZtoEMu_Wjets(TString Name_, TString id_):
   Selection(Name_,id_)
@@ -53,6 +58,7 @@ void  ZtoEMu_Wjets::Configure(){
     if(i==NMu)                cut.at(NMu)=1;
     if(i==NE)                 cut.at(NE)=1;
     if(i==ptthreshold)        cut.at(ptthreshold)=1;
+    if(i==drEMu)              cut.at(drEMu)=0.3;
     if(i==diMuonVeto)         cut.at(diMuonVeto)=0;
     if(i==triLeptonVeto)      cut.at(triLeptonVeto)=0;
     if(i==charge)             cut.at(charge)=0;
@@ -116,6 +122,18 @@ void  ZtoEMu_Wjets::Configure(){
         hlabel="ptthreshold ";
         Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ptthreshold_",htitle,17,-0.5,16.5,hlabel,"Events"));
         Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ptthreshold_",htitle,17,-0.5,16.5,hlabel,"Events"));
+    }
+    else if(i==drEMu){
+      title.at(i)="$\\Delta R(e,\\mu) < $";
+      char buffer[50];
+      sprintf(buffer,"%5.2f",cut.at(drEMu));
+      title.at(i)+=buffer;
+      htitle=title.at(i);
+      htitle.ReplaceAll("$","");
+      htitle.ReplaceAll("\\","#");
+      hlabel="dR(e,mu)";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_drEMu_",htitle,50,0,5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_drEMu_",htitle,50,0,5,hlabel,"Events"));
     }
     else if(i==diMuonVeto){
   	  title.at(i)="di-muon veto";
@@ -181,10 +199,12 @@ void  ZtoEMu_Wjets::Configure(){
     // calling external files (e.g. root files for efficiencies)
     TString base = "";
 	if(runtype==GRID){
-		base = std::getenv("PWD");
+		base+=std::getenv("PWD");
 		base+="/Code/nehrkorn/";
 	}
 	else if(runtype==Local){
+		//base+=Selection::splitString(std::getenv("PWD"),'/',"workdir");
+		//base+="/Code/nehrkorn/";
 		base+="/net/scratch_cms/institut_3b/nehrkorn/";
 	}
 	FRFile = new TFile(base+"FakeRates_2012_19ifb_rereco.root");
@@ -240,10 +260,10 @@ void  ZtoEMu_Wjets::Configure(){
   wb=HConfig.GetTH1D(Name+"_wb","wb",2,0.,2.,"number of entries");
   wc=HConfig.GetTH1D(Name+"_wc","wc",2,0.,2.,"number of entries");
   wd=HConfig.GetTH1D(Name+"_wd","wd",2,0.,2.,"number of entries");
-  wjets_control_a=HConfig.GetTH1D(Name+"_wjets_control_a","wjets_control_a",30,50.,140.,"m_{e,#mu} / GeV");
-  wjets_control_b=HConfig.GetTH1D(Name+"_wjets_control_b","wjets_control_b",30,50.,140.,"m_{e,#mu} / GeV");
-  wjets_control_c=HConfig.GetTH1D(Name+"_wjets_control_c","wjets_control_c",30,50.,140.,"m_{e,#mu} / GeV");
-  wjets_control_d=HConfig.GetTH1D(Name+"_wjets_control_d","wjets_control_d",30,50.,140.,"m_{e,#mu} / GeV");
+  wjets_control_a=HConfig.GetTH1D(Name+"_wjets_control_a","wjets_control_a",20,60.,120.,"m_{e,#mu} / GeV");
+  wjets_control_b=HConfig.GetTH1D(Name+"_wjets_control_b","wjets_control_b",20,60.,120.,"m_{e,#mu} / GeV");
+  wjets_control_c=HConfig.GetTH1D(Name+"_wjets_control_c","wjets_control_c",20,60.,120.,"m_{e,#mu} / GeV");
+  wjets_control_d=HConfig.GetTH1D(Name+"_wjets_control_d","wjets_control_d",20,60.,120.,"m_{e,#mu} / GeV");
   wjets=HConfig.GetTH2D(Name+"_wjets","wjets",2,1,2,2,1,2,"mt<50 GeV | 50<mt<120 GeV","os charge | ss charge");
   Selection::ConfigureHistograms();
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);
@@ -325,7 +345,11 @@ void  ZtoEMu_Wjets::doEvent(){
 			  && (matchTrigger(i,0.2,"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon") || matchTrigger(i,0.2,"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon"))
 			  && vertex>=0
 			  ){
-		  if(isTightMuon(i,vertex) && Muon_RelIso(i)<0.12) GoodMuons.push_back(i);
+		  if((Ntp->GetMCID()==31 || Ntp->GetMCID()==32) && !matchTruth(Ntp->Muon_p4(i),13,0.2)) continue;
+		  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Muon_p4(i),13,0.2) && !matchTruth(Ntp->Muon_p4(i),15,0.2)) continue;
+		  if(isTightMuon(i,vertex) && Muon_RelIso(i)<0.12){
+			  GoodMuons.push_back(i);
+		  }
 	  }
   }
 
@@ -377,6 +401,9 @@ void  ZtoEMu_Wjets::doEvent(){
 		  }
 		  if(matchRecoMuon) continue;
 		  //if(isMVATrigElectron(i) && Electron_RelIso(i)<0.15) GoodElectrons.push_back(i);
+		  if(Ntp->GetMCID()==31 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2)) continue;
+		  if(Ntp->GetMCID()==32 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2) && !matchTruth(Ntp->Electron_p4(i),13,0.2)) continue;
+		  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),13,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2) && !matchTruth(Ntp->Electron_p4(i),15,0.2)) continue;
 		  if(isWWElectron(i,vertex) && Electron_RelIso(i)<0.15) GoodElectrons.push_back(i);
 	  }
   }
@@ -418,6 +445,17 @@ void  ZtoEMu_Wjets::doEvent(){
 
   ///////////////////////////////////////////////
   //
+  // dR(e,mu)
+  //
+  if(verbose) std::cout << "dR(e,mu)" << std::endl;
+  value.at(drEMu)=0;
+  if(muidx!=999 && eidx!=999){
+	  value.at(drEMu)=Ntp->Muon_p4(muidx).DeltaR(Ntp->Electron_p4(eidx));
+  }
+  pass.at(drEMu)=(value.at(drEMu)>cut.at(drEMu));
+
+  ///////////////////////////////////////////////
+  //
   // Di Muon Veto
   //
   if(verbose)std::cout << "dimuon veto" << std::endl;
@@ -453,7 +491,7 @@ void  ZtoEMu_Wjets::doEvent(){
 	  for(unsigned i=0;i<Ntp->NElectrons();i++){
 		  if(i==eidx) continue;
 		  if(vertex<0) continue;
-		  if(Ntp->Electron_p4(i).Pt()<10) continue;
+		  if(Ntp->Electron_p4(i).Et()<10) continue;
 		  if(fabs(Ntp->Electron_supercluster_eta(i))>2.5) continue;
 		  //if(!isMVATrigElectron(i)) continue;
 		  if(!isWWElectron(i,vertex)) continue;
@@ -484,8 +522,8 @@ void  ZtoEMu_Wjets::doEvent(){
   bool etrackjet(false);
   bool mutrackjet(false);
   std::vector<int> jetsfromvtx;
-
-  if(doOldJetVeto){
+  
+  /*if(doOldJetVeto){
 	  // loop over all jets & only save the ones that do not overlap with the selected muon/electron
 	  std::vector<int> jetidx;
 	  if(eidx!=999 && muidx!=999){
@@ -559,6 +597,24 @@ void  ZtoEMu_Wjets::doEvent(){
 			  jetsfromvtx.push_back(i);
 		  }
 	  }
+  }*/
+
+  if(verbose)std::cout << "Finding jets from vtx" << std::endl;
+  for(unsigned i=0;i<Ntp->NPFJets();i++){
+	  // clean jets against signal objects
+	  if(Ntp->PFJet_p4(i).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(i).Eta(),Ntp->RunNumber())<20) continue;
+	  if(fabs(Ntp->PFJet_p4(i).Eta())>jet_eta) continue;
+	  if(muidx!=999){
+		  mutrackjet = false;
+		  if(Ntp->PFJet_p4(i).DeltaR(Ntp->Muon_p4(muidx))<0.3) mutrackjet = true;
+	  }
+	  if(eidx!=999){
+		  etrackjet = false;
+		  if(Ntp->PFJet_p4(i).DeltaR(Ntp->Electron_p4(eidx))<0.3) etrackjet = true;
+	  }
+	  if(etrackjet || mutrackjet) continue;
+	  // find jets from vertex: use pileup jet id for jets with pt>20 GeV
+	  if(Ntp->PFJet_PUJetID_tightWP(i)>0.5) jetsfromvtx.push_back(i);
   }
 
   if(verbose)std::cout<< "Find two highest pt jets" << std::endl;
@@ -568,20 +624,18 @@ void  ZtoEMu_Wjets::doEvent(){
 
   // loop over jets from selected vertex & find the two jets with the highest pt
   for(unsigned i=0;i<jetsfromvtx.size();i++){
-	  if(fabs(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta())>jet_eta) continue;
-	  if(Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()>initialpt){
-		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt();
+	  if(Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())>initialpt){
+		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber());
 		  firstjet_idx=jetsfromvtx.at(i);
 	  }
   }
   initialpt=0.;
   for(unsigned i=0;i<jetsfromvtx.size();i++){
-	  if(fabs(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta())>jet_eta) continue;
 	  if(jetsfromvtx.size()>1 && firstjet_idx!=-1
-			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()>initialpt
-			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()<Ntp->PFJet_p4(firstjet_idx).Pt()
+			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())>initialpt
+			  && Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber())<Ntp->PFJet_p4(firstjet_idx).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(firstjet_idx).Eta(),Ntp->RunNumber())
 			  ){
-		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt();
+		  initialpt=Ntp->PFJet_p4(jetsfromvtx.at(i)).Pt()*rundependentJetPtCorrection(Ntp->PFJet_p4(jetsfromvtx.at(i)).Eta(),Ntp->RunNumber());
 		  secondjet_idx=jetsfromvtx.at(i);
 	  }
   }
@@ -607,7 +661,7 @@ void  ZtoEMu_Wjets::doEvent(){
   // mtmu cut
   //
   if(verbose) std::cout << "Mt Mu cut" << std::endl;
-  value.at(mtmu)=999;
+  value.at(mtmu)=0;
   if(muidx!=999){
 	  value.at(mtmu)=sqrt(2*Ntp->Muon_p4(muidx).Pt()*Ntp->MET_CorrT0pcT1_et()*(1-cosphi2d(Ntp->Muon_p4(muidx).Px(),Ntp->Muon_p4(muidx).Py(),Ntp->MET_CorrT0pcT1_ex(),Ntp->MET_CorrT0pcT1_ey())));
   }
@@ -618,7 +672,7 @@ void  ZtoEMu_Wjets::doEvent(){
   // Pt balance cut
   //
   if(verbose) std::cout << "pt balance cut" << std::endl;
-  value.at(ptbal)=999.;
+  value.at(ptbal)=0.;
   if(muidx!=999
 		  && eidx!=999
 		  ){
@@ -662,25 +716,25 @@ void  ZtoEMu_Wjets::doEvent(){
 		  && pass.at(ptthreshold)
 		  && pass.at(diMuonVeto)
 		  && pass.at(triLeptonVeto)
-		  && pass.at(jetVeto)
-		  && pass.at(ptbal)
+		  //&& pass.at(jetVeto)
+		  //&& pass.at(ptbal)
 		  ){
 	  double m = (Ntp->Muon_p4(muidx)+Ntp->Electron_p4(eidx)).M();
-	  if(m>50. && m<140.){
+	  if(m>60. && m<120.){
 		  if(pass.at(mtmu) && pass.at(charge)){
-			  wjets_a.at(t).AddBinContent(w);
+			  wjets_a.at(t).AddBinContent(1,w);
 			  wjets_control_a.at(t).Fill(m,w);
 		  }
-		  if(!pass.at(mtmu) /*&& value.at(mtmu)<120.*/ && pass.at(charge)){
-			  wjets_b.at(t).AddBinContent(w);
+		  if(!pass.at(mtmu) && pass.at(charge)){
+			  wjets_b.at(t).AddBinContent(1,w);
 			  wjets_control_b.at(t).Fill(m,w);
 		  }
 		  if(pass.at(mtmu) && !pass.at(charge)){
-			  wjets_c.at(t).AddBinContent(w);
+			  wjets_c.at(t).AddBinContent(1,w);
 			  wjets_control_c.at(t).Fill(m,w);
 		  }
-		  if(!pass.at(mtmu) /*&& value.at(mtmu)<120.*/ && !pass.at(charge)){
-			  wjets_d.at(t).AddBinContent(w);
+		  if(!pass.at(mtmu) && !pass.at(charge)){
+			  wjets_d.at(t).AddBinContent(1,w);
 			  wjets_control_d.at(t).Fill(m,w);
 		  }
 	  }
@@ -1417,6 +1471,7 @@ void ZtoEMu_Wjets::Finish(){
 	double lumi = 19712.;
 	double xdytautau = 1966.7;
 	double xdylltt = 1177.3;
+	double xdy = 1129.2;
 	double xdyee = 1966.7;
 	double xdymumu = 1966.7;
 	double xww = 5.824;
@@ -1454,10 +1509,10 @@ void ZtoEMu_Wjets::Finish(){
 	scale.push_back(lumi*xtt/ntt);
 	scale.push_back(lumi*xtw/ntw);
 	scale.push_back(lumi*xtbarw/ntbarw);
-	//scale.push_back(lumi*xdytautau/ndytautau);
-	scale.push_back(lumi*xdylltt/ndylltt);
-	scale.push_back(lumi*xdymumu/ndymumu);
-	scale.push_back(lumi*xdyee/ndyee);
+	scale.push_back(lumi*xdytautau/ndytautau);
+	//scale.push_back(lumi*xdylltt/ndylltt);
+	scale.push_back(lumi*xdy/ndymumu);
+	scale.push_back(lumi*xdy/ndyee);
 
 	wa.at(0).SetBinContent(1,wjets_a.at(0).GetBinContent(1));
 	wb.at(0).SetBinContent(1,wjets_b.at(0).GetBinContent(1));
@@ -1479,7 +1534,6 @@ void ZtoEMu_Wjets::Finish(){
 	std::cout << "events in region c: " << wjets.at(0).GetBinContent(1,2) << std::endl;
 	std::cout << "events in region d: " << wjets.at(0).GetBinContent(2,2) << std::endl;
 	std::cout << "Use ratio of " << (double)wjets.at(0).GetBinContent(1,2)/(double)wjets.at(0).GetBinContent(2,2) << " to extrapolate shape of region b to region a" << std::endl;
-	//std::cout << "Uncertainty on ratio: " << TMath::Sqrt(TMath::Power((double)wjets.at(0).GetBinError(1,2)/(double)wjets.at(0).GetBinContent(2,2),2)+TMath::Power((double)wjets.at(0).GetBinContent(1,2)*(double)wjets.at(0).GetBinError(2,2)/(double)wjets.at(0).GetBinContent(2,2)/(double)wjets.at(0).GetBinContent(2,2),2)) << std::endl;
 	std::cout << "Uncertainty on ratio: " << TMath::Sqrt(wjets.at(0).GetBinContent(1,2)/TMath::Power(wjets.at(0).GetBinContent(2,2),2)+TMath::Power(wjets.at(0).GetBinContent(1,2),2)/TMath::Power(wjets.at(0).GetBinContent(2,2),3)) << std::endl;
 
 	Selection::Finish();
