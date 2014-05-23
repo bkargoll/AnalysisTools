@@ -26,6 +26,7 @@
 #endif
 #ifdef USE_kargoll
 #include "kargoll/HToTaumuTauh.h"
+#include "kargoll/HToTaumuTauhSkim.h"
 #include "kargoll/MuTauSync.h"
 #include "kargoll/OneJetBoost.h"
 #include "kargoll/OneJetHigh.h"
@@ -50,6 +51,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   Analysis.ToLower();
 
   // ensuring code will compile independently of user code
+  // WARNING: be aware of the consequences of "Contains". Make sure that Class "foo" is put after "foobar".
   if(Analysis.Contains("example"))s=new Example(Analysis,UncertType);
   else if(Analysis.Contains("tauspinexample"))s=new TauSpinExample(Analysis,UncertType);
 #ifdef USE_cherepanov
@@ -75,6 +77,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ztoemu"))s=new ZtoEMu(Analysis,UncertType);
 #endif
 #ifdef USE_kargoll
+  else if(Analysis.Contains("htotaumutauhskim")) s=new HToTaumuTauhSkim(Analysis,UncertType);
   else if(Analysis.Contains("htotaumutauh")) s=new HToTaumuTauh(Analysis,UncertType);
   else if(Analysis.Contains("mutausync")) s=new MuTauSync(Analysis,UncertType);
   else if(Analysis.Contains("onejetboost")) s=new OneJetBoost(Analysis,UncertType);
