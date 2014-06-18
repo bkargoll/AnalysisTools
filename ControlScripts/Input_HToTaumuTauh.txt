@@ -1,7 +1,7 @@
 Thin: False
 Skim: True
 HistoFile: InputData/Histo_HToTaumuTauh.txt
-Analysis: HToTaumuTauhSkim
+Analysis: HToTaumuTauh
 UncertType: default
 SkimInfo: InputData/SkimSummary_HToTaumuTauh.log
 Lumi: 19712
