@@ -32,7 +32,7 @@ private:
 	unsigned int evt;
 	 // Event Variables
 	int npv;
-	int npu;
+	float npu;
 	float rho;
 	 // Event Weights
 	float mcweight;

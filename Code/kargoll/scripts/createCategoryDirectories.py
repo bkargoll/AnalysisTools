@@ -2,7 +2,7 @@
 
 import os
 
-channels = ["VBFTight", "VBFLoose", "OneJetHigh", "OneJetLow", "OneJetBoost", "ZeroJetHigh", "ZeroJetLow"]
+channels = ["VBFTight", "VBFLoose", "OneJetHigh", "OneJetLow", "OneJetBoost", "ZeroJetHigh", "ZeroJetLow", "Inclusive"]
 
 for chan in channels:
     os.mkdir(chan)

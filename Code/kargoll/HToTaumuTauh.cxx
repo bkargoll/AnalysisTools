@@ -6,6 +6,7 @@
 
 HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   Selection(Name_,id_),
+  verbose(0),
   cMu_dxy(0.045),
   cMu_dz(0.2),
   cMu_relIso(0.1),
@@ -29,6 +30,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   cCat_splitTauPt(45.0),
   cJetClean_dR(0.5)
 {
+	if (verbose) std::cout << "HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_)" << std::endl;
 	TString trigNames[] = {"HLT_IsoMu18_eta2p1_LooseIsoPFTau20","HLT_IsoMu17_eta2p1_LooseIsoPFTau20"};
 	std::vector<TString> temp (trigNames, trigNames + sizeof(trigNames) / sizeof(TString) );
 	cTriggerNames = temp;
@@ -37,23 +39,52 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// VBFTight, VBFLoose
 	// OneJetHigh, OneJetLow, OneJetBoost
 	// ZeroJetHigh, ZeroJetLow
-	// NoCategory
+	// Inclusive
+	// NoCategory (for skimming)
 
 	// Set it to "NoCategory" here.
 	// For each category, there should be a special class inheriting from HToTaumuTauh
 	categoryFlag = "NoCategory";
+
+	// select which WJets Background source to use
+	// chose between:
+	// * "MC": use MC as given in Histo.txt
+	// * "Data": use data driven method (make sure wJetsYieldMap is filled correctly)
+	wJetsBGSource = "MC";
+
+	// this one is actually used to set the new cross section for W+Jet
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetLow",   7.6) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetHigh",  6.4) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetLow",    9.2) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetHigh",   7.5) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetBoost",  6.4) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFLoose",     28.1) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFTight",     4.2) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("Inclusive",    7.8) );
+
+	// this one is used for cross-check only
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   6604.2) );
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  1137.5) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",    4831.7) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",    663.9) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",   151.2) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",       62.9) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",        4.6) );
+	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",   13202.4) );
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
-  for(int j=0; j<Npassed.size(); j++){
-    std::cout << "HToTaumuTauh::~HToTaumuTauh Selection Summary before: "
+	if (verbose) std::cout << "HToTaumuTauh::~HToTaumuTauh()" << std::endl;
+	for(int j=0; j<Npassed.size(); j++){
+	std::cout << "HToTaumuTauh::~HToTaumuTauh Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
-  }
-  std::cout << "HToTaumuTauh::~HToTaumuTauh()" << std::endl;
+	}
+	std::cout << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
 }
 
 void  HToTaumuTauh::Configure(){
+  if (verbose) std::cout << "HToTaumuTauh::Configure()" << std::endl;
   // Setup Cut Values
   for(int i=0; i<NCuts;i++){
     cut.push_back(0);
@@ -283,6 +314,7 @@ void  HToTaumuTauh::Configure(){
 
   // Setup Extra Histograms
   NCatFired=HConfig.GetTH1D(Name+"_NCatFired","NCatFired",6,-0.5,5.5,"Num. of passed categories");
+  CatFired=HConfig.GetTH1D(Name+"_CatFired","CatFired",8,-0.5,7.5,"Fired Categories");
 
   NVtx=HConfig.GetTH1D(Name+"_NVtx","NVtx",26,-0.5,25.5,"N(Vtx) before selection");
   NVtxFullSelection=HConfig.GetTH1D(Name+"_NVtxFullSelection","NVtxFullSelection",26,-0.5,25.5,"N(Vertex) after selection");
@@ -391,7 +423,9 @@ void  HToTaumuTauh::Configure(){
   CatVBFTightMtSideband = HConfig.GetTH1D(Name+"_CatVBFTightMtSideband","CatVBFTightMtSideband",30,60.,120.,"VBFT: m_{T}/GeV");
   CatVBFTightRelaxMt = HConfig.GetTH1D(Name+"_CatVBFTightRelaxMt","CatVBFTightRelaxMt",125,0.,250.,"VBFTRelax: m_{T}/GeV");
   CatVBFTightRelaxMtExtrapolation = HConfig.GetTH1D(Name+"_CatVBFTightRelaxMtExtrapolation","CatVBFTightRelaxMtExtrapolation",2,0.5,2.5,"VBFTRelax: m_{T} signal and sideband");
-
+  CatInclusiveMt = HConfig.GetTH1D(Name+"_CatInclusiveMt","CatInclusiveMt",125,0.,250.,"Incl: m_{T}/GeV");
+  CatInclusiveMtSideband = HConfig.GetTH1D(Name+"_CatInclusiveMtSideband","CatInclusiveMtSideband",90,70.,250.,"Incl: m_{T}/GeV");
+  CatInclusiveMtExtrapolation = HConfig.GetTH1D(Name+"_CatInclusiveMtExtrapolation","CatInclusiveMtExtrapolation",2,0.5,2.5,"Incl: m_{T} signal and sideband");
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
   else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
@@ -400,6 +434,7 @@ void  HToTaumuTauh::Configure(){
   else if (categoryFlag == "OneJetBoost")configure_OneJetBoost();
   else if (categoryFlag == "ZeroJetHigh")configure_ZeroJetHigh();
   else if (categoryFlag == "ZeroJetLow") configure_ZeroJetLow();
+  else if (categoryFlag == "Inclusive") configure_NoCategory();
   else if (categoryFlag == "NoCategory")	configure_NoCategory();
   else{
 	  std::cout << "WARNING: category " << categoryFlag << " does not exist. Using NoCategory instead." << std::endl;
@@ -412,7 +447,9 @@ void  HToTaumuTauh::Configure(){
 
 
 void  HToTaumuTauh::Store_ExtraDist(){
+ if (verbose) std::cout << "HToTaumuTauh::Store_ExtraDist()" << std::endl;
  Extradist1d.push_back(&NCatFired);
+ Extradist1d.push_back(&CatFired);
 
  Extradist1d.push_back(&NVtx);
  Extradist1d.push_back(&NVtxFullSelection);
@@ -518,9 +555,13 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&CatVBFTightMtSideband);
  Extradist1d.push_back(&CatVBFTightRelaxMt);
  Extradist1d.push_back(&CatVBFTightRelaxMtExtrapolation);
+ Extradist1d.push_back(&CatInclusiveMt);
+ Extradist1d.push_back(&CatInclusiveMtSideband);
+ Extradist1d.push_back(&CatInclusiveMtExtrapolation);
 }
 
 void  HToTaumuTauh::doEvent(){
+  if (verbose) std::cout << "HToTaumuTauh::doEvent()" << std::endl;
   // set variables to hold selected objects to default values
   selVertex = -1;
   selMuon = -1;
@@ -769,6 +810,24 @@ void  HToTaumuTauh::doEvent(){
 	  selMjj = -1;
   }
 
+  // define booleans for different stages of selection
+  bool passedVertex = pass.at(TriggerOk) && pass.at(PrimeVtx);
+  bool passedMuId = passedVertex && pass.at(NMuId);
+  bool passedMu = passedMuId && pass.at(NMuKin);
+  bool passedTauIdIso = passedVertex && pass.at(NTauId) && pass.at(NTauIso);
+  bool passedTau = passedTauIdIso && pass.at(NTauKin);
+  bool passedObjects = passedMu && passedTau;
+  bool passedDiMuonVeto = passedObjects && pass.at(DiMuonVeto);
+  bool passedFullInclusiveSelNoBVeto = passedDiMuonVeto && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(MT);
+  bool passedFullInclusiveSel = passedFullInclusiveSelNoBVeto && pass.at(BJetVeto);
+
+  // define booleans for analysis stages needed for background methods
+  bool passedFullInclusiveSelNoMt = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(BJetVeto);
+  bool passedFullInclusiveSelNoMtNoOS = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(BJetVeto);
+
+  // define booleans for analysis stages for additional plots
+  bool passedObjectsFailDiMuonVeto = passedObjects && !pass.at(DiMuonVeto);
+
   // run categories
   bool passed_VBFTight		= category_VBFTight(nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
   bool passed_VBFLoose		= category_VBFLoose(nJets, selJetdeta, selNjetingap, selMjj, passed_VBFTight);
@@ -782,15 +841,25 @@ void  HToTaumuTauh::doEvent(){
 
   // fill plot checking if multiple categories have passed, which should never happen
   unsigned nCat = 0;
-  if (passed_VBFTight	) nCat++;
-  if (passed_VBFLoose	) nCat++;
-  if (passed_OneJetHigh	) nCat++;
-  if (passed_OneJetLow	) nCat++;
-  if (passed_OneJetBoost) nCat++;
-  if (passed_ZeroJetHigh) nCat++;
-  if (passed_ZeroJetLow	) nCat++;
+  if (passedFullInclusiveSel) {CatFired.at(t).Fill(0., w);}
+  if (passedFullInclusiveSel && passed_VBFTight	) {nCat++; CatFired.at(t).Fill(1, w);}
+  if (passedFullInclusiveSel && passed_VBFLoose	) {nCat++; CatFired.at(t).Fill(2, w);}
+  if (passedFullInclusiveSel && passed_OneJetHigh	) {nCat++; CatFired.at(t).Fill(3, w);}
+  if (passedFullInclusiveSel && passed_OneJetLow	) {nCat++; CatFired.at(t).Fill(4, w);}
+  if (passedFullInclusiveSel && passed_OneJetBoost) {nCat++; CatFired.at(t).Fill(5, w);}
+  if (passedFullInclusiveSel && passed_ZeroJetHigh) {nCat++; CatFired.at(t).Fill(6, w);}
+  if (passedFullInclusiveSel && passed_ZeroJetLow	) {nCat++; CatFired.at(t).Fill(7, w);}
 
-  NCatFired.at(t).Fill(nCat);
+  NCatFired.at(t).Fill(nCat, w);
+
+  if (passedFullInclusiveSel && nCat == 0){
+	  std::cout << "                       Here comes a bad event" << std::endl;
+	  const char* format = "%12s : %5s %5s %5s %5s %5s %5s %5s %5s \n";
+	  printf(format,"Event", "NJets", "dEta", "CJV", "mjj", "pT(H)", "isVBT", "isVBF", "pT(t)");
+	  format = "%12i : %5i %5.2f %5i %5.2f %5.2f %5i %5i %5,2f \n";
+	  printf(format,Ntp->EventNumber(), nJets, selJetdeta, selNjetingap, selMjj, higgsPt, passed_VBFTight, passed_VBF, tauPt);
+  }
+
 
   // run relaxed categories for background methods
   bool passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed(nJets, selJetdeta, selNjetingap, selMjj);
@@ -818,7 +887,7 @@ void  HToTaumuTauh::doEvent(){
 
   //////// plots filled after Vertex selection: Object selection
 
-  if(pass.at(TriggerOk) && pass.at(PrimeVtx)){
+  if(passedVertex){
 	  for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
 		  if(	Ntp->isTightMuon(i_mu,selVertex) ){
 			  MuDxy.at(t).Fill(dxy(Ntp->Muon_p4(i_mu),Ntp->Muon_Poca(i_mu),Ntp->Vtx(selVertex)), w);
@@ -829,7 +898,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// plots filled after muon ID selection: Muon Kinematics
-  if(pass.at(TriggerOk) && pass.at(PrimeVtx) && pass.at(NMuId)){
+  if(passedMuId){
 	  for(std::vector<int>::iterator it_mu = selectedMuonsId.begin();it_mu != selectedMuonsId.end(); ++it_mu){
 		  MuPt.at(t).Fill(Ntp->Muon_p4(*it_mu).Pt(), w);
 		  MuEta.at(t).Fill(Ntp->Muon_p4(*it_mu).Eta(), w);
@@ -837,7 +906,7 @@ void  HToTaumuTauh::doEvent(){
 	  }
 
 	  //////// plots filled only with selected muon
-	  if(pass.at(NMuKin)){
+	  if(passedMu){
 		  MuSelPt.at(t).Fill(Ntp->Muon_p4(selMuon).Pt(), w);
 		  MuSelEta.at(t).Fill(Ntp->Muon_p4(selMuon).Eta(), w);
 		  MuSelPhi.at(t).Fill(Ntp->Muon_p4(selMuon).Phi(), w);
@@ -857,7 +926,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// plots filled after tau ID + Iso selection: Tau Kinematics
-  if(pass.at(TriggerOk) && pass.at(PrimeVtx) && pass.at(NTauId) && pass.at(NTauIso)){
+  if(passedTauIdIso){
 	  for(std::vector<int>::iterator it_tau = selectedTausIso.begin(); it_tau != selectedTausIso.end(); ++it_tau){
 		  TauPt.at(t).Fill(Ntp->PFTau_p4(*it_tau).Pt(), w);
 		  TauEta.at(t).Fill(Ntp->PFTau_p4(*it_tau).Eta(), w);
@@ -865,7 +934,7 @@ void  HToTaumuTauh::doEvent(){
 	  }
 
 	  //////// plots filled only with selected tau
-	  if(pass.at(NTauKin)){
+	  if(passedTau){
 		  TauSelPt.at(t).Fill(Ntp->PFTau_p4(selTau).Pt(), w);
 		  TauSelEta.at(t).Fill(Ntp->PFTau_p4(selTau).Eta(), w);
 		  TauSelPhi.at(t).Fill(Ntp->PFTau_p4(selTau).Phi(), w);
@@ -874,8 +943,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// plots filled after full muon and tau selection
-  bool passedObjects = pass.at(TriggerOk) && pass.at(PrimeVtx) && pass.at(NMuId   ) && pass.at(NMuKin  ) && pass.at(NTauId  ) && pass.at(NTauIso ) && pass.at(NTauKin );
-  if(passedObjects && !pass.at(DiMuonVeto)){
+  if(passedObjectsFailDiMuonVeto){
 	  // Investigate events discarded by the DiMuon Veto
 	  if (Ntp->Muon_Charge(selMuon) == 1){
 		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
@@ -891,15 +959,23 @@ void  HToTaumuTauh::doEvent(){
 	  MuVetoDeltaR.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR(Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0))), w );
   }
 
-  if(passedObjects && pass.at(DiMuonVeto)){
+  if(passedDiMuonVeto){
 	  // Tri-lepton vetoes
 	  NMuonTriLepVeto.at(t).Fill(triLepVetoMuons.size(), w);
 	  NElecTriLepVeto.at(t).Fill(triLepVetoElecs.size(), w);
   }
+  //////// plots filled after full selection without BJetVeto
+  if (passedFullInclusiveSelNoBVeto){
+	  NBJets.at(t).Fill( selectedBJets.size(), w);
+	  if (selectedBJets.size() > 0){
+		  BJet1Pt.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Pt(), w);
+		  BJet1Eta.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Eta(), w);
+		  BJet1Phi.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Phi(), w);
+	  }
+  }
 
   //////// plots filled after full selection (without categories)
-  bool fullSel = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(MT);
-  if (fullSel){
+  if (passedFullInclusiveSel){
 	  // Mu-Tau correlations
 	  MuTauDR    .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaR(Ntp->PFTau_p4(selTau)), w );
 	  MuTauDPhi  .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaPhi(Ntp->PFTau_p4(selTau)), w );
@@ -943,13 +1019,6 @@ void  HToTaumuTauh::doEvent(){
 		  Jet2IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(selectedJets.at(1)) > cCat_btagDisc, w);
 	  }
 
-	  NBJets.at(t).Fill( selectedBJets.size(), w);
-	  if (selectedBJets.size() > 0){
-		  BJet1Pt.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Pt(), w);
-		  BJet1Eta.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Eta(), w);
-		  BJet1Phi.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Phi(), w);
-	  }
-
 	  // variables for categorization
 	  HiggsPt.at(t).Fill(higgsPt , w);
 	  HiggsPhi.at(t).Fill(higgsPhi , w);
@@ -965,138 +1034,249 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// category specific plots, especially for background methods
-  bool fullSelNoMt = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge);
-  bool fullSelNoMtNoOS = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto);
   bool isWJetMC = (Ntp->GetMCID() >= 20) && (Ntp->GetMCID() <= 23);
   // 0-Jet Low
-  if(fullSelNoMt && passed_ZeroJetLow){
+  if(passedFullInclusiveSelNoMt && passed_ZeroJetLow){
 	  Cat0JetLowMt.at(t).Fill(value.at(MT), w);
 	  Cat0JetLowMtSideband.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  Cat0JetLowMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  Cat0JetLowMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 70.)
 			  Cat0JetLowMtExtrapolation.at(t).Fill(2, w);
 	  }
   }
   // 0-Jet High
-  if(fullSelNoMt && passed_ZeroJetHigh){
+  if(passedFullInclusiveSelNoMt && passed_ZeroJetHigh){
 	  Cat0JetHighMt.at(t).Fill(value.at(MT), w);
 	  Cat0JetHighMtSideband.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  Cat0JetHighMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  Cat0JetHighMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 70.)
-			  Cat0JetHighMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  Cat0JetHighMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
   // 1-Jet Low
-  if(fullSelNoMt && passed_OneJetLow){
+  if(passedFullInclusiveSelNoMt && passed_OneJetLow){
 	  Cat1JetLowMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetLowMtSideband.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  Cat1JetLowMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  Cat1JetLowMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 70.)
-			  Cat1JetLowMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  Cat1JetLowMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
   // 1-Jet High
-  if(fullSelNoMt && passed_OneJetHigh){
+  if(passedFullInclusiveSelNoMt && passed_OneJetHigh){
 	  Cat1JetHighMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetHighMtSideband.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  Cat1JetHighMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  Cat1JetHighMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 70.)
-			  Cat1JetHighMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  Cat1JetHighMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
   // 1-Jet Boost
-  if(fullSelNoMt && passed_OneJetBoost){
+  if(passedFullInclusiveSelNoMt && passed_OneJetBoost){
 	  Cat1JetBoostMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetBoostMtSideband.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  Cat1JetBoostMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  Cat1JetBoostMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 70.)
-			  Cat1JetBoostMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  Cat1JetBoostMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
   // VBF Loose
-  if(fullSelNoMt && passed_VBFLoose){
+  if(passedFullInclusiveSelNoMt && passed_VBFLoose){
 	  CatVBFLooseMt.at(t).Fill(value.at(MT), w);
 	  CatVBFLooseMtSideband.at(t).Fill(value.at(MT), w);
   }
-  if(fullSelNoMtNoOS && passed_VBFLooseRelaxed){
+  if(passedFullInclusiveSelNoMtNoOS && passed_VBFLooseRelaxed){
 	  CatVBFLooseRelaxMt.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 60. && value.at(MT) < 120.)
-			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
   // VBF Tight
-  if(fullSelNoMt && passed_VBFTight){
+  if(passedFullInclusiveSelNoMt && passed_VBFTight){
 	  CatVBFTightMt.at(t).Fill(value.at(MT), w);
 	  CatVBFTightMtSideband.at(t).Fill(value.at(MT), w);
   }
-  if(fullSelNoMtNoOS && passed_VBFTightRelaxed){
+  if(passedFullInclusiveSelNoMtNoOS && passed_VBFTightRelaxed){
 	  CatVBFTightRelaxMt.at(t).Fill(value.at(MT), w);
 	  if(isWJetMC){
 		  if(pass.at(MT))
-			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(1); // fill w/o weight
+			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(1, w); // fill with weight
 		  if(value.at(MT) > 60. && value.at(MT) < 120.)
-			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(2); // fill w/o weight
+			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(2, w); // fill with weight
+	  }
+  }
+  // Inclusive
+  if(passedFullInclusiveSelNoMt){
+	  CatInclusiveMt.at(t).Fill(value.at(MT), w);
+	  CatInclusiveMtSideband.at(t).Fill(value.at(MT), w);
+	  if(isWJetMC){
+		  if(pass.at(MT))
+			  CatInclusiveMtExtrapolation.at(t).Fill(1, w); // fill with weight
+		  if(value.at(MT) > 70.)
+			  CatInclusiveMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
 }
 
 
 void  HToTaumuTauh::Finish(){
-	// calculate W+Jet yield for categories
-	unsigned histo;
-	double sig0JL, side0JL, sig0JH, side0JH, sig1JL, side1JL, sig1JH, side1JH, sig1JB, side1JB, sigVBFL, sideVBFL, sigVBFT, sideVBFT;
-	for (unsigned id = 20; id < 24; id++){
-		if (HConfig.GetHisto(false,id,histo)){
-			sig0JL += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(1);
-			side0JL += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(2);
+	if (verbose) std::cout << "HToTaumuTauh::Finish()" << std::endl;
 
-			sig0JH += Cat0JetHighMtExtrapolation.at(histo).GetBinContent(1);
-			side0JH+= Cat0JetHighMtExtrapolation.at(histo).GetBinContent(2);
-
-			sig1JL += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(1);
-			side1JL += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(2);
-
-			sig1JH += Cat1JetHighMtExtrapolation.at(histo).GetBinContent(1);
-			side1JH += Cat1JetHighMtExtrapolation.at(histo).GetBinContent(2);
-
-			sig1JB += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(1);
-			side1JB += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(2);
-
-			sigVBFL += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(1);
-			sideVBFL += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(2);
-
-			sigVBFT += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(1);
-			sideVBFT += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(2);
+	if(wJetsBGSource == "Data"){
+		double wJetsYieldMC;
+		unsigned histo;
+		printf("WJet BG: CategoryId = %i, WJet Yield Scale Factor = %.3f", categoryFlag, wJetsYieldScaleMap[categoryFlag]);
+		for (unsigned id = 20; id < 24; id++){
+			// scale cross-sections for WJet backgrounds by DataYield/MCYield in HistoConfig
+			double oldXSec = HConfig.GetCrossSection(id);
+			double newXSec = oldXSec * wJetsYieldScaleMap[categoryFlag];
+			if( !HConfig.SetCrossSection(id, newXSec) ) std::cout << "WARNING: Could not change cross-section for id " << id << std::endl;
+			printf("WJet BG, id = %i: Scale from MC xsec = %.1f to data-driven xsec = %.1f")
 		}
 	}
-	std::cout << "  ##########################################################" << std::endl;
-	std::cout << "  ############# W+Jets MC extrapolation factor #############" << std::endl;
-	printf("%12s : %13s | %13s || %12s \n","Category","Signal Region", "Sideband", "Extr. factor");
-	const char* format = "%12s : %12.1f | %12.1f || %12f \n";
-	printf(format,"0-Jet Low", sig0JL, side0JL, sig0JL/side0JL);
-	printf(format,"0-Jet High", sig0JH, side0JH, sig0JH/side0JH);
-	printf(format,"1-Jet Low", sig1JL, side1JL, sig1JL/side1JL);
-	printf(format,"1-Jet High", sig1JH, side1JH, sig1JH/side1JH);
-	printf(format,"1-Jet Boost", sig1JB, side1JB, sig1JB/side1JB);
-	printf(format,"VBF Loose", sigVBFL, sideVBFL, sigVBFL/sideVBFL);
-	printf(format,"VBF Tight", sigVBFT, sideVBFT, sigVBFT/sideVBFT);
-	std::cout << "  ##########################################################" << std::endl;
-	std::cout << "  ##########################################################" << std::endl;
 
 	Selection::Finish();
+
+	// print MC scales
+	unsigned histo;
+	std::map<int, double> scales;
+	for (unsigned id = 2; id < 100; id++){
+			if (HConfig.GetHisto(false,id,histo)){
+				double scale = Lumi * HConfig.GetCrossSection(id) / Npassed.at(histo).GetBinContent(0);
+				scales.insert(std::pair<int, double>(id, scale));
+				printf("ID = %2i has scale of %4f \n", id, scale);
+				//printf("ID = %2i has scale of %4f (%4f * %4f / %4f) \n", id, scale, Lumi, HConfig.GetCrossSection(id), Npassed.at(histo).GetBinContent(0));
+			}
+	}
+
+	if(wJetsBGSource == "MC"){
+		// calculate W+Jet yield for categories
+		const unsigned nCat = 8;
+		TString n[nCat] = {"0-Jet Low","0-Jet High","1-Jet Low","1-Jet High","1-Jet Boost","VBF Loose","VBF Tight","Inclusive"};
+		std::vector<TString> catNames(n,n+nCat);
+		// extrapolation factor from MC
+		std::vector<double> catEPSignal(nCat,0.0);
+		std::vector<double> catEPSideband(nCat,0.0);
+		std::vector<double> catWJetMCPrediction(nCat,0.0);
+		int lowBin = Cat0JetLowMt.at(0).FindFixBin(0.0);
+		int highBin = Cat0JetLowMt.at(0).FindFixBin(30.0) - 1;
+		printf("lowBin = %i, highBin = %i \n", lowBin, highBin);
+		for (unsigned id = 20; id < 24; id++){ //only for WJets processes
+			if (HConfig.GetHisto(false,id,histo)){
+				catEPSignal.at(0) += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(0) += Cat0JetLowMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(0) += Cat0JetLowMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(1) += Cat0JetHighMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(1)+= Cat0JetHighMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(1) += Cat0JetHighMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(2) += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(2) += Cat1JetLowMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(2) += Cat1JetLowMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(3)+= Cat1JetHighMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(3) += Cat1JetHighMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(3) += Cat1JetHighMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(4) += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(4) += Cat1JetBoostMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(4) += Cat1JetBoostMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(5) += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(5) += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(5) += CatVBFLooseMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(6) += CatVBFTightMt.at(histo).Integral(lowBin, highBin) * scales[id];
+
+				catEPSignal.at(7)+= CatInclusiveMtExtrapolation.at(histo).GetBinContent(1);
+				catEPSideband.at(7) += CatInclusiveMtExtrapolation.at(histo).GetBinContent(2);
+				catWJetMCPrediction.at(7) += CatInclusiveMt.at(histo).Integral(lowBin, highBin) * scales[id];
+			}
+		}
+		std::vector<double> catEPFactor(nCat,0.0);
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			catEPFactor.at(icat) = catEPSignal.at(icat)/catEPSideband.at(icat);
+		}
+		// mT sideband events from data
+		std::vector<double> catSBData(nCat,0.0);
+		if (HConfig.GetHisto(true,1,histo)){
+			catSBData.at(0) = Cat0JetLowMtSideband.at(histo).Integral();
+			catSBData.at(1) = Cat0JetHighMtSideband.at(histo).Integral();
+			catSBData.at(2) = Cat1JetLowMtSideband.at(histo).Integral();
+			catSBData.at(3) = Cat1JetHighMtSideband.at(histo).Integral();
+			catSBData.at(4) = Cat1JetBoostMtSideband.at(histo).Integral();
+			catSBData.at(5) = CatVBFLooseMtSideband.at(histo).Integral();
+			catSBData.at(6) = CatVBFTightMtSideband.at(histo).Integral();
+			catSBData.at(7) = CatInclusiveMtSideband.at(histo).Integral();
+		}
+		std::vector<double> catSBBackgrounds(nCat,0.0);
+		for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
+			if (id == 60) continue; // 60 = QCD
+			if (HConfig.GetHisto(false,id,histo)){
+				catSBBackgrounds.at(0) += Cat0JetLowMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(1) += Cat0JetHighMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(2) += Cat1JetLowMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(3) += Cat1JetHighMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(4) += Cat1JetBoostMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(5) += CatVBFLooseMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(6) += CatVBFTightMtSideband.at(histo).Integral() * scales[id];
+				catSBBackgrounds.at(7) += CatInclusiveMtSideband.at(histo).Integral() * scales[id];
+			}
+		}
+		std::vector<double> catWJetsInSB(nCat,0.0);
+		std::vector<double> catWJetsYield(nCat,0.0);
+		std::vector<double> catWJetsMCRatio(nCat,0.0);
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			catWJetsInSB.at(icat) = catSBData.at(icat) - catSBBackgrounds.at(icat);
+			catWJetsYield.at(icat) = catWJetsInSB.at(icat) * catEPFactor.at(icat);
+			catWJetsMCRatio.at(icat) = catWJetsYield.at(icat) / catWJetMCPrediction.at(icat);
+		}
+
+
+		// print results
+		std::cout << "  ##########################################################" << std::endl;
+		std::cout << "  ############# W+Jets MC extrapolation factor #############" << std::endl;
+		printf("%12s  %13s : %13s = %12s \n","Category","Signal Region", "Sideband", "Extr. factor");
+		const char* format = "%12s  %13.1f : %13.1f = %12f \n";
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			printf(format,catNames.at(icat).Data(), catEPSignal.at(icat), catEPSideband.at(icat), catEPFactor.at(icat));
+		}
+		std::cout << "  ############# W+Jets Events in Sideband ##################" << std::endl;
+		printf("%12s  %13s - %13s = %14s \n","Category","Nevts Data SB", "Nevts MC SB", "Nevts WJets SB");
+		format = "%12s  %13.3f - %13.3f = %14.3f \n";
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			printf(format,catNames.at(icat).Data(), catSBData.at(icat), catSBBackgrounds.at(icat), catWJetsInSB.at(icat));
+		}
+		std::cout << "  ############# W+Jets Yield ###############################" << std::endl;
+		printf("%12s  %14s * %14s = %14s \n","Category","Nevts WJets SB", "Extr. factor", "WJets Yield");
+		format = "%12s  %14.3f * %14f = %14.1f\n";
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			printf(format,catNames.at(icat).Data(), catWJetsInSB.at(icat), catEPFactor.at(icat), catWJetsYield.at(icat));
+		}
+		std::cout << "  ############# W+Jets MC Comparison #######################" << std::endl;
+		printf("%12s  %14s <-> %14s || %14s\n","Category","WJets Yield", "MC Pred.", "Data/MC");
+		format = "%12s  %14.1f <-> %14.1f || %14.6f\n";
+		for (unsigned int icat = 0; icat < nCat; icat++){
+			printf(format,catNames.at(icat).Data(), catWJetsYield.at(icat), catWJetMCPrediction.at(icat), catWJetsMCRatio.at(icat));
+		}
+		std::cout << "  ##########################################################" << std::endl;
+	}
 }
 
 

@@ -114,6 +114,16 @@ double HistoConfig::GetCrossSection(int id){
   return 0;
 }
 
+bool HistoConfig::SetCrossSection(int id, double xsec){
+	for(int i=0; i<ID.size(); i++){
+		if(ID.at(i)==id){
+			CS.at(i) = xsec;
+			return true;
+	    }
+	}
+	return false;
+}
+
 void HistoConfig::GetHistoInfo(std::vector<int> &types,std::vector<float> &CrossSectionandAcceptance,std::vector<TString> &legend,std::vector<int> &colour){
   types=ID;
   legend=HistoLegend;

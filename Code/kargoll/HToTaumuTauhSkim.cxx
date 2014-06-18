@@ -16,6 +16,9 @@ HToTaumuTauhSkim::HToTaumuTauhSkim(TString Name_, TString id_):
 	// always run without category for skimming
 	categoryFlag = "NoCategory";
 
+	// run Skim always using MC for WJets BG
+	wJetsBGSource = "MC";
+
 	// check if skimming cuts are looser than main analysis cuts
 	if (cSkim_Mu_relIso < cMu_relIso)
 		std::cout << "WARNING: Mu_relIso cut in skim tighter than in main analysis! Using main analysis value." << std::endl;

@@ -169,15 +169,16 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   int BunchCrossing(){ return Ntp->Event_bunchCrossing;}
   int OrbitNumber(){ return Ntp->Event_orbitNumber;}
   unsigned int LuminosityBlock(){return Ntp->Event_luminosityBlock;}
-  int           PileupInfo_TrueNumInteractions_nm1(){return Ntp->PileupInfo_TrueNumInteractions_nm1;}
-  int           PileupInfo_TrueNumInteractions_n0(){return Ntp->PileupInfo_TrueNumInteractions_n0;}
-  int           PileupInfo_TrueNumInteractions_np1(){return Ntp->PileupInfo_TrueNumInteractions_np1;}
+  float           PileupInfo_TrueNumInteractions_nm1(){return Ntp->PileupInfo_TrueNumInteractions_nm1;}
+  float           PileupInfo_TrueNumInteractions_n0(){return Ntp->PileupInfo_TrueNumInteractions_n0;}
+  float           PileupInfo_TrueNumInteractions_np1(){return Ntp->PileupInfo_TrueNumInteractions_np1;}
   double        PUWeight(){return Ntp->PUWeight;}
   double        PUWeight_p5(){return Ntp->PUWeight_p5;}
   double        PUWeight3D_m5(){return Ntp->PUWeight3D_m5;}
   double        PUWeight3D(){return Ntp->PUWeight3D;}
   double        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
   double        PUWeight_m5(){return Ntp->PUWeight_m5;}
+  double		PUWeightFineBins(){return Ntp->PUWeightFineBins;}
 
   TVectorT<double>      beamspot_par(){TVectorT<double> BS(NBS_par);for(unsigned int i=0;i<NBS_par;i++)BS(i)=Ntp->beamspot_par->at(i);return BS;}
 
@@ -475,6 +476,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              PFJet_nTrk(unsigned int i){return Ntp->PFJet_nTrk->at(i);}
    TLorentzVector     PFJet_TracksP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_TracksP4->at(i).at(j).at(1),Ntp->PFJet_TracksP4->at(i).at(j).at(2),Ntp->PFJet_TracksP4->at(i).at(j).at(3),Ntp->PFJet_TracksP4->at(i).at(j).at(0));}
    int                PFJet_nTracks(unsigned int i){return Ntp->PFJet_TracksP4->at(i).size();}
+   float			  PFJet_JECuncertainty(unsigned int i){return Ntp->PFJet_JECuncertainty->at(i);}
 
    float              PFJet_PUJetID_discr(unsigned int i){return Ntp->PFJet_PUJetID_discr->at(i);}
    float              PFJet_PUJetID_looseWP(unsigned int i){return Ntp->PFJet_PUJetID_looseWP->at(i);}
@@ -552,6 +554,15 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              MET_CorrMVA_significance_xx(){return Ntp->MET_CorrMVA_significance_xx;}
    float              MET_CorrMVA_significance_xy(){return Ntp->MET_CorrMVA_significance_xy;}
    float              MET_CorrMVA_significance_yy(){return Ntp->MET_CorrMVA_significance_yy;}
+   unsigned int   	  NMET_CorrMVA_srcMuons(){return Ntp->MET_CorrMVA_srcMuon_p4->size();}
+   TLorentzVector     MET_CorrMVA_srcMuon_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(1),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(2),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(3),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(0));}
+   bool				  findCorrMVASrcMuon(unsigned int muon_idx, int &mvaSrcMuon_idx, float &dR );
+   unsigned int   	  NMET_CorrMVA_srcElectrons(){return Ntp->MET_CorrMVA_srcElectron_p4->size();}
+   TLorentzVector     MET_CorrMVA_srcElectron_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVA_srcElectron_p4->at(i).at(1),Ntp->MET_CorrMVA_srcElectron_p4->at(i).at(2),Ntp->MET_CorrMVA_srcElectron_p4->at(i).at(3),Ntp->MET_CorrMVA_srcElectron_p4->at(i).at(0));}
+   bool				  findCorrMVASrcElectron(unsigned int elec_idx, int &mvaSrcElectron_idx, float &dR );
+   unsigned int   	  NMET_CorrMVA_srcTaus(){return Ntp->MET_CorrMVA_srcTau_p4->size();}
+   TLorentzVector     MET_CorrMVA_srcTau_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVA_srcTau_p4->at(i).at(1),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(2),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(3),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(0));}
+   bool				  findCorrMVASrcTau(unsigned int tau_idx, int &mvaSrcTau_idx, float &dR );
 
    float              MET_CorrMVAMuTau_et(){return Ntp->MET_CorrMVAMuTau_et;}
    float              MET_CorrMVAMuTau_phi(){return Ntp->MET_CorrMVAMuTau_phi;}
@@ -561,6 +572,12 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              MET_CorrMVAMuTau_significance_xx(){return Ntp->MET_CorrMVAMuTau_significance_xx;}
    float              MET_CorrMVAMuTau_significance_xy(){return Ntp->MET_CorrMVAMuTau_significance_xy;}
    float              MET_CorrMVAMuTau_significance_yy(){return Ntp->MET_CorrMVAMuTau_significance_yy;}
+   unsigned int   	  NMET_CorrMVAMuTau_srcMuons(){return Ntp->MET_CorrMVAMuTau_srcMuon_p4->size();}
+   TLorentzVector     MET_CorrMVAMuTau_srcMuon_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(1),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(2),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(3),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(0));}
+   bool				  findCorrMVAMuTauSrcMuon(unsigned int muon_idx, int &mvaMuTauSrcMuon_idx, float &dR );
+   unsigned int   	  NMET_CorrMVAMuTau_srcTaus(){return Ntp->MET_CorrMVAMuTau_srcTau_p4->size();}
+   TLorentzVector     MET_CorrMVAMuTau_srcTau_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(1),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(2),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(3),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(0));}
+   bool				  findCorrMVAMuTauSrcTau(unsigned int tau_idx, int &mvaMuTauSrcTau_idx, float &dR );
 
    //Track Information
    unsigned int      NTracks(){return Ntp->Track_p4->size();}

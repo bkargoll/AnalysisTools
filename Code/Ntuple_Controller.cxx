@@ -494,6 +494,7 @@ float Ntuple_Controller::Electron_Aeff_R04(double Eta){
 	else if(eta>=2.2 && eta<2.3) return 0.183;
 	else if(eta>=2.3 && eta<2.3) return 0.194;
 	else if(eta>=2.4) return 0.261;
+	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }
 
 float Ntuple_Controller::Electron_Aeff_R03(double Eta){
@@ -505,6 +506,7 @@ float Ntuple_Controller::Electron_Aeff_R03(double Eta){
 	else if(eta>=2.2 && eta<2.3) return 0.11;
 	else if(eta>=2.3 && eta<2.3) return 0.11;
 	else if(eta>=2.4) return 0.14;
+	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -880,4 +882,76 @@ float Ntuple_Controller::vertexSignificance(TVector3 vec, unsigned int vertex){
 		}
 	}
 	return 999;
+}
+
+// check if given lepton was used for MVA-MET calculation
+bool Ntuple_Controller::findCorrMVASrcMuon(unsigned int muon_idx, int &mvaSrcMuon_idx, float &dR ){
+	float minDr = 1000;
+	float dr = 1001;
+	for (unsigned i_mvaLep = 0; i_mvaLep < NMET_CorrMVA_srcMuons(); i_mvaLep++){
+		 dr = Tools::dr(Muon_p4(muon_idx),MET_CorrMVA_srcMuon_p4(i_mvaLep));
+		 if ((dr < 0.05) && (dr < minDr)) {
+			 minDr = dr;
+			 dR = dr;
+			 mvaSrcMuon_idx = i_mvaLep;
+		 }
+	}
+	if (minDr < 0.05) return true;
+	else return false;
+}
+bool Ntuple_Controller::findCorrMVASrcElectron(unsigned int elec_idx, int &mvaSrcElectron_idx, float &dR ){
+	float minDr = 1000;
+	float dr = 1001;
+	for (unsigned i_mvaLep = 0; i_mvaLep < NMET_CorrMVA_srcElectrons(); i_mvaLep++){
+		 dr = Tools::dr(Electron_p4(elec_idx),MET_CorrMVA_srcElectron_p4(i_mvaLep));
+		 if ((dr < 0.05) && (dr < minDr)) {
+			 minDr = dr;
+			 dR = dr;
+			 mvaSrcElectron_idx = i_mvaLep;
+		 }
+	}
+	if (minDr < 0.05) return true;
+	else return false;
+}
+bool Ntuple_Controller::findCorrMVASrcTau(unsigned int tau_idx, int &mvaSrcTau_idx, float &dR ){
+	float minDr = 1000;
+	float dr = 1001;
+	for (unsigned i_mvaLep = 0; i_mvaLep < NMET_CorrMVA_srcTaus(); i_mvaLep++){
+		 dr = Tools::dr(PFTau_p4(tau_idx),MET_CorrMVA_srcTau_p4(i_mvaLep));
+		 if ((dr < 0.05) && (dr < minDr)) {
+			 minDr = dr;
+			 dR = dr;
+			 mvaSrcTau_idx = i_mvaLep;
+		 }
+	}
+	if (minDr < 0.05) return true;
+	else return false;
+}
+bool Ntuple_Controller::findCorrMVAMuTauSrcMuon(unsigned int muon_idx, int &mvaMuTauSrcMuon_idx, float &dR ){
+	float minDr = 1000;
+	float dr = 1001;
+	for (unsigned i_mvaLep = 0; i_mvaLep < NMET_CorrMVAMuTau_srcMuons(); i_mvaLep++){
+		 dr = Tools::dr(Muon_p4(muon_idx),MET_CorrMVAMuTau_srcMuon_p4(i_mvaLep));
+		 if ((dr < 0.05) && (dr < minDr)) {
+			 minDr = dr;
+			 dR = dr;
+			 mvaMuTauSrcMuon_idx = i_mvaLep;
+		 }
+	}
+	if (minDr < 0.05) return true;
+	else return false;
+}
+bool Ntuple_Controller::findCorrMVAMuTauSrcTau(unsigned int tau_idx, int &mvaMuTauSrcTau_idx, float &dR ){
+	float minDr = 1000;
+	float dr = 1001;
+	for (unsigned i_mvaLep = 0; i_mvaLep < NMET_CorrMVAMuTau_srcTaus(); i_mvaLep++){
+		 dr = Tools::dr(PFTau_p4(tau_idx),MET_CorrMVAMuTau_srcTau_p4(i_mvaLep));
+		 if ((dr < 0.05) && (dr < minDr)) {
+			 minDr = dr;
+			 dR = dr;
+			 mvaMuTauSrcTau_idx = i_mvaLep;
+		 }
+	}
+	if (minDr < 0.05) return true;
+	else return false;
 }

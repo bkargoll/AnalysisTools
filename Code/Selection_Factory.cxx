@@ -35,6 +35,7 @@
 #include "kargoll/VBFLoose.h"
 #include "kargoll/ZeroJetHigh.h"
 #include "kargoll/ZeroJetLow.h"
+#include "kargoll/Inclusive.h"
 #endif
 #ifdef USE_pistone
 
@@ -87,6 +88,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("vbfloose")) s=new VBFLoose(Analysis,UncertType);
   else if(Analysis.Contains("zerojethigh")) s=new ZeroJetHigh(Analysis,UncertType);
   else if(Analysis.Contains("zerojetlow")) s=new ZeroJetLow(Analysis,UncertType);
+  else if(Analysis.Contains("inclusive")) s=new Inclusive(Analysis,UncertType);
 #endif
 #ifdef USE_pistone
 

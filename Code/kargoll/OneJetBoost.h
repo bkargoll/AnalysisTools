@@ -1,5 +1,5 @@
 /*
- * VBFTight.h
+ * OneJetBoost.h
  *
  *  Created on: Mar 21, 2014
  *      Author: kargoll

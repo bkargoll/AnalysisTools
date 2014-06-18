@@ -104,6 +104,7 @@ class HToTaumuTauh : public Selection {
 
   // Selection Variables
   std::vector<TH1D> NCatFired;
+  std::vector<TH1D> CatFired;
 
   std::vector<TH1D> NVtx;
   std::vector<TH1D> NVtxFullSelection;
@@ -212,6 +213,11 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatVBFTightMtSideband;
   std::vector<TH1D> CatVBFTightRelaxMt;
   std::vector<TH1D> CatVBFTightRelaxMtExtrapolation;
+  std::vector<TH1D> CatInclusiveMt;
+  std::vector<TH1D> CatInclusiveMtSideband;
+  std::vector<TH1D> CatInclusiveMtExtrapolation;
+
+  unsigned verbose;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
@@ -222,6 +228,12 @@ class HToTaumuTauh : public Selection {
 
   // flag for category to run
   TString categoryFlag;
+  // flag for WJets background source
+  TString wJetsBGSource;
+
+  // map to hold WJets yields for each category
+  std::map<TString, double> wJetsYieldMap;
+  std::map<TString, double> wJetsYieldScaleMap;
 
   // variables to hold selected objects (to be used e.g. for sync Ntuple)
   int selVertex;

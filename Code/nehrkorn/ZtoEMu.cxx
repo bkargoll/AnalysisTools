@@ -650,15 +650,15 @@ void  ZtoEMu::doEvent(){
 			  && vertex>=0
 			  ){
 		  // don't use electrons with tracks matching those of selected muons
-		  for(unsigned j=0;j<GoodMuons.size();j++){
+		  /*for(unsigned j=0;j<GoodMuons.size();j++){
 			  if(Ntp->Electron_Track_idx(i)==Ntp->Muon_Track_idx(GoodMuons.at(j))) hasMuonTrack = true;
 		  }
-		  /*if(GoodMuons.size()==0 && (doHiggsObjects || doWWObjects)){
+		  if(GoodMuons.size()==0 && (doHiggsObjects || doWWObjects)){
 			  for(unsigned j=0;j<Fakemuons.size();j++){
 				  if(Ntp->Electron_Track_idx(i)==Ntp->Muon_Track_idx(Fakemuons.at(j))) hasMuonTrack = true;
 			  }
-		  }*/
-		  if(hasMuonTrack) continue;
+		  }
+		  if(hasMuonTrack) continue;*/
 		  // no overlapping reco muons
 		  /*for(unsigned j=0;j<Ntp->NMuons();j++){
 			  if(Ntp->Electron_p4(i).DeltaR(Ntp->Muon_p4(j))<0.3) matchRecoMuon = true;

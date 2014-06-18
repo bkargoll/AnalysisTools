@@ -7,4 +7,5 @@ cd VBFLoose; source VBFLoose.sh; cd ..
 cd VBFTight; source VBFTight.sh; cd ..
 cd ZeroJetHigh; source ZeroJetHigh.sh; cd ..
 cd ZeroJetLow; source ZeroJetLow.sh; cd ..
+cd Inclusive; source Inclusive.sh; cd ..
 echo 'All categories have been executed. Done.'
