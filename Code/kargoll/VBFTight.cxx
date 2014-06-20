@@ -14,6 +14,8 @@ VBFTight::VBFTight(TString Name_, TString id_):
 	// run VBFTight category
 	categoryFlag = "VBFTight";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 VBFTight::~VBFTight() {

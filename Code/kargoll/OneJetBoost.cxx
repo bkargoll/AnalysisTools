@@ -14,6 +14,8 @@ OneJetBoost::OneJetBoost(TString Name_, TString id_):
 	// run OneJetBoost category
 	categoryFlag = "OneJetBoost";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 OneJetBoost::~OneJetBoost() {

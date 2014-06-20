@@ -14,6 +14,8 @@ OneJetHigh::OneJetHigh(TString Name_, TString id_):
 	// run OneJetHigh category
 	categoryFlag = "OneJetHigh";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 OneJetHigh::~OneJetHigh() {

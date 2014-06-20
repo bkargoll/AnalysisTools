@@ -14,6 +14,8 @@ OneJetLow::OneJetLow(TString Name_, TString id_):
 	// run OneJetLow category
 	categoryFlag = "OneJetLow";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 OneJetLow::~OneJetLow() {

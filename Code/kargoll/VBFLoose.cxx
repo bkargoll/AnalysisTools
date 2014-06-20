@@ -14,6 +14,8 @@ VBFLoose::VBFLoose(TString Name_, TString id_):
 	// run VBFLoose category
 	categoryFlag = "VBFLoose";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 VBFLoose::~VBFLoose() {

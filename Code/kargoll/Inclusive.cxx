@@ -14,6 +14,8 @@ Inclusive::Inclusive(TString Name_, TString id_):
 	// run Inclusive category
 	categoryFlag = "Inclusive";
 
+	// run Categories using data-driven WJets BG
+	wJetsBGSource = "Data";
 }
 
 Inclusive::~Inclusive() {
