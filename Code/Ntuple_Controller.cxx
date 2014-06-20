@@ -492,7 +492,7 @@ float Ntuple_Controller::Electron_Aeff_R04(double Eta){
 	else if(eta>=1.479 && eta<2.) return 0.115;
 	else if(eta>=2. && eta<2.2) return 0.143;
 	else if(eta>=2.2 && eta<2.3) return 0.183;
-	else if(eta>=2.3 && eta<2.3) return 0.194;
+	else if(eta>=2.3 && eta<2.4) return 0.194;
 	else if(eta>=2.4) return 0.261;
 	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }
@@ -504,7 +504,7 @@ float Ntuple_Controller::Electron_Aeff_R03(double Eta){
 	else if(eta>=1.479 && eta<2.) return 0.07;
 	else if(eta>=2. && eta<2.2) return 0.09;
 	else if(eta>=2.2 && eta<2.3) return 0.11;
-	else if(eta>=2.3 && eta<2.3) return 0.11;
+	else if(eta>=2.3 && eta<2.4) return 0.11;
 	else if(eta>=2.4) return 0.14;
 	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }

@@ -27,6 +27,7 @@
 #ifdef USE_kargoll
 #include "kargoll/HToTaumuTauh.h"
 #include "kargoll/HToTaumuTauhSkim.h"
+#include "kargoll/HToTaumuTauhBackgrounds.h"
 #include "kargoll/MuTauSync.h"
 #include "kargoll/OneJetBoost.h"
 #include "kargoll/OneJetHigh.h"
@@ -79,6 +80,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 #endif
 #ifdef USE_kargoll
   else if(Analysis.Contains("htotaumutauhskim")) s=new HToTaumuTauhSkim(Analysis,UncertType);
+  else if(Analysis.Contains("htotaumutauhbackgrounds")) s=new HToTaumuTauhSkim(Analysis,UncertType);
   else if(Analysis.Contains("htotaumutauh")) s=new HToTaumuTauh(Analysis,UncertType);
   else if(Analysis.Contains("mutausync")) s=new MuTauSync(Analysis,UncertType);
   else if(Analysis.Contains("onejetboost")) s=new OneJetBoost(Analysis,UncertType);
