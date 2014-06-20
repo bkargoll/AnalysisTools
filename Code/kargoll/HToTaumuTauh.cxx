@@ -111,6 +111,8 @@ void  HToTaumuTauh::Configure(){
     cut_OneJetBoost.push_back(-10.);
     cut_ZeroJetHigh.push_back(-10.);
     cut_ZeroJetLow.push_back(-10.);
+    cut_VBFTightRelaxed.push_back(-10.);
+    cut_VBFLooseRelaxed.push_back(-10.);
     if(i>=CatCut1){
     	cut.at(i)=-10.0;
     }
@@ -149,6 +151,19 @@ void  HToTaumuTauh::Configure(){
 
 	  if(i==ZeroJetLow_NJet) 	cut_ZeroJetLow.at(ZeroJetLow_NJet)	 	= 0;
 	  if(i==ZeroJetLow_TauPt)	cut_ZeroJetLow.at(ZeroJetLow_TauPt) 	= cCat_splitTauPt;
+
+	  // relaxed categories
+	  if(i==VbfTight_NJet)		cut_VBFTightRelaxed.at(VbfTight_NJet)		= 2;
+	  if(i==VbfTight_DeltaEta)	cut_VBFTightRelaxed.at(VbfTight_DeltaEta)	= 2.0;
+	  if(i==VbfTight_NJetRapGap)cut_VBFTightRelaxed.at(VbfTight_NJetRapGap)= 0;
+	  if(i==VbfTight_JetInvM)	cut_VBFTightRelaxed.at(VbfTight_JetInvM)	= 200.0;
+	  if(i==VbfTight_HiggsPt)	cut_VBFTightRelaxed.at(VbfTight_HiggsPt)	= 100.0;
+
+	  if(i==VbfLoose_NJet)		cut_VBFLooseRelaxed.at(VbfLoose_NJet)		= 2;
+	  if(i==VbfLoose_DeltaEta)	cut_VBFLooseRelaxed.at(VbfLoose_DeltaEta)	= 2.0;
+	  if(i==VbfLoose_NJetRapGap)cut_VBFLooseRelaxed.at(VbfLoose_NJetRapGap)= 0;
+	  if(i==VbfLoose_JetInvM)	cut_VBFLooseRelaxed.at(VbfLoose_JetInvM)	= 200.0;
+	  if(i==VbfLoose_NotVbfTight)cut_VBFLooseRelaxed.at(VbfLoose_NotVbfTight)	= true; // disabled, set to true here
   }
 
   TString hlabel;
@@ -839,7 +854,14 @@ void  HToTaumuTauh::doEvent(){
   bool passed_ZeroJetLow	= category_ZeroJetLow(nJets, tauPt);
   bool passed_NoCategory	= category_NoCategory();
 
-  // fill plot checking if multiple categories have passed, which should never happen
+  // run relaxed categories for background methods
+  bool isWJetMC = (Ntp->GetMCID() >= 20) && (Ntp->GetMCID() <= 23);
+  bool useRelaxedForPlots =  (wJetsBGSource == "Data") && isWJetMC; // overwrite pass-vector with relaxed VBF categories (for WJets shape) only if wanted
+  bool passed_VBFTightRelaxed = helperCategory_VBFTightRelaxed(useRelaxedForPlots, nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
+  bool passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed(useRelaxedForPlots, nJets, selJetdeta, selNjetingap, selMjj);
+
+  // fill plot checking if multiple categories have passed
+  // this should never happen (except for WJets MC events when running with the "Data" flag
   unsigned nCat = 0;
   if (passedFullInclusiveSel) {CatFired.at(t).Fill(0., w);}
   if (passedFullInclusiveSel && passed_VBFTight	) {nCat++; CatFired.at(t).Fill(1, w);}
@@ -859,11 +881,6 @@ void  HToTaumuTauh::doEvent(){
 	  format = "%12i : %5i %5.2f %5i %5.2f %5.2f %5i %5i %5,2f \n";
 	  printf(format,Ntp->EventNumber(), nJets, selJetdeta, selNjetingap, selMjj, higgsPt, passed_VBFTight, passed_VBF, tauPt);
   }
-
-
-  // run relaxed categories for background methods
-  bool passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed(nJets, selJetdeta, selNjetingap, selMjj);
-  bool passed_VBFTightRelaxed = helperCategory_VBFTightRelaxed(passed_VBFLooseRelaxed, higgsPt);
 
   //if (!(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
 	//	  std::cout << "************* NO CATEGORY PASSED! ****************" << std::endl;
@@ -1034,7 +1051,6 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// category specific plots, especially for background methods
-  bool isWJetMC = (Ntp->GetMCID() >= 20) && (Ntp->GetMCID() <= 23);
   // 0-Jet Low
   if(passedFullInclusiveSelNoMt && passed_ZeroJetLow){
 	  Cat0JetLowMt.at(t).Fill(value.at(MT), w);
@@ -2033,18 +2049,75 @@ bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<flo
 }
 
 // helper category definitions for background methods
-bool HToTaumuTauh::helperCategory_VBFLooseRelaxed(unsigned NJets, double DEta, int NJetsInGap, double Mjj){
-	bool passNJets = ( NJets >=  cut_VBFLoose.at(VbfLoose_NJet) );
-	if (!passNJets) return false;
+bool HToTaumuTauh::helperCategory_VBFLooseRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj){
+	std::vector<float> value_VBFLooseRelaxed;
+	std::vector<float> pass_VBFLooseRelaxed;
 
-	bool passDEta = ( fabs(DEta) > 2.0 );
-	bool passCJV = ( NJetsInGap <= cut_VBFLoose.at(VbfLoose_NJetRapGap));
-	bool passMjj = ( Mjj > 200.0 );
+	// cut implementation
+	for(int i=0; i<NCuts;i++){
+	value_VBFLooseRelaxed.push_back(-10.);
+	pass_VBFLooseRelaxed.push_back(false);
+	}
 
-	return passDEta && passCJV && passMjj;
+	value_VBFLooseRelaxed.at(VbfLoose_NJet) = NJets;
+	pass_VBFLooseRelaxed.at(VbfLoose_NJet) = (value_VBFLooseRelaxed.at(VbfLoose_NJet) >= cut_VBFLooseRelaxed.at(VbfLoose_NJet));
+
+	if(pass_VBFLooseRelaxed.at(VbfLoose_NJet)){
+		value_VBFLooseRelaxed.at(VbfLoose_DeltaEta) = DEta;
+		pass_VBFLooseRelaxed.at(VbfLoose_DeltaEta) = (fabs(value_VBFLooseRelaxed.at(VbfLoose_DeltaEta)) > cut_VBFLooseRelaxed.at(VbfLoose_DeltaEta));
+
+		value_VBFLooseRelaxed.at(VbfLoose_NJetRapGap) = NJetsInGap;
+		pass_VBFLooseRelaxed.at(VbfLoose_NJetRapGap) = (value_VBFLooseRelaxed.at(VbfLoose_NJetRapGap) <= cut_VBFLooseRelaxed.at(VbfLoose_NJetRapGap));
+
+		value_VBFLooseRelaxed.at(VbfLoose_JetInvM) = Mjj;
+		pass_VBFLooseRelaxed.at(VbfLoose_JetInvM) = (value_VBFLooseRelaxed.at(VbfLoose_JetInvM) > cut_VBFLooseRelaxed.at(VbfLoose_JetInvM));
+	}
+	else{
+		pass_VBFLooseRelaxed.at(VbfLoose_DeltaEta) = true;
+		pass_VBFLooseRelaxed.at(VbfLoose_NJetRapGap) = true;
+		pass_VBFLooseRelaxed.at(VbfLoose_JetInvM) = true;
+	}
+
+	value_VBFLooseRelaxed.at(VbfLoose_NotVbfTight) = true;
+	pass_VBFLooseRelaxed.at(VbfLoose_NotVbfTight) = true; // disabled cut
+
+	// migrate into main analysis if this is chosen category
+	TString cat = useRelaxedForPlots ? "Loose" : "DoNotUseThisCategoryForPlotting";
+	return migrateCategoryIntoMain(cat,value_VBFLooseRelaxed, pass_VBFLooseRelaxed,VbfLoose_NCuts);
 }
-bool HToTaumuTauh::helperCategory_VBFTightRelaxed(bool passVBFLooseRelaxed, double higgsPt){
-	if (!passVBFLooseRelaxed) return false;
+bool HToTaumuTauh::helperCategory_VBFTightRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt){
+	std::vector<float> value_VBFTightRelaxed;
+	std::vector<float> pass_VBFTightRelaxed;
 
-	return ( higgsPt > cut_VBFTight.at(VbfTight_HiggsPt));
+	// cut implementation
+	for(int i=0; i<NCuts;i++){
+	value_VBFTightRelaxed.push_back(-10.);
+	pass_VBFTightRelaxed.push_back(false);
+	}
+
+	value_VBFTightRelaxed.at(VbfTight_NJet) = NJets;
+	pass_VBFTightRelaxed.at(VbfTight_NJet) = (value_VBFTightRelaxed.at(VbfTight_NJet) >= cut_VBFTightRelaxed.at(VbfTight_NJet));
+
+	if(pass_VBFTightRelaxed.at(VbfTight_NJet)){
+		value_VBFTightRelaxed.at(VbfTight_DeltaEta) = DEta;
+		pass_VBFTightRelaxed.at(VbfTight_DeltaEta) = (fabs(value_VBFTightRelaxed.at(VbfTight_DeltaEta)) > cut_VBFTightRelaxed.at(VbfTight_DeltaEta));
+
+		value_VBFTightRelaxed.at(VbfTight_NJetRapGap) = NJetsInGap;
+		pass_VBFTightRelaxed.at(VbfTight_NJetRapGap) = (value_VBFTightRelaxed.at(VbfTight_NJetRapGap) <= cut_VBFTightRelaxed.at(VbfTight_NJetRapGap));
+
+		value_VBFTightRelaxed.at(VbfTight_JetInvM) = Mjj;
+		pass_VBFTightRelaxed.at(VbfTight_JetInvM) = (value_VBFTightRelaxed.at(VbfTight_JetInvM) > cut_VBFTightRelaxed.at(VbfTight_JetInvM));
+	}
+	else{
+		pass_VBFTightRelaxed.at(VbfTight_DeltaEta) = true;
+		pass_VBFTightRelaxed.at(VbfTight_NJetRapGap) = true;
+		pass_VBFTightRelaxed.at(VbfTight_JetInvM) = true;
+	}
+
+	value_VBFTightRelaxed.at(VbfTight_HiggsPt) = higgsPt;
+	pass_VBFTightRelaxed.at(VbfTight_HiggsPt) = (value_VBFTightRelaxed.at(VbfTight_HiggsPt) > cut_VBFTightRelaxed.at(VbfTight_HiggsPt));
+
+	// migrate into main analysis if this is chosen category
+	TString cat = useRelaxedForPlots ? "VBFTight" : "DoNotUseThisCategoryForPlotting";
+	return migrateCategoryIntoMain(cat,value_VBFTightRelaxed, pass_VBFTightRelaxed,VbfTight_NCuts);
 }

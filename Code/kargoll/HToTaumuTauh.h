@@ -278,6 +278,8 @@ class HToTaumuTauh : public Selection {
   std::vector<float> cut_OneJetHigh, cut_OneJetLow, cut_OneJetBoost;
   std::vector<float> cut_ZeroJetHigh, cut_ZeroJetLow;
   std::vector<float> cut_NoCategory;
+  // relaxed categories for background methods
+  std::vector<float> cut_VBFTightRelaxed, cut_VBFLooseRelaxed;
 
   bool migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, int categoryNCuts);
 
@@ -305,8 +307,8 @@ class HToTaumuTauh : public Selection {
   void configure_NoCategory();
   bool category_NoCategory();
 
-  bool helperCategory_VBFLooseRelaxed(unsigned NJets, double DEta, int NJetsInGap, double Mjj);
-  bool helperCategory_VBFTightRelaxed(bool passVBFLooseRelaxed, double higgsPt);
+  bool helperCategory_VBFLooseRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj);
+  bool helperCategory_VBFTightRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
 
  private:
   // everything is in protected to be accessible by derived classes
