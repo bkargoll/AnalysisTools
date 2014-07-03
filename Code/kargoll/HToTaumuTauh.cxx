@@ -2125,7 +2125,7 @@ bool HToTaumuTauh::category_NoCategory(){
 	// no cuts to compute
 
 	// migrate into main analysis if this is chosen category
-	TString cat = (categoryFlag == "Inclusive ") ? "Inclusive" : "NoCategory"; // make sure that Inclusive category is handled as NoCategory
+	TString cat = (categoryFlag == "Inclusive") ? "Inclusive" : "NoCategory"; // make sure that Inclusive category is handled as NoCategory
 	return migrateCategoryIntoMain(cat,value_NoCategory, pass_NoCategory,NoCategory_NCuts);
 }
 
