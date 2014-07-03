@@ -49,28 +49,28 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// select which WJets Background source to use
 	// chose between:
 	// * "MC": use MC as given in Histo.txt
-	// * "Data": use data driven method (make sure wJetsYieldMap is filled correctly)
+	// * "Data": use data driven method (make sure wJetsYieldScaleMap is filled correctly)
 	wJetsBGSource = "MC";
 
 	// this one is actually used to set the new cross section for W+Jet
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetLow",   7.6) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetHigh",  6.4) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetLow",    9.2) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetHigh",   7.5) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetBoost",  6.4) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFLoose",     28.1) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFTight",     4.2) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("Inclusive",    7.8) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetLow",   0.80901627) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetHigh",  0.68228370) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetLow",    0.98325814) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetHigh",   0.79677233) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetBoost",  0.67725753) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFLoose",     0.14590955) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFTight",     0.04354578) );
+	wJetsYieldScaleMap.insert(std::pair<TString,double>("Inclusive",    0.83902189) );
 
 	// this one is used for cross-check only
-	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   6604.2) );
-	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  1137.5) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",    4831.7) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",    663.9) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",   151.2) );
-	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",       62.9) );
-	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",        4.6) );
-	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",   13202.4) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   6604.2) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  1137.5) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",    4831.7) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",    663.9) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",   151.2) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",       62.9) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",        4.6) );
+//	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",   13283.5) );
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
@@ -441,6 +441,16 @@ void  HToTaumuTauh::Configure(){
   CatInclusiveMt = HConfig.GetTH1D(Name+"_CatInclusiveMt","CatInclusiveMt",125,0.,250.,"Incl: m_{T}/GeV");
   CatInclusiveMtSideband = HConfig.GetTH1D(Name+"_CatInclusiveMtSideband","CatInclusiveMtSideband",90,70.,250.,"Incl: m_{T}/GeV");
   CatInclusiveMtExtrapolation = HConfig.GetTH1D(Name+"_CatInclusiveMtExtrapolation","CatInclusiveMtExtrapolation",2,0.5,2.5,"Incl: m_{T} signal and sideband");
+
+  Cat0JetLowQcdAbcd = HConfig.GetTH2D(Name+"_Cat0JetLowQcdAbcd","Cat0JetLowQcdAbcd",2,-1.,1.,2,-1.,1.,"0JL: relIso(#mu)","OS/SS");
+  Cat0JetHighQcdAbcd = HConfig.GetTH2D(Name+"_Cat0JetHighQcdAbcd","Cat0JetHighQcdAbcd",2,-1.,1.,2,-1.,1.,"0JH:relIso(#mu)","OS/SS");
+  Cat1JetLowQcdAbcd = HConfig.GetTH2D(Name+"_Cat1JetLowQcdAbcd","Cat1JetLowQcdAbcd",2,-1.,1.,2,-1.,1.,"1JL:relIso(#mu)","OS/SS");
+  Cat1JetHighQcdAbcd = HConfig.GetTH2D(Name+"_Cat1JetHighQcdAbcd","Cat1JetHighQcdAbcd",2,-1.,1.,2,-1.,1.,"1JH:relIso(#mu)","OS/SS");
+  Cat1JetBoostQcdAbcd = HConfig.GetTH2D(Name+"_Cat1JetBoostQcdAbcd","Cat1JetBoostQcdAbcd",2,-1.,1.,2,-1.,1.,"1JB:relIso(#mu)","OS/SS");
+  CatVBFLooseQcdAbcd = HConfig.GetTH2D(Name+"_CatVBFLooseQcdAbcd","CatVBFLooseQcdAbcd",2,-1.,1.,2,-1.,1.,"VBFL:relIso(#mu)","OS/SS");
+  CatVBFTightQcdAbcd = HConfig.GetTH2D(Name+"_CatVBFTightQcdAbcd","CatVBFTightQcdAbcd",2,-1.,1.,2,-1.,1.,"VBFT:relIso(#mu)","OS/SS");
+  CatInclusiveQcdAbcd = HConfig.GetTH2D(Name+"_CatInclusiveQcdAbcd","CatInclusiveQcdAbcd",2,-1.,1.,2,-1.,1.,"Incl:relIso(#mu)","OS/SS");
+
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
   else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
@@ -573,6 +583,16 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&CatInclusiveMt);
  Extradist1d.push_back(&CatInclusiveMtSideband);
  Extradist1d.push_back(&CatInclusiveMtExtrapolation);
+
+ Extradist2d.push_back(&Cat0JetLowQcdAbcd);
+ Extradist2d.push_back(&Cat0JetHighQcdAbcd);
+ Extradist2d.push_back(&Cat1JetLowQcdAbcd);
+ Extradist2d.push_back(&Cat1JetHighQcdAbcd);
+ Extradist2d.push_back(&Cat1JetBoostQcdAbcd);
+ Extradist2d.push_back(&CatVBFLooseQcdAbcd);
+ Extradist2d.push_back(&CatVBFTightQcdAbcd);
+ Extradist2d.push_back(&CatInclusiveQcdAbcd);
+
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -594,7 +614,7 @@ void  HToTaumuTauh::doEvent(){
   
   double wobs=1;
   double w;
-  if(!Ntp->isData()){w = Ntp->PUWeight();}
+  if(!Ntp->isData()){w = Ntp->PUWeightFineBins();}
   else{w=1;}
 
   // Apply Selection
@@ -643,7 +663,21 @@ void  HToTaumuTauh::doEvent(){
   }
   value.at(NMuKin)=selectedMuons.size();
   pass.at(NMuKin)=(value.at(NMuKin)>=cut.at(NMuKin));
-  if (selectedMuons.size() > 0) selMuon = selectedMuons.at(0);
+
+  // muons for QCD background method
+  std::vector<int> antiIsoMuons;
+  antiIsoMuons.clear();
+  for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
+	  if( selectMuon_antiIso(i_mu,selVertex) ) {
+		  antiIsoMuons.push_back(i_mu);
+	  }
+  }
+  bool hasAntiIsoMuon = (antiIsoMuons.size() > 0);
+
+  if (selectedMuons.size() > 0)
+	  selMuon = selectedMuons.at(0); // use signal muon
+  if (selectedMuons.size() <= 0 && hasAntiIsoMuon)
+	  selMuon = antiIsoMuons.at(0); // for background methods: use anti-iso muon
 
   std::vector<int> diMuonVetoMuonsPositive;	// muons selected for the dimuon veto
   diMuonVetoMuonsPositive.clear();
@@ -697,7 +731,21 @@ void  HToTaumuTauh::doEvent(){
   }
   value.at(NTauKin)=selectedTaus.size();
   pass.at(NTauKin)=(value.at(NTauKin)>=cut.at(NTauKin));
-  if(selectedTaus.size() > 0) selTau = selectedTaus.at(0);
+
+  // taus for QCD background method
+  std::vector<int> relaxedIsoTaus;
+  relaxedIsoTaus.clear();
+  for(unsigned i_tau=0; i_tau < Ntp->NPFTaus(); i_tau++){
+	  if ( selectPFTau_relaxedIso(i_tau,selectedMuonsId) ){
+		  relaxedIsoTaus.push_back(i_tau);
+	  }
+  }
+  bool hasRelaxedIsoTau = (relaxedIsoTaus.size() > 0);
+
+  if(selectedTaus.size() > 0)
+	  selTau = selectedTaus.at(0); // use signal tau
+  if(selectedTaus.size() <= 0 && hasRelaxedIsoTau)
+	  selTau = relaxedIsoTaus.at(0); // relaxed isolation tau
 
   // Tri-lepton veto
   std::vector<int> triLepVetoMuons;
@@ -785,7 +833,7 @@ void  HToTaumuTauh::doEvent(){
 	  tauPt = Ntp->PFTau_p4(selTau).Pt();
   }
 
-  // calculate pt of higgs candidate
+  // calculate pt of higgs candidatef
   double higgsPt = -10;
   double higgsPhi = -10;
   if (selMuon != -1 && selTau != -1){
@@ -825,6 +873,7 @@ void  HToTaumuTauh::doEvent(){
 	  selMjj = -1;
   }
 
+
   // define booleans for different stages of selection
   bool passedVertex = pass.at(TriggerOk) && pass.at(PrimeVtx);
   bool passedMuId = passedVertex && pass.at(NMuId);
@@ -839,6 +888,7 @@ void  HToTaumuTauh::doEvent(){
   // define booleans for analysis stages needed for background methods
   bool passedFullInclusiveSelNoMt = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(BJetVeto);
   bool passedFullInclusiveSelNoMtNoOS = passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(BJetVeto);
+  bool passedFullInclusiveNoIsoNoCharge = passedVertex && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(MT) && pass.at(BJetVeto);
 
   // define booleans for analysis stages for additional plots
   bool passedObjectsFailDiMuonVeto = passedObjects && !pass.at(DiMuonVeto);
@@ -1050,8 +1100,9 @@ void  HToTaumuTauh::doEvent(){
     //std::cout << "ID after = " << id << std::endl;
   }
 
-  //////// category specific plots, especially for background methods
-  // 0-Jet Low
+  //////// category specific plots, especially for background methods /////////
+
+  ////// W+Jets Background estimation
   if(passedFullInclusiveSelNoMt && passed_ZeroJetLow){
 	  Cat0JetLowMt.at(t).Fill(value.at(MT), w);
 	  Cat0JetLowMtSideband.at(t).Fill(value.at(MT), w);
@@ -1062,7 +1113,6 @@ void  HToTaumuTauh::doEvent(){
 			  Cat0JetLowMtExtrapolation.at(t).Fill(2, w);
 	  }
   }
-  // 0-Jet High
   if(passedFullInclusiveSelNoMt && passed_ZeroJetHigh){
 	  Cat0JetHighMt.at(t).Fill(value.at(MT), w);
 	  Cat0JetHighMtSideband.at(t).Fill(value.at(MT), w);
@@ -1073,7 +1123,6 @@ void  HToTaumuTauh::doEvent(){
 			  Cat0JetHighMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // 1-Jet Low
   if(passedFullInclusiveSelNoMt && passed_OneJetLow){
 	  Cat1JetLowMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetLowMtSideband.at(t).Fill(value.at(MT), w);
@@ -1084,7 +1133,6 @@ void  HToTaumuTauh::doEvent(){
 			  Cat1JetLowMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // 1-Jet High
   if(passedFullInclusiveSelNoMt && passed_OneJetHigh){
 	  Cat1JetHighMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetHighMtSideband.at(t).Fill(value.at(MT), w);
@@ -1095,7 +1143,6 @@ void  HToTaumuTauh::doEvent(){
 			  Cat1JetHighMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // 1-Jet Boost
   if(passedFullInclusiveSelNoMt && passed_OneJetBoost){
 	  Cat1JetBoostMt.at(t).Fill(value.at(MT), w);
 	  Cat1JetBoostMtSideband.at(t).Fill(value.at(MT), w);
@@ -1106,7 +1153,6 @@ void  HToTaumuTauh::doEvent(){
 			  Cat1JetBoostMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // VBF Loose
   if(passedFullInclusiveSelNoMt && passed_VBFLoose){
 	  CatVBFLooseMt.at(t).Fill(value.at(MT), w);
 	  CatVBFLooseMtSideband.at(t).Fill(value.at(MT), w);
@@ -1120,7 +1166,6 @@ void  HToTaumuTauh::doEvent(){
 			  CatVBFLooseRelaxMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // VBF Tight
   if(passedFullInclusiveSelNoMt && passed_VBFTight){
 	  CatVBFTightMt.at(t).Fill(value.at(MT), w);
 	  CatVBFTightMtSideband.at(t).Fill(value.at(MT), w);
@@ -1134,7 +1179,6 @@ void  HToTaumuTauh::doEvent(){
 			  CatVBFTightRelaxMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
-  // Inclusive
   if(passedFullInclusiveSelNoMt){
 	  CatInclusiveMt.at(t).Fill(value.at(MT), w);
 	  CatInclusiveMtSideband.at(t).Fill(value.at(MT), w);
@@ -1145,6 +1189,44 @@ void  HToTaumuTauh::doEvent(){
 			  CatInclusiveMtExtrapolation.at(t).Fill(2, w); // fill with weight
 	  }
   }
+
+  ////// QCD Background estimation
+  //     OS/SS
+  //       ^
+  //    C  |  D
+  //   ---------> relIso(mu)
+  //    A  |  B
+  if (passedFullInclusiveNoIsoNoCharge){
+	  bool isSS = ( abs(value.at(OppCharge)) == 2 );
+	  // (!passedObjects && hasRelaxedIsoTau) means that there is no signal muon (as relaxedIsoTaus fully contains signal taus)
+	  // --> veto events with signal muon AND antiIsoMuon, as in these cases mT etc. are calculated using the signal muon
+	  bool isA = pass.at(OppCharge) && passedObjects;
+	  bool isB = pass.at(OppCharge) && !passedObjects && hasRelaxedIsoTau && hasAntiIsoMuon;
+	  bool isC = isSS && passedObjects;
+	  bool isD = isSS && !passedObjects && hasRelaxedIsoTau && hasAntiIsoMuon;
+	  if (isA+isB+isC+isD > 1) printf("WARNING: Event %i enters more than 1 ABCD region! (A%i, B%i, C%i D%i)\n", Ntp->EventNumber(), isA, isB, isC, isD);
+//	  if (isA+isB+isC+isD == 0) {
+//		  printf("ATTENTION: Event %9d enters no ABCD region! Sum(q) = %d, passedMu = %d, passedTau = %d\n", Ntp->EventNumber(), value.at(OppCharge), passedMu, passedTau);
+//		  printf("       		                                    hasRelTau = %d, hasAntiIsoMu = %d\n", hasRelaxedIsoTau, hasAntiIsoMuon);
+//	  }
+	  double iso(-10.), q(-10.);
+	  if (isA || isB) q = -0.5;
+	  if (isC || isD) q = +0.5;
+	  if (isA || isC) iso = -0.5;
+	  if (isB || isD) iso = +0.5;
+
+	  CatInclusiveQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_ZeroJetLow) Cat0JetLowQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_ZeroJetHigh) Cat0JetHighQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_OneJetLow) Cat1JetLowQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_OneJetHigh) Cat1JetHighQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_OneJetBoost) Cat1JetBoostQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_VBFLoose) CatVBFLooseQcdAbcd.at(t).Fill(iso,q,w);
+	  if (passed_VBFTight) CatVBFTightQcdAbcd.at(t).Fill(iso,q,w);
+  }
+  // todo: fill the ABCD plot
+  // todo: create plots showing isolation for OS and SS events
+
 }
 
 
@@ -1155,19 +1237,22 @@ void  HToTaumuTauh::Finish(){
 		std::cout << "WJet BG: Using data driven yield method." << std::endl;
 		double wJetsYieldMC;
 		unsigned histo;
-		printf("WJet BG: CategoryId = %i, WJet Yield Scale Factor = %.3f", categoryFlag.Data(), wJetsYieldScaleMap[categoryFlag]);
+		printf("WJet BG: CategoryId = %s, WJet Yield Scale Factor = %.3f\n", categoryFlag.Data(), wJetsYieldScaleMap[categoryFlag]);
 		for (unsigned id = 20; id < 24; id++){
 			// scale cross-sections for WJet backgrounds by DataYield/MCYield in HistoConfig
 			double oldXSec = HConfig.GetCrossSection(id);
 			double newXSec = oldXSec * wJetsYieldScaleMap[categoryFlag];
 			if( !HConfig.SetCrossSection(id, newXSec) ) std::cout << "WARNING: Could not change cross-section for id " << id << std::endl;
-			printf("WJet BG, id = %i: Scale from MC xsec = %.1f to data-driven xsec = %.1f");
+			printf("WJet BG, id = %i: Scale from MC xsec = %.1f to data-driven xsec = %.1f\n", id, oldXSec, newXSec);
 		}
 	}
 	else if (wJetsBGSource == "MC") std::cout << "WJet BG: Using MC." << std::endl;
 	else std::cout << "WJet BG: Please specify \"MC\" or \"Data\". Using MC for this run..." << std::endl;
 
 	Selection::Finish();
+
+	// todo: implement cross check: Integral in WJet plot <-> yield from background method
+
 }
 
 
@@ -1235,6 +1320,17 @@ bool HToTaumuTauh::selectMuon_Kinematics(unsigned i){
 	if(	Ntp->Muon_p4(i).Pt() >= cMu_pt &&
 		fabs(Ntp->Muon_p4(i).Eta()) <= cMu_eta
 			){
+		return true;
+	}
+	return false;
+}
+
+bool HToTaumuTauh::selectMuon_antiIso(unsigned i, unsigned vertex) {
+	if (Ntp->isSelectedMuon(i, vertex, cMu_dxy, cMu_dz) &&
+		Ntp->Muon_RelIso(i) <= 0.5 &&
+		Ntp->Muon_RelIso(i) >= 0.2 &&
+		matchTrigger(i, cTriggerNames, "muon") < cMu_dRHltMatch &&
+		selectMuon_Kinematics(i)) {
 		return true;
 	}
 	return false;
@@ -1333,6 +1429,15 @@ bool HToTaumuTauh::selectPFTau_Kinematics(unsigned i){
 	if ( 	Ntp->PFTau_p4(i).Pt() >= cTau_pt &&
 			fabs(Ntp->PFTau_p4(i).Eta()) <= cTau_eta
 			){
+		return true;
+	}
+	return false;
+}
+
+bool HToTaumuTauh::selectPFTau_relaxedIso(unsigned i, std::vector<int> muonCollection){
+	if (selectPFTau_Id(i, muonCollection) &&
+		Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(i) < 10. &&
+		selectPFTau_Kinematics(i)){
 		return true;
 	}
 	return false;
@@ -2020,7 +2125,8 @@ bool HToTaumuTauh::category_NoCategory(){
 	// no cuts to compute
 
 	// migrate into main analysis if this is chosen category
-	return migrateCategoryIntoMain("NoCategory",value_NoCategory, pass_NoCategory,NoCategory_NCuts);
+	TString cat = (categoryFlag == "Inclusive ") ? "Inclusive" : "NoCategory"; // make sure that Inclusive category is handled as NoCategory
+	return migrateCategoryIntoMain(cat,value_NoCategory, pass_NoCategory,NoCategory_NCuts);
 }
 
 // migrate a category into main analysis if this is chosen category

@@ -217,6 +217,15 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatInclusiveMtSideband;
   std::vector<TH1D> CatInclusiveMtExtrapolation;
 
+  std::vector<TH2D> Cat0JetLowQcdAbcd;
+  std::vector<TH2D> Cat0JetHighQcdAbcd;
+  std::vector<TH2D> Cat1JetLowQcdAbcd;
+  std::vector<TH2D> Cat1JetHighQcdAbcd;
+  std::vector<TH2D> Cat1JetBoostQcdAbcd;
+  std::vector<TH2D> CatVBFLooseQcdAbcd;
+  std::vector<TH2D> CatVBFTightQcdAbcd;
+  std::vector<TH2D> CatInclusiveQcdAbcd;
+
   unsigned verbose;
 
   // cut values
@@ -232,7 +241,7 @@ class HToTaumuTauh : public Selection {
   TString wJetsBGSource;
 
   // map to hold WJets yields for each category
-  std::map<TString, double> wJetsYieldMap;
+  //std::map<TString, double> wJetsYieldMap;
   std::map<TString, double> wJetsYieldScaleMap;
 
   // variables to hold selected objects (to be used e.g. for sync Ntuple)
@@ -253,15 +262,19 @@ class HToTaumuTauh : public Selection {
   bool selectMuon_Id(unsigned i, unsigned vertex);
   bool selectMuon_Kinematics(unsigned i);
 
+  bool selectMuon_antiIso(unsigned i, unsigned vertex);
+
   bool selectMuon_diMuonVeto(unsigned i, unsigned i_vtx);
   bool selectMuon_triLeptonVeto(unsigned i, int selectedMuon, unsigned i_vtx);
 
   bool selectElectron_triLeptonVeto(unsigned i, unsigned i_vtx, std::vector<int>);
 
   bool selectPFTau_Id(unsigned i);
-  bool selectPFTau_Id(unsigned i, std::vector<int>);
+  bool selectPFTau_Id(unsigned i, std::vector<int> muonCollection);
   bool selectPFTau_Iso(unsigned i);
   bool selectPFTau_Kinematics(unsigned i);
+
+  bool selectPFTau_relaxedIso(unsigned i, std::vector<int> muonCollection);
 
   std::vector<int> sortPFjets();
   bool selectPFJet_Cleaning(unsigned i, int selectedMuon, int selectedTau);

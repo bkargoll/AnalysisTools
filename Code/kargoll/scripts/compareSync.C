@@ -10,9 +10,10 @@ void runSync(){
 	//compareSync("MuTau_VBF","Claudia","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/ClaudiasSample/workdirAnalysis_Apr_07_2014","MuTauSyncTree_VBFHToTauTauM125_2014_Mar_20_Claudia","syncTree","weight1","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/ClaudiasSample/forcePUweightToOne/workdirAnalysis_Apr_07_2014","MuTauSyncTree_VBFHToTauTauM125_2014_Mar_20_Claudia_PUweightsForcedTo1","syncTree");
 	//compareSync("MuTau_VBF","AC_finePU","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/workdirAnalysis_Apr_04_2014","MuTauSyncTree_VBFHiggs_TestPUBinning","syncTree","Claudia","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/ClaudiasSample/workdirAnalysis_Apr_07_2014","MuTauSyncTree_VBFHToTauTauM125_2014_Mar_20_Claudia","syncTree");
 	//compareSync("MuTau_VBF","ACFixedPUBug","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/switchToFloatNumInter/workdirAnalysis_Apr_10_2014","MuTauSyncTree_fixedPUBug_1","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
-	compareSync("MuTau_VBF","ACFixedPUBug","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/switchToFloatNumInter/workdirAnalysis_Apr_10_2014","MuTauSyncTree_fixedPUBug_1","syncTree","ACBeforePUFix","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/workdirAnalysis_Apr_04_2014","MuTauSyncTree_VBFHiggs_TestPUBinning","syncTree");
+	//compareSync("MuTau_VBF","ACFixedPUBug","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/switchToFloatNumInter/workdirAnalysis_Apr_10_2014","MuTauSyncTree_fixedPUBug_1","syncTree","ACBeforePUFix","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/workdirAnalysis_Apr_04_2014","MuTauSyncTree_VBFHiggs_TestPUBinning","syncTree");
 	//compareSync("MuTau_VBF","ACFixedPUBug1","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/switchToFloatNumInter/workdirAnalysis_Apr_10_2014","MuTauSyncTree_fixedPUBug_1","syncTree","ACFixedPUBug2","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/switchToFloatNumInter/Test2ndRun/workdirAnalysis_Apr_10_2014","MuTauSyncTree_fixedPUBug_2","syncTree");
 	//compareSync("MuTau_VBF","CERN","/afs/cern.ch/user/s/steggema/public/H2TauTauSync/","muTau_HiggsVBF125","H2TauTauSyncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
+	compareSync("MuTau_VBF","Aachen","/net/scratch_cms/institut_3b/kargoll/workdirAnalysis_Jun_30_2014/","MuTauSyncTree_VBFHiggs2012A_Prod2014Jun05", "syncTree", "London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
 	gROOT->ProcessLine(".q");
 }
 
@@ -187,12 +188,12 @@ void compareSync(TString channel,TString myGroup,TString myPath,TString myRootFi
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"met",20,0,200,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"metphi",35,-3.5,3.5,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"metcov00",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
-  drawHistos(&C,filename,"inclusive",Tmine,Tother,"metcov01",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
+  drawHistos(&C,filename,"inclusive",Tmine,Tother,"metcov01",40,-500,500,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"metcov11",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvamet",20,0,200,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvametphi",35,-3.5,3.5,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvacov00",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
-  drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvacov01",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
+  drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvacov01",40,-500,500,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"mvacov11",40,0,1000,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);
 
   drawHistos(&C,filename,"inclusive",Tmine,Tother,"jpt_1",50,0,200,selection,myGroup,myRootFile,group,groupRootFile,mySel,groupSel);

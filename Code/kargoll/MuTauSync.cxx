@@ -57,7 +57,7 @@ void MuTauSync::doEvent(){
 		rho = Ntp->RhoIsolationAllInputTags();
 		 // Event Weights
 		mcweight = -10;
-		puweight = Ntp->PUWeight();
+		puweight = Ntp->PUWeightFineBins();
 		trigweight_1 = -10;
 		trigweight_2 = -10;
 		idweight_1 = -10;

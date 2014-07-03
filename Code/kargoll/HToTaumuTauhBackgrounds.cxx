@@ -52,10 +52,10 @@ void HToTaumuTauhBackgrounds::Finish() {
 		TString n[nCat] = {"0-Jet Low","0-Jet High","1-Jet Low","1-Jet High","1-Jet Boost","VBF Loose","VBF Tight","Inclusive"};
 		std::vector<TString> catNames(n,n+nCat);
 		// extrapolation factor from MC
-		std::vector<double> catEPSignal(nCat,-9.9);
-		std::vector<double> catEPSideband(nCat,-9.9);
-		std::vector<double> catWJetMCPrediction(nCat,-9.9);
-		std::vector<double> catWJetRelaxedMCPrediction(nCat,-9.9);
+		std::vector<double> catEPSignal(nCat,0.0);
+		std::vector<double> catEPSideband(nCat,0.0);
+		std::vector<double> catWJetMCPrediction(nCat,0.0);
+		std::vector<double> catWJetRelaxedMCPrediction(nCat,0.0);
 		int lowBin = Cat0JetLowMt.at(0).FindFixBin(0.0);
 		int highBin = Cat0JetLowMt.at(0).FindFixBin(30.0) - 1;
 		printf("lowBin = %i, highBin = %i \n", lowBin, highBin);
@@ -89,7 +89,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 				catEPSignal.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(1);
 				catEPSideband.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(2);
 				catWJetMCPrediction.at(6) += CatVBFTightMt.at(histo).Integral(lowBin, highBin) * scales[id];
-				catWJetRelaxedMCPrediction.at(5) += CatVBFLooseRelaxMt.at(histo).Integral(lowBin, highBin) * scales[id];
+				catWJetRelaxedMCPrediction.at(6) += CatVBFTightRelaxMt.at(histo).Integral(lowBin, highBin) * scales[id];
 
 				catEPSignal.at(7)+= CatInclusiveMtExtrapolation.at(histo).GetBinContent(1);
 				catEPSideband.at(7) += CatInclusiveMtExtrapolation.at(histo).GetBinContent(2);
@@ -112,7 +112,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 			catSBData.at(6) = CatVBFTightMtSideband.at(histo).Integral();
 			catSBData.at(7) = CatInclusiveMtSideband.at(histo).Integral();
 		}
-		std::vector<double> catSBBackgrounds(nCat,-9.9);
+		std::vector<double> catSBBackgrounds(nCat,0.0);
 		for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
 			if (id == 60) continue; // 60 = QCD
 			if (HConfig.GetHisto(false,id,histo)){
