@@ -95,11 +95,11 @@ void  HToTaumuTauh::Configure(){
     if(i==NMuId)			cut.at(NMuId)=1;
     if(i==NMuKin)			cut.at(NMuKin)=1;
     if(i==DiMuonVeto)		cut.at(DiMuonVeto)=0.15;
-    if(i==NTauId)			cut.at(NTauId)=1;
-    if(i==NTauIso)			cut.at(NTauIso)=1;
-    if(i==NTauKin)			cut.at(NTauKin)=1;
+    if(i==NTauId)			cut.at(NTauId)=0; // todo: switch back to 1
+    if(i==NTauIso)			cut.at(NTauIso)=0;// todo: switch back to 1
+    if(i==NTauKin)			cut.at(NTauKin)=0;// todo: switch back to 1
     if(i==TriLeptonVeto)	cut.at(TriLeptonVeto)=0;
-    if(i==OppCharge)		cut.at(OppCharge)=0;
+    if(i==OppCharge)		cut.at(OppCharge)=999; //todo: switch back to 0
     if(i==MT)				cut.at(MT)=30.0; // https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#Event_Categories_SM
     if(i==BJetVeto)			cut.at(BJetVeto)=0;
     //category-specific values are set in the corresponding configure function
@@ -924,13 +924,13 @@ void  HToTaumuTauh::doEvent(){
 
   NCatFired.at(t).Fill(nCat, w);
 
-  if (passedFullInclusiveSel && nCat == 0){
+  /*if (passedFullInclusiveSel && nCat == 0){
 	  std::cout << "                       Here comes a bad event" << std::endl;
 	  const char* format = "%12s : %5s %5s %5s %5s %5s %5s %5s %5s \n";
 	  printf(format,"Event", "NJets", "dEta", "CJV", "mjj", "pT(H)", "isVBT", "isVBF", "pT(t)");
 	  format = "%12i : %5i %5.2f %5i %5.2f %5.2f %5i %5i %5,2f \n";
 	  printf(format,Ntp->EventNumber(), nJets, selJetdeta, selNjetingap, selMjj, higgsPt, passed_VBFTight, passed_VBF, tauPt);
-  }
+	  }*/
 
   //if (!(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
 	//	  std::cout << "************* NO CATEGORY PASSED! ****************" << std::endl;
@@ -1001,7 +1001,7 @@ void  HToTaumuTauh::doEvent(){
 	  }
 
 	  //////// plots filled only with selected tau
-	  if(passedTau){
+	  if(passedTau && selTau != -1){
 		  TauSelPt.at(t).Fill(Ntp->PFTau_p4(selTau).Pt(), w);
 		  TauSelEta.at(t).Fill(Ntp->PFTau_p4(selTau).Eta(), w);
 		  TauSelPhi.at(t).Fill(Ntp->PFTau_p4(selTau).Phi(), w);
@@ -1014,11 +1014,11 @@ void  HToTaumuTauh::doEvent(){
 	  // Investigate events discarded by the DiMuon Veto
 	  if (Ntp->Muon_Charge(selMuon) == 1){
 		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
-		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
+		  if (selTau != -1) MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
 	  }
 	  else if (Ntp->Muon_Charge(selMuon) == -1){
 		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
-		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
+		  if (selTau != -1) MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
 	  }
 	  MuVetoInvM.at(t).Fill( (Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)) + Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0))).M() , w);
 	  MuVetoPtPositive.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).Pt(), w);
@@ -1044,15 +1044,15 @@ void  HToTaumuTauh::doEvent(){
   //////// plots filled after full selection (without categories)
   if (passedFullInclusiveSel){
 	  // Mu-Tau correlations
-	  MuTauDR    .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaR(Ntp->PFTau_p4(selTau)), w );
-	  MuTauDPhi  .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaPhi(Ntp->PFTau_p4(selTau)), w );
-	  MuTauDEta  .at(t).Fill( Ntp->Muon_p4(selMuon).Eta() - Ntp->PFTau_p4(selTau).Eta(), w );
-	  MuTauDPt   .at(t).Fill( Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt(), w );
-	  MuTauRelDPt.at(t).Fill( (Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt()) / Ntp->Muon_p4(selMuon).Pt() , w);
+	  if (selTau != -1) MuTauDR    .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaR(Ntp->PFTau_p4(selTau)), w );
+	  if (selTau != -1) MuTauDPhi  .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaPhi(Ntp->PFTau_p4(selTau)), w );
+	 if (selTau != -1)  MuTauDEta  .at(t).Fill( Ntp->Muon_p4(selMuon).Eta() - Ntp->PFTau_p4(selTau).Eta(), w );
+	  if (selTau != -1) MuTauDPt   .at(t).Fill( Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt(), w );
+	 if (selTau != -1)  MuTauRelDPt.at(t).Fill( (Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt()) / Ntp->Muon_p4(selMuon).Pt() , w);
 
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
-	  TauCharge.at(t).Fill( Ntp->PFTau_Charge(selTau), w);
+	  if (selTau != -1) TauCharge.at(t).Fill( Ntp->PFTau_Charge(selTau), w);
 
 	  // MET
 	  MetPt.at(t).Fill( Ntp->MET_CorrMVAMuTau_et(), w);
