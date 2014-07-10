@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "HistoConfig.h"
 #include <iostream>
+#include "../Tools.h"
 
 HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   Selection(Name_,id_),
@@ -382,8 +383,85 @@ void  HToTaumuTauh::Configure(){
   MuTauDPt=HConfig.GetTH1D(Name+"_MuTauDPt","MuTauDPt",100,-100.,100.,"#Deltap_{T}(#mu,#tau_{h})/GeV");
   MuTauRelDPt=HConfig.GetTH1D(Name+"_MuTauRelDPt","MuTauRelDPt",100,-2.,2.,"#Deltap_{T}(#mu,#tau_{h})/p_{T}(#mu)");
 
-  MetPt  = HConfig.GetTH1D(Name+"_MetPt","MetPt",50,0.,200.,"E_{T}^{miss}/GeV");
-  MetPhi = HConfig.GetTH1D(Name+"_MetPhi","MetPhi",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
+  MetMVAPt = HConfig.GetTH1D(Name+"_MetMVAPt","MetMVAPt",50,0.,200.,"MVA E_{T}^{miss}/GeV");
+  MetMVAPhi = HConfig.GetTH1D(Name+"_MetMVAPhi","MetMVAPhi",50,-TMath::Pi(),TMath::Pi(),"MVA #phi(E_{T}^{miss})");
+  MetMVADPhiMuon  = HConfig.GetTH1D(Name+"_MetMVADPhiMu","MetMVADPhiMu",50,-TMath::Pi(),TMath::Pi(),"MVA #Delta#phi(#mu,E_{T}^{miss}})");
+  MetMVACosDPhiMuon = HConfig.GetTH1D(Name+"_MetMVACosDPhiMu","MetMVACosDPhiMu",50,-1.0,1.0,"MVA cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetMVAmTMuon = HConfig.GetTH1D(Name+"_MetMVAmTMu","MetMVAmTMu",50,0.,100.,"MVA m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetMVAMuTauPt = HConfig.GetTH1D(Name+"_MetMVAMuTauPt","MetMVAMuTauPt",50,0.,200.,"MVAMuTau E_{T}^{miss}/GeV");
+  MetMVAMuTauPhi = HConfig.GetTH1D(Name+"_MetMVAMuTauPhi","MetMVAMuTauPhi",50,-TMath::Pi(),TMath::Pi(),"MVAMuTau #phi(E_{T}^{miss})");
+  MetMVAMuTauDPhiMuon  = HConfig.GetTH1D(Name+"_MetMVAMuTauDPhiMu","MetMVAMuTauDPhiMu",50,-TMath::Pi(),TMath::Pi(),"MVAMuTau #Delta#phi(#mu,E_{T}^{miss}})");
+  MetMVAMuTauCosDPhiMuon = HConfig.GetTH1D(Name+"_MetMVAMuTauCosDPhiMu","MetMVAMuTauCosDPhiMu",50,-1.0,1.0,"MVAMuTau cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetMVAMuTaumTMuon = HConfig.GetTH1D(Name+"_MetMVAMuTaumTMu","MetMVAMuTaumTMu",50,0.,100.,"MVAMuTau m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetUncorrPt = HConfig.GetTH1D(Name+"_MetUncorrPt","MetUncorrPt",50,0.,200.,"Uncorr E_{T}^{miss}/GeV");
+  MetUncorrPhi = HConfig.GetTH1D(Name+"_MetUncorrPhi","MetUncorrPhi",50,-TMath::Pi(),TMath::Pi(),"Uncorr #phi(E_{T}^{miss})");
+  MetUncorrDPhiMuon  = HConfig.GetTH1D(Name+"_MetUncorrDPhiMu","MetUncorrDPhiMu",50,-TMath::Pi(),TMath::Pi(),"Uncorr #Delta#phi(#mu,E_{T}^{miss}})");
+  MetUncorrCosDPhiMuon = HConfig.GetTH1D(Name+"_MetUncorrCosDPhiMu","MetUncorrCosDPhiMu",50,-1.0,1.0,"Uncorr cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetUncorrmTMuon = HConfig.GetTH1D(Name+"_MetUncorrmTMu","MetUncorrmTMu",50,0.,100.,"Uncorr m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0rtPt = HConfig.GetTH1D(Name+"_MetCorrT0rtPt","MetCorrT0rtPt",50,0.,200.,"CorrT0rt E_{T}^{miss}/GeV");
+  MetCorrT0rtPhi = HConfig.GetTH1D(Name+"_MetCorrT0rtPhi","MetCorrT0rtPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0rt #phi(E_{T}^{miss})");
+  MetCorrT0rtDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0rtDPhiMu","MetCorrT0rtDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0rt #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0rtCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtCosDPhiMu","MetCorrT0rtCosDPhiMu",50,-1.0,1.0,"CorrT0rt cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0rtmTMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtmTMu","MetCorrT0rtmTMu",50,0.,100.,"CorrT0rt m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0rtT1Pt = HConfig.GetTH1D(Name+"_MetCorrT0rtT1Pt","MetCorrT0rtT1Pt",50,0.,200.,"CorrT0rtT1 E_{T}^{miss}/GeV");
+  MetCorrT0rtT1Phi = HConfig.GetTH1D(Name+"_MetCorrT0rtT1Phi","MetCorrT0rtT1Phi",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtT1 #phi(E_{T}^{miss})");
+  MetCorrT0rtT1DPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0rtT1DPhiMu","MetCorrT0rtT1DPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtT1 #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0rtT1CosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtT1CosDPhiMu","MetCorrT0rtT1CosDPhiMu",50,-1.0,1.0,"CorrT0rtT1 cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0rtT1mTMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtT1mTMu","MetCorrT0rtT1mTMu",50,0.,100.,"CorrT0rtT1 m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0pcPt = HConfig.GetTH1D(Name+"_MetCorrT0pcPtPt","MetCorrT0pcPtPt",50,0.,200.,"CorrT0pcPt E_{T}^{miss}/GeV");
+  MetCorrT0pcPhi = HConfig.GetTH1D(Name+"_MetCorrT0pcPtPhi","MetCorrT0pcPtPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcPt #phi(E_{T}^{miss})");
+  MetCorrT0pcDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0pcPtDPhiMu","MetCorrT0pcPtDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcPt #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0pcCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcPtCosDPhiMu","MetCorrT0pcPtCosDPhiMu",50,-1.0,1.0,"CorrT0pcPt cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0pcmTMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcPtmTMu","MetCorrT0pcPtmTMu",50,0.,100.,"CorrT0pcPt m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0pcT1Pt = HConfig.GetTH1D(Name+"_MetCorrT0pcT1Pt","MetCorrT0pcT1Pt",50,0.,200.,"CorrT0pcT1Pt E_{T}^{miss}/GeV");
+  MetCorrT0pcT1Phi = HConfig.GetTH1D(Name+"_MetCorrT0pcT1Phi","MetCorrT0pcT1Phi",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcT1 #phi(E_{T}^{miss})");
+  MetCorrT0pcT1DPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0pcT1DPhiMu","MetCorrT0pcT1DPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcT1 #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0pcT1CosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcT1CosDPhiMu","MetCorrT0pcT1CosDPhiMu",50,-1.0,1.0,"CorrT0pcT1 cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0pcT1mTMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcT1mTMu","MetCorrT0pcT1mTMu",50,0.,100.,"CorrT0pcT1 m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0rtTxyPt = HConfig.GetTH1D(Name+"_MetCorrT0rtTxyPt","MetCorrT0rtTxyPt",50,0.,200.,"CorrT0rtTxy E_{T}^{miss}/GeV");
+  MetCorrT0rtTxyPhi = HConfig.GetTH1D(Name+"_MetCorrT0rtTxyPhi","MetCorrT0rtTxyPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtTxy #phi(E_{T}^{miss})");
+  MetCorrT0rtTxyDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0rtTxyDPhiMu","MetCorrT0rtTxyDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtTxy #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0rtTxyCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtTxyCosDPhiMu","MetCorrT0rtTxyCosDPhiMu",50,-1.0,1.0,"CorrT0rtTxy cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0rtTxymTMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtTxymTMu","MetCorrT0rtTxymTMu",50,0.,100.,"CorrT0rtTxy m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0rtT1TxyPt = HConfig.GetTH1D(Name+"_MetCorrT0rtT1TxyPt","MetCorrT0rtT1TxyPt",50,0.,200.,"CorrT0rtT1Txy E_{T}^{miss}/GeV");
+  MetCorrT0rtT1TxyPhi = HConfig.GetTH1D(Name+"_MetCorrT0rtT1TxyPhi","MetCorrT0rtT1TxyPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtT1Txy #phi(E_{T}^{miss})");
+  MetCorrT0rtT1TxyDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0rtT1TxyDPhiMu","MetCorrT0rtT1TxyDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0rtT1Txy #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0rtT1TxyCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtT1TxyCosDPhiMu","MetCorrT0rtT1TxyCosDPhiMu",50,-1.0,1.0,"CorrT0rtT1Txy cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0rtT1TxymTMuon = HConfig.GetTH1D(Name+"_MetCorrT0rtT1TxymTMu","MetCorrT0rtT1TxymTMu",50,0.,100.,"CorrT0rtT1Txy m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0pcTxyPt = HConfig.GetTH1D(Name+"_MetCorrT0pcTxyPt","MetCorrT0pcTxyPt",50,0.,200.,"CorrT0pcTxy E_{T}^{miss}/GeV");
+  MetCorrT0pcTxyPhi = HConfig.GetTH1D(Name+"_MetCorrT0pcTxyPhi","MetCorrT0pcTxyPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcTxy #phi(E_{T}^{miss})");
+  MetCorrT0pcTxyDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0pcTxyDPhiMu","MetCorrT0pcTxyDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcTxy #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0pcTxyCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcTxyCosDPhiMu","MetCorrT0pcTxyCosDPhiMu",50,-1.0,1.0,"CorrT0pcTxy cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0pcTxymTMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcTxymTMu","MetCorrT0pcTxymTMu",50,0.,100.,"CorrT0pcTxy m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT0pcT1TxyPt = HConfig.GetTH1D(Name+"_MetCorrT0pcT1TxyPt","MetCorrT0pcTxyPt",50,0.,200.,"CorrT0pcTxy E_{T}^{miss}/GeV");
+  MetCorrT0pcT1TxyPhi = HConfig.GetTH1D(Name+"_MetCorrT0pcT1TxyPhi","MetCorrT0pcTxyPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcTxy #phi(E_{T}^{miss})");
+  MetCorrT0pcT1TxyDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT0pcT1TxyDPhiMu","MetCorrT0pcTxyDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT0pcTxy #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT0pcT1TxyCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcT1TxyCosDPhiMu","MetCorrT0pcTxyCosDPhiMu",50,-1.0,1.0,"CorrT0pcTxy cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT0pcT1TxymTMuon = HConfig.GetTH1D(Name+"_MetCorrT0pcT1TxymTMu","MetCorrT0pcTxymTMu",50,0.,100.,"CorrT0pcTxy m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT1Pt = HConfig.GetTH1D(Name+"_MetCorrT1Pt","MetCorrT1Pt",50,0.,200.,"CorrT1 E_{T}^{miss}/GeV");
+  MetCorrT1Phi = HConfig.GetTH1D(Name+"_MetCorrT1Phi","MetCorrT1Phi",50,-TMath::Pi(),TMath::Pi(),"CorrT1 #phi(E_{T}^{miss})");
+  MetCorrT1DPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT1DPhiMu","MetCorrT1DPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT1 #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT1CosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT1CosDPhiMu","MetCorrT1CosDPhiMu",50,-1.0,1.0,"CorrT1 cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT1mTMuon = HConfig.GetTH1D(Name+"_MetCorrT1mTMu","MetCorrT1mTMu",50,0.,100.,"CorrT1 m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrT1TxyPt = HConfig.GetTH1D(Name+"_MetCorrT1TxyPt","MetCorrT1TxyPt",50,0.,200.,"CorrT1Txy E_{T}^{miss}/GeV");
+  MetCorrT1TxyPhi = HConfig.GetTH1D(Name+"_MetCorrT1TxyPhi","MetCorrT1TxyPhi",50,-TMath::Pi(),TMath::Pi(),"CorrT1Txy #phi(E_{T}^{miss})");
+  MetCorrT1TxyDPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrT1TxyDPhiMu","MetCorrT1TxyDPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrT1Txy #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrT1TxyCosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrT1TxyCosDPhiMu","MetCorrT1TxyCosDPhiMu",50,-1.0,1.0,"CorrT1Txy cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrT1TxymTMuon = HConfig.GetTH1D(Name+"_MetCorrT1TxymTMu","MetCorrT1TxymTMu",50,0.,100.,"CorrT1Txy m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrCaloT1Pt = HConfig.GetTH1D(Name+"_MetCorrCaloT1Pt","MetCorrCaloT1Pt",50,0.,200.,"CorrCaloT1 E_{T}^{miss}/GeV");
+  MetCorrCaloT1Phi = HConfig.GetTH1D(Name+"_MetCorrCaloT1Phi","MetCorrCaloT1Phi",50,-TMath::Pi(),TMath::Pi(),"CorrCaloT1 #phi(E_{T}^{miss})");
+  MetCorrCaloT1DPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrCaloT1DPhiMu","MetCorrCaloT1DPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrCaloT1 #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrCaloT1CosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrCaloT1CosDPhiMu","MetCorrCaloT1CosDPhiMu",50,-1.0,1.0,"CorrCaloT1 cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrCaloT1mTMuon = HConfig.GetTH1D(Name+"_MetCorrCaloT1mTMu","MetCorrCaloT1mTMu",50,0.,100.,"CorrCaloT1 m_{T}(#mu,E_{T}^{miss})/GeV");
+  MetCorrCaloT1T2Pt = HConfig.GetTH1D(Name+"_MetCorrCaloT1T2Pt","MetCorrCaloT1T2Pt",50,0.,200.,"CorrCaloT1T2 E_{T}^{miss}/GeV");
+  MetCorrCaloT1T2Phi = HConfig.GetTH1D(Name+"_MetCorrCaloT1T2Phi","MetCorrCaloT1T2Phi",50,-TMath::Pi(),TMath::Pi(),"CorrCaloT1T2 #phi(E_{T}^{miss})");
+  MetCorrCaloT1T2DPhiMuon  = HConfig.GetTH1D(Name+"_MetCorrCaloT1T2DPhiMu","MetCorrCaloT1T2DPhiMu",50,-TMath::Pi(),TMath::Pi(),"CorrCaloT1T2 #Delta#phi(#mu,E_{T}^{miss}})");
+  MetCorrCaloT1T2CosDPhiMuon = HConfig.GetTH1D(Name+"_MetCorrCaloT1T2CosDPhiMu","MetCorrCaloT1T2CosDPhiMu",50,-1.0,1.0,"CorrCaloT1T2 cos(#Delta#phi(#mu,E_{T}^{miss}}))");
+  MetCorrCaloT1T2mTMuon = HConfig.GetTH1D(Name+"_MetCorrCaloT1T2mTMu","MetCorrCaloT1T2mTMu",50,0.,100.,"CorrCaloT1T2 m_{T}(#mu,E_{T}^{miss})/GeV");
+
+ // MetPtFullSel  = HConfig.GetTH1D(Name+"_MetPt","MetPt",50,0.,200.,"E_{T}^{miss}/GeV");
+  //MetPhiFullSel = HConfig.GetTH1D(Name+"_MetPhi","MetPhiFullSel",50,-TMath::Pi(),TMath::Pi(),"#phi(E_{T}^{miss})");
+  //MetDPhiMuFullSel = HConfig.GetTH1D(Name+"_MetDPhiMuFullSel","MetDPhiMuFullSel",50,-TMath::Pi(),TMath::Pi(),"#Delta#phi(#mu,E_{T}^{miss}})");
 
   NJetsKin = HConfig.GetTH1D(Name+"_NJetsKin","NJetsKin",11,-0.5,10.5,"N(j_{kin})");
   JetKin1Pt = HConfig.GetTH1D(Name+"_JetKin1Pt","JetKin1Pt",50,0.,200.,"p_{T}(j_{kin}^{1})/GeV");
@@ -524,8 +602,85 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&MuTauDPt);
  Extradist1d.push_back(&MuTauRelDPt);
 
- Extradist1d.push_back(&MetPt);
- Extradist1d.push_back(&MetPhi);
+ Extradist1d.push_back(&MetMVAPt);
+ Extradist1d.push_back(&MetMVAPhi);
+ Extradist1d.push_back(&MetMVADPhiMuon);
+ Extradist1d.push_back(&MetMVACosDPhiMuon);
+ Extradist1d.push_back(&MetMVAmTMuon);
+ Extradist1d.push_back(&MetMVAMuTauPt);
+ Extradist1d.push_back(&MetMVAMuTauPhi);
+ Extradist1d.push_back(&MetMVAMuTauDPhiMuon);
+ Extradist1d.push_back(&MetMVAMuTauCosDPhiMuon);
+ Extradist1d.push_back(&MetMVAMuTaumTMuon);
+ Extradist1d.push_back(&MetUncorrPt);
+ Extradist1d.push_back(&MetUncorrPhi);
+ Extradist1d.push_back(&MetUncorrDPhiMuon);
+ Extradist1d.push_back(&MetUncorrCosDPhiMuon);
+ Extradist1d.push_back(&MetUncorrmTMuon);
+ Extradist1d.push_back(&MetCorrT0rtPt);
+ Extradist1d.push_back(&MetCorrT0rtPhi);
+ Extradist1d.push_back(&MetCorrT0rtDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtmTMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1Pt);
+ Extradist1d.push_back(&MetCorrT0rtT1Phi);
+ Extradist1d.push_back(&MetCorrT0rtT1DPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1CosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1mTMuon);
+ Extradist1d.push_back(&MetCorrT0pcPt);
+ Extradist1d.push_back(&MetCorrT0pcPhi);
+ Extradist1d.push_back(&MetCorrT0pcDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcmTMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1Pt);
+ Extradist1d.push_back(&MetCorrT0pcT1Phi);
+ Extradist1d.push_back(&MetCorrT0pcT1DPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1CosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1mTMuon);
+ Extradist1d.push_back(&MetCorrT0rtTxyPt);
+ Extradist1d.push_back(&MetCorrT0rtTxyPhi);
+ Extradist1d.push_back(&MetCorrT0rtTxyDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtTxyCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtTxymTMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1TxyPt);
+ Extradist1d.push_back(&MetCorrT0rtT1TxyPhi);
+ Extradist1d.push_back(&MetCorrT0rtT1TxyDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1TxyCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0rtT1TxymTMuon);
+ Extradist1d.push_back(&MetCorrT0pcTxyPt);
+ Extradist1d.push_back(&MetCorrT0pcTxyPhi);
+ Extradist1d.push_back(&MetCorrT0pcTxyDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcTxyCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcTxymTMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1TxyPt);
+ Extradist1d.push_back(&MetCorrT0pcT1TxyPhi);
+ Extradist1d.push_back(&MetCorrT0pcT1TxyDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1TxyCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT0pcT1TxymTMuon);
+ Extradist1d.push_back(&MetCorrT1Pt);
+ Extradist1d.push_back(&MetCorrT1Phi);
+ Extradist1d.push_back(&MetCorrT1DPhiMuon);
+ Extradist1d.push_back(&MetCorrT1CosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT1mTMuon);
+ Extradist1d.push_back(&MetCorrT1TxyPt);
+ Extradist1d.push_back(&MetCorrT1TxyPhi);
+ Extradist1d.push_back(&MetCorrT1TxyDPhiMuon);
+ Extradist1d.push_back(&MetCorrT1TxyCosDPhiMuon);
+ Extradist1d.push_back(&MetCorrT1TxymTMuon);
+ Extradist1d.push_back(&MetCorrCaloT1Pt);
+ Extradist1d.push_back(&MetCorrCaloT1Phi);
+ Extradist1d.push_back(&MetCorrCaloT1DPhiMuon);
+ Extradist1d.push_back(&MetCorrCaloT1CosDPhiMuon);
+ Extradist1d.push_back(&MetCorrCaloT1mTMuon);
+ Extradist1d.push_back(&MetCorrCaloT1T2Pt);
+ Extradist1d.push_back(&MetCorrCaloT1T2Phi);
+ Extradist1d.push_back(&MetCorrCaloT1T2DPhiMuon);
+ Extradist1d.push_back(&MetCorrCaloT1T2CosDPhiMuon);
+ Extradist1d.push_back(&MetCorrCaloT1T2mTMuon);
+
+ //Extradist1d.push_back(&MetPtFullSel);
+ //Extradist1d.push_back(&MetPhiFullSel);
+ //Extradist1d.push_back(&MetDPhiMuFullSel);
 
  Extradist1d.push_back(&NJetsKin);
  Extradist1d.push_back(&JetKin1Pt);
@@ -873,7 +1028,6 @@ void  HToTaumuTauh::doEvent(){
 	  selMjj = -1;
   }
 
-
   // define booleans for different stages of selection
   bool passedVertex = pass.at(TriggerOk) && pass.at(PrimeVtx);
   bool passedMuId = passedVertex && pass.at(NMuId);
@@ -1041,6 +1195,85 @@ void  HToTaumuTauh::doEvent(){
 	  }
   }
 
+  //////// plots filled after full selection without mT cut
+  if (passedObjects && pass.at(DiMuonVeto) && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(BJetVeto)){
+	  MetMVAPt.at(t).Fill(Ntp->MET_CorrMVA_et(), w);
+	  MetMVAPhi.at(t).Fill(Ntp->MET_CorrMVA_phi(), w);
+	  MetMVADPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrMVA_phi()), w);
+	  MetMVACosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrMVA_phi()), w);
+	  MetMVAmTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrMVA_et(),Ntp->MET_CorrMVA_phi()), w);
+	  MetMVAMuTauPt.at(t).Fill(Ntp->MET_CorrMVAMuTau_et() , w);
+	  MetMVAMuTauPhi.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi() , w);
+	  MetMVAMuTauDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrMVAMuTau_phi()), w);
+	  MetMVAMuTauCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrMVAMuTau_phi()), w);
+	  MetMVAMuTaumTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi()), w);
+	  MetUncorrPt.at(t).Fill(Ntp->MET_Uncorr_et() , w);
+	  MetUncorrPhi.at(t).Fill(Ntp->MET_Uncorr_phi() , w);
+	  MetUncorrDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_Uncorr_phi()), w);
+	  MetUncorrCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_Uncorr_phi()), w);
+	  MetUncorrmTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_Uncorr_et(),Ntp->MET_Uncorr_phi()), w);
+	  MetCorrT0rtPt.at(t).Fill(Ntp->MET_CorrT0rt_et() , w);
+	  MetCorrT0rtPhi.at(t).Fill(Ntp->MET_CorrT0rt_phi() , w);
+	  MetCorrT0rtDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0rt_phi()), w);
+	  MetCorrT0rtCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0rt_phi()), w);
+	  MetCorrT0rtmTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0rt_et(),Ntp->MET_CorrT0rt_phi()), w);
+	  MetCorrT0rtT1Pt.at(t).Fill(Ntp->MET_CorrT0rtT1_et() , w);
+	  MetCorrT0rtT1Phi.at(t).Fill(Ntp->MET_CorrT0rtT1_phi() , w);
+	  MetCorrT0rtT1DPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0rtT1_phi()), w);
+	  MetCorrT0rtT1CosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0rtT1_phi()), w);
+	  MetCorrT0rtT1mTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0rtT1_et(),Ntp->MET_CorrT0rtT1_phi()), w);
+	  MetCorrT0pcPt.at(t).Fill(Ntp->MET_CorrT0pc_et() , w);
+	  MetCorrT0pcPhi.at(t).Fill(Ntp->MET_CorrT0pc_phi() , w);
+	  MetCorrT0pcDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0pc_phi()), w);
+	  MetCorrT0pcCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0pc_phi()), w);
+	  MetCorrT0pcmTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0pc_et(),Ntp->MET_CorrT0pc_phi()), w);
+	  MetCorrT0pcT1Pt.at(t).Fill(Ntp->MET_CorrT0pcT1_et() , w);
+	  MetCorrT0pcT1Phi.at(t).Fill(Ntp->MET_CorrT0pcT1_phi() , w);
+	  MetCorrT0pcT1DPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0pcT1_phi()), w);
+	  MetCorrT0pcT1CosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0pcT1_phi()), w);
+	  MetCorrT0pcT1mTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0pcT1_et(),Ntp->MET_CorrT0pcT1_phi()), w);
+	  MetCorrT0rtTxyPt.at(t).Fill(Ntp->MET_CorrT0rtTxy_et() , w);
+	  MetCorrT0rtTxyPhi.at(t).Fill(Ntp->MET_CorrT0rtTxy_phi() , w);
+	  MetCorrT0rtTxyDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0rtTxy_phi()), w);
+	  MetCorrT0rtTxyCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0rtTxy_phi()), w);
+	  MetCorrT0rtTxymTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0rtTxy_et(),Ntp->MET_CorrT0rtTxy_phi()), w);
+	  MetCorrT0rtT1TxyPt.at(t).Fill(Ntp->MET_CorrT0rtT1Txy_et() , w);
+	  MetCorrT0rtT1TxyPhi.at(t).Fill(Ntp->MET_CorrT0rtT1Txy_phi() , w);
+	  MetCorrT0rtT1TxyDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0rtT1Txy_phi()), w);
+	  MetCorrT0rtT1TxyCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0rtT1Txy_phi()), w);
+	  MetCorrT0rtT1TxymTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0rtT1Txy_et(),Ntp->MET_CorrT0rtT1Txy_phi()), w);
+	  MetCorrT0pcTxyPt.at(t).Fill(Ntp->MET_CorrT0pcTxy_et() , w);
+	  MetCorrT0pcTxyPhi.at(t).Fill(Ntp->MET_CorrT0pcTxy_phi() , w);
+	  MetCorrT0pcTxyDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0pcTxy_phi()), w);
+	  MetCorrT0pcTxyCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0pcTxy_phi()), w);
+	  MetCorrT0pcTxymTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0pcTxy_et(),Ntp->MET_CorrT0pcTxy_phi()), w);
+	  MetCorrT0pcT1TxyPt.at(t).Fill(Ntp->MET_CorrT0pcT1Txy_et() , w);
+	  MetCorrT0pcT1TxyPhi.at(t).Fill(Ntp->MET_CorrT0pcT1Txy_phi() , w);
+	  MetCorrT0pcT1TxyDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT0pcT1Txy_phi()), w);
+	  MetCorrT0pcT1TxyCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT0pcT1Txy_phi()), w);
+	  MetCorrT0pcT1TxymTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT0pcT1Txy_et(),Ntp->MET_CorrT0pcT1Txy_phi()), w);
+	  MetCorrT1Pt.at(t).Fill(Ntp->MET_CorrT1_et() , w);
+	  MetCorrT1Phi.at(t).Fill(Ntp->MET_CorrT1_phi() , w);
+	  MetCorrT1DPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT1_phi()), w);
+	  MetCorrT1CosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT1_phi()), w);
+	  MetCorrT1mTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT1_et(),Ntp->MET_CorrT1_phi()), w);
+	  MetCorrT1TxyPt.at(t).Fill(Ntp->MET_CorrT1Txy_et() , w);
+	  MetCorrT1TxyPhi.at(t).Fill(Ntp->MET_CorrT1Txy_phi() , w);
+	  MetCorrT1TxyDPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrT1Txy_phi()), w);
+	  MetCorrT1TxyCosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrT1Txy_phi()), w);
+	  MetCorrT1TxymTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrT1Txy_et(),Ntp->MET_CorrT1Txy_phi()), w);
+	  MetCorrCaloT1Pt.at(t).Fill(Ntp->MET_CorrCaloT1_et() , w);
+	  MetCorrCaloT1Phi.at(t).Fill(Ntp->MET_CorrCaloT1_phi() , w);
+	  MetCorrCaloT1DPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrCaloT1_phi()), w);
+	  MetCorrCaloT1CosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrCaloT1_phi()), w);
+	  MetCorrCaloT1mTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrCaloT1_et(),Ntp->MET_CorrCaloT1_phi()), w);
+	  MetCorrCaloT1T2Pt.at(t).Fill(Ntp->MET_CorrCaloT1T2_et() , w);
+	  MetCorrCaloT1T2Phi.at(t).Fill(Ntp->MET_CorrCaloT1T2_phi() , w);
+	  MetCorrCaloT1T2DPhiMuon.at(t).Fill(Tools::DeltaPhi(Ntp->Muon_p4(selMuon).Phi(), Ntp->MET_CorrCaloT1T2_phi()), w);
+	  MetCorrCaloT1T2CosDPhiMuon.at(t).Fill(cos(Ntp->Muon_p4(selMuon).Phi() - Ntp->MET_CorrCaloT1T2_phi()), w);
+	  MetCorrCaloT1T2mTMuon.at(t).Fill(transverseMass(Ntp->Muon_p4(selMuon).Pt(),Ntp->Muon_p4(selMuon).Phi(),Ntp->MET_CorrCaloT1T2_et(),Ntp->MET_CorrCaloT1T2_phi()), w);
+  }
+
   //////// plots filled after full selection (without categories)
   if (passedFullInclusiveSel){
 	  // Mu-Tau correlations
@@ -1053,11 +1286,9 @@ void  HToTaumuTauh::doEvent(){
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
 	  if (selTau != -1) TauCharge.at(t).Fill( Ntp->PFTau_Charge(selTau), w);
-
 	  // MET
-	  MetPt.at(t).Fill( Ntp->MET_CorrMVAMuTau_et(), w);
-	  MetPhi.at(t).Fill( Ntp->MET_CorrMVAMuTau_phi(), w);
-
+	  //MetPt.at(t).Fill( Ntp->MET_CorrMVAMuTau_et(), w);
+	  //MetPhi.at(t).Fill( Ntp->MET_CorrMVAMuTau_phi(), w);
 	  // Jets
 	  NJetsKin.at(t).Fill( selectedJetsKin.size(), w);
 	  if (selectedJetsKin.size() > 0){
@@ -1085,7 +1316,6 @@ void  HToTaumuTauh::doEvent(){
 		  Jet2Phi.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(1)).Phi(), w);
 		  Jet2IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(selectedJets.at(1)) > cCat_btagDisc, w);
 	  }
-
 	  // variables for categorization
 	  HiggsPt.at(t).Fill(higgsPt , w);
 	  HiggsPhi.at(t).Fill(higgsPhi , w);
@@ -1093,7 +1323,6 @@ void  HToTaumuTauh::doEvent(){
 	  JetsInEtaGap.at(t).Fill(selNjetingap , w);
 	  JetsInvM.at(t).Fill(selMjj , w);
   }
-
   //////// plots filled after full selection
   if(status){
     NVtxFullSelection.at(t).Fill(Ntp->NVtx(),w);
@@ -1101,7 +1330,6 @@ void  HToTaumuTauh::doEvent(){
   }
 
   //////// category specific plots, especially for background methods /////////
-
   ////// W+Jets Background estimation
   if(passedFullInclusiveSelNoMt && passed_ZeroJetLow){
 	  Cat0JetLowMt.at(t).Fill(value.at(MT), w);
@@ -1226,7 +1454,6 @@ void  HToTaumuTauh::doEvent(){
   }
   // todo: fill the ABCD plot
   // todo: create plots showing isolation for OS and SS events
-
 }
 
 
