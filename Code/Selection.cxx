@@ -431,7 +431,6 @@ void Selection::ScaleAllHistOfType(unsigned int t,float w){
     }
   }
   if(Npassed.size()>t)Npassed.at(t).Scale(w);
-  if(Npassed_noweight.size()>t)Npassed_noweight.at(t).Scale(w);
   for(unsigned int k=0; k<Extradist1d.size();k++){
     if(Extradist1d.at(k)->size()>t)Extradist1d.at(k)->at(t).Scale(w);
   }
