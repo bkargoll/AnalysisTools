@@ -438,8 +438,8 @@ void  Ztotautau_ControlSample::doEvent(){
   double mu_pt(0);
   if(channel==muontag){
     for(unsigned int i=0;i<Ntp->NMuons();i++){
-      if(Ntp->isGoodMuon(i) && fabs(Ntp->Muons_p4(i).Eta())<muoneta){
-	if(mu_pt<Ntp->Muons_p4(i).Pt()){mu_idx=i;mu_pt=Ntp->Muons_p4(i).Pt();}
+      if(Ntp->isGoodMuon(i) && fabs(Ntp->Muon_p4(i).Eta())<muoneta){
+	if(mu_pt<Ntp->Muon_p4(i).Pt()){mu_idx=i;mu_pt=Ntp->Muon_p4(i).Pt();}
 	nmus++;
       }
     }
@@ -453,7 +453,7 @@ void  Ztotautau_ControlSample::doEvent(){
     pass.at(TagPtmax)=(value.at(TagPtmax)<cut.at(TagPtmax));
 
     if(verbose)std::cout << "void  Ztotautau_ControlSample::doEvent() C2 - " << mu_idx << " " << Ntp->NMuons() << std::endl;
-    if(mu_idx!=999){value.at(TagIso) = (Ntp->Muon_emEt05(mu_idx) + Ntp->Muon_hadEt05(mu_idx) + Ntp->Muon_sumPt05(mu_idx))/Ntp->Muons_p4(mu_idx).Pt();}
+    if(mu_idx!=999){value.at(TagIso) = (Ntp->Muon_emEt05(mu_idx) + Ntp->Muon_hadEt05(mu_idx) + Ntp->Muon_sumPt05(mu_idx))/Ntp->Muon_p4(mu_idx).Pt();}
     else{value.at(TagIso)=999;}
     pass.at(TagIso)=(value.at(TagIso)<=cut.at(TagIso));
     
@@ -464,7 +464,7 @@ void  Ztotautau_ControlSample::doEvent(){
   double jet_pt(0);
   if(mu_idx!=999){
     for(int i=0;i<Ntp->NPFJets();i++){
-      if(Tools::dr(Ntp->Muons_p4(mu_idx),Ntp->PFJet_p4(i))>0.4){
+      if(Tools::dr(Ntp->Muon_p4(mu_idx),Ntp->PFJet_p4(i))>0.4){
 	if(jeteta>fabs(Ntp->PFJet_p4(i).Eta())){
 	  double TrackMaxPt=0;
 	  std::vector<int> PFJet_Track_idx=Ntp->PFJet_Track_idx(i);
@@ -506,7 +506,7 @@ void  Ztotautau_ControlSample::doEvent(){
   pass.at(JetTrackPtMax)=true;
 
   if(mu_idx!=999 && jet_idx!=999){
-    value.at(deltaPhi)=fabs(Tools::DeltaPhi(Ntp->Muons_p4(mu_idx),Ntp->PFJet_p4(jet_idx)));
+    value.at(deltaPhi)=fabs(Tools::DeltaPhi(Ntp->Muon_p4(mu_idx),Ntp->PFJet_p4(jet_idx)));
   }
   else { 
     value.at(deltaPhi)=0;
@@ -518,7 +518,7 @@ void  Ztotautau_ControlSample::doEvent(){
   pass.at(MET)=(value.at(MET)<cut.at(MET));
 
   if(mu_idx!=999){
-    value.at(MT)=sqrt(2*(Ntp->MET_CorrMVA_et())*Ntp->Muons_p4(mu_idx).Pt()*fabs(1-cos(Ntp->Muons_p4(mu_idx).Phi()-Ntp->MET_CorrMVA_phi())));
+    value.at(MT)=sqrt(2*(Ntp->MET_CorrMVA_et())*Ntp->Muon_p4(mu_idx).Pt()*fabs(1-cos(Ntp->Muon_p4(mu_idx).Phi()-Ntp->MET_CorrMVA_phi())));
   }
   else{
     value.at(MT)=999;
@@ -534,7 +534,7 @@ void  Ztotautau_ControlSample::doEvent(){
         if(track_p4.Pt()<Ntp->Track_p4(PFJet_Track_idx.at(i)).Pt())track_p4=Ntp->Track_p4(PFJet_Track_idx.at(i));
       }
     }
-    Z_lv+=Ntp->Muons_p4(mu_idx);
+    Z_lv+=Ntp->Muon_p4(mu_idx);
     Z_lv+=track_p4;
   }
   value.at(ZMassmin)=Z_lv.M();
@@ -547,7 +547,7 @@ void  Ztotautau_ControlSample::doEvent(){
   if(verbose)std::cout << "void  Ztotautau_ControlSample::doEvent() h" << std::endl;
 
   if(mu_idx!=999){
-    value.at(etaq)=Ntp->Muon_Charge(mu_idx)*fabs(Ntp->Muons_p4(mu_idx).Eta());
+    value.at(etaq)=Ntp->Muon_Charge(mu_idx)*fabs(Ntp->Muon_p4(mu_idx).Eta());
     pass.at(etaq)=value.at(etaq)>cut.at(etaq);
   }
   else{
@@ -559,7 +559,7 @@ void  Ztotautau_ControlSample::doEvent(){
   if(jet_idx!=999 && mu_idx!=999){
     value.at(HT)=0;
     value.at(HT)+=Ntp->PFJet_p4(jet_idx).Pt();
-    value.at(HT)+=Ntp->Muons_p4(mu_idx).Pt();
+    value.at(HT)+=Ntp->Muon_p4(mu_idx).Pt();
     value.at(HT)+=Ntp->MET_CorrMVA_et();
     for(int i=0;i<Ntp->NPFJets();i++){
       if(i!=jet_idx){
@@ -687,7 +687,7 @@ void  Ztotautau_ControlSample::doEvent(){
 
   double wobs(1),w(1);
   if(!Ntp->isData()){
-    w*=Ntp->EvtWeight3D();
+    w*=Ntp->PUWeightFineBins();
   }
   else{w=1;}
   if(verbose)std::cout << "w=" << w << " " << wobs << " " << w*wobs << std::endl;
@@ -734,7 +734,7 @@ void  Ztotautau_ControlSample::doEvent(){
       if(Ntp->isVtxGood(i))nGoodVtx++;
     }
     NGoodVtx.at(t).Fill(nGoodVtx,w);;
-    if(mu_idx!=999) TagEtaPT.at(t).Fill(fabs(Ntp->Muons_p4(mu_idx).Eta()),Ntp->Muons_p4(mu_idx).Pt(),w);
+    if(mu_idx!=999) TagEtaPT.at(t).Fill(fabs(Ntp->Muon_p4(mu_idx).Eta()),Ntp->Muon_p4(mu_idx).Pt(),w);
 
  
     /////////////////////////////////////////

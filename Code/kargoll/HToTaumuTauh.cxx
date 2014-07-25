@@ -52,25 +52,26 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// * "Data": use data driven method (make sure wJetsYieldScaleMap is filled correctly)
 	wJetsBGSource = "MC";
 
-	// this one is actually used to set the new cross section for W+Jet
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetLow",   0.80901627) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetHigh",  0.68228370) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetLow",    0.98325814) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetHigh",   0.79677233) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetBoost",  0.67725753) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFLoose",     0.14590955) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFTight",     0.04354578) );
-	wJetsYieldScaleMap.insert(std::pair<TString,double>("Inclusive",    0.83902189) );
+	// this one is used to set the event yield for W+Jet
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   6606.6) );
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  1144.5) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",    4842.3) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",    668.2) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",   153.9) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",       62.8) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",        4.6) );
+	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",   13307.8) );
 
 	// this one is used for cross-check only
-//	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   6604.2) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  1137.5) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",    4831.7) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",    663.9) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",   151.2) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",       62.9) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",        4.6) );
-//	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",   13283.5) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetLow",   0.80901627) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("ZeroJetHigh",  0.68228370) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetLow",    0.98325814) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetHigh",   0.79677233) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("OneJetBoost",  0.67725753) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFLoose",     0.14590955) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("VBFTight",     0.04354578) );
+	// wJetsYieldScaleMap.insert(std::pair<TString,double>("Inclusive",    0.83902189) );
+
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
@@ -467,7 +468,7 @@ void  HToTaumuTauh::Configure(){
   }
 
   Selection::ConfigureHistograms();
-  HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);
+  HConfig.GetHistoInfo(types, CrossSectionandAcceptance, legend, colour);
 }
 
 
@@ -1230,25 +1231,51 @@ void  HToTaumuTauh::doEvent(){
 }
 
 
-void  HToTaumuTauh::Finish(){
-	if (verbose) std::cout << "HToTaumuTauh::Finish()" << std::endl;
+void HToTaumuTauh::Finish() {
+	if (verbose)
+		std::cout << "HToTaumuTauh::Finish()" << std::endl;
 
-	if(wJetsBGSource == "Data"){
-		std::cout << "WJet BG: Using data driven yield method." << std::endl;
-		double wJetsYieldMC;
-		unsigned histo;
-		printf("WJet BG: CategoryId = %s, WJet Yield Scale Factor = %.3f\n", categoryFlag.Data(), wJetsYieldScaleMap[categoryFlag]);
-		for (unsigned id = 20; id < 24; id++){
-			// scale cross-sections for WJet backgrounds by DataYield/MCYield in HistoConfig
-			double oldXSec = HConfig.GetCrossSection(id);
-			double newXSec = oldXSec * wJetsYieldScaleMap[categoryFlag];
-			if( !HConfig.SetCrossSection(id, newXSec) ) std::cout << "WARNING: Could not change cross-section for id " << id << std::endl;
-			printf("WJet BG, id = %i: Scale from MC xsec = %.1f to data-driven xsec = %.1f\n", id, oldXSec, newXSec);
+	if (wJetsBGSource == "Data") {
+		if (mode == RECONSTRUCT) { // only apply data-driven numbers on "combine" level
+			std::cout << "WJet BG: Using data driven yield method." << std::endl;
+
+			double sumSelEvts = 0;
+			for (unsigned id = 20; id < 24; id++) {
+				if (!HConfig.hasID(id))
+					continue;
+				int type = HConfig.GetType(id);
+				// check that cross-section for WJet processes is set to -1 in Histo.txt
+				double oldXSec = HConfig.GetCrossSection(id);
+				if (oldXSec != -1) {
+					// Histo.txt has WJet xsec unequal -1, so set it to -1 to avoid scaling by framework
+					if (!HConfig.SetCrossSection(id, -1))
+						std::cout << "WARNING: Could not change cross-section for id " << id << std::endl;
+					printf("WJet process %i had xsec = %6.1f. Setting to %6.1f for data-driven WJet yield.\n", id, oldXSec, HConfig.GetCrossSection(id));
+				}
+				sumSelEvts += Npassed.at(type).GetBinContent(NCuts);
+			}
+
+			// second loop, now the total sum of all Wjets events is known, so we can scale
+			for (unsigned id = 20; id < 24; id++) {
+				if (!HConfig.hasID(id))
+					continue;
+				int type = HConfig.GetType(id);
+				double rawSelEvts = Npassed.at(type).GetBinContent(NCuts);
+
+				// scale all WJet histograms to data-driven yield
+				ScaleAllHistOfType(type, wJetsYieldMap[categoryFlag] / sumSelEvts);
+				printf("WJet process %i was scaled from yield %f to yield %f \n", id, rawSelEvts, Npassed.at(type).GetBinContent(NCuts));
+			}
 		}
+		else
+			std::cout << "WJet BG: Data driven will be used at Combine stage, but not in this individual set." << std::endl;
 	}
-	else if (wJetsBGSource == "MC") std::cout << "WJet BG: Using MC." << std::endl;
-	else std::cout << "WJet BG: Please specify \"MC\" or \"Data\". Using MC for this run..." << std::endl;
-
+	else if (wJetsBGSource == "MC")
+		std::cout << "WJet BG: Using MC." << std::endl;
+	else
+		std::cout << "WJet BG: Please specify \"MC\" or \"Data\". Using MC for this run..." << std::endl;
+	// call GetHistoInfo here (instead of in Configure function), otherwise the SetCrossSection calls are not reflected
+	HConfig.GetHistoInfo(types, CrossSectionandAcceptance, legend, colour);
 	Selection::Finish();
 
 	// todo: implement cross check: Integral in WJet plot <-> yield from background method

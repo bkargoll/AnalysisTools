@@ -16,7 +16,10 @@ class Tables {
  public:
   Tables(TString name);
   ~Tables();
-  void  MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents);
+  void MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> names);
+  void MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents);
+  void AddPlots(std::vector<TString> names);
+  void GeneratePDF();
 
  private:
   TString Name;

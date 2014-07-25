@@ -216,32 +216,8 @@ void  Selection::Finish(){
   if(mode==ANALYSIS)        fName+="ANALYSIS_";
   fName+=Name;
 
-  TFile f(fName+".root","RECREATE");
-  for(unsigned int i=0; i<Nminus1.size(); i++){
-    for(unsigned int j=0; j<Nminus1.at(i).size();j++){
-      Nminus1.at(i).at(j).Write((Nminus1.at(i).at(j)).GetName());
-      Nminus0.at(i).at(j).Write((Nminus0.at(i).at(j)).GetName());
-      if(distindx.at(i)){
-	Nminus1dist.at(i).at(j).Write((Nminus1dist.at(i).at(j)).GetName());
-	Accumdist.at(i).at(j).Write((Accumdist.at(i).at(j)).GetName());
-      }
-      if(i==0){
-	Npassed.at(j).Write((Npassed.at(j)).GetName());
-	Npassed_noweight.at(j).Write((Npassed_noweight.at(j)).GetName());
-	for(unsigned int i=0; i<Extradist1d.size();i++){
-	  Extradist1d.at(i)->at(j).Write((Extradist1d.at(i)->at(j)).GetName());
-	}
-	for(unsigned int i=0; i<Extradist2d.size();i++){
-	  Extradist2d.at(i)->at(j).Write((Extradist2d.at(i)->at(j)).GetName());
-	}
-        for(unsigned int i=0; i<Extradist3d.size();i++){
-          Extradist3d.at(i)->at(j).Write((Extradist3d.at(i)->at(j)).GetName());
-        }
+  Save(fName);// Save file with unweighted events - required for combining code
 
-      }
-    }
-  }
-  f.Close();
   std::cout << "Writing out "+Name+".root Complete" << std::endl;
   SkimConfig SC;
   SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
@@ -254,55 +230,94 @@ void  Selection::Finish(){
     nevents_noweight_default.push_back(Npassed_noweight.at(i).GetBinContent(1));
   }
 
+  // For local jobs produce pdf file
   if(runtype!=GRID){
-    std::cout << "Printing Plots " << std::endl;
+    Tables T(Name);
+    T.MakeNEventsTable(Npassed,title);
+
+    // weight all Histograms
     for(int i=0;i<CrossSectionandAcceptance.size();i++){
       std::cout << i << " CrossSectionandAcceptance " << CrossSectionandAcceptance.at(i) << " " << nevents.at(i) << " " << nevents_noweight.at(i) << std::endl;
+      if(CrossSectionandAcceptance.at(i)>0) ScaleAllHistOfType(i,Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
     }
+    // Reset the SkimEff since it can be broken during this normilization
+    SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
+    Save(fName+"_LumiScaled");// Save file with Lumi-scaled events - required for combining code
 
     ///Now make the plots
+    std::cout << "Printing Plots " << std::endl;
     system("rm EPS/*.eps");
     Plots P;
-    P.Plot1D(Nminus1,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+    P.Plot1D(Nminus1,colour,legend);
     for(unsigned int i=0; i<Nminus1.size();i++){
-      P.Plot1DSignificance(Nminus1.at(i),true,false,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-      P.Plot1DSignificance(Nminus1.at(i),false,true,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-      P.Plot1Dsigtobkg(Nminus1.at(i),true,false,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-      P.Plot1Dsigtobkg(Nminus1.at(i),false,true,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-      P.Plot1D_DataMC_Compare(Nminus1.at(i),Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+      P.Plot1DSignificance(Nminus1.at(i),true,false,colour,legend);
+      P.Plot1DSignificance(Nminus1.at(i),false,true,colour,legend);
+      P.Plot1Dsigtobkg(Nminus1.at(i),true,false,colour,legend);
+      P.Plot1Dsigtobkg(Nminus1.at(i),false,true,colour,legend);
+      P.Plot1D_DataMC_Compare(Nminus1.at(i),colour,legend);
     }
-    P.Plot1D(Nminus0,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-    P.Plot1D(Nminus1dist,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-    P.Plot1D(Accumdist,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+    P.Plot1D(Nminus0,colour,legend);
+    P.Plot1D(Nminus1dist,colour,legend);
+    P.Plot1D(Accumdist,colour,legend);
     
 
     for(unsigned int i=0; i<Extradist1d.size();i++){
-      P.Plot1D((*Extradist1d.at(i)),Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+      P.Plot1D((*Extradist1d.at(i)),colour,legend);
       if(Lumi>0){
-	P.Plot1DSignificance((*Extradist1d.at(i)),true,false,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-	P.Plot1DSignificance((*Extradist1d.at(i)),false,true,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-	P.Plot1Dsigtobkg((*Extradist1d.at(i)),true,false,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-	P.Plot1Dsigtobkg((*Extradist1d.at(i)),false,true,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
-	P.Plot1D_DataMC_Compare((*Extradist1d.at(i)),Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+	P.Plot1DSignificance((*Extradist1d.at(i)),true,false,colour,legend);
+	P.Plot1DSignificance((*Extradist1d.at(i)),false,true,colour,legend);
+	P.Plot1Dsigtobkg((*Extradist1d.at(i)),true,false,colour,legend);
+	P.Plot1Dsigtobkg((*Extradist1d.at(i)),false,true,colour,legend);
+	P.Plot1D_DataMC_Compare((*Extradist1d.at(i)),colour,legend);
       }
     }
     for(unsigned int i=0; i<Extradist2d.size();i++){
-      P.Plot2D((*Extradist2d.at(i)),Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+      P.Plot2D((*Extradist2d.at(i)),colour,legend);
     }
     for(unsigned int i=0; i<Extradist3d.size();i++){
-      P.Plot3D((*Extradist3d.at(i)),Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+      P.Plot3D((*Extradist3d.at(i)),colour,legend);
     }
 
     
     std::cout << "Writing out "<< Name << ".tex" << std::endl;
-    Tables T(Name);
     T.MakeEffTable(Npassed,title,Lumi,CrossSectionandAcceptance,nevents);
+    T.AddPlots(title);
+    T.GeneratePDF();
     std::cout << "Plots and Tables Complete"<< std::endl;
   }
+
   //Check that the correct number of events are run over
   SC.CheckNEvents(types,nevents_noweight_default);
 }
 
+
+void Selection::Save(TString fName){
+  TFile f(fName+".root","RECREATE");
+  for(unsigned int i=0; i<Nminus1.size(); i++){
+    for(unsigned int j=0; j<Nminus1.at(i).size();j++){
+      Nminus1.at(i).at(j).Write((Nminus1.at(i).at(j)).GetName());
+      Nminus0.at(i).at(j).Write((Nminus0.at(i).at(j)).GetName());
+      if(distindx.at(i)){
+        Nminus1dist.at(i).at(j).Write((Nminus1dist.at(i).at(j)).GetName());
+        Accumdist.at(i).at(j).Write((Accumdist.at(i).at(j)).GetName());
+      }
+      if(i==0){
+        Npassed.at(j).Write((Npassed.at(j)).GetName());
+        Npassed_noweight.at(j).Write((Npassed_noweight.at(j)).GetName());
+        for(unsigned int i=0; i<Extradist1d.size();i++){
+          Extradist1d.at(i)->at(j).Write((Extradist1d.at(i)->at(j)).GetName());
+        }
+        for(unsigned int i=0; i<Extradist2d.size();i++){
+          Extradist2d.at(i)->at(j).Write((Extradist2d.at(i)->at(j)).GetName());
+        }
+        for(unsigned int i=0; i<Extradist3d.size();i++){
+          Extradist3d.at(i)->at(j).Write((Extradist3d.at(i)->at(j)).GetName());
+        }
+      }
+    }
+  }
+  f.Close();
+}
 
 bool Selection::Passed(){
   for(int i=0; i<pass.size();i++){

@@ -387,7 +387,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
   //
   std::vector<unsigned int> mu_idx;
   for(unsigned int i=0; i<Ntp->NMuons(); i++){
-    if(Ntp->isGoodMuon(i) && Ntp->Muons_p4(i).Pt()>muon_pt && fabs(Ntp->Muons_p4(i).Eta())<muon_eta){mu_idx.push_back(i);}
+    if(Ntp->isGoodMuon(i) && Ntp->Muon_p4(i).Pt()>muon_pt && fabs(Ntp->Muon_p4(i).Eta())<muon_eta){mu_idx.push_back(i);}
   }
   value.at(NMuons)=mu_idx.size();
   pass.at(NMuons)=(value.at(NMuons)==cut.at(NMuons));
@@ -395,7 +395,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
   float max_mu_pt=0;
   value.at(MuRelIso)=1.1;
   for(unsigned int i=0; i<mu_idx.size();i++){
-    if(Ntp->Muons_p4(mu_idx.at(i)).Pt()>max_mu_pt){
+    if(Ntp->Muon_p4(mu_idx.at(i)).Pt()>max_mu_pt){
       value.at(MuRelIso)=Ntp->Muon_RelIso(mu_idx.at(i));
     }
   }
@@ -480,7 +480,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
 
   value.at(MT)=0;
   if(mu_idx.size()>0){
-    value.at(MT)=sqrt(2*(Ntp->MET_CorrMVA_et())*Ntp->Muons_p4(mu_idx.at(0)).Pt()*fabs(1-cos(Ntp->Muons_p4(mu_idx.at(0)).Phi()-Ntp->MET_CorrMVA_phi())));
+    value.at(MT)=sqrt(2*(Ntp->MET_CorrMVA_et())*Ntp->Muon_p4(mu_idx.at(0)).Pt()*fabs(1-cos(Ntp->Muon_p4(mu_idx.at(0)).Phi()-Ntp->MET_CorrMVA_phi())));
     pass.at(MT)=(value.at(MT)>cut.at(MT));
   }
   pass.at(MT)=true;
@@ -490,7 +490,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
 
   float dphiMuMET=0;
   if(mu_idx.size()>0){
-    dphiMuMET=cos(Tools::DeltaPhi(Ntp->Muons_p4(mu_idx.at(0)),Met));
+    dphiMuMET=cos(Tools::DeltaPhi(Ntp->Muon_p4(mu_idx.at(0)),Met));
   }
   value.at(MTandMuMETdphi)=sqrt(pow((double)(1-dphiMuMET)*200,2.0)+pow((double)value.at(MT),2.0));
   pass.at(MTandMuMETdphi)=(value.at(MTandMuMETdphi)>=cut.at(MTandMuMETdphi));
@@ -501,7 +501,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
 
   value.at(MuMETJetdphi)=0;
   if(mu_idx.size()>0 && GoodBJets.size()>0){
-    TLorentzVector LVMuMET=Met;LVMuMET+=Ntp->Muons_p4(mu_idx.at(0));
+    TLorentzVector LVMuMET=Met;LVMuMET+=Ntp->Muon_p4(mu_idx.at(0));
     value.at(MuMETJetdphi)=cos(Tools::DeltaPhi(Ntp->PFJet_p4(GoodBJets.at(0)),LVMuMET));
   }
   pass.at(MuMETJetdphi)=(value.at(MuMETJetdphi)>cut.at(MuMETJetdphi));
@@ -521,7 +521,7 @@ void  ChargedHiggs_dilepontic::doEvent(){
   double wobs(1),w(1);
   if(!Ntp->isData()){
     if(verbose)std::cout << "void  ChargedHiggs_dilepontic::doEvent() J" << std::endl;
-    w*=Ntp->EvtWeight3D();
+    w*=Ntp->PUWeightFineBins();
     if(verbose)std::cout << "void  ChargedHiggs_dilepontic::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;}

@@ -241,8 +241,8 @@ class HToTaumuTauh : public Selection {
   TString wJetsBGSource;
 
   // map to hold WJets yields for each category
-  //std::map<TString, double> wJetsYieldMap;
-  std::map<TString, double> wJetsYieldScaleMap;
+  std::map<TString, double> wJetsYieldMap;
+  //std::map<TString, double> wJetsYieldScaleMap;
 
   // variables to hold selected objects (to be used e.g. for sync Ntuple)
   int selVertex;

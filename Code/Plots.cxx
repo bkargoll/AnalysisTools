@@ -38,10 +38,10 @@ void Plots::Set_Plot_Type(TString style, TString label){
   else{ CMSStyle2();}
 }
 
-void Plots::Plot1D(std::vector<TH1D> histo,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot1D(std::vector<TH1D> histo,std::vector<int> colour,std::vector<TString> legend){
   std::vector<std::vector<TH1D> > histos;
   histos.push_back(histo);
-  Plot1D(histos,Lumi,CrossSectionandAcceptance,nevents,colour,legend);
+  Plot1D(histos,colour,legend);
 }
 
 
@@ -50,7 +50,7 @@ void Plots::SaveHistograms(TString File, std::vector<TString> HistogramNames){
   HistogramNames_=HistogramNames;
 }
 
-void Plots::Plot1D(std::vector<std::vector<TH1D> > histo,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot1D(std::vector<std::vector<TH1D> > histo,std::vector<int> colour,std::vector<TString> legend){
  
   std::cout << "Plots::Plot1D" << std::endl;
   TCanvas c("c","c",200,10,750,750);
@@ -128,10 +128,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo,float Lumi,std::vector<
 		theIntegral=0;
 	      }
 	    }
-	    if(nevents.at(i)>0){
-	      if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>0){
-		histo.at(j).at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-	      }
+	    if(i!=0){
 	      if(histo.at(j).at(i).Integral()>0 ){
 		MCHistoStack.Add(&histo.at(j).at(i));
 		Total.Add(&histo.at(j).at(i));
@@ -239,7 +236,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo,float Lumi,std::vector<
 }
 
 
-void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt,bool lt,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt,bool lt,std::vector<int> colour,std::vector<TString> legend){
   // plots significance: assumes the histograms have been normilized
   std::cout << "Plots::Plot1DSignificance" << std::endl;
   gStyle->SetPadTopMargin(0.05);
@@ -253,12 +250,6 @@ void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt,bool lt,float Lu
 
     histo.at(0).Reset();
     if(histo.size()>0){
-     for(int i=0; i<histo.size();i++){ 
-       if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>0){
-	 histo.at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-	 
-       }
-     }      
       for(int b=1; b<=histo.at(0).GetNbinsX();b++){
 	if(gt){
 	  double sig=histo.at(histo.size()-1).Integral(b,histo.at(0).GetNbinsX()+1);
@@ -315,7 +306,7 @@ void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt,bool lt,float Lu
   std::cout << "Plots::Plot1DSignificance done" << std::endl;
 }
 
-void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt,bool lt,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt,bool lt,std::vector<int> colour,std::vector<TString> legend){
   // plots significance: assumes the histograms have been normilized
   std::cout << "Plots::Plot1Dsigtobkg" << std::endl;
   gStyle->SetPadTopMargin(0.05);
@@ -329,11 +320,6 @@ void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt,bool lt,float Lumi,s
 
     histo.at(0).Reset();
     if(histo.size()>2){
-     for(int i=0; i<histo.size();i++){ 
-       if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>0){
-	 histo.at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-       }
-     }
       for(int b=1; b<=histo.at(0).GetNbinsX();b++){
 	if(gt){
 	  double sig=histo.at(histo.size()-1).Integral(b,histo.at(0).GetNbinsX()+1);
@@ -412,7 +398,7 @@ void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt,bool lt,float Lumi,s
 
 
 
-void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, std::vector<int> colour,std::vector<TString> legend){
   std::cout << "Plots::Plot1D_DataMC_Compare Start" << std::endl;
   gStyle->SetPadTopMargin(0.05);
   gStyle->SetPadBottomMargin(0.20);
@@ -423,9 +409,6 @@ void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, float Lumi,std::vecto
 
     if(histo.size()>4){
       for(int i=0; i<histo.size();i++){ 
-	if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>=0){
-	  histo.at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-	}
 	if(i>1){
 	  histo.at(1).Add(&histo.at(i),1);
 	}
@@ -511,14 +494,14 @@ void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, float Lumi,std::vecto
 
 
 
-void Plots::Plot2D(std::vector<TH2D>  histo,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot2D(std::vector<TH2D>  histo,std::vector<int> colour,std::vector<TString> legend){
   std::cout << "Plots::Plot2D" << std::endl;
   gStyle->SetPadTopMargin(0.10);
   gStyle->SetPadBottomMargin(0.22);
   gStyle->SetPadLeftMargin(0.180);
   gStyle->SetPadRightMargin(0.175);
   TCanvas c("c","c",200,10,750,750);
-  if(verbose)std::cout << "Starting Plot2D" << histo.size() << " " << CrossSectionandAcceptance.size() << " " 
+  if(verbose)std::cout << "Starting Plot2D" << histo.size() << " " 
 	    << colour.size() << " " << legend.size() << std::endl;
   c.Clear();
   int size=18;
@@ -581,15 +564,6 @@ void Plots::Plot2D(std::vector<TH2D>  histo,float Lumi,std::vector<float> CrossS
     std::vector<int> GoodhistoCanvas;
     int type=0;
     int index=0;
-    for(int i=0; i<histo.size();i++){
-      if(nevents.at(i)>0 && i!=0){
-	if(ntypes>1){
-	  if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>0){
-	    histo.at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-	  }
-	}
-      }
-    }
     index=0;
     LegType="";
     if(verbose)std::cout << "A " << ntypes << std::endl;
@@ -660,172 +634,12 @@ void Plots::Plot2D(std::vector<TH2D>  histo,float Lumi,std::vector<float> CrossS
       EPSName+=".eps";
       c.Print(EPSName);
     }
-    if(verbose)std::cout << "Histo 2D " << EPSName << std::endl;
-    
-    //////////////////////////////////////////////////////
-    //
-    // Now add profile histograms
-    //
-    if(dooneprofile){
-      c.Clear();
-      c.Divide(1,1);
-    }
-    std::cout << Goodhistoindx.size() << std::endl;
-    std::vector<TH1D*> ProfileStat;
-    std::vector<TH1D*> ProfileRMS;
-    ProfileStat.clear();
-    ProfileRMS.clear();
-    for(int p=0; p<3;p++){
-      if(verbose)std::cout << "Now adding Profile" << std::endl;
-      int l=0;
-      int type=0;
-      for(int j=0; j<Goodhistoindx.size();j++){
-	bool filled=false;
-	double m_max(0),m_min(0), meanmax(-10000);
-	int i=Goodhistoindx.at(j);
-	int profCanvas=GoodhistoCanvas.at(j);
-	c.cd(profCanvas);
-	if(verbose)std::cout << "legend " <<  legend.at(i) << " " << histo.at(i).Integral() << " i=" << i  << " " << histo.size() 
-		  << colour.size() << std::endl;
-	TString n="Profile_";
-	if(verbose)std::cout << "A" << ProfileStat.size() << " " << ProfileRMS.size() <<  std::endl;
-	n+=i;
-	n+="_";
-	n+=j;
-	n+="_p";
-	n+=p;
-	n+="_";
-	n+=histo.at(i).GetName();
-	if(histo.at(i).GetNbinsX()==109){
-	  ProfileStat.push_back(new TH1D(n,n,41,histo.at(i).GetXaxis()->GetXmin(),
-					 40.5 ));
-
-	}
-	else{
-	ProfileStat.push_back(new TH1D(n,n,histo.at(i).GetNbinsX(),histo.at(i).GetXaxis()->GetXmin(),
-				       histo.at(i).GetXaxis()->GetXmax() ));
-	}
-	ProfileStat.at(ProfileStat.size()-1)->SetLineWidth(1);
-	ProfileStat.at(ProfileStat.size()-1)->SetLineColor(1);
-	ProfileStat.at(ProfileStat.size()-1)->SetFillStyle(1001);
-	ProfileStat.at(ProfileStat.size()-1)->SetMarkerColor(1);
-	ProfileStat.at(ProfileStat.size()-1)->SetMarkerSize(0.35);
-	//ProfileStat.at(ProfileStat.size()-1)->SetMarkerStyle(8);
-	if(verbose)std::cout << "B" << std::endl;
-	ProfileRMS.push_back(new TH1D(n+"RMS",n+"RMS",histo.at(i).GetNbinsX(),histo.at(i).GetXaxis()->GetXmin(),
-				      histo.at(i).GetXaxis()->GetXmax()));
-	if(verbose)std::cout << "B1 - " << ProfileStat.size() << " " << ProfileRMS.size() << " " << colour.size() << std::endl;
-        ProfileRMS.at(ProfileStat.size()-1)->SetLineWidth(1);
-	if(verbose)std::cout << "1" << std::endl;
-	ProfileRMS.at(ProfileStat.size()-1)->SetLineColor(colour.at(i));
-	if(verbose)std::cout << "2" << std::endl;
-	ProfileRMS.at(ProfileStat.size()-1)->SetFillStyle(1001);
-	if(verbose)std::cout << "3" << std::endl;
-	ProfileRMS.at(ProfileStat.size()-1)->SetFillColor(7);
-	if(verbose)std::cout << "3" << std::endl;
-	ProfileRMS.at(ProfileStat.size()-1)->SetMarkerColor(colour.at(i));
-	if(verbose)std::cout << "4" << std::endl;
-	ProfileRMS.at(ProfileStat.size()-1)->SetMarkerSize(0.35);
-	//ProfileRMS.at(ProfileStat.size()-1)->SetMarkerStyle(8);
-	if(verbose)std::cout << "C" << std::endl;
-	for(int k=1;k<=histo.at(i).GetNbinsX();k++){
-	  TH1D *hp=histo.at(i).ProjectionY("p"+n,k-1,k);
-	  double MEAN=hp->GetMean();
-	  double MEANERR=hp->GetMeanError();
-	  double RMS=hp->GetRMS();
-	  if(p==2){
-	    MEAN=RMS;
-	    MEANERR=hp->GetRMSError();
-	  }
-	  if(!filled && hp->Integral()>0){
-	    m_max=MEAN+fabs(MEANERR)+0.1;
-	    m_min=MEAN-fabs(MEANERR)-0.1;
-	    filled=true;
-	  }
-	  if(p==0)RMS=0;
-	  if(MEAN>-10000 && MEAN<10000){
-	    ProfileStat.at(ProfileStat.size()-1)->SetBinContent(k,MEAN);
-	    ProfileStat.at(ProfileStat.size()-1)->SetBinError(k,MEANERR);
-	  }
-	  if(RMS>0 && RMS<100000){
-	    ProfileRMS.at(ProfileStat.size()-1)->SetBinContent(k,MEAN);
-	    ProfileRMS.at(ProfileStat.size()-1)->SetBinError(k,fabs(RMS));
-	  }
-	  if(MEAN>meanmax) meanmax=MEAN;
-	  if((MEAN+fabs(MEANERR)+fabs(RMS))>m_max) m_max=(MEAN+fabs(MEANERR)+fabs(RMS));
-	  if((MEAN-fabs(MEANERR)-fabs(RMS))<m_min) m_min=(MEAN-fabs(MEANERR)-fabs(RMS));
-	}
-	if(verbose)std::cout << "C" << std::endl;
-	if(verbose)std::cout << "min: " << m_min << " " << m_max << " " << histo.at(0).GetTitle() << " " << p << " " << meanmax
-		  << " " << histo.at(i).Integral() << std::endl; 
-	ProfileStat.at(ProfileStat.size()-1)->SetMaximum(m_max);//(histo.at(i).GetYaxis()->GetXmax());//(m_max);
-	ProfileStat.at(ProfileStat.size()-1)->SetMinimum(m_min);//(histo.at(i).GetYaxis()->GetXmin());//(m_min);
-	ProfileStat.at(ProfileStat.size()-1)->GetXaxis()->SetTitle(histo.at(i).GetXaxis()->GetTitle());
-	TString temp="Mean of ";
-	if(p==2) temp="RMS of ";
-	temp+=histo.at(0).GetYaxis()->GetTitle();
-	ProfileStat.at(ProfileStat.size()-1)->GetYaxis()->SetTitle(temp);
-	if(verbose)std::cout << "D" << std::endl;
-	if(((Goodhistoindx.at(j)==0 || Goodhistoindx.at(j)==1 && p!=1) && dooneprofile) ||  !dooneprofile ){
-	  if(Goodhistoindx.at(j)==1){
-	    ProfileStat.at(ProfileStat.size()-1)->SetFillColor(5);
-	    if(p==1){
-	      ProfileStat.at(ProfileStat.size()-1)->Draw("pe");
-	      ProfileRMS.at(ProfileStat.size()-1)->Draw("E2 same");
-	      ProfileStat.at(ProfileStat.size()-1)->Draw("pe same");
-	    }
-	    if(p!=1){
-	      //c.cd(profCanvas-1);
-	      ProfileStat.at(ProfileStat.size()-1)->SetLineColor(1);
-	      ProfileStat.at(ProfileStat.size()-1)->SetMarkerColor(1);
-	      ProfileStat.at(ProfileStat.size()-1)->SetFillColor(5);
-	      ProfileStat.at(ProfileStat.size()-1)->Draw("E2 same");
-	      ProfileStat.at(ProfileStat.size()-2)->Draw("pe same");
-	    }
-	  }
-	  else if(p==0){
-	    ProfileStat.at(ProfileStat.size()-1)->Draw("pe");
-	  }
-	  else if(p==1){
-	    ProfileStat.at(ProfileStat.size()-1)->Draw("pe");
-	    ProfileRMS.at(ProfileStat.size()-1)->Draw("E2 same");
-	    ProfileStat.at(ProfileStat.size()-1)->Draw("pe same");
-	  }
-	  else if(p==2){
-	    ProfileStat.at(ProfileStat.size()-1)->Draw("pe");
-	  }
-	  if(!dooneprofile){
-	    if(verbose)std::cout << "E" << std::endl;
-	    c.Update();
-	    TLatex l;
-	    l.SetNDC();
-	    c.cd(profCanvas);
-	    l.DrawLatex(0.25, 0.90, legend.at(i));
-	  }
-	}
-      }
-      name=histo.at(0).GetName();
-      name+="_Profile_";
-      name+=p;
-      name+="_index_";
-      name+=0;
-      EPSName="EPS/";
-      EPSName+=name;
-      EPSName+=".eps";
-      c.Print(EPSName);
-    }
-    for(int q=0;q< ProfileStat.size();q++){
-      delete ProfileStat.at(q);
-      delete ProfileRMS.at(q);
-    }
-    ProfileStat.clear();
-    ProfileRMS.clear();
   }
 }
 
 
 
-void Plots::Plot3D(std::vector<TH3F>  histo,float Lumi,std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents,std::vector<int> colour,std::vector<TString> legend){
+void Plots::Plot3D(std::vector<TH3F>  histo,std::vector<int> colour,std::vector<TString> legend){
   std::cout << "Plots::Plot3D" << std::endl;
   gStyle->SetPadTopMargin(0.10);
   gStyle->SetPadBottomMargin(0.22);
@@ -836,18 +650,11 @@ void Plots::Plot3D(std::vector<TH3F>  histo,float Lumi,std::vector<float> CrossS
 
   TCanvas c("c","c",200,10,750,750);
   if(histo.size()>0){
-    if(verbose)std::cout << "Starting Plot3D" << histo.size() << " " << CrossSectionandAcceptance.size() << " " << colour.size() << " " << legend.size() << std::endl;
+    if(verbose)std::cout << "Starting Plot3D" << histo.size() << " "  << colour.size() << " " << legend.size() << std::endl;
     c.Clear();
     c.Divide(2,2);
     int type=0;
     int index=0;
-    for(int i=0; i<histo.size();i++){
-      if(nevents.at(i)>0 && i!=0){
-	if(nevents.at(i)>0 && Lumi>0 && CrossSectionandAcceptance.at(i)>0){
-	  histo.at(i).Scale(Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
-	}
-      }
-    }
     std::cout << "A" << std::endl;
     TLegend leg(0.1,0.4,0.9,0.9);
     leg.SetBorderSize(0);

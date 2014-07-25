@@ -272,8 +272,8 @@ void  Ztomumu_ControlSample::doEvent(){
   if(verbose)std::cout << "void  Ztomumu_ControlSample::doEvent() C" << std::endl;
 
   for(unsigned i=0;i<GoodMuons.size();i++){
-    dist.at(NMuPt).push_back(Ntp->Muons_p4(GoodMuons.at(i)).Pt());
-    if(Ntp->Muons_p4(GoodMuons.at(i)).Pt()<mu_pt){
+    dist.at(NMuPt).push_back(Ntp->Muon_p4(GoodMuons.at(i)).Pt());
+    if(Ntp->Muon_p4(GoodMuons.at(i)).Pt()<mu_pt){
       GoodMuons.erase(GoodMuons.begin()+i);
       i--;
     }
@@ -282,8 +282,8 @@ void  Ztomumu_ControlSample::doEvent(){
   value.at(NMuPt)=GoodMuons.size();
   pass.at(NMuPt)=(value.at(NMuPt)>=cut.at(NMuPt));
   for(unsigned i=0;i<GoodMuons.size();i++){
-    dist.at(NMuEta).push_back(Ntp->Muons_p4(GoodMuons.at(i)).Eta());
-    if(fabs(Ntp->Muons_p4(GoodMuons.at(i)).Eta())>mu_eta){
+    dist.at(NMuEta).push_back(Ntp->Muon_p4(GoodMuons.at(i)).Eta());
+    if(fabs(Ntp->Muon_p4(GoodMuons.at(i)).Eta())>mu_eta){
       GoodMuons.erase(GoodMuons.begin()+i);
       i--;
     }
@@ -305,8 +305,8 @@ void  Ztomumu_ControlSample::doEvent(){
   if(verbose)std::cout << "void  Ztomumu_ControlSample::doEvent() F" << std::endl;
   value.at(deltaPhi)=1;
   if(muidx1!=999 && muidx2!=999){
-    TLorentzVector Mu1=Ntp->Muons_p4(muidx1);
-    TLorentzVector Mu2=Ntp->Muons_p4(muidx2);
+    TLorentzVector Mu1=Ntp->Muon_p4(muidx1);
+    TLorentzVector Mu2=Ntp->Muon_p4(muidx2);
     value.at(deltaPhi)=cos(Tools::DeltaPhi(Mu1.Phi(),Mu2.Phi()));
     TLorentzVector Z=Mu1+Mu2;
     value.at(ZMassmax)=Z.M();
@@ -320,9 +320,9 @@ void  Ztomumu_ControlSample::doEvent(){
   int overlap1(0), overlap2(0);
   for(int i=0;i<Ntp->NPFJets();i++){
     double dR=5;
-    if(muidx1!=999) dR=Tools::dr(Ntp->Muons_p4(muidx1),Ntp->PFJet_p4(i));
+    if(muidx1!=999) dR=Tools::dr(Ntp->Muon_p4(muidx1),Ntp->PFJet_p4(i));
     if(dR<cut.at(MuIso))overlap1++;
-    if(muidx2!=999) dR=Tools::dr(Ntp->Muons_p4(muidx2),Ntp->PFJet_p4(i));
+    if(muidx2!=999) dR=Tools::dr(Ntp->Muon_p4(muidx2),Ntp->PFJet_p4(i));
     if(dR<cut.at(MuIso))overlap2++;
   }
   pass.at(MuIso)=(2==overlap1+overlap2);
@@ -345,7 +345,7 @@ void  Ztomumu_ControlSample::doEvent(){
     if(/*Ntp->isGoodJet(i) &&*/ Ntp->PFJet_p4(i).Pt()>jet_pt && fabs(Ntp->PFJet_p4(i).Eta())<jet_eta){
       bool overlap=false;
       for(unsigned j=0;j<GoodMuons.size();j++){
-	//	if(Tools::dr(Ntp->Muons_p4(GoodMuons.at(j)),Ntp->PFJet_p4(i))<0.5) overlap=true;
+	//	if(Tools::dr(Ntp->Muon_p4(GoodMuons.at(j)),Ntp->PFJet_p4(i))<0.5) overlap=true;
       }
       if(!overlap)GoodJets.push_back(i);
     }
@@ -377,7 +377,7 @@ void  Ztomumu_ControlSample::doEvent(){
   double wobs(1),w(1);
   if(!Ntp->isData()){
     if(verbose)std::cout << "void  Ztomumu_ControlSample::doEvent() J" << std::endl;
-    //w*=Ntp->EvtWeight3D();
+    //w*=Ntp->PUWeightFineBins();
     if(verbose)std::cout << "void  Ztomumu_ControlSample::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;wobs=1;}

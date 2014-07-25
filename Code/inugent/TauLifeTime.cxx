@@ -266,17 +266,17 @@ void  TauLifeTime::doEvent(){
   //double mu_pt(0);
   for(unsigned int i=0;i<Ntp->NMuons();i++){
     //std::cout << "Checking if muon number = " << i << " is good..." << std::endl;
-    if(Ntp->isGoodMuon(i) && fabs(Ntp->Muons_p4(i).Eta())<muoneta){
+    if(Ntp->isGoodMuon(i) && fabs(Ntp->Muon_p4(i).Eta())<muoneta){
       mu_idx_good.push_back(i);
     }  
   }
   for(unsigned int i=0;i<mu_idx_good.size();i++){	  
-    if(Ntp->Muons_p4(mu_idx_good.at(i)).Pt() > cut.at(TagPtMin)){
+    if(Ntp->Muon_p4(mu_idx_good.at(i)).Pt() > cut.at(TagPtMin)){
       mu_idx_pt.push_back(mu_idx_good.at(i));
     }
   }	
   for(unsigned int i=0;i<mu_idx_pt.size();i++){
-    if((Ntp->Muon_emEt05(mu_idx_pt.at(i)) + Ntp->Muon_hadEt05(mu_idx_pt.at(i)) + Ntp->Muon_sumPt05(mu_idx_pt.at(i)))/Ntp->Muons_p4(mu_idx_pt.at(i)).Pt()<=cut.at(TagIso)){
+    if((Ntp->Muon_emEt05(mu_idx_pt.at(i)) + Ntp->Muon_hadEt05(mu_idx_pt.at(i)) + Ntp->Muon_sumPt05(mu_idx_pt.at(i)))/Ntp->Muon_p4(mu_idx_pt.at(i)).Pt()<=cut.at(TagIso)){
       mu_idx=mu_idx_pt.at(i);//mu_idx is the idx of the effectively selected muon.
       mu_idx_iso.push_back(mu_idx);
     }
@@ -327,8 +327,8 @@ void  TauLifeTime::doEvent(){
     //should have only one element, shouldn't it? for(int i=0;i<tau_idx_iso.size();i++){
     if(tau_idx_fit.size()>=1 && mu_idx_iso.size()>=1){
       //std::cout << "The index of the tau is " << tau_idx_fit.at(0) << " = " << tau_idx << std::endl;
-      if(fabs(Tools::DeltaPhi(Ntp->Muons_p4(mu_idx),Ntp->PFTau_p4(tau_idx)))>=cut.at(deltaPhi)){
-        delta_phi=fabs(Tools::DeltaPhi(Ntp->Muons_p4(mu_idx),Ntp->PFTau_p4(tau_idx)));
+      if(fabs(Tools::DeltaPhi(Ntp->Muon_p4(mu_idx),Ntp->PFTau_p4(tau_idx)))>=cut.at(deltaPhi)){
+        delta_phi=fabs(Tools::DeltaPhi(Ntp->Muon_p4(mu_idx),Ntp->PFTau_p4(tau_idx)));
         tau_idx_phi.push_back(tau_idx_fit.at(0));
       }
       if(fabs(Ntp->PFTau_Charge(tau_idx) + Ntp->Muon_Charge(mu_idx))<0.5){ 
@@ -378,7 +378,7 @@ void  TauLifeTime::doEvent(){
 
   double wobs(1),w(1);
   if(!Ntp->isData()){
-    w*=Ntp->EvtWeight3D();
+    w*=Ntp->PUWeightFineBins();
   }
   else{w=1;}
   if(verbose)std::cout << "w=" << w << " " << wobs << " " << w*wobs << std::endl;

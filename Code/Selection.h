@@ -32,11 +32,12 @@ class Selection : public Selection_Base {
   std::vector<std::vector<TH2D>* >&  Get_Extradist2d(){return Extradist2d;}
   std::vector<std::vector<TH3F>* >&  Get_Extradist3d(){return Extradist3d;}
 
-  virtual double Compute(double thisdata,double thissignal, double thissignalTotal, double thisbkg,
-				    double data,double signal,double signalTotal, double bkg);
+  virtual double Compute(double thisdata,double thissignal, double thissignalTotal, double thisbkg,double data,double signal,
+			 double signalTotal, double bkg);
   virtual void EvaluateSystematics(Selection_Base* &selectionsys, double w);
-
   static TString splitString(const std::string &s, char delim, std::string splitpoint);
+
+  void Save(TString fName);
 
  protected:
   virtual bool AnalysisCuts(int t,double w,double wobjs=1.0);

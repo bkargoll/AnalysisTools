@@ -15,12 +15,13 @@ else
     echo "Configuring Environment...."
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/CommonUtils/lib
     ## setup variables for make files
-    export ROOTSYS=/usr/lib/root-5.34.17/
-    ROOT="/usr/lib/root-5.34.17/"
+    export ROOTSYS=$PWD/../root/
+    ROOT="$PWD/../root/"
     if [ "${1}"  == "--useRoot" ]; then
-	export ROOTSYS=${2}
+        export ROOTSYS=${2}
+        ROOT="$PWD/../root/"
     fi
-    
+
     UseTauSpinner=0
     for var in $@ ; do
 	if [ "${var}" == "--ReBuild" ]; then

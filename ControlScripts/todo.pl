@@ -666,6 +666,7 @@ if( $ARGV[0] eq "--GRID" ){
     system(sprintf("cd $OutputDir/workdir$set/; $dir/subs USERNAME $UserIDCern CheckandGet.sh; cd $dir"));
     system(sprintf("cd $OutputDir/workdir$set/; $dir/subs WORKDIR workdir$set CheckandGet.sh; cd $dir"));
     system(sprintf("cp $dir/Purge_Jobs.sh $OutputDir/workdir$set/"));
+    system(sprintf("cp $dir/Run.sh $OutputDir/workdir$set/"));
 
     # generate compile script 
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/compile "));
@@ -697,10 +698,8 @@ if( $ARGV[0] eq "--GRID" ){
     # Start Submit script
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
-    
-    system(sprintf("echo \"ls $OutputDir/workdir$set/Set_*/out | awk '{system(\"rm \" \\\$1)}' \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"ls $OutputDir/workdir$set/Set_*/err | awk '{system(\"rm \" \\\$1)}' \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"ls $OutputDir/workdir$set/Set_*/*.tar | awk '{system(\"rm \" \\\$1)}' \" >> $OutputDir/workdir$set/Submit"));
+	system(sprintf("echo \"if [ -f $OutputDir/workdir$set/Set*/out ]; then \n rm $OutputDir/workdir$set/Set*/out; rm $OutputDir/workdir$set/Set*/err; rm $OutputDir/workdir$set/Set*/*.tar; \n fi  \" >> $OutputDir/workdir$set/Submit"));
+
 
     system(sprintf("echo \"echo 'Creating tarballs and installing on the GRID... '\" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"if [ -f workdir$set.tar  ]; then \n rm workdir$set.tar \n fi \n tar -cf workdir$set.tar root Code;\" >> $OutputDir/workdir$set/Submit "));

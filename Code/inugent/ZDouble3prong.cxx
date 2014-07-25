@@ -442,7 +442,7 @@
   double wobs(1),w(1);
   if(!Ntp->isData()){
     if(verbose)std::cout << "void  ZDouble3prong::doEvent() J" << std::endl;
-    //w*=Ntp->EvtWeight3D();
+    //w*=Ntp->PUWeightFineBins();
     if(verbose)std::cout << "void  ZDouble3prong::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;wobs=1;}

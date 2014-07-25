@@ -30,32 +30,11 @@ Tables::Tables(TString name){
 
 Tables::~Tables(){
 }
+
   
-void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,float Lumi,std::vector<float> CrossSectionandAcceptance,
-			       std::vector<float> nevents){
-
-
+void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> names){
   ofstream output;
-  output.open(Name+".tex", ios::out);
-  (output) << "\\documentclass[11pt]{article}" << std::endl;
-  (output) << "\\usepackage[width=6.5in, height=8.5in]{geometry}" << std::endl;
-  (output) << "\\usepackage{epsfig}" << std::endl;
-  (output) << "\\usepackage{cite}" << std::endl;
-  (output) << "\\usepackage{fancyhdr}" << std::endl;
-  (output) << "\\usepackage{lscape,graphicx}" << std::endl;
-  (output) << "\\usepackage{hyperref}"  << std::endl;
-  TString title=Name;
-  title.ReplaceAll("_"," ");
-  (output) << "\\title{Analysis Results for: " << title <<"}" << std::endl;
-  (output) << "\\begin{document}" << std::endl; 
-  (output) << "\\maketitle" << std::endl;
-  (output) << "\\tableofcontents" << std::endl;
-  (output) << "\\newpage" << std::endl;
-  (output) << "\\listoftables" << std::endl;
-  (output) << "\\newpage" << std::endl;
-  (output) << "\\listoffigures" << std::endl; 
-  (output) << "\\clearpage" << std::endl; 
-
+  output.open(Name+"NEvents.tex", ios::out);
 
   (output) << "\\section{Event Cut Flow Tables}" << std::endl; 
   //Makes the Selection Table
@@ -96,7 +75,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
       (output) << " Before Skim";
       for(Int_t j=0; j<nhist;j++){
         if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  (output) << " &  $" << nevents[j]  << "$";
+	  (output) << " &  $" << histo[t].GetBinContent(1)  << "$";
         }
         t++;
       }
@@ -136,9 +115,15 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
     }
     (output) << "\\end{landscape}" << std::endl;
   }
+  output.close();
+}
 
-
- //Makes the Lumi Norm Selection Table
+void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,float Lumi,
+			   std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents){
+  ofstream output;
+  output.open(Name+"LumiNormAndEffTable.tex", ios::out);
+  
+  //Makes the Lumi Norm Selection Table
   if(histo.size()>0){
     int nhist=histo.size();
     int ncuts=histo[0].GetNbinsX()-1;
@@ -197,8 +182,9 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
       (output) << " Before Skim";
       for(Int_t j=0; j<nhist;j++){
         if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-          if(CrossSectionandAcceptance[j]>0)(output) << "  &  $" << nevents[j]*Lumi*CrossSectionandAcceptance[j]/nevents[j]  << "$";
-	  else (output) << "  &  $" << nevents[j]  << "$";
+          //if(CrossSectionandAcceptance[j]>0)(output) << "  &  $" << Lumi*CrossSectionandAcceptance[j]  << "$";
+	  //else 
+	  (output) << "  &  $" << nevents[j]  << "$";
 	}
         t++;
       }
@@ -219,7 +205,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
 	  if(k<=j  && j<nhist && j<k+ncol && t<histo.size() ){
 	  if(nevents[t]>0){
 	    if(CrossSectionandAcceptance[t]>0){
-	      (output) << " &   "<< histo[t].GetBinContent(i+2)*(Lumi*CrossSectionandAcceptance[t])/nevents[t];
+	      (output) << " &   "<< histo[t].GetBinContent(i+2);
 	    }
 	    else{
 	      (output) << " &   "<< histo[t].GetBinContent(i+2);
@@ -320,9 +306,6 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
     (output) << "\\end{landscape}" << std::endl;
   }
 
-
-
-
   // Makes the Relative Efficiency Table
   if(histo.size()>0){
     int nhist=histo.size();
@@ -391,14 +374,16 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
     }
     (output) << "\\end{landscape}" << std::endl;
   }
+  output.close();
+}
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Tables::AddPlots(std::vector<TString> names){
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Add Plots
-
-  //(output) << "\\clearpage" << std::endl;
-
+  ofstream output;
+  output.open(Name+"Plots.tex", ios::out);
+  
   vector<TString> files;
   string dir="./EPS/";
   DIR *dp;
@@ -411,7 +396,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
       files.push_back(string(dirp->d_name));
     }
     closedir(dp);
-   
+    
   }
   std::sort(files.begin(),files.end(),stringCompare);
   for(int j=0;j<2;j++){
@@ -475,73 +460,76 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
 
 	  // Default Nminus 1
 	  (output) << "\\begin{figure}[p]" << std::endl;
-	  (output) << "  \\begin{center} " << std::endl;
-	  (output) << "    \\begin{tabular}{c}" << std::endl;
-	  (output) << "      \\begin{minipage}[h!]{404pt}" << std::endl;
-	  (output) << "        \\begin{center}" << std::endl;
-	  (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	  (output) << "            \\begin{center}" << std::endl;
-	  (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName0 << "}" << std::endl;
+	  (output) << "\\begin{center} " << std::endl;
+	  (output) << "\\begin{tabular}{c}" << std::endl;
+	  (output) << "\\begin{minipage}[h!]{404pt}" << std::endl;
+	  (output) << "\\begin{center}" << std::endl;
+          (output) << "\\caption[ "<< name <<"  ]{"<< std::endl;
+          if(is1 && is2 && is3){
+            (output) << "(Upper Left)  The N minus 1 plot for the "<< name << " cut. " << std::endl;
+            (output) << "(Upper Right) The N minus 0 plot for the "<< name << " cut. " << std::endl;
+            (output) << "(Lower Left)  The associated plot for the "<< name << " cut, with all cuts except the "
+                     << name << " cut applied. " << std::endl;
+            (output) << "(Lower Right) The accumulative associated plot for the " << name
+                     << " cut. This plot is  accumulative, meaning that all cuts from the cut flow before the "
+                     << name << " cut have been applied. " << std::endl;
+          }
+          if(!(is2 && is3)){
+            (output) << "(Left) The N minus 1 plot for the "<< name << " cut. " << std::endl;
+            (output) << "(Right) The N minus 0 plot for the "<< name << " cut. " << std::endl;
+          }
+          (output) << " }" << std::endl;
+	  (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	  (output) << "\\begin{center}" << std::endl;
+	  (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName0 << "}" << std::endl;
 	  if(is2){
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2 << "}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2 << "}" << std::endl;
 	  }
-	  (output) << "            \\end{center}" << std::endl;
-	  (output) << "          \\end{minipage}" << std::endl;
+	  (output) << "\\end{center}" << std::endl;
+	  (output) << "\\end{minipage}" << std::endl;
 	  if(is1 || is3){
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    if(is1) (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
-	    if(is3) (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3 << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl; 
-	    (output) << "          \\end{minipage}" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    if(is1) (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
+	    if(is3) (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3 << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl; 
+	    (output) << "\\end{minipage}" << std::endl;
 	  }
-	  (output) << "          \\caption[ "<< name <<"  ]{"<< std::endl;
-	  if(is1 && is2 && is3){
-	    (output) << "(Upper Left)  The N minus 1 plot for the "<< name << " cut. " << std::endl;
-	    (output) << "(Upper Right) The N minus 0 plot for the "<< name << " cut. " << std::endl;
-	    (output) << "(Lower Left)  The associated plot for the "<< name << " cut, with all cuts except the "<< name << " cut applied. " << std::endl;
-	    (output) << "(Lower Right) The accumulative associated plot for the "<< name << " cut. This plot is  accumulative, meaning that all cuts from the cut flow before the "<< name << " cut have been applied. " << std::endl;
-	  }
-	  if(!(is2 && is3)){
-	    (output) << "(Left) The N minus 1 plot for the "<< name << " cut. " << std::endl;
- 	    (output) << "(Right) The N minus 0 plot for the "<< name << " cut. " << std::endl;
-	  }
-	  (output) << " }" << std::endl; 
-	  (output) << "        \\end{center}" << std::endl; 
-	  (output) << "      \\end{minipage}" << std::endl;
-	  (output) << "    \\end{tabular}" << std::endl; 
-	  (output) << "  \\end{center}" << std::endl;
+	  (output) << "\\end{center}" << std::endl; 
+	  (output) << "\\end{minipage}" << std::endl;
+	  (output) << "\\end{tabular}" << std::endl; 
+	  (output) << "\\end{center}" << std::endl;
 	  (output) << "\\end{figure}" << std::endl; 
 	  (output) << "\\clearpage" << std::endl;
 
 	  // Cut optimization
 	  if(is4 && is5 && is6 && is7){
 	    (output) << "\\begin{figure}[p]" << std::endl;
-	    (output) << "  \\begin{center} " << std::endl;
-	    (output) << "    \\begin{tabular}{c}" << std::endl;
-	    (output) << "      \\begin{minipage}[h!]{404pt}" << std::endl;
-	    (output) << "        \\begin{center}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName4 << "}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName6 << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl;
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName5 << "}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName7 << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl;
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\caption[ "<< name <<"  ]{"<< std::endl;
-	    (output) << "(Upper Left) The significance plot (lt) of "<< name << ". (Upper Right) The Purity plot (lt) of "<< name
+	    (output) << "\\begin{center} " << std::endl;
+	    (output) << "\\begin{tabular}{c}" << std::endl;
+            (output) << "\\begin{minipage}[h!]{404pt}" << std::endl;
+            (output) << "\\begin{center}" << std::endl;
+            (output) << "\\caption[ "<< name <<"  ]{"<< std::endl;
+            (output) << "(Upper Left) The significance plot (lt) of "<< name << ". (Upper Right) The Purity plot (lt) of "<< name
                      << "." << "(Lower Left) The significance plot (gt) of "<< name
                      << ". (Lower Right) The purity (gt) plot of "<< name << "." <<  std::endl;
-	    (output) << " }" << std::endl;
-	    (output) << "        \\end{center}" << std::endl;
-	    (output) << "      \\end{minipage}" << std::endl;
-	    (output) << "    \\end{tabular}" << std::endl;
-	    (output) << "  \\end{center}" << std::endl;
+            (output) << " }" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName4 << "}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName6 << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName5 << "}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName7 << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{tabular}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
 	    (output) << "\\end{figure}" << std::endl;
 	    (output) << "\\clearpage" << std::endl;
 	  }
@@ -549,28 +537,31 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
 	  //Extras
 	  if(is2dist && is3Accum){
 	    (output) << "\\begin{figure}[p]" << std::endl;
-	    (output) << "  \\begin{center} " << std::endl;
-	    (output) << "    \\begin{tabular}{c}" << std::endl;
-	    (output) << "      \\begin{minipage}[h!]{404pt}" << std::endl;
-	    (output) << "        \\begin{center}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2dist << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl;
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3Accum << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl;
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\caption[ "<< name <<"  ]{"<< std::endl;
-	    (output) << "(Left)  The associated plot for the "<< name << " cut, with all cuts except the "<< name << " cut applied. " << std::endl;
-	    (output) << "(Right) The accumulative associated plot for the "<< name << " cut. This plot is  accumulative, meaning that all cuts from the cut flow before the "<< name << " cut have been applied. " << std::endl;
-	    (output) << " }" << std::endl;
-	    (output) << "        \\end{center}" << std::endl;
-	    (output) << "      \\end{minipage}" << std::endl;
-	    (output) << "    \\end{tabular}" << std::endl;
-	    (output) << "  \\end{center}" << std::endl;
+	    (output) << "\\begin{center} " << std::endl;
+            (output) << "\\begin{tabular}{c}" << std::endl;
+            (output) << "\\begin{minipage}[h!]{404pt}" << std::endl;
+            (output) << "\\begin{center}" << std::endl;
+            (output) << "\\caption[ "<< name <<"  ]{"<< std::endl;
+            (output) << "(Left)  The associated plot for the "<< name << " cut, with all cuts except the "
+                     << name << " cut applied. " << std::endl;
+            (output) << "(Right) The accumulative associated plot for the "<< name
+                     << " cut. This plot is  accumulative, meaning that all cuts from the cut flow before the "
+                     << name << " cut have been applied. " << std::endl;
+            (output) << " }" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2dist << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3Accum << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{tabular}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
 	    (output) << "\\end{figure}" << std::endl;
 	    (output) << "\\clearpage" << std::endl;
 	  }
@@ -613,14 +604,13 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
 	  }
 
 	  if(f1 && !f2 && !f3 && !f4 && !f5 && !f6 && !f7 && !f8){
-	    cout << "A" << endl;
 	    (output) << "\\begin{figure}[p]" << std::endl;
 	    (output) << "\\begin{center} " << std::endl;
 	    (output) << "\\begin{tabular}{c}" << std::endl;
 	    (output) << "\\begin{minipage}[h!]{400pt}" << std::endl;
 	    (output) << "\\begin{center}" << std::endl;
-	    (output) << "\\includegraphics*[width=400pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
 	    (output) << "\\caption[ "<< name <<"  ]{ A plot of "<< name << ".}" << std::endl;
+	    (output) << "\\includegraphics*[width=400pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
 	    (output) << "\\end{center}" << std::endl;
 	    (output) << "\\end{minipage}" << std::endl;
 	    (output) << "\\end{tabular}" << std::endl;
@@ -629,67 +619,65 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
 	    (output) << "\\clearpage" << std::endl;
 	  }
 	  else{
-	    cout << "B" << endl;
 	    (output) << "\\begin{figure}[p]" << std::endl;
-	    (output) << "  \\begin{center} " << std::endl;
-	    (output) << "    \\begin{tabular}{c}" << std::endl;
-	    (output) << "      \\begin{minipage}[h!]{404pt}" << std::endl;
-	    (output) << "        \\begin{center}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
-	    if(f3)   (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3 << "}" 
+	    (output) << "\\begin{center} " << std::endl;
+	    (output) << "\\begin{tabular}{c}" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{404pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+            (output) << "\\caption[ "<< name <<"  ]{"<< std::endl;
+            if((!f3 && !f4))          (output) << "(Left) The plot of "<< name << ". (Right) A log plot of "<< name << "." << std::endl;
+            if((f3 || f4))            (output) << "(Upper Left) The plot of "<< name << ". (Upper Right) The log plot of "<< name
+                                               << "." << "(Lower Left) The significance plot of "<< name
+                                               << ". (Lower Right) The signal to background plot of "<< name << "." <<  std::endl;
+            (output) << " }" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName1 << "}" << std::endl;
+	    if(f3)   (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName3 << "}" 
 			      << std::endl;
-	    (output) << "            \\end{center}" << std::endl;
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-	    (output) << "            \\begin{center}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2 << "}" << std::endl;
-	    if(f4)(output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName4 << "}" << std::endl;
-	    (output) << "            \\end{center}" << std::endl; 
-	    (output) << "          \\end{minipage}" << std::endl;
-	    (output) << "          \\caption[ "<< name <<"  ]{"<< std::endl;
-	    if((!f3 && !f4))          (output) << "(Left) The plot of "<< name << ". (Right) A log plot of "<< name << "." << std::endl;
-	    if((f3 || f4))            (output) << "(Upper Left) The plot of "<< name << ". (Upper Right) The log plot of "<< name 
-					       << "." << "(Lower Left) The significance plot of "<< name 
-					       << ". (Lower Right) The signal to background plot of "<< name << "." <<  std::endl;
-	    (output) << " }" << std::endl; 
-	    (output) << "        \\end{center}" << std::endl; 
-	    (output) << "      \\end{minipage}" << std::endl;
-	    (output) << "    \\end{tabular}" << std::endl; 
-	    (output) << "  \\end{center}" << std::endl;
+	    (output) << "\\end{center}" << std::endl;
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+	    (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName2 << "}" << std::endl;
+	    if(f4)(output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName4 << "}" << std::endl;
+	    (output) << "\\end{center}" << std::endl; 
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{center}" << std::endl; 
+	    (output) << "\\end{minipage}" << std::endl;
+	    (output) << "\\end{tabular}" << std::endl; 
+	    (output) << "\\end{center}" << std::endl;
 	    (output) << "\\end{figure}" << std::endl; 
 	    (output) << "\\clearpage" << std::endl;
 	  }
 	  if(f5 && f6 && f7 && f8){
-            cout << "B" << endl;
             (output) << "\\begin{figure}[p]" << std::endl;
-            (output) << "  \\begin{center} " << std::endl;
-            (output) << "    \\begin{tabular}{c}" << std::endl;
-            (output) << "      \\begin{minipage}[h!]{404pt}" << std::endl;
-            (output) << "        \\begin{center}" << std::endl;
-            (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-            (output) << "            \\begin{center}" << std::endl;
-            (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName5 << "}" << std::endl;
-	    (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName7 << "}"
-		     << std::endl;
-            (output) << "            \\end{center}" << std::endl;
-            (output) << "          \\end{minipage}" << std::endl;
-            (output) << "          \\begin{minipage}[h!]{200pt}" << std::endl;
-            (output) << "            \\begin{center}" << std::endl;
-            (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName6 << "}" << std::endl;
-            (output) << "              \\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName8 << "}" << std::endl;
-            (output) << "            \\end{center}" << std::endl;
-            (output) << "          \\end{minipage}" << std::endl;
-            (output) << "          \\caption[ "<< name <<"  ]{"<< std::endl;
-	    (output) << "(Upper Left) The significance plot (lt) of "<< name << ". (Upper Right) The Purity plot (lt) of "<< name
-		     << "." << "(Lower Left) The significance plot (gt) of "<< name
-		     << ". (Lower Right) The purity (gt) plot of "<< name << "." <<  std::endl;
+            (output) << "\\begin{center} " << std::endl;
+            (output) << "\\begin{tabular}{c}" << std::endl;
+            (output) << "\\begin{minipage}[h!]{404pt}" << std::endl;
+            (output) << "\\begin{center}" << std::endl;
+	    (output) << "\\caption[ "<< name <<"  ]{"<< std::endl;
+            (output) << "(Upper Left) The significance plot (lt) of "<< name << ". (Upper Right) The Purity plot (lt) of "<< name
+                     << "." << "(Lower Left) The significance plot (gt) of "<< name
+                     << ". (Lower Right) The purity (gt) plot of "<< name << "." <<  std::endl;
             (output) << " }" << std::endl;
-            (output) << "        \\end{center}" << std::endl;
-            (output) << "      \\end{minipage}" << std::endl;
-            (output) << "    \\end{tabular}" << std::endl;
-            (output) << "  \\end{center}" << std::endl;
+            (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+            (output) << "\\begin{center}" << std::endl;
+            (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName5 << "}" << std::endl;
+	    (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName7 << "}"
+		     << std::endl;
+            (output) << "\\end{center}" << std::endl;
+            (output) << "\\end{minipage}" << std::endl;
+            (output) << "\\begin{minipage}[h!]{200pt}" << std::endl;
+            (output) << "\\begin{center}" << std::endl;
+            (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName6 << "}" << std::endl;
+            (output) << "\\includegraphics*[width=200pt,bb=0pt 0pt 567pt 550pt]{./EPS/" << EPSName8 << "}" << std::endl;
+            (output) << "\\end{center}" << std::endl;
+            (output) << "\\end{minipage}" << std::endl;
+            (output) << "\\end{center}" << std::endl;
+            (output) << "\\end{minipage}" << std::endl;
+            (output) << "\\end{tabular}" << std::endl;
+            (output) << "\\end{center}" << std::endl;
             (output) << "\\end{figure}" << std::endl;
             (output) << "\\clearpage" << std::endl;
 	  }
@@ -698,6 +686,34 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString>  names,
     }
     }
   }
+  output.close();
+}
+
+void Tables::GeneratePDF(){
+  ofstream output;
+  output.open(Name+".tex", ios::out);
+  (output) << "\\documentclass[11pt]{article}" << std::endl;
+  (output) << "\\usepackage[width=6.5in, height=8.5in]{geometry}" << std::endl;
+  (output) << "\\usepackage{epsfig}" << std::endl;
+  (output) << "\\usepackage{cite}" << std::endl;
+  (output) << "\\usepackage{fancyhdr}" << std::endl;
+  (output) << "\\usepackage{lscape,graphicx}" << std::endl;
+  (output) << "\\usepackage{hyperref}"  << std::endl;
+  TString title=Name;
+  title.ReplaceAll("_"," ");
+  (output) << "\\title{Analysis Results for: " << title <<"}" << std::endl;
+  (output) << "\\begin{document}" << std::endl;
+  (output) << "\\maketitle" << std::endl;
+  (output) << "\\tableofcontents" << std::endl;
+  (output) << "\\newpage" << std::endl;
+  (output) << "\\listoftables" << std::endl;
+  (output) << "\\newpage" << std::endl;
+  (output) << "\\listoffigures" << std::endl;
+  (output) << "\\clearpage" << std::endl;
+  
+  (output) << "\\input{"+Name+"NEvents.tex}" << std::endl;
+  (output) << "\\input{"+Name+"LumiNormAndEffTable.tex}" << std::endl;
+  (output) << "\\input{"+Name+"Plots.tex}" << std::endl;
 
   (output) << "\\end{document}" << std::endl;
   output.close();

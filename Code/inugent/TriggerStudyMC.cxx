@@ -192,7 +192,7 @@ void  TriggerStudyMC::doEvent(){
   double wobs(1),w(1);
   if(!Ntp->isData()){
     if(verbose)std::cout << "void  TriggerStudyMC::doEvent() J" << std::endl;
-    //w*=Ntp->EvtWeight3D();
+    //w*=Ntp->PUWeightFineBins();
     if(verbose)std::cout << "void  TriggerStudyMC::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;wobs=1;}

@@ -215,3 +215,12 @@ int HistoConfig::GetID(unsigned int i){
   if(ID.size()>i) return ID.at(i);
   return -999;
 }
+
+int HistoConfig::GetType(int id){
+	for(int i=0; i<ID.size(); i++){
+	    if(ID.at(i)==id){
+	    	return i;
+	    }
+	}
+	return -1;
+}

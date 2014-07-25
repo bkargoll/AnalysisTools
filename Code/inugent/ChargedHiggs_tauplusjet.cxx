@@ -452,7 +452,7 @@ void  ChargedHiggs_tauplusjet::doEvent(){
       MET_Ey=Ntp->MET_CorrMVA_ey();
       // correct for neutrino from taus   
       if(GoodTaus.size()>0){
-	Tau=Ntp->KFTau_TauFit_p4(GoodTaus.at(0)).Pt();
+	Tau=Ntp->KFTau_TauFit_p4(GoodTaus.at(0));
 	BTau+=Tau;
 	MET_Ex+=Ntp->KFTau_Neutrino_p4(GoodTaus.at(0)).Px();
 	MET_Ey+=Ntp->KFTau_Neutrino_p4(GoodTaus.at(0)).Py();
@@ -491,7 +491,7 @@ void  ChargedHiggs_tauplusjet::doEvent(){
   double wobs(1),w(1);
   if(!Ntp->isData()){
     if(verbose)std::cout << "void  ChargedHiggs_tauplusjet::doEvent() J" << std::endl;
-    // w*=Ntp->EvtWeight3D();
+    // w*=Ntp->PUWeightFineBins();
     if(verbose)std::cout << "void  ChargedHiggs_tauplusjet::doEvent() k" << w << " " << wobs << std::endl;
   }
   else{w=1;}
