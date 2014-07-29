@@ -46,7 +46,6 @@ else
 	  eval=`cat jobs_submitted  | wc -l`
 	  echo ${eval} " jobs still running"
 	  if [[  ${eval} -eq 0 ]]; then
-	      source CheckandGet.sh  --status
 	      source Purge_Jobs.sh --all
 	      if [ "${1}"  == "--NoCombine" ] || [ "${2}"  == "--NoCombine" ] || [ "${3}"  == "--NoCombine" ] || [ "${4}"  == "--NoCombine" ]; then
 		  echo "Jobs Complete"
@@ -55,11 +54,12 @@ else
 		  source Combine >& log_Combine
 		  echo "Job Complete"
 	      fi
-	      idx=$nmin+1;
-	      echo "finished " $idx
+	      echo "finished in loop " $idx
+	      let idx=nmin+1
+	  else
+	      let idx=idx+1 
+	      echo "in loop " $idx
 	  fi
-	  let idx=idx+1 
-	  echo "in loop " $idx " " 
 	done	
 	echo "Running Complete. The output of Combine has been dumped to the file log_Combine."
     else

@@ -221,14 +221,9 @@ void  Selection::Finish(){
   std::cout << "Writing out "+Name+".root Complete" << std::endl;
   SkimConfig SC;
   SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
-  std::vector<float> nevents;
-  std::vector<float> nevents_noweight;
-  std::vector<float> nevents_noweight_default;
-  for(int i=0; i<Npassed.size();i++){
-    nevents.push_back(Npassed.at(i).GetBinContent(0));
-    nevents_noweight.push_back(Npassed_noweight.at(i).GetBinContent(0));
-    nevents_noweight_default.push_back(Npassed_noweight.at(i).GetBinContent(1));
-  }
+	for(int i=0; i<Npassed.size();i++){
+		nevents_noweight_default.push_back(Npassed_noweight.at(i).GetBinContent(1));
+	}
 
   // For local jobs produce pdf file
   if(runtype!=GRID){
@@ -237,11 +232,9 @@ void  Selection::Finish(){
 
     // weight all Histograms
     for(int i=0;i<CrossSectionandAcceptance.size();i++){
-      std::cout << i << " CrossSectionandAcceptance " << CrossSectionandAcceptance.at(i) << " " << nevents.at(i) << " " << nevents_noweight.at(i) << std::endl;
-      if(CrossSectionandAcceptance.at(i)>0) ScaleAllHistOfType(i,Lumi*CrossSectionandAcceptance.at(i)/nevents.at(i));
+      std::cout << i << " CrossSectionandAcceptance " << CrossSectionandAcceptance.at(i) << " " << Npassed.at(i).GetBinContent(0) << " " << Npassed_noweight.at(i).GetBinContent(0) << std::endl;
+      if(CrossSectionandAcceptance.at(i)>0) ScaleAllHistOfType(i,Lumi*CrossSectionandAcceptance.at(i)/Npassed.at(i).GetBinContent(0));
     }
-    // Reset the SkimEff since it can be broken during this normilization
-    SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
     Save(fName+"_LumiScaled");// Save file with Lumi-scaled events - required for combining code
 
     ///Now make the plots
@@ -277,10 +270,9 @@ void  Selection::Finish(){
     for(unsigned int i=0; i<Extradist3d.size();i++){
       P.Plot3D((*Extradist3d.at(i)),colour,legend);
     }
-
     
     std::cout << "Writing out "<< Name << ".tex" << std::endl;
-    T.MakeEffTable(Npassed,title,Lumi,CrossSectionandAcceptance,nevents);
+    T.MakeEffTable(Npassed,title,Lumi,CrossSectionandAcceptance);
     T.AddPlots(title);
     T.GeneratePDF();
     std::cout << "Plots and Tables Complete"<< std::endl;

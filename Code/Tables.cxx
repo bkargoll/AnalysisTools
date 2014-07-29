@@ -40,7 +40,7 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
   //Makes the Selection Table
   if(histo.size()>0){
     int nhist=histo.size();
-    int ncuts=histo[0].GetNbinsX()-1;
+    int ncuts=histo.at(0).GetNbinsX()-1;
 
     bool flag=true;
     int ncol=6;
@@ -61,7 +61,7 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
       t=0;
       for(Int_t j=0; j<nhist;j++){
 	if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  TString id=histo[t].GetTitle();
+	  TString id=histo.at(t).GetTitle();
 	  id.ReplaceAll("N Passed ","");
 	  id.ReplaceAll("#","\\");
 	  id.ReplaceAll("had"," had");
@@ -75,7 +75,7 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
       (output) << " Before Skim";
       for(Int_t j=0; j<nhist;j++){
         if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  (output) << " &  $" << histo[t].GetBinContent(1)  << "$";
+	  (output) << " &  $" << histo.at(t).GetBinContent(1)  << "$";
         }
         t++;
       }
@@ -85,7 +85,7 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
       for(int i=-1; i<ncuts;i++){
 	t=0;
 	if(i>=0){
-	  TString title=names[i];
+	  TString title=names.at(i);
 	  (output) << title;
 	}
 	else{
@@ -94,7 +94,7 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
 
 	for(Int_t j=0; j<nhist;j++){
 	  if(k<=j  && j<nhist && j<k+ncol && t<histo.size() ){
-	    (output) << " &   "<< histo[t].GetBinContent(i+2);
+	    (output) << " &   "<< histo.at(t).GetBinContent(i+2);
 	  }
 	  t++;
 	}
@@ -119,14 +119,14 @@ void  Tables::MakeNEventsTable(std::vector<TH1D> histo,std::vector<TString> name
 }
 
 void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,float Lumi,
-			   std::vector<float> CrossSectionandAcceptance,std::vector<float> nevents){
+			   std::vector<float> CrossSectionandAcceptance){
   ofstream output;
   output.open(Name+"LumiNormAndEffTable.tex", ios::out);
   
   //Makes the Lumi Norm Selection Table
   if(histo.size()>0){
     int nhist=histo.size();
-    int ncuts=histo[0].GetNbinsX()-1;
+    int ncuts=histo.at(0).GetNbinsX()-1;
 
     bool flag=true;
     int ncol=6;
@@ -147,7 +147,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       t=0;
       for(Int_t j=0; j<nhist;j++){
 	if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  TString id=histo[t].GetTitle();
+	  TString id=histo.at(t).GetTitle();
 	  id.ReplaceAll("N Passed ","");
 	  id.ReplaceAll("#","\\");
 	  id.ReplaceAll("had"," had");
@@ -162,7 +162,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       (output) << "Cross Section" << std::endl;
       for(Int_t j=0; j<nhist;j++){
 	if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  (output) << " &  " << CrossSectionandAcceptance[j] << "$pb$";
+	  (output) << " &  " << CrossSectionandAcceptance.at(j) << "$pb$";
 	}
 	t++;
       }
@@ -184,7 +184,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
         if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
           //if(CrossSectionandAcceptance[j]>0)(output) << "  &  $" << Lumi*CrossSectionandAcceptance[j]  << "$";
 	  //else 
-	  (output) << "  &  $" << nevents[j]  << "$";
+	  (output) << "  &  $" << histo.at(j).GetBinContent(0)  << "$";
 	}
         t++;
       }
@@ -194,7 +194,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       for(int i=-1; i<ncuts;i++){
 	t=0;
 	if(i>=0){
-	  TString title=names[i];
+	  TString title=names.at(i);
 	  (output) << title;
 	}
 	else{
@@ -203,13 +203,8 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
 
 	for(Int_t j=0; j<nhist;j++){
 	  if(k<=j  && j<nhist && j<k+ncol && t<histo.size() ){
-	  if(nevents[t]>0){
-	    if(CrossSectionandAcceptance[t]>0){
-	      (output) << " &   "<< histo[t].GetBinContent(i+2);
-	    }
-	    else{
-	      (output) << " &   "<< histo[t].GetBinContent(i+2);
-	    }
+	  if(histo.at(t).GetBinContent(0)>0){
+	      (output) << " &   "<< histo.at(t).GetBinContent(i+2);
 	  }
 	  else{
 	    (output) << " &   NA";
@@ -239,7 +234,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
   // Makes Accumulative Efficiency table
   if(histo.size()>0){
     int nhist=histo.size();
-    int ncuts=histo[0].GetNbinsX()-1;
+    int ncuts=histo.at(0).GetNbinsX()-1;
 
     bool flag=true;
     int ncol=6;
@@ -260,7 +255,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       t=0;
       for(Int_t j=0; j<nhist;j++){
 	if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  TString id=histo[t].GetTitle();
+	  TString id=histo.at(t).GetTitle();
 	  id.ReplaceAll("N Passed ","");
 	  id.ReplaceAll("#","\\");
 	  id.ReplaceAll("had"," had");
@@ -274,13 +269,13 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       for(int i=0; i<=ncuts;i++){
 	t=0;
 	TString title="Before Skim";
-	if(i>0) title=names[i-1];
+	if(i>0) title=names.at(i-1);
 	(output) << title;
 	
 	for(Int_t j=0; j<nhist;j++){
 	  if(k<=j  && j<nhist && j<k+ncol && t<histo.size() ){
-	  if(nevents[t]>0){
-	    (output) << " &   " << histo[t].GetBinContent(i+1)/nevents[t];
+	  if(histo.at(t).GetBinContent(0)>0){
+	    (output) << " &   " << histo.at(t).GetBinContent(i+1)/histo.at(t).GetBinContent(0);
 	  }
 	  else{
 	    (output) << " &   0";
@@ -309,7 +304,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
   // Makes the Relative Efficiency Table
   if(histo.size()>0){
     int nhist=histo.size();
-    int ncuts=histo[0].GetNbinsX()-1;
+    int ncuts=histo.at(0).GetNbinsX()-1;
 
     bool flag=true;
     int ncol=6;
@@ -330,7 +325,7 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       t=0;
       for(Int_t j=0; j<nhist;j++){
 	if(k<=j && j<nhist && j<k+ncol && t<histo.size()){
-	  TString id=histo[t].GetTitle();
+	  TString id=histo.at(t).GetTitle();
 	  id.ReplaceAll("N Passed ","");
 	  id.ReplaceAll("#","\\");
 	  id.ReplaceAll("had"," had");
@@ -343,13 +338,13 @@ void  Tables::MakeEffTable(std::vector<TH1D> histo, std::vector<TString> names,f
       
       for(int i=0; i<ncuts;i++){
 	t=0;
-	TString title=names[i];
+	TString title=names.at(i);
 	(output) << title;
 	
 	for(Int_t j=0; j<nhist;j++){
 	  if(k<=j  && j<nhist && j<k+ncol && t<histo.size() ){
-	  if(nevents[t]>0){
-	    (output) << " &   "<< histo[t].GetBinContent(i+2)/histo[t].GetBinContent(i+1);
+	  if(histo.at(t).GetBinContent(0)>0){
+	    (output) << " &   "<< histo.at(t).GetBinContent(i+2)/histo.at(t).GetBinContent(i+1);
 	  }
 	  else{
 	    (output) << " &   0";
@@ -404,16 +399,16 @@ void Tables::AddPlots(std::vector<TString> names){
     if(j==1)  (output) << "\\clearpage \n\\section{Assorted Plots}" << std::endl;
     for(int l=0;l<names.size();l++){
     for(int i=0;i<files.size();i++){
-      if(files[i].Contains(".eps") && files[i].Contains(Name)){
+      if(files.at(i).Contains(".eps") && files.at(i).Contains(Name)){
 	//cout << files[i] << endl;
 	TString index="Data_index_";
 	index+=l;
 	index+=".eps";
 	TString idxstr="_index_";
 	idxstr+=l;
-	if(j==0 && files[i].Contains("Nminus1_") && files[i].Contains(index)){
+	if(j==0 && files.at(i).Contains("Nminus1_") && files.at(i).Contains(index)){
 	  //cout << files[i] << endl;
-	  TString EPSName0=files[i];
+	  TString EPSName0=files.at(i);
 	  TString EPSName1=EPSName0;
 	  EPSName1.ReplaceAll("Nminus1","Nminus0");
 	  TString EPSName2=EPSName0;
@@ -440,18 +435,18 @@ void Tables::AddPlots(std::vector<TString> names){
 
 	  bool is1(false),is2(false),is3(false),is4(false),is5(false),is6(false),is7(false),is2dist(false),is3Accum(false);
 	  for(int k=0;k<files.size();k++){
-	    if(files[k].Contains(EPSName1)) is1=true;
-	    if(files[k].Contains(EPSName2)) is2=true;
-	    if(files[k].Contains(EPSName3)) is3=true;
-	    if(files[k].Contains(EPSName4)) is4=true;
-	    if(files[k].Contains(EPSName5)) is5=true;
-	    if(files[k].Contains(EPSName6)) is6=true;
-	    if(files[k].Contains(EPSName7)) is7=true;
-	    if(files[k].Contains(EPSName2dist)) is2dist=true;
-	    if(files[k].Contains(EPSName3Accum)) is3Accum=true;
+	    if(files.at(k).Contains(EPSName1)) is1=true;
+	    if(files.at(k).Contains(EPSName2)) is2=true;
+	    if(files.at(k).Contains(EPSName3)) is3=true;
+	    if(files.at(k).Contains(EPSName4)) is4=true;
+	    if(files.at(k).Contains(EPSName5)) is5=true;
+	    if(files.at(k).Contains(EPSName6)) is6=true;
+	    if(files.at(k).Contains(EPSName7)) is7=true;
+	    if(files.at(k).Contains(EPSName2dist)) is2dist=true;
+	    if(files.at(k).Contains(EPSName3Accum)) is3Accum=true;
 	  }
 
-	  TString name=files[i];
+	  TString name=files.at(i);
 	  name.ReplaceAll(Name,"");
 	  name.ReplaceAll(index,"");
 	  name.ReplaceAll("_"," ");
@@ -567,9 +562,9 @@ void Tables::AddPlots(std::vector<TString> names){
 	  }
 	  
 	}
-	else if(j==1 && files[i].Contains(idxstr) && !files[i].Contains("Nminus1") && !files[i].Contains("Nminus0") && !files[i].Contains("Accumdist") && !files[i].Contains("Nminus1dist") && !files[i].Contains("_log_") && !files[i].Contains("_sig") && !files[i].Contains("_sigtobkg")){
+	else if(j==1 && files.at(i).Contains(idxstr) && !files.at(i).Contains("Nminus1") && !files.at(i).Contains("Nminus0") && !files.at(i).Contains("Accumdist") && !files.at(i).Contains("Nminus1dist") && !files.at(i).Contains("_log_") && !files.at(i).Contains("_sig") && !files.at(i).Contains("_sigtobkg")){
 	  cout << "in File loop" << endl;
-	  TString EPSName1=files[i];
+	  TString EPSName1=files.at(i);
 	  TString EPSName2=EPSName1;
 	  EPSName2.ReplaceAll("_index_","_log_index_");
 	  TString EPSName3=EPSName2;
@@ -585,7 +580,7 @@ void Tables::AddPlots(std::vector<TString> names){
 	  TString EPSName8=EPSName3;
           EPSName8.ReplaceAll("_sig_index_","_sigtobkggt_index_");
 
-	  TString name=files[i];
+	  TString name=files.at(i);
 	  name.ReplaceAll(Name,"");
 	  name.ReplaceAll(index,"");
 	  name.ReplaceAll("_"," ");
@@ -593,14 +588,14 @@ void Tables::AddPlots(std::vector<TString> names){
 
 	  bool f1(false),f2(false),f3(false),f4(false),f5(false),f6(false),f7(false),f8(false);
 	  for(int i=0;i<files.size();i++){
-	    if(files[i].Contains(EPSName1)) f1=true;
-	    if(files[i].Contains(EPSName2)) f2=true;
-	    if(files[i].Contains(EPSName3)) f3=true;
-	    if(files[i].Contains(EPSName4)) f4=true;
-	    if(files[i].Contains(EPSName5)) f5=true;
-	    if(files[i].Contains(EPSName6)) f6=true;
-	    if(files[i].Contains(EPSName7)) f7=true;
-	    if(files[i].Contains(EPSName8)) f8=true;
+	    if(files.at(i).Contains(EPSName1)) f1=true;
+	    if(files.at(i).Contains(EPSName2)) f2=true;
+	    if(files.at(i).Contains(EPSName3)) f3=true;
+	    if(files.at(i).Contains(EPSName4)) f4=true;
+	    if(files.at(i).Contains(EPSName5)) f5=true;
+	    if(files.at(i).Contains(EPSName6)) f6=true;
+	    if(files.at(i).Contains(EPSName7)) f7=true;
+	    if(files.at(i).Contains(EPSName8)) f8=true;
 	  }
 
 	  if(f1 && !f2 && !f3 && !f4 && !f5 && !f6 && !f7 && !f8){
