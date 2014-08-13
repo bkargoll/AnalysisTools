@@ -20,8 +20,6 @@ class ZtoEMu_Skim : public Selection {
 		 NMu,
 		 NE,
 		 ptthreshold,
-		 //diMuonVeto,
-		 //triLeptonVeto,
 	     NCuts};
 
  protected:
@@ -37,10 +35,11 @@ class ZtoEMu_Skim : public Selection {
   std::vector<TH1D> ept;
   std::vector<TH1D> eeta;
 
-  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax;
+  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta;
   int n_mu,n_e;
 
   bool doHiggsObjects;
+  bool doWWObjects;
 
   double cosphi2d(double px1, double py1, double px2, double py2);
   double dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
@@ -52,63 +51,29 @@ class ZtoEMu_Skim : public Selection {
   int matchTruth(TLorentzVector tvector);
   bool matchTruth(TLorentzVector tvector, int pid, double dr);
   
-  bool isTightMuon(unsigned int i);
-  bool isTightMuon(unsigned int i, unsigned int j);
-  bool isHiggsMuon(unsigned int i, unsigned int j);
-  bool isLooseMuon(unsigned int i);
-  bool isFakeMuon(unsigned int i);
-  bool isFakeMuon(unsigned int i, unsigned int j);
-  double Muon_RelIso(unsigned int i);
-  double Muon_AbsIso(unsigned int i);
+  bool isTightMuon(unsigned int idx);
+  bool isTightMuon(unsigned int idx, unsigned int vtx);
+  bool isHiggsMuon(unsigned int idx, unsigned int vtx);
+  bool isLooseMuon(unsigned int idx);
+  bool isFakeMuon(unsigned int idx);
+  bool isFakeMuon(unsigned int idx, unsigned int vtx);
+  double Muon_RelIso(unsigned int idx);
   
-  bool isTrigPreselElectron(unsigned int i);
-  bool isTrigNoIPPreselElectron(unsigned int i);
-  bool isMVATrigElectron(unsigned int i);
-  bool isMVATrigNoIPElectron(unsigned int i);
-  bool isMVANonTrigElectron(unsigned int i, unsigned int j);
-  bool isHiggsElectron(unsigned int i, unsigned int j);
-  bool isTightElectron(unsigned int i);
-  bool isTightElectron(unsigned int i, unsigned int j);
-  bool isFakeElectron(unsigned int i);
-  bool isFakeElectron(unsigned int i, unsigned int j);
-  double Electron_RelIso(unsigned int i);
+  bool isTrigPreselElectron(unsigned int idx);
+  bool isTrigNoIPPreselElectron(unsigned int idx);
+  bool isMVATrigElectron(unsigned int idx);
+  bool isMVATrigNoIPElectron(unsigned int idx);
+  bool isMVANonTrigElectron(unsigned int idx, unsigned int vtx);
+  bool isHiggsElectron(unsigned int idx, unsigned int vtx);
+  bool isWWElectron(unsigned int idx, unsigned int vtx);
+  bool isTightElectron(unsigned int idx);
+  bool isTightElectron(unsigned int idx, unsigned int vtx);
+  bool isLooseElectron(unsigned int idx);
+  bool isFakeElectron(unsigned int idx);
+  bool isFakeElectron(unsigned int idx, unsigned int vtx);
+  double Electron_RelIso(unsigned int idx);
   double Electron_Aeff_R04(double Eta);
   double Electron_Aeff_R03(double Eta);
-  
-  double MuonIDeff(unsigned int i);
-  double MuonHiggsIDeff(unsigned int i);
-  double ElectronIDeff(unsigned int i, std::string id);
-  double ElectronTrigIDeff(unsigned int i);
-  double ElectronNonTrigIDeff(unsigned int i);
-  double ElectronHiggsIDeff(unsigned int i);
-
-  double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
-  double FakerateWW(unsigned int i, std::string type);
-  
-  TFile* FRFile;
-  TFile* EmbEffFile;
-  TH2D* ElectronFakeRate;
-  TH2D* MuonFakeRate;
-  TH2D* EmbEff;
-  double fakeRate;
-  double fakeRateMu;
-  double fakeRateE;
-
-  TFile* MuIdEffFile;
-  TFile* MuIsoEffFile;
-  TFile* ETrigIdEffFile;
-  TFile* ENonTrigIdEffFile;
-
-  TH2D* ElectronTrigEff;
-  TH2D* ElectronNonTrigEff;
-  TGraphAsymmErrors* MuIdEff09;
-  TGraphAsymmErrors* MuIdEff12;
-  TGraphAsymmErrors* MuIdEff21;
-  TGraphAsymmErrors* MuIdEff24;
-  TGraphAsymmErrors* MuIsoEff09;
-  TGraphAsymmErrors* MuIsoEff12;
-  TGraphAsymmErrors* MuIsoEff21;
-  TGraphAsymmErrors* MuIsoEff24;
 
 };
 #endif

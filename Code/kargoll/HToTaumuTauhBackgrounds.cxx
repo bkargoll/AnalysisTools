@@ -37,6 +37,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 		return;
 	}
 
+	//////////// WJets ////////////
 	// calculate W+Jet yield for categories
 	unsigned histo;
 	const unsigned nCat = 8;
@@ -185,10 +186,59 @@ void HToTaumuTauhBackgrounds::Finish() {
 	for (unsigned int icat = 5; icat <= 6; icat++){
 		printf(format,catNames.at(icat).Data(), catWJetsYield.at(icat), catWJetMCPrediction.at(icat), catWJetsMCRatio.at(icat), catWJetRelaxedMCPrediction.at(icat), catWJetsRelaxedMCRatio.at(icat));
 	}
-	std::cout << "  ##########################################################" << std::endl;
+	std::cout << "  ##########################################################\n" << std::endl;
 	printf("Please copy the following numbers in order to use the data driven WJets yield:\n");
 	for (unsigned int icat = 0; icat < nCat; icat++){
-		if (icat != 5 && icat != 6) printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsMCRatio.at(icat));
-		else printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsYield.at(icat));
+		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsYield.at(icat));
 	}
+
+	//////////// QCD ////////////
+	// calculate the OS/SS factor
+	std::vector<TH2D> catQcdABCD(nCat,TH2D());
+	std::vector<double> catOsSsRatio(nCat,0.0);
+	if (HConfig.GetHisto(true,1,histo)){
+		catQcdABCD.at(0) = Cat0JetLowQcdAbcd.at(histo);
+		catQcdABCD.at(1) = Cat0JetHighQcdAbcd.at(histo);
+		catQcdABCD.at(2) = Cat1JetLowQcdAbcd.at(histo);
+		catQcdABCD.at(3) = Cat1JetHighQcdAbcd.at(histo);
+		catQcdABCD.at(4) = Cat1JetBoostQcdAbcd.at(histo);
+		catQcdABCD.at(5) = CatVBFLooseQcdAbcd.at(histo);
+		catQcdABCD.at(6) = CatVBFTightQcdAbcd.at(histo);
+		catQcdABCD.at(7) = CatInclusiveQcdAbcd.at(histo);
+	}
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		catOsSsRatio.at(icat) = catQcdABCD.at(icat).GetBinContent(2,1) / catQcdABCD.at(icat).GetBinContent(2,2);
+	}
+
+	// get events in SS region
+	std::vector<double> catQcdSSYieldData(nCat,0.0);
+	std::vector<double> catQcdSSYieldWJets(nCat,0.0); // todo: this has to be implemented!
+	std::vector<double> catQcdSSYieldMCBG(nCat,0.0);
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		catQcdSSYieldData.at(icat) = catQcdABCD.at(icat).GetBinContent(1,2);
+	}
+	for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
+		if (id == 60) continue; // 60 = QCD
+		if (HConfig.GetHisto(false,id,histo)){
+			catQcdSSYieldMCBG.at(0) += Cat0JetLowQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(1) += Cat0JetHighQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(2) += Cat1JetLowQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(3) += Cat1JetHighQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(4) += Cat1JetBoostQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(5) += CatVBFLooseQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(6) += CatVBFTightQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(7) += CatInclusiveQcdAbcd.at(histo).GetBinContent(1,2);
+		}
+	}
+
+	std::cout << "  ############# QCD: OS/SS ratio #######################" << std::endl;
+	printf("%12s  %12s / %12s = %12s\n", "Category", "N(OS)", "N(SS)", "OS/SS ratio");
+	format = "%12s  %12.1f / %12.1f = %12f\n";
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		double os = catQcdABCD.at(icat).GetBinContent(2,1);
+		double ss = catQcdABCD.at(icat).GetBinContent(2,2);
+		printf(format, catNames.at(icat).Data(), os, ss, catOsSsRatio.at(icat));
+	}
+
+
 }

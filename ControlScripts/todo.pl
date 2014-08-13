@@ -401,13 +401,23 @@ if( $ARGV[0] eq "--Local" ){
 	    }
 	}
     }
+    
+    printf("Setting up root....\n");
+    if($buildRoot==1){
+        printf("Building custom root $buildrootversion... Enjoy your coffee!!! ");
+	system(sprintf("wget ftp://root.cern.ch/root/root_v$buildrootversion.source.tar.gz"));
+	system(sprintf("gzip -dc root_v$buildrootversion.source.tar.gz | tar -xf -"));
+	system(sprintf("mkdir $OutputDir/workdir$set/root"));
+	system(sprintf("cd root_v$buildrootversion; ./configure --enable-python --enable-roofit --enable-minuit2 --disable-xrootd --disable-sqlite --disable-python --disable-mysql --prefix=$OutputDir/workdir$set/root; make & make install "));
+    }
+    else{
+        printf("Copying local root $MYROOTSYS ");
+        system(sprintf("mkdir $OutputDir/workdir$set/root/"));
+        system(sprintf("cp -r $MYROOTSYS/* $OutputDir/workdir$set/root/"));
+    }
 
     # Finish Submit script
     system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"chmod +x  Auto_Combine_submit  \" >> $OutputDir/workdir$set/Submit"));
-    #system(sprintf("echo \"nohup  ./Auto_Combine_submit & \" >> $OutputDir/workdir$set/Submit"));
-    GenerateAutoCombineScript("Auto_Combine_submit");
-    system(sprintf("mv Auto_Combine_submit $OutputDir/workdir$set/"));
 
     # print Instructions  
     printf("\n\nInstructions");
@@ -416,10 +426,10 @@ if( $ARGV[0] eq "--Local" ){
     printf("\ngit config --global credential.helper cache");
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
-    printf("\nTo compile the code in the workdir: source compile ");
+    printf("\nTo compile the code in the workdir: source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir ");
     printf("\nTo submit jobs to the batch queue: source Submit ");
     printf("\nTo combine jobs submitted to the batch queue: source Combine \n");
-    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
+    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
 
 } 
 
@@ -601,12 +611,22 @@ if( $ARGV[0] eq "--DCache" ){
 	}
     }
 
+    printf("Setting up root....\n");
+    if($buildRoot==1){
+        printf("Building custom root $buildrootversion... Enjoy your coffee!!! ");
+	system(sprintf("wget ftp://root.cern.ch/root/root_v$buildrootversion.source.tar.gz"));
+	system(sprintf("gzip -dc root_v$buildrootversion.source.tar.gz | tar -xf -"));
+	system(sprintf("mkdir $OutputDir/workdir$set/root"));
+	system(sprintf("cd root_v$buildrootversion; ./configure --enable-python --enable-roofit --enable-minuit2 --disable-xrootd --disable-sqlite --disable-python --disable-mysql --prefix=$OutputDir/workdir$set/root; make & make install "));
+    }
+    else{
+        printf("Copying local root $MYROOTSYS ");
+        system(sprintf("mkdir $OutputDir/workdir$set/root/"));
+        system(sprintf("cp -r $MYROOTSYS/* $OutputDir/workdir$set/root/"));
+    }
+
     # Finish Submit script
     system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"chmod +x  Auto_Combine_submit  \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"nohup  ./Auto_Combine_submit & \" >> $OutputDir/workdir$set/Submit"));
-    GenerateAutoCombineScript("Auto_Combine_submit");
-    system(sprintf("mv Auto_Combine_submit $OutputDir/workdir$set/"));
 
     # print Instructions
     printf("\n\nInstructions");
@@ -617,10 +637,10 @@ if( $ARGV[0] eq "--DCache" ){
     printf("\ngit config --global credential.helper cache");
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
-    printf("\nTo compile the code in the workdir: source compile ");
+    printf("\nTo compile the code in the workdir: source compile --useRoot $OutputDir/workdir$set/root/ $UserDir ");
     printf("\nTo submit jobs to the batch queue: source Submit ");
     printf("\nTo combine jobs submitted to the batch queue: source Combine \n");
-    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
+    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
 } 
 
 if( $ARGV[0] eq "--GRID" ){
@@ -697,33 +717,46 @@ if( $ARGV[0] eq "--GRID" ){
 
     # Start Submit script
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
-    system(sprintf("echo \"cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"if [ -f $OutputDir/workdir$set/Set*/out ]; then \n rm $OutputDir/workdir$set/Set*/out; rm $OutputDir/workdir$set/Set*/err; rm $OutputDir/workdir$set/Set*/*.tar; \n fi  \" >> $OutputDir/workdir$set/Submit"));
+# This script run the grid jobs and then combines the output
+    system(sprintf("echo 'if [ \"\${1}\"  == \"--help\" ] ; then ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo '  echo \"Script to submit grid jobs. \" ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo '  echo \"Options for running this this script\" ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo '  echo \"source Submit --Setup           Creates new tarball and ships it to the grid. Cleans history of submitted jobs. \" ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo '  echo \"source Submit --Submit          Submits all unsubmitted jobs using installed tarball. \" ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo '  echo \"source Submit --SetupAndSubmit  Runs --Setup and then --Submit. \" ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo 'fi ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo 'if [ \"\${1}\" == \"--Setup\" ] || [ \"\${1}\" == \"--SetupAndSubmit\" ]; then ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  if [ -f $OutputDir/workdir$set/Set*/out ]; then \n    rm $OutputDir/workdir$set/Set*/out;\n    rm $OutputDir/workdir$set/Set*/err;\n    rm $OutputDir/workdir$set/Set*/*.tar; \n  fi  \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  echo 'Creating tarballs and installing on the GRID... '\" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"  if [ -f workdir$set.tar  ]; then \n    rm workdir$set.tar \n  fi \n  tar -cf workdir$set.tar root Code;\" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"  isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep workdir$set.tar  | wc -l) \n  if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"    srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \n  fi \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"  srmcp  file:////$OutputDir/workdir$set/workdir$set.tar srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"  echo 'Complete '\" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"  if [ -f $OutputDir/workdir$set/jobs_submitted ]; then \n    rm $OutputDir/workdir$set/jobs_submitted \n  fi \n  touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  if [ -f $OutputDir/workdir$set/jobs_complete ]; then  \n  rm $OutputDir/workdir$set/jobs_complete  \n  fi \n  touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  if [ -f $OutputDir/workdir$set/jobs_submittedOrComplete ]; then  \n    rm $OutputDir/workdir$set/jobs_submittedOrComplete  \n  fi \n  touch $OutputDir/workdir$set/jobs_submittedOrComplete\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  touch jobs_log \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  echo 'Configuring storage on the GRID...' \" >> $OutputDir/workdir$set/Submit"));
+ system(sprintf("echo \"  hasdir=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep /pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/  | wc -l) \n  if [ \\\$hasdir == 0 ]; then \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"    srmmkdir srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set \n  fi \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo 'fi ' >> $OutputDir/workdir$set/Submit")) ;
 
-
-    system(sprintf("echo \"echo 'Creating tarballs and installing on the GRID... '\" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"if [ -f workdir$set.tar  ]; then \n rm workdir$set.tar \n fi \n tar -cf workdir$set.tar root Code;\" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"isSkim=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep workdir$set.tar  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \n fi \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"srmcp  file:////$OutputDir/workdir$set/workdir$set.tar srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"echo 'Complete '\" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/jobs_submitted ]; then \n rm $OutputDir/workdir$set/jobs_submitted \n fi \n touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"if [ -f $OutputDir/workdir$set/jobs_complete ]; then  \n rm $OutputDir/workdir$set/jobs_complete  \n fi \n touch $OutputDir/workdir$set/jobs_submitted\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \" touch jobs_log \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"echo 'Configuring storage on the GRID...' \" >> $OutputDir/workdir$set/Submit"));
- system(sprintf("echo \"hasdir=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep /pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/  | wc -l) \n if [ \\\$hasdir == 0 ]; then \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"srmmkdir srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set \n fi \" >> $OutputDir/workdir$set/Submit"));
-	# get file list from dcache
-	system(sprintf("echo \"rm listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"touch listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"filecount=0 \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"readfiles=1 \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"while [ \\\$readfiles -gt \\\$filecount ] \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"do \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"  srmls -count=999 -offset=\\\$filecount -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ >& listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"  let filecount=filecount+999 \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"  readfiles=\\`cat listOfSrmlsFileNames | wc -l\\`; \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"done \" >> $OutputDir/workdir$set/Submit")) ;
+    # get file list from dcache to remove old skims
+    system(sprintf("echo '\n\n\nif [ \"\${1}\" == \"--Submit\" ] || [ \"\${1}\" == \"--SetupAndSubmit\" ]; then ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  #find list of Skim file from previous job\n  touch jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  touch listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  filecount=0 \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  readfiles=1 \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  while [ \\\$readfiles -gt \\\$filecount ]; do \" >> $OutputDir/workdir$set/Submit")) ;
+     system(sprintf("echo \"    srmls -count=999 -offset=\\\$filecount -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/ >& listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"    let filecount=filecount+999 \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"    readfiles=\\`cat listOfSrmlsFileNames | wc -l\\`; \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"  done \" >> $OutputDir/workdir$set/Submit")) ;
+    
+    
 
 
     $B=0;
@@ -771,15 +804,9 @@ if( $ARGV[0] eq "--GRID" ){
 		    if($A > $max ){
 			$A=1;
 			$B++;
-
-
-       		# Add Set information to Combining scripts and Input.txt
-			system(sprintf("echo \"File: $OutputDir/workdir$set/Set_$B/ \" >>  $OutputDir/workdir$set/Input.txt ")) ;
-			system(sprintf("echo \"cd $OutputDir/workdir$set/  \" >> $OutputDir/workdir$set/Submit")) ;
-			system(sprintf("echo \"echo 'Submitting Set_$B/GRIDJob.jdl' \" >> $OutputDir/workdir$set/Submit "));
-			system(sprintf("echo \"isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_$B.root  | wc -l) \n if [ \\\$isSkim == 1 ]; then \" >> $OutputDir/workdir$set/Submit "));
-			system(sprintf("echo \"srmrm  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_$B.root \n fi \" >> $OutputDir/workdir$set/Submit "));
-			system(sprintf("echo \"glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_$B/GRIDJob.jdl  | tee junk ; cat junk >> jobs_log; cat junk |  grep https | awk '{print \\\$1 \\\" $OutputDir/workdir$set/Set_$B \\\" }' >>  $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit")) ;
+			
+                        # Add Set information to Combining scripts and Input.txt
+			system(sprintf("echo \"File: $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Input.txt ")) ;
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
@@ -911,13 +938,30 @@ if( $ARGV[0] eq "--GRID" ){
     }
     
     # Finish Submit script
-    system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"rm  listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"echo 'number of jobs submitted:'\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"cat jobs_submitted | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"echo 'total number of sets in this directory:'\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"ls -l | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"rm -rf /user/scratch/$UserID/$myfile  \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
+    system(sprintf("echo \"\n\n# Now setup up submission (try 3 times for good luck) \n  for (( l=1; l<=3; l++ )); do \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"    for (( c=1; c<=$B; c++ )); do \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"      issub=\\\$(grep workdir$set/Set_\\\${c} $OutputDir/workdir$set/jobs_submittedOrComplete | wc -l) \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"      if [[ \\\${issub} -eq 0 ]]; then  \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"        cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"        echo 'Submitting Set_'\\\${c}'/GRIDJob.jdl' \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"        isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_\\\${c}.root | wc -l) \n      if [[ \\\${isSkim} -eq 1 ]]; then \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"          srmrm srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_\\\${c}.root \n     fi \" >> $OutputDir/workdir$set/Submit "));
+    system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx }' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"          cp $OutputDir/workdir$set/jobs_submitted $OutputDir/workdir$set/jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ; 
+    system(sprintf("echo \"      fi \n    done\n  done \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  njobs=\\\$(cat jobs_submittedOrComplete | wc -l)  \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  if [[ \\\${njobs} -ne $B ]]; then \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"    echo \\\${njobs} ' out of $B were submitted. Check that the grid is not experiencing technical difficulties and retry: source Submit --Submit ' \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  fi\" >> $OutputDir/workdir$set/Submit"));
+
+    #Clean up and Summary
+    system(sprintf("echo \"\n\n\n#Summary and Cleanup\n  cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  rm  listOfSrmlsFileNames \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  echo 'number of jobs submitted:'\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  cat jobs_submitted | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  echo 'total number of sets in this directory:'\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  ls -l | grep -c Set_\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"fi\" >> $OutputDir/workdir$set/Submit"));
 
     # print Instructions
     printf("\n\nInstructions");
@@ -935,31 +979,3 @@ if( $ARGV[0] eq "--GRID" ){
     printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1.sh; cd ..\n");
     
 } 
-
-sub GenerateAutoCombineScript{
-    $file=$_[0];
-    system(sprintf("echo \"#! /bin/bash\" >> $file"));
-    system(sprintf("echo \"for i in {1..2881} \" >>  $file"));
-    system(sprintf("echo \"do \" >>  $file"));
-    system(sprintf("echo \"  nDir=\\\$(ls | grep Set_ | wc -l) \" >>  $file"));
-    system(sprintf("echo \"  nFin=\\\$(grep \\\"Completed Job\\\" Set_*/Set_*.o | wc -l) \" >>  $file"));
-    system(sprintf("echo \"  if [ \\\$nFin != \\\$nDir ]; then\" >>  $file"));
-    system(sprintf("echo \"    sleep 300\" >>  $file"));
-    system(sprintf("echo \"  else\" >>  $file"));
-    system(sprintf("echo \"    sleep 180\" >>  $file"));
-    system(sprintf("echo \"    nSuc=\\\$(grep \\\"Program is Finished\\\" Set_*/Set_*.output  | wc -l )  \" >>  $file"));
-    system(sprintf("echo \"    if [ \\\$nFin == \\\$nSuc ]; then\" >>  $file"));
-    system(sprintf("echo \"      echo \\\"All Jobs Succeeded: Submitting Condor_Combine \\\"\" >>  $file"));
-    system(sprintf("echo \"      condor_submit Condor_Combine\" >>  $file"));
-    system(sprintf("echo \"    else \" >>  $file"));
-    system(sprintf("echo \"      echo \\\"Failed Jobs: Aborting combine submission \\\"\" >>  $file"));
-    system(sprintf("echo \"    fi\" >>  $file"));
-    system(sprintf("echo \"    break\" >>  $file"));
-    system(sprintf("echo \"  fi\" >>  $file"));
-    system(sprintf("echo \"  if [ \\\$i == 2880 ]; then\" >>  $file"));
-    system(sprintf("echo \"    echo \\\"Out of time (48hr): Submit Condor_Combine manually when jobs complete \\\" \" >>  $file"));
-    system(sprintf("echo \"    break\" >>  $file")); 
-    system(sprintf("echo \"  fi\" >>  $file")); 
-    system(sprintf("echo \"done\" >>  $file")); 
-}
-

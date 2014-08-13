@@ -179,6 +179,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   double        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
   double        PUWeight_m5(){return Ntp->PUWeight_m5;}
   double		PUWeightFineBins(){return Ntp->PUWeightFineBins;}
+  double        EmbeddedWeight(){return Ntp->EmbeddedWeight;}
 
   TVectorT<double>      beamspot_par(){TVectorT<double> BS(NBS_par);for(unsigned int i=0;i<NBS_par;i++)BS(i)=Ntp->beamspot_par->at(i);return BS;}
 

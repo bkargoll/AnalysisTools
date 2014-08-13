@@ -228,6 +228,9 @@ void  Selection::Finish(){
   // For local jobs produce pdf file
   if(runtype!=GRID){
     Tables T(Name);
+    //Check that the correct number of events are run over and make Table
+    SC.CheckNEvents(types,nevents_noweight_default);
+    // Make Tables
     T.MakeNEventsTable(Npassed,title);
 
     // weight all Histograms
@@ -278,8 +281,6 @@ void  Selection::Finish(){
     std::cout << "Plots and Tables Complete"<< std::endl;
   }
 
-  //Check that the correct number of events are run over
-  SC.CheckNEvents(types,nevents_noweight_default);
 }
 
 

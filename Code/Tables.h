@@ -23,6 +23,7 @@ class Tables {
 
  private:
   TString Name;
+  bool plotCutOptimization;
 
 };
 #endif

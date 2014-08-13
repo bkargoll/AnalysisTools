@@ -109,7 +109,7 @@ void  Example::doEvent(){
       NTrackperVtx.at(t).Fill(Ntp->Vtx_Track_idx(i).size(),w);
       if(Ntp->isVtxGood(i))nGoodVtx++;
     }
-    NGoodVtx.at(t).Fill(nGoodVtx,w);;
+    NGoodVtx.at(t).Fill(nGoodVtx,w);
   }
 }
 

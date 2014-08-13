@@ -21,6 +21,7 @@ class ZtoEMu : public Selection {
 		 NMu,
 		 NE,
 		 ptthreshold,
+		 mll,
 		 drEMu,
 		 diMuonVeto,
 		 triLeptonVeto,
@@ -76,6 +77,7 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> invmass_vetos_m;
   std::vector<TH1D> invmass_only_object_id_m;
 
+  std::vector<TH1D> invmass_dremu_only;
   std::vector<TH1D> invmass_dimuon_only;
   std::vector<TH1D> invmass_trilepton_only;
   std::vector<TH1D> invmass_charge_only;
@@ -91,6 +93,7 @@ class ZtoEMu : public Selection {
   
   std::vector<TH1D> NPV;
   std::vector<TH1D> NPV3d;
+  std::vector<TH1D> NPVfine;
   std::vector<TH1D> evtweight;
   
   std::vector<TH1D> met;
@@ -130,10 +133,21 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> ptbal_chargepass;
   std::vector<TH1D> ptbal_chargefail;
 
-  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax,mtmu,ptbalance;
+  std::vector<TH1D> Dxy_trig;
+  std::vector<TH1D> Dz_trig;
+  std::vector<TH1D> Dxy_nontrig;
+  std::vector<TH1D> Dz_nontrig;
+  std::vector<TH1D> Dxy_trignoip;
+  std::vector<TH1D> Dz_trignoip;
+  std::vector<TH2D> eta_mu_e;
+  std::vector<TH2D> pt_vs_eta_mu;
+  std::vector<TH2D> pt_vs_eta_e;
+
+  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax,mtmu,ptbalance,mmin;
   int n_mu,n_e;
   bool doHiggsObjects;
   bool doWWObjects;
+  bool useMadgraphZ;
   
   double csvl,csvm,csvt;
 
@@ -190,6 +204,7 @@ class ZtoEMu : public Selection {
   double ElectronHiggsIDeff(unsigned int idx);
   double ElectronTriggerEff(unsigned int idx);
   double ElectronTriggerErr(unsigned int idx);
+  double ElectronEmbeddedEff(unsigned int idx);
   
   double TriggerEff(unsigned int muid, unsigned int eid, TString path);
   double SingleEle(unsigned int idx);
@@ -199,12 +214,16 @@ class ZtoEMu : public Selection {
   double DoubleMuLeading(unsigned int idx);
   double DoubleMuTrailing(unsigned int idx);
 
+  double TrackingEff(double eta);
+
   double ElectronMassScale(unsigned int idx);
   double ZPtReweight(double zpt);
   double PowhegReweight(double zpt);
   double rundependentJetPtCorrection(double jeteta, int runnumber);
-
-  //double JECuncertainty(unsigned int i, TString datamc);
+  double CorrectJER(unsigned int idx);
+  double JetEnergyResolutionCorr(double jeteta);
+  double JetEnergyResolutionCorrErr(double jeteta);
+  TLorentzVector GenJet(unsigned int recjet);
 
   double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
   double FakerateWW(unsigned int idx, std::string type);
@@ -227,9 +246,11 @@ class ZtoEMu : public Selection {
   TFile* ENonTrigIdEffFile;
   TFile* TriggerEfficiencies;
   TFile* FakeRates;
+  TFile* ENonTrigIdRecoEffFile;
 
   TH2D* ElectronTrigEff;
   TH2D* ElectronNonTrigEff;
+  TH2D* ElectronNonTrigRecoEff;
   TGraphAsymmErrors* MuIdEff09;
   TGraphAsymmErrors* MuIdEff12;
   TGraphAsymmErrors* MuIdEff21;

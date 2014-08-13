@@ -131,12 +131,14 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> TauPt;
   std::vector<TH1D> TauEta;
   std::vector<TH1D> TauPhi;
+  std::vector<TH1D> TauIso;
 
   std::vector<TH1D> TauSelPt;
   std::vector<TH1D> TauSelEta;
   std::vector<TH1D> TauSelPhi;
   std::vector<TH1D> TauSelDrHlt; // todo: not filled at the moment
   std::vector<TH1D> TauSelDecayMode;
+  std::vector<TH1D> TauSelIso;
 
   std::vector<TH1D> MuVetoDPtSelMuon;
   std::vector<TH1D> MuVetoInvM;
@@ -156,9 +158,17 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MuTauDEta;
   std::vector<TH1D> MuTauDPt;
   std::vector<TH1D> MuTauRelDPt;
+  std::vector<TH2D> MuPtVsTauPt;
 
   std::vector<TH1D> MetPt;
   std::vector<TH1D> MetPhi;
+
+  std::vector<TH1D> MetLepMuDr;
+  std::vector<TH1D> MetLepTauDr;
+  std::vector<TH1D> MetLepNMu;
+  std::vector<TH1D> MetLepNTau;
+  std::vector<TH1D> MetLepNMuMinusNMu;
+  std::vector<TH1D> MetLepNTauMinusNTau;
 
   std::vector<TH1D> NJetsKin;
   std::vector<TH1D> JetKin1Pt;
@@ -189,6 +199,19 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> JetsDEta;
   std::vector<TH1D> JetsInEtaGap;
   std::vector<TH1D> JetsInvM;
+
+  std::vector<TH1D> TauIsoFullSel;
+
+  std::vector<TH1D> MtAfterMuon;
+  std::vector<TH1D> MtAfterDiMuonVeto;
+  std::vector<TH1D> MtAfterTau;
+  std::vector<TH1D> MtAfterTriLepVeto;
+  std::vector<TH1D> MtAfterOppCharge;
+  std::vector<TH1D> MtAfterBJetVeto;
+  std::vector<TH1D> MtOnlyTau;
+  std::vector<TH1D> MtOnlyTriLepVeto;
+  std::vector<TH1D> MtOnlyOppCharge;
+  std::vector<TH1D> MtOnlyBJet;
 
   std::vector<TH1D> Cat0JetLowMt;
   std::vector<TH1D> Cat0JetLowMtSideband;
@@ -225,6 +248,39 @@ class HToTaumuTauh : public Selection {
   std::vector<TH2D> CatVBFLooseQcdAbcd;
   std::vector<TH2D> CatVBFTightQcdAbcd;
   std::vector<TH2D> CatInclusiveQcdAbcd;
+
+  std::vector<TH1D> Cat0JetLowQcdOSMuIso;
+  std::vector<TH1D> Cat0JetLowQcdOSTauIso;
+  std::vector<TH1D> Cat0JetLowQcdSSMuIso;
+  std::vector<TH1D> Cat0JetLowQcdSSTauIso;
+  std::vector<TH1D> Cat0JetHighQcdOSMuIso;
+  std::vector<TH1D> Cat0JetHighQcdOSTauIso;
+  std::vector<TH1D> Cat0JetHighQcdSSMuIso;
+  std::vector<TH1D> Cat0JetHighQcdSSTauIso;
+  std::vector<TH1D> Cat1JetLowQcdOSMuIso;
+  std::vector<TH1D> Cat1JetLowQcdOSTauIso;
+  std::vector<TH1D> Cat1JetLowQcdSSMuIso;
+  std::vector<TH1D> Cat1JetLowQcdSSTauIso;
+  std::vector<TH1D> Cat1JetHighQcdOSMuIso;
+  std::vector<TH1D> Cat1JetHighQcdOSTauIso;
+  std::vector<TH1D> Cat1JetHighQcdSSMuIso;
+  std::vector<TH1D> Cat1JetHighQcdSSTauIso;
+  std::vector<TH1D> Cat1JetBoostQcdOSMuIso;
+  std::vector<TH1D> Cat1JetBoostQcdOSTauIso;
+  std::vector<TH1D> Cat1JetBoostQcdSSMuIso;
+  std::vector<TH1D> Cat1JetBoostQcdSSTauIso;
+  std::vector<TH1D> CatVBFLooseQcdOSMuIso;
+  std::vector<TH1D> CatVBFLooseQcdOSTauIso;
+  std::vector<TH1D> CatVBFLooseQcdSSMuIso;
+  std::vector<TH1D> CatVBFLooseQcdSSTauIso;
+  std::vector<TH1D> CatVBFTightQcdOSMuIso;
+  std::vector<TH1D> CatVBFTightQcdOSTauIso;
+  std::vector<TH1D> CatVBFTightQcdSSMuIso;
+  std::vector<TH1D> CatVBFTightQcdSSTauIso;
+  std::vector<TH1D> CatInclusiveQcdOSMuIso;
+  std::vector<TH1D> CatInclusiveQcdOSTauIso;
+  std::vector<TH1D> CatInclusiveQcdSSMuIso;
+  std::vector<TH1D> CatInclusiveQcdSSTauIso;
 
   unsigned verbose;
 
@@ -320,8 +376,8 @@ class HToTaumuTauh : public Selection {
   void configure_NoCategory();
   bool category_NoCategory();
 
-  bool helperCategory_VBFLooseRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj);
-  bool helperCategory_VBFTightRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
+  bool helperCategory_VBFLooseRelaxed_WYieldShape(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj);
+  bool helperCategory_VBFTightRelaxed_WYield(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
 
  private:
   // everything is in protected to be accessible by derived classes

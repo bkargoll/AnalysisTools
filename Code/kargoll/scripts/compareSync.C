@@ -3,6 +3,7 @@
 #include "TString.h"
 
 void runSync(){
+	gROOT->ProcessLine("#include <math.h>");
 	//compareSync("MuTau_TauPlusX","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/TauPlusX2012A/workdirAnalysis_Apr_02_2014/","MuTauSyncTree_TauPlusX2012A_2014_Mar_20","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_Data_mt_2012","TauCheck");
 	//compareSync("MuTau_VBF","AC_finePU","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/workdirAnalysis_Apr_04_2014","MuTauSyncTree_VBFHiggs_TestPUBinning","syncTree","London","/afs/cern.ch/work/a/agilbert/public/PaperSync_v6","SYNCFILE_VBF_HToTauTau_M-125_mt_2012","TauCheck");
 	//compareSync("MuTau_VBF","AC_finePU","/net/scratch_cms/institut_3b/kargoll/TestPUBinning/workdirAnalysis_Apr_04_2014","MuTauSyncTree_VBFHiggs_TestPUBinning","syncTree","Aachen","/net/scratch_cms/institut_3b/kargoll/SyncExercise/VBFHToTauTauM125/workdirAnalysis_Apr_02_2014","MuTauSyncTree_VBFHToTauTauM125_2014_Mar_20","syncTree");

@@ -33,7 +33,7 @@ else
 		rm Set_*/err
 	    fi
 	    
-	    source Submit
+	    source Submit --SetupAndSubmit
 	fi
 	myruntime=`echo "${nmin}*5/60" | bc`; 
 	echo "Will check jobs every 5 minutes for  ${myruntime}  hours.";
@@ -42,6 +42,12 @@ else
 	while (test "$nmin" -ge "$idx" )
 	  do
 	  sleep 300;
+	  nsets=$(ls | grep Set_ | wc -l)
+	  njobs=$(cat jobs_submittedOrComplete | wc -l)
+	  if [[ ${nsets} -ne ${njobs} ]]; then
+	      echo "not all jobs were submitted. Retrying failed submissions..."
+	      source Submit --Submit 
+	  fi
 	  source CheckandGet.sh  --get >& junk_CG; rm junk_CG;
 	  eval=`cat jobs_submitted  | wc -l`
 	  echo ${eval} " jobs still running"

@@ -21,15 +21,11 @@ ZtoEMu_Skim::ZtoEMu_Skim(TString Name_, TString id_):
   ,e_pthigh(20)
   ,mu_eta(2.4)
   ,e_eta(2.5)
-  ,jet_pt(18)
-  ,jet_eta(4.7)
-  ,jet_sum(70)
-  ,zmin(88)
-  ,zmax(94)
 {
     //verbose=true;
 
 	doHiggsObjects = false;
+	doWWObjects = true;
 }
 
 ZtoEMu_Skim::~ZtoEMu_Skim(){
@@ -53,8 +49,6 @@ void  ZtoEMu_Skim::Configure(){
     if(i==NMu)                cut.at(NMu)=1;
     if(i==NE)                 cut.at(NE)=1;
     if(i==ptthreshold)        cut.at(ptthreshold)=1;
-    //if(i==diMuonVeto)         cut.at(diMuonVeto)=0;
-    //if(i==triLeptonVeto)      cut.at(triLeptonVeto)=0;
   }
 
   TString hlabel;
@@ -114,55 +108,6 @@ void  ZtoEMu_Skim::Configure(){
         Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ptthreshold_",htitle,17,-0.5,16.5,hlabel,"Events"));
         Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ptthreshold_",htitle,17,-0.5,16.5,hlabel,"Events"));
     }
-    /*else if(i==diMuonVeto){
-	  title.at(i)="di-muon veto";
-	  htitle=title.at(i);
-	  htitle.ReplaceAll("$","");
-	  htitle.ReplaceAll("\\","#");
-	  hlabel="dimuon veto";
-	  Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_diMuonVeto_",htitle,40,0,20,hlabel,"Events"));
-	  Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_diMuonVeto_",htitle,40,0,20,hlabel,"Events"));
-	}
-    else if(i==triLeptonVeto){
-  	  title.at(i)="tri-lepton veto";
-  	  htitle=title.at(i);
-  	  htitle.ReplaceAll("$","");
-  	  htitle.ReplaceAll("\\","#");
-  	  hlabel="trilepton veto";
-  	  Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_triLeptonVeto_",htitle,40,0,20,hlabel,"Events"));
-  	  Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_triLeptonVeto_",htitle,40,0,20,hlabel,"Events"));
-  	}*/
-    
-    // calling external files (e.g. root files for efficiencies)
-    TString base = "";
-	if(runtype==GRID){
-		base = std::getenv("PWD");
-		base+="/Code/nehrkorn/";
-	}
-	else if(runtype==Local){
-		base+="/net/scratch_cms/institut_3b/nehrkorn/";
-	}
-	FRFile = new TFile(base+"FakeRates_2012_19ifb_rereco.root");
-	EmbEffFile = new TFile(base+"RecHitElectronEfficiencies.root");
-	MuIdEffFile = new TFile(base+"MuonEfficiencies_Run2012ReReco_53X.root");
-	MuIsoEffFile = new TFile(base+"MuonEfficiencies_ISO_Run_2012ReReco_53X.root");
-	ETrigIdEffFile = new TFile(base+"ElectronEfficiencies_Run2012ReReco_53X_Trig.root");
-	ENonTrigIdEffFile = new TFile(base+"ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root");
-
-	ElectronFakeRate = (TH2D*)(FRFile->Get("ElectronFakeRateHist"));
-	MuonFakeRate = (TH2D*)(FRFile->Get("MuonFakeRateHist"));
-	EmbEff = (TH2D*)(EmbEffFile->Get("hPtEtaSFL"));
-
-	ElectronTrigEff = (TH2D*)(ETrigIdEffFile->Get("electronsDATAMCratio_FO_ID_ISO"));
-	ElectronNonTrigEff = (TH2D*)(ENonTrigIdEffFile->Get("h_electronScaleFactor_IdIsoSip"));
-	MuIdEff09 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta<0.9"));
-	MuIdEff12 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta0.9-1.2"));
-	MuIdEff21 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta1.2-2.1"));
-	MuIdEff24 = (TGraphAsymmErrors*)(MuIdEffFile->Get("DATA_over_MC_Tight_pt_abseta2.1-2.4"));
-	MuIsoEff09 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta<0.9"));
-	MuIsoEff12 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta0.9-1.2"));
-	MuIsoEff21 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta1.2-2.1"));
-	MuIsoEff24 = (TGraphAsymmErrors*)(MuIsoEffFile->Get("DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta2.1-2.4"));
 
     //-----------
   }
@@ -199,14 +144,22 @@ void  ZtoEMu_Skim::doEvent(){
   if(verbose)std::cout << "id: " << id << std::endl;
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ std::cout << "failed to find id" << std::endl; return;}
 
+  // Apply Selection
+    
+  ///////////////////////////////////////////////
+  //
+  // Trigger passed?
+  //
+  if(verbose)std::cout << "Trigger passed?" << std::endl;
   value.at(TriggerOk)=0;
   if(Ntp->TriggerAccept("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v") || Ntp->TriggerAccept("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v")){
 	  value.at(TriggerOk)=1;
   }
+  if(Ntp->GetMCID()==DataMCType::DY_emu_embedded)value.at(TriggerOk)=1;
   pass.at(TriggerOk)=(value.at(TriggerOk)==cut.at(TriggerOk));
 
   // Apply Selection
-    
+
   ///////////////////////////////////////////////
   //
   // Vertex selection
@@ -220,7 +173,6 @@ void  ZtoEMu_Skim::doEvent(){
 		  nGoodVtx++;
 	  }
   }
-  if(verbose)std::cout << "selected vertex: " << vertex << std::endl;
   value.at(PrimeVtx)=nGoodVtx;
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
 
@@ -230,45 +182,40 @@ void  ZtoEMu_Skim::doEvent(){
   //
   if(verbose) std::cout << "Muon cuts" << std::endl;
   std::vector<unsigned int> GoodMuons;
-  std::vector<unsigned int> Fakemuons;
   
   // muon ID cuts
   for(unsigned i=0;i<Ntp->NMuons();i++){
 	  if(Ntp->Muon_p4(i).Pt()>mu_ptlow
 			  && fabs(Ntp->Muon_p4(i).Eta())<mu_eta
-			  && (matchTrigger(i,0.2,"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon") || matchTrigger(i,0.2,"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon"))
 			  && vertex>=0
+			  && (matchTrigger(i,0.2,"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon") || matchTrigger(i,0.2,"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","muon") || Ntp->GetMCID()==DataMCType::DY_emu_embedded)
 			  ){
 		  if(doHiggsObjects){
 			  if(isHiggsMuon(i,vertex)
 					  && ((fabs(Ntp->Muon_p4(i).Eta())<1.479 && Muon_RelIso(i)<0.15) || (fabs(Ntp->Muon_p4(i).Eta())>=1.479 && Muon_RelIso(i)<0.10))
 							  ){
-				  if((Ntp->GetMCID()==31 || Ntp->GetMCID()==32) && !matchTruth(Ntp->Muon_p4(i),13,0.2)) continue;
-				  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Muon_p4(i),13,0.2) && !matchTruth(Ntp->Muon_p4(i),15,0.2)) continue;
 				  GoodMuons.push_back(i);
 			  }else if(isFakeMuon(i,vertex)
-					  && Ntp->isData()
+					  && (Ntp->isData() || Ntp->GetMCID()==DataMCType::DY_ee || Ntp->GetMCID()==DataMCType::DY_mumu || Ntp->GetMCID()==DataMCType::DY_tautau || Ntp->GetMCID()==DataMCType::DY_ll)
 					  ){
-				  Fakemuons.push_back(i);
+				  GoodMuons.push_back(i);
 			  }
 		  }else{
 			  if(isTightMuon(i,vertex)
 					  && Muon_RelIso(i)<0.12
 					  ){
-				  if((Ntp->GetMCID()==31 || Ntp->GetMCID()==32) && !matchTruth(Ntp->Muon_p4(i),13,0.2)) continue;
-				  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Muon_p4(i),13,0.2) && !matchTruth(Ntp->Muon_p4(i),15,0.2)) continue;
 				  GoodMuons.push_back(i);
-			  }else if(isFakeMuon(i,vertex)
-					  && Ntp->isData()
+			  }else if(doWWObjects
+					  && isFakeMuon(i,vertex)
+					  && (Ntp->isData() || Ntp->GetMCID()==DataMCType::DY_ee || Ntp->GetMCID()==DataMCType::DY_mumu || Ntp->GetMCID()==DataMCType::DY_tautau || Ntp->GetMCID()==DataMCType::DY_ll)
 					  ){
-				  //Fakemuons.push_back(i);
+				  GoodMuons.push_back(i);
 			  }
 		  }
 	  }
   }
   
   value.at(NMu)=GoodMuons.size();
-  //if(GoodMuons.size()==0)value.at(NMu)=Fakemuons.size();
   pass.at(NMu)=(value.at(NMu)>=cut.at(NMu));
   
   unsigned int muidx(999);
@@ -282,19 +229,6 @@ void  ZtoEMu_Skim::doEvent(){
 	  }
   }
   if(GoodMuons.size()==1){muidx=GoodMuons.at(0);}
-  if(doHiggsObjects){
-	  if(GoodMuons.size()==0){
-		  if(Fakemuons.size()>1){
-			  for(unsigned i=0;i<Fakemuons.size();i++){
-				  if(Ntp->Muon_p4(Fakemuons.at(i)).Pt()>hardestmu){
-					  hardestmu = Ntp->Muon_p4(Fakemuons.at(i)).Pt();
-					  muidx = Fakemuons.at(i);
-				  }
-			  }
-		  }
-		  if(Fakemuons.size()==1){muidx=Fakemuons.at(0);}
-	  }
-  }
 
   ///////////////////////////////////////////////
   //
@@ -302,69 +236,55 @@ void  ZtoEMu_Skim::doEvent(){
   //
   if(verbose) std::cout << "electrons cuts" << std::endl;
   std::vector<unsigned int> GoodElectrons;
-  std::vector<unsigned int> Fakeelectrons;
   bool hasMuonTrack = false;
-  bool notThisOne = false;
   bool matchRecoMuon = false;
   
   // electron ID cuts (eta-dependent MVA or simple cut-based)
   for(unsigned i=0;i<Ntp->NElectrons();i++){
+	  hasMuonTrack = false;
+	  matchRecoMuon = false;
 	  if(Ntp->Electron_p4(i).Et()>e_ptlow
 			  && fabs(Ntp->Electron_supercluster_eta(i))<e_eta
-			  && (matchTrigger(i,0.2,"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","electron") || matchTrigger(i,0.2,"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","electron"))
 			  && vertex>=0
+			  && (matchTrigger(i,0.2,"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","electron") || matchTrigger(i,0.2,"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v","electron") || Ntp->GetMCID()==DataMCType::DY_emu_embedded)
 			  ){
+		  // don't use electrons with tracks matching those of selected muons
 		  for(unsigned j=0;j<GoodMuons.size();j++){
 			  if(Ntp->Electron_Track_idx(i)==Ntp->Muon_Track_idx(GoodMuons.at(j))) hasMuonTrack = true;
 		  }
-		  if(GoodMuons.size()==0 && doHiggsObjects){
-			  for(unsigned j=0;j<Fakemuons.size();j++){
-				  if(Ntp->Electron_Track_idx(i)==Ntp->Muon_Track_idx(Fakemuons.at(j))) hasMuonTrack = true;
-			  }
-		  }
 		  if(hasMuonTrack) continue;
+		  // no overlapping reco muons
 		  for(unsigned j=0;j<Ntp->NMuons();j++){
-			  for(unsigned k=0;k<GoodMuons.size();k++){
-				  notThisOne = false;
-				  if(j==k){
-					  notThisOne = true;
-				  }
-				  if(notThisOne)break;
-			  }
-			  if(!notThisOne && Ntp->Electron_p4(i).DeltaR(Ntp->Muon_p4(j))<0.3) matchRecoMuon = true;
+			  if(j==muidx)continue;
+			  if(Ntp->Electron_p4(i).DeltaR(Ntp->Muon_p4(j))<0.3) matchRecoMuon = true;
 		  }
 		  if(matchRecoMuon) continue;
 		  if(doHiggsObjects){
 			  if(isHiggsElectron(i,vertex)
 					  && ((fabs(Ntp->Electron_supercluster_eta(i))<1.479 && Electron_RelIso(i)<0.15) || (fabs(Ntp->Electron_supercluster_eta(i))>=1.479 && Electron_RelIso(i)<0.10))
 					  ){
-				  if((Ntp->GetMCID()==31 || Ntp->GetMCID()==32) && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),13,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2)) continue;
-				  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),13,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2) && !matchTruth(Ntp->Electron_p4(i),15,0.2)) continue;
 				  GoodElectrons.push_back(i);
 			  }else if(isFakeElectron(i,vertex)
-					  && Ntp->isData()
+					  && (Ntp->isData() || Ntp->GetMCID()==DataMCType::DY_ee || Ntp->GetMCID()==DataMCType::DY_mumu || Ntp->GetMCID()==DataMCType::DY_tautau || Ntp->GetMCID()==DataMCType::DY_ll)
 					  ){
-				  Fakeelectrons.push_back(i);
+				  GoodElectrons.push_back(i);
 			  }
 		  }else{
-			  if(isMVATrigElectron(i)
+			  if(isWWElectron(i,vertex)
 					  && Electron_RelIso(i)<0.15
 					  ){
-				  if(Ntp->GetMCID()==31 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2)) continue;
-				  if(Ntp->GetMCID()==32 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2) && matchTruth(Ntp->Electron_p4(i),13,0.2)) continue;
-				  if(Ntp->GetMCID()==33 && !matchTruth(Ntp->Electron_p4(i),11,0.2) && !matchTruth(Ntp->Electron_p4(i),13,0.2) && !matchTruth(Ntp->Electron_p4(i),22,0.2) && !matchTruth(Ntp->Electron_p4(i),15,0.2)) continue;
 				  GoodElectrons.push_back(i);
-			  }else if(isFakeElectron(i,vertex)
-					  && Ntp->isData()
+			  }else if(doWWObjects
+					  && isFakeElectron(i,vertex)
+					  && (Ntp->isData() || Ntp->GetMCID()==DataMCType::DY_ee || Ntp->GetMCID()==DataMCType::DY_mumu || Ntp->GetMCID()==DataMCType::DY_tautau || Ntp->GetMCID()==DataMCType::DY_ll)
 					  ){
-				  //Fakeelectrons.push_back(i);
+				  GoodElectrons.push_back(i);
 			  }
 		  }
 	  }
   }
   
   value.at(NE)=GoodElectrons.size();
-  //if(GoodElectrons.size()==0)value.at(NE)=Fakeelectrons.size();
   pass.at(NE)=(value.at(NE)>=cut.at(NE));
   
   unsigned int eidx(999);
@@ -378,119 +298,35 @@ void  ZtoEMu_Skim::doEvent(){
 	  }
   }
   if(GoodElectrons.size()==1){eidx=GoodElectrons.at(0);}
-  if(doHiggsObjects){
-	  if(GoodElectrons.size()==0){
-		  if(Fakeelectrons.size()>1){
-			  for(unsigned i=0;i<Fakeelectrons.size();i++){
-				  if(Ntp->Electron_p4(Fakeelectrons.at(i)).Et()>hardeste){
-					  hardeste = Ntp->Electron_p4(Fakeelectrons.at(i)).Et();
-					  eidx = Fakeelectrons.at(i);
-				  }
-			  }
-		  }
-		  if(Fakeelectrons.size()==1){eidx=Fakeelectrons.at(0);}
-	  }
-  }
   
   ///////////////////////////////////////////////
   //
   // pt thresholds
   //
   if(verbose) std::cout << "Setting pt thresholds" << std::endl;
+  bool passembed = false;
   bool leadingmu = false;
   value.at(ptthreshold)=0;
   if(muidx!=999 && eidx!=999){
 	  value.at(ptthreshold)=1;
 	  if(Ntp->Muon_p4(muidx).Pt()<=mu_ptlow || Ntp->Electron_p4(eidx).Et()<=e_ptlow) value.at(ptthreshold)=0;
 	  if(Ntp->Muon_p4(muidx).Pt()<mu_pthigh && Ntp->Electron_p4(eidx).Et()<e_pthigh) value.at(ptthreshold)=0;
+	  if(value.at(ptthreshold)==1 && Ntp->GetMCID()==DataMCType::DY_emu_embedded) passembed = true;
 	  if(Ntp->Muon_p4(muidx).Pt()<mu_pthigh){
 		  if(!Ntp->TriggerAccept("HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v")) value.at(ptthreshold)=0;
 	  }else if(Ntp->Electron_p4(eidx).Et()<e_pthigh){
 		  if(!Ntp->TriggerAccept("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v")) value.at(ptthreshold)=0;
 		  else leadingmu = true;
 	  }
+	  if(passembed) value.at(ptthreshold)=1;
   }
   pass.at(ptthreshold)=(value.at(ptthreshold)==cut.at(ptthreshold));
-
-  ///////////////////////////////////////////////
-  //
-  // Di Muon Veto
-  //
-  /*if(verbose)std::cout << "dimuon veto" << std::endl;
-  unsigned int dimu(0);
-  if(eidx!=999 && muidx!=999){
-	  for(unsigned i=0;i<Ntp->NMuons();i++){
-		  if(i==muidx) continue;
-		  if(Ntp->Muon_p4(i).Pt()<3) continue;
-		  if(fabs(Ntp->Muon_p4(i).Eta())>2.4) continue;
-		  if(Ntp->Electron_p4(eidx).DeltaR(Ntp->Muon_p4(i))>0.3) continue;
-		  dimu++;
-	  }
-  }
-  value.at(diMuonVeto)=dimu;
-  pass.at(diMuonVeto)=(value.at(diMuonVeto)==cut.at(diMuonVeto));*/
-  
-  ///////////////////////////////////////////////
-  //
-  // Tri Lepton Veto
-  //
-  /*if(verbose)std::cout << "trilepton veto" << std::endl;
-  unsigned int trilep(0);
-  if(eidx!=999 && muidx!=999){
-	  for(unsigned i=0;i<Ntp->NMuons();i++){
-		  if(i==muidx) continue;
-		  if(vertex<0) continue;
-		  if(Ntp->Muon_p4(i).Pt()<10) continue;
-		  if(fabs(Ntp->Muon_p4(i).Eta())>2.4) continue;
-		  if(!isTightMuon(i,vertex)) continue;
-		  if(Muon_RelIso(i)>0.3) continue;
-		  if(doHiggsObjects){
-			  if(dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(vertex))<0.045
-					  && dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(vertex))<0.2
-					  ){
-				  trilep++;
-			  }
-		  }else{
-			  trilep++;
-		  }
-	  }
-	  for(unsigned i=0;i<Ntp->NElectrons();i++){
-		  if(i==eidx) continue;
-		  if(vertex<0) continue;
-		  if(Ntp->Electron_p4(i).Et()<10) continue;
-		  if(fabs(Ntp->Electron_supercluster_eta(i))>2.5) continue;
-		  if(doHiggsObjects){
-			  if(isHiggsElectron(i,vertex)
-					  && Electron_RelIso(i)<0.3
-					  && dxy(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(vertex))<0.045
-					  && dz(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(vertex))<0.2
-					  ){
-				  trilep++;
-			  }
-		  }else{
-			  if(isMVATrigElectron(i)
-					  && Electron_RelIso(i)<0.3
-					  ){
-				  trilep++;
-			  }
-		  }
-	  }
-  }
-  value.at(triLeptonVeto)=trilep;
-  pass.at(triLeptonVeto)=(value.at(triLeptonVeto)==cut.at(triLeptonVeto));*/
   
   //////////////////////////////////////////////////////////
   if(verbose) std::cout << "do weights" << std::endl;
   double wobs(1),w(1);
-  if(!Ntp->isData() && Ntp->GetMCID()!=34){
-    w*=Ntp->PUWeight();
-    if(verbose)std::cout << "void  ZtoEMu_Skim::doEvent() k" << w << " " << wobs << std::endl;
-    if(pass.at(NMu)){
-    	w*=MuonIDeff(muidx);
-    }
-    if(pass.at(NE)){
-    	w*=ElectronIDeff(eidx,"Trig");
-    }
+  if(!Ntp->isData() && Ntp->GetMCID()!=DataMCType::DY_emu_embedded){
+    //w*=Ntp->PUWeight();
   }
   else{w=1;wobs=1;}
   if(verbose)std::cout << "w=" << w << " " << wobs << " " << w*wobs << std::endl;
@@ -621,70 +457,66 @@ bool ZtoEMu_Skim::matchTruth(TLorentzVector tvector, int pid, double dr){
 // Muon related functions
 //
 
-bool ZtoEMu_Skim::isTightMuon(unsigned int i){
-	if(!Ntp->Muon_isGlobalMuon(i)) return false;
-	if(!Ntp->Muon_isPFMuon(i)) return false;
-	if(Ntp->Muon_normChi2(i)>=10.) return false;
-	if(Ntp->Muon_hitPattern_numberOfValidMuonHits(i)<=0) return false;
-	if(Ntp->Muon_numberOfMatchedStations(i)<=1) return false;
-	if(Ntp->Muon_numberofValidPixelHits(i)<=0) return false;
-	if(Ntp->Muon_trackerLayersWithMeasurement(i)<=5) return false;
+bool ZtoEMu_Skim::isTightMuon(unsigned int idx){
+	if(!Ntp->Muon_isGlobalMuon(idx)) return false;
+	if(!Ntp->Muon_isPFMuon(idx)) return false;
+	if(Ntp->Muon_normChi2(idx)>=10.) return false;
+	if(Ntp->Muon_hitPattern_numberOfValidMuonHits(idx)<=0) return false;
+	if(Ntp->Muon_numberOfMatchedStations(idx)<=1) return false;
+	if(Ntp->Muon_numberofValidPixelHits(idx)<=0) return false;
+	if(Ntp->Muon_trackerLayersWithMeasurement(idx)<=5) return false;
 	return true;
 }
 
-bool ZtoEMu_Skim::isTightMuon(unsigned int i, unsigned int j){
-	if(j<0 || j>=Ntp->NVtx()) return false;
-	if(!isTightMuon(i)) return false;
-	if(dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.2) return false;
-	if(dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.5) return false;
+bool ZtoEMu_Skim::isTightMuon(unsigned int idx, unsigned int vtx){
+	if(vtx<0 || vtx>=Ntp->NVtx()) return false;
+	if(!isTightMuon(idx)) return false;
+	if(dxy(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.2) return false;
+	if(dz(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.5) return false;
 	return true;
 }
 
-bool ZtoEMu_Skim::isHiggsMuon(unsigned int i, unsigned int j){
-	if(j<0 || j>=Ntp->NVtx()) return false;
-	if(!isTightMuon(i)) return false;
-	if(dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.02) return false;
-	if(dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.1) return false;
+bool ZtoEMu_Skim::isHiggsMuon(unsigned int idx, unsigned int vtx){
+	if(vtx<0 || vtx>=Ntp->NVtx()) return false;
+	if(!isTightMuon(idx)) return false;
+	if(dxy(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.02) return false;
+	if(dz(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.1) return false;
 	return true;
 }
 
-bool ZtoEMu_Skim::isLooseMuon(unsigned int i){
-	if(!Ntp->Muon_isPFMuon(i)) return false;
-	if(!(Ntp->Muon_isGlobalMuon(i) || Ntp->Muon_isTrackerMuon(i))) return false;
+bool ZtoEMu_Skim::isLooseMuon(unsigned int idx){
+	if(!Ntp->Muon_isPFMuon(idx)) return false;
+	if(!(Ntp->Muon_isGlobalMuon(idx) || Ntp->Muon_isTrackerMuon(idx))) return false;
 	return true;
 }
 
-bool ZtoEMu_Skim::isFakeMuon(unsigned int i){
-	if(!Ntp->Muon_isGlobalMuon(i)) return false;
-	if(Ntp->Muon_p4(i).Pt()<=10) return false;
-	if(fabs(Ntp->Muon_p4(i).Eta())>2.4) return false;
-	if(Ntp->Muon_p4(i).Pt()<=20){
-		if(Ntp->Muon_sumPt03(i)>=8.) return false;
-		if(Ntp->Muon_emEt03(i)>=8.) return false;
-		if(Ntp->Muon_hadEt03(i)>=8.) return false;
+bool ZtoEMu_Skim::isFakeMuon(unsigned int idx){
+	if(!Ntp->Muon_isGlobalMuon(idx)) return false;
+	if(Ntp->Muon_p4(idx).Pt()<=10) return false;
+	if(fabs(Ntp->Muon_p4(idx).Eta())>2.4) return false;
+	if(Ntp->Muon_p4(idx).Pt()<=20){
+		if(Ntp->Muon_sumPt03(idx)>=8.) return false;
+		if(Ntp->Muon_emEt03(idx)>=8.) return false;
+		if(Ntp->Muon_hadEt03(idx)>=8.) return false;
 	}
-	if(Ntp->Muon_p4(i).Pt()>20){
-		if(Ntp->Muon_sumPt03(i)/Ntp->Muon_p4(i).Pt()>=0.4) return false;
-		if(Ntp->Muon_emEt03(i)/Ntp->Muon_p4(i).Pt()>=0.4) return false;
-		if(Ntp->Muon_hadEt03(i)/Ntp->Muon_p4(i).Pt()>=0.4) return false;
+	if(Ntp->Muon_p4(idx).Pt()>20){
+		if(Ntp->Muon_sumPt03(idx)/Ntp->Muon_p4(idx).Pt()>=0.4) return false;
+		if(Ntp->Muon_emEt03(idx)/Ntp->Muon_p4(idx).Pt()>=0.4) return false;
+		if(Ntp->Muon_hadEt03(idx)/Ntp->Muon_p4(idx).Pt()>=0.4) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isFakeMuon(unsigned int i, unsigned int j){
-	if(j<0 || j>=Ntp->NVtx()) return false;
-	if(!isFakeMuon(i)) return false;
-	if(dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.2) return false;
-	if(dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(j))>=0.1) return false;
+bool ZtoEMu_Skim::isFakeMuon(unsigned int idx, unsigned int vtx){
+	if(vtx<0 || vtx>=Ntp->NVtx()) return false;
+	if(!isFakeMuon(idx)) return false;
+	if(dxy(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.2) return false;
+	if(dz(Ntp->Muon_p4(idx),Ntp->Muon_Poca(idx),Ntp->Vtx(vtx))>=0.1) return false;
 	return true;
 }
 
-double ZtoEMu_Skim::Muon_RelIso(unsigned int i){
-	return (Ntp->Muon_sumChargedHadronPt04(i)+std::max(0.,Ntp->Muon_sumNeutralHadronEt04(i)+Ntp->Muon_sumPhotonEt04(i)-0.5*Ntp->Muon_sumPUPt04(i)))/Ntp->Muon_p4(i).Pt();
-}
-
-double ZtoEMu_Skim::Muon_AbsIso(unsigned int i){
-	return Ntp->Muon_sumChargedHadronPt04(i)+std::max(0.,Ntp->Muon_sumNeutralHadronEt04(i)+Ntp->Muon_sumPhotonEt04(i)-0.5*Ntp->Muon_sumPUPt04(i));
+double ZtoEMu_Skim::Muon_RelIso(unsigned int idx){
+	return (Ntp->Muon_sumChargedHadronPt04(idx)+std::max(0.,Ntp->Muon_sumNeutralHadronEt04(idx)+Ntp->Muon_sumPhotonEt04(idx)-0.5*Ntp->Muon_sumPUPt04(idx)))/Ntp->Muon_p4(idx).Pt();
 }
 
 //////////////////////////////
@@ -692,180 +524,205 @@ double ZtoEMu_Skim::Muon_AbsIso(unsigned int i){
 // Electron related functions
 //
 
-bool ZtoEMu_Skim::isTrigPreselElectron(unsigned int i){
-	if(fabs(Ntp->Electron_supercluster_eta(i))>2.5) return false;
-	if(Ntp->Electron_Gsf_dr03TkSumPt(i)/Ntp->Electron_p4(i).Pt()>0.2) return false;
-	if(Ntp->Electron_Gsf_dr03HcalTowerSumEt(i)/Ntp->Electron_p4(i).Pt()>0.2) return false;
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(fabs(Ntp->Electron_supercluster_eta(i))<1.479){
-		if(Ntp->Electron_sigmaIetaIeta(i)>0.014) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>0.15) return false;
+bool ZtoEMu_Skim::isTrigPreselElectron(unsigned int idx){
+	if(fabs(Ntp->Electron_supercluster_eta(idx))>2.5) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Ntp->Electron_Gsf_dr03TkSumPt(idx)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(Ntp->Electron_Gsf_dr03HcalTowerSumEt(idx)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(fabs(Ntp->Electron_supercluster_eta(idx))<1.479){
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.014) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.15) return false;
 	}else{
-		if(Ntp->Electron_sigmaIetaIeta(i)>0.035) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>0.1) return false;
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.035) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.1) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isTrigNoIPPreselElectron(unsigned int i){
-	if(fabs(Ntp->Electron_supercluster_eta(i))>2.5) return false;
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(Ntp->Electron_Gsf_dr03TkSumPt(i)/Ntp->Electron_p4(i).Pt()>0.2) return false;
-	if(Ntp->Electron_Gsf_dr03HcalTowerSumEt(i)/Ntp->Electron_p4(i).Pt()>0.2) return false;
-	if(fabs(Ntp->Electron_supercluster_eta(i))<1.479){
-		if(Ntp->Electron_sigmaIetaIeta(i)>0.01) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>0.12) return false;
-		if(fabs(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.007) return false;
-		if(fabs(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.15) return false;
+bool ZtoEMu_Skim::isTrigNoIPPreselElectron(unsigned int idx){
+	if(fabs(Ntp->Electron_supercluster_eta(idx))>2.5) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Ntp->Electron_Gsf_dr03TkSumPt(idx)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(Ntp->Electron_Gsf_dr03HcalTowerSumEt(idx)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(fabs(Ntp->Electron_supercluster_eta(idx))<1.479){
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.01) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.12) return false;
+		if(fabs(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx))>0.007) return false;
+		if(fabs(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx))>0.15) return false;
 	}else{
-		if(Ntp->Electron_sigmaIetaIeta(i)>0.03) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>0.1) return false;
-		if(fabs(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.009) return false;
-		if(fabs(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.1) return false;
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.03) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.1) return false;
+		if(fabs(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx))>0.009) return false;
+		if(fabs(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx))>0.1) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isMVATrigNoIPElectron(unsigned int i){
-	double mvapt = Ntp->Electron_p4(i).Pt();
-	double mvaeta = fabs(Ntp->Electron_supercluster_eta(i));
-	if(Ntp->Electron_HasMatchedConversions(i)) return false;
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(!isTrigNoIPPreselElectron(i)) return false;
-	if(mvaeta<1.479 && Electron_RelIso(i)>0.15) return false;
-	if(mvaeta>=1.479 && Electron_RelIso(i)>0.10) return false;
+bool ZtoEMu_Skim::isMVATrigNoIPElectron(unsigned int idx){
+	double mvapt = Ntp->Electron_p4(idx).Pt();
+	double mvaeta = fabs(Ntp->Electron_supercluster_eta(idx));
+	if(mvaeta>2.5) return false;
+	if(Ntp->Electron_HasMatchedConversions(idx)) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(!isTrigNoIPPreselElectron(idx)) return false;
+	if(mvaeta<1.479 && Electron_RelIso(idx)>0.15) return false;// TODO: correct isolation cuts?
+	if(mvaeta>=1.479 && Electron_RelIso(idx)>0.10) return false;
 	if(mvapt<20){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=-0.5375) return false;
-		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=-0.375) return false;
-		if(mvaeta>=1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=-0.025) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=-0.5375) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=-0.375) return false;
+		if(mvaeta>=1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=-0.025) return false;
 	}
 	if(mvapt>=20){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=0.325) return false;
-		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
-		if(mvaeta>=1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=0.325) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=0.775) return false;
+		if(mvaeta>=1.479 && Ntp->Electron_MVA_TrigNoIP_discriminator(idx)<=0.775) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isMVANonTrigElectron(unsigned int i, unsigned int j){
-	double mvapt = Ntp->Electron_p4(i).Pt();
-	double mvaeta = fabs(Ntp->Electron_supercluster_eta(i));
-	if(Ntp->Electron_numberOfMissedHits(i)>1) return false;
-	if(vertexSignificance(Ntp->Electron_Poca(i),j)>=4) return false;
+bool ZtoEMu_Skim::isMVANonTrigElectron(unsigned int idx, unsigned int vtx){
+	double mvapt = Ntp->Electron_p4(idx).Pt();
+	double mvaeta = fabs(Ntp->Electron_supercluster_eta(idx));
+	if(mvapt<7.) return false;
+	if(mvaeta>2.5) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>1) return false;
+	if(vertexSignificance(Ntp->Electron_Poca(idx),vtx)>=4) return false;
 	if(mvapt>7. && mvapt<10.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.47) return false;
-		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.004) return false;
-		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.295) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.47) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.004) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.295) return false;
 	}
 	if(mvapt>=10.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=-0.34) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=-0.65) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.6) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=-0.34) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=-0.65) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.6) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isHiggsElectron(unsigned int i, unsigned int j){
-	double mvapt = Ntp->Electron_p4(i).Pt();
-	double mvaeta = fabs(Ntp->Electron_supercluster_eta(i));
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(Ntp->Electron_HasMatchedConversions(i)) return false;
-	if(dxy(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.02) return false;
-	if(dz(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.1) return false;
+bool ZtoEMu_Skim::isHiggsElectron(unsigned int idx, unsigned int vtx){
+	double mvapt = Ntp->Electron_p4(idx).Pt();
+	double mvaeta = fabs(Ntp->Electron_supercluster_eta(idx));
+	if(mvaeta>2.5) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Ntp->Electron_HasMatchedConversions(idx)) return false;
+	if(dxy(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>=0.02) return false;
+	if(dz(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>=0.1) return false;
 	if(mvapt<20.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.925) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.915) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.965) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.925) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.915) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.965) return false;
 	}
 	if(mvapt>=20.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.905) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.955) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(i)<=0.975) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.905) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.955) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_NonTrig_discriminator(idx)<=0.975) return false;
 	}
 	return true;
 }
 
-
-bool ZtoEMu_Skim::isMVATrigElectron(unsigned int i){
-	double mvapt = Ntp->Electron_p4(i).Pt();
-	double mvaeta = fabs(Ntp->Electron_supercluster_eta(i));
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(Ntp->Electron_HasMatchedConversions(i)) return false;
-	if(!isTrigPreselElectron(i)) return false;
+bool ZtoEMu_Skim::isWWElectron(unsigned int idx, unsigned int vtx){
+	double mvapt = Ntp->Electron_p4(idx).Pt();
+	double mvaeta = fabs(Ntp->Electron_supercluster_eta(idx));
+	if(mvapt<10.) return false;
+	if(mvaeta>2.5) return false;
+	if(!isFakeElectron(idx,vtx)) return false;
 	if(mvapt>10. && mvapt<20.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.00) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.10) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.62) return false;
-	}else if(mvapt>=20.){
-		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.94) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.85) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(i)<=0.92) return false;
+		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.00) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.10) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.62) return false;
+	}
+	if(mvapt>=20.){
+		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.94) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.85) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.92) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isTightElectron(unsigned int i){
-	if(Ntp->Electron_HasMatchedConversions(i)) return false;
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(Electron_RelIso(i)>=0.1) return false;
-	if(fabs(1/Ntp->Electron_ecalEnergy(i)-1/Ntp->Electron_trackMomentumAtVtx(i))>=0.05) return false;
-	if(fabs(Ntp->Electron_supercluster_eta(i))<=1.479){
-		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i)>=0.004) return false;
-		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i)>=0.03) return false;
-		if(Ntp->Electron_sigmaIetaIeta(i)>=0.01) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>=0.12) return false;
+bool ZtoEMu_Skim::isMVATrigElectron(unsigned int idx){
+	double mvapt = Ntp->Electron_p4(idx).Pt();
+	double mvaeta = fabs(Ntp->Electron_supercluster_eta(idx));
+	if(mvapt<10.) return false;
+	if(mvaeta>2.5) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Ntp->Electron_HasMatchedConversions(idx)) return false;
+	if(!isTrigPreselElectron(idx)) return false;
+	if(mvapt>10. && mvapt<20.){
+		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.00) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.10) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.62) return false;
 	}
-	if(fabs(Ntp->Electron_supercluster_eta(i))>1.479 && fabs(Ntp->Electron_supercluster_eta(i))<2.5){
-		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i)>=0.005) return false;
-		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i)>=0.02) return false;
-		if(Ntp->Electron_sigmaIetaIeta(i)>=0.03) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>=0.10) return false;
-		if(Ntp->Electron_p4(i).Pt()<20 && Electron_RelIso(i)>=0.07) return false;
-	}
-	return true;
-}
-
-bool ZtoEMu_Skim::isTightElectron(unsigned int i, unsigned int j){
-	if(j<0 || j>=Ntp->NVtx()) return false;
-	if(!isTightElectron(i)) return false;
-	if(dxy(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.02) return false;
-	if(dz(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.1) return false;
-	return true;
-}
-
-bool ZtoEMu_Skim::isFakeElectron(unsigned int i){
-	if(Ntp->Electron_p4(i).Pt()<=10) return false;
-	if(fabs(Ntp->Electron_supercluster_eta(i))>=2.5) return false;
-	if(Ntp->Electron_HasMatchedConversions(i)) return false;
-	if(Ntp->Electron_numberOfMissedHits(i)>0) return false;
-	if(Ntp->Electron_tkSumPt03(i)/Ntp->Electron_p4(i).Pt()>=0.2) return false;
-	if(std::max(Ntp->Electron_ecalRecHitSumEt03(i)-1.,0.)/Ntp->Electron_p4(i).Pt()>=0.2) return false;
-	if((Ntp->Electron_hcalDepth1TowerSumEt03(i)+Ntp->Electron_hcalDepth2TowerSumEt03(i))/Ntp->Electron_p4(i).Pt()>=0.2) return false;
-	if(fabs(Ntp->Electron_supercluster_eta(i))<1.479){
-		if(Ntp->Electron_sigmaIetaIeta(i)>=0.01) return false;
-		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i)>=0.15) return false;
-		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i)>=0.007) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>=0.12) return false;
-	}
-	if(fabs(Ntp->Electron_supercluster_eta(i))>=1.479 && fabs(Ntp->Electron_supercluster_eta(i))<2.5){
-		if(Ntp->Electron_sigmaIetaIeta(i)>=0.03) return false;
-		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i)>=0.10) return false;
-		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i)>=0.009) return false;
-		if(Ntp->Electron_hadronicOverEm(i)>=0.10) return false;
+	if(mvapt>=20.){
+		if(mvaeta<0.8 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.94) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.85) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Ntp->Electron_MVA_Trig_discriminator(idx)<=0.92) return false;
 	}
 	return true;
 }
 
-bool ZtoEMu_Skim::isFakeElectron(unsigned int i, unsigned int j){
-	if(j<0 || j>=Ntp->NVtx()) return false;
-	if(!isFakeElectron(i)) return false;
-	if(dz(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.1) return false;
-	if(dxy(Ntp->Electron_p4(i),Ntp->Electron_Poca(i),Ntp->Vtx(j))>=0.02) return false;
+bool ZtoEMu_Skim::isTightElectron(unsigned int idx){
+	if(Ntp->Electron_HasMatchedConversions(idx)) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Electron_RelIso(idx)>=0.1) return false;
+	if(fabs(1/Ntp->Electron_ecalEnergy(idx)-1/Ntp->Electron_trackMomentumAtVtx(idx))>=0.05) return false;
+	if(fabs(Ntp->Electron_supercluster_eta(idx))<=1.479){
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)>=0.004) return false;
+		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)>=0.03) return false;
+		if(Ntp->Electron_sigmaIetaIeta(idx)>=0.01) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>=0.12) return false;
+	}
+	if(fabs(Ntp->Electron_supercluster_eta(idx))>1.479 && fabs(Ntp->Electron_supercluster_eta(idx))<2.5){
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)>=0.005) return false;
+		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)>=0.02) return false;
+		if(Ntp->Electron_sigmaIetaIeta(idx)>=0.03) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>=0.10) return false;
+		if(Ntp->Electron_p4(idx).Pt()<20 && Electron_RelIso(idx)>=0.07) return false;
+	}
 	return true;
 }
 
-double ZtoEMu_Skim::Electron_RelIso(unsigned int i){
-	return (Ntp->Electron_chargedHadronIso(i)+std::max((double)0.,Ntp->Electron_neutralHadronIso(i)+Ntp->Electron_photonIso(i)-Ntp->RhoIsolationAllInputTags()*Electron_Aeff_R04(Ntp->Electron_supercluster_eta(i))))/Ntp->Electron_p4(i).Pt();
+bool ZtoEMu_Skim::isTightElectron(unsigned int idx, unsigned int vtx){
+	if(vtx<0 || vtx>=Ntp->NVtx()) return false;
+	if(!isTightElectron(idx)) return false;
+	if(dxy(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>=0.02) return false;
+	if(dz(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>=0.1) return false;
+	return true;
+}
+
+bool ZtoEMu_Skim::isFakeElectron(unsigned int idx){
+	if(Ntp->Electron_p4(idx).Pt()<10) return false;
+	if(fabs(Ntp->Electron_supercluster_eta(idx))>2.5) return false;
+	if(Ntp->Electron_HasMatchedConversions(idx)) return false;
+	if(Ntp->Electron_numberOfMissedHits(idx)>0) return false;
+	if(Ntp->Electron_tkSumPt03(idx)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(std::max(Ntp->Electron_ecalRecHitSumEt03(idx)-1.,0.)/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if((Ntp->Electron_hcalDepth1TowerSumEt03(idx)+Ntp->Electron_hcalDepth2TowerSumEt03(idx))/Ntp->Electron_p4(idx).Pt()>0.2) return false;
+	if(fabs(Ntp->Electron_supercluster_eta(idx))<1.479){
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.01) return false;
+		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)>0.15) return false;
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)>0.007) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.12) return false;
+	}
+	if(fabs(Ntp->Electron_supercluster_eta(idx))>=1.479){
+		if(Ntp->Electron_sigmaIetaIeta(idx)>0.03) return false;
+		if(Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)>0.10) return false;
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)>0.009) return false;
+		if(Ntp->Electron_hadronicOverEm(idx)>0.10) return false;
+	}
+	return true;
+}
+
+bool ZtoEMu_Skim::isFakeElectron(unsigned int idx, unsigned int vtx){
+	if(vtx<0 || vtx>=Ntp->NVtx()) return false;
+	if(!isFakeElectron(idx)) return false;
+	if(dz(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>0.1) return false;
+	if(dxy(Ntp->Electron_p4(idx),Ntp->Electron_Poca(idx),Ntp->Vtx(vtx))>0.02) return false;
+	return true;
+}
+
+double ZtoEMu_Skim::Electron_RelIso(unsigned int idx){
+	return (Ntp->Electron_chargedHadronIso(idx)+std::max((double)0.,Ntp->Electron_neutralHadronIso(idx)+Ntp->Electron_photonIso(idx)-Ntp->RhoIsolationAllInputTags()*Electron_Aeff_R04(Ntp->Electron_supercluster_eta(idx))))/Ntp->Electron_p4(idx).Pt();
 }
 
 double ZtoEMu_Skim::Electron_Aeff_R04(double Eta){
@@ -875,7 +732,7 @@ double ZtoEMu_Skim::Electron_Aeff_R04(double Eta){
 	else if(eta>=1.479 && eta<2.) return 0.115;
 	else if(eta>=2. && eta<2.2) return 0.143;
 	else if(eta>=2.2 && eta<2.3) return 0.183;
-	else if(eta>=2.3 && eta<2.3) return 0.194;
+	else if(eta>=2.3 && eta<2.4) return 0.194;
 	else if(eta>=2.4) return 0.261;
 }
 
@@ -886,294 +743,40 @@ double ZtoEMu_Skim::Electron_Aeff_R03(double Eta){
 	else if(eta>=1.479 && eta<2.) return 0.07;
 	else if(eta>=2. && eta<2.2) return 0.09;
 	else if(eta>=2.2 && eta<2.3) return 0.11;
-	else if(eta>=2.3 && eta<2.3) return 0.11;
+	else if(eta>=2.3 && eta<2.4) return 0.11;
 	else if(eta>=2.4) return 0.14;
 }
 
-//////////////////////////////
-//
-// Trigger & ID efficiencies
-//
-
-double ZtoEMu_Skim::MuonIDeff(unsigned int i){
-	double pt = Ntp->Muon_p4(i).Pt();
-	double eta = fabs(Ntp->Muon_p4(i).Eta());
-	double eff = 1.;
-	if(pt<20) pt=20;
-	if(pt>100) pt=100;
-	if(eta<0.9) eff = MuIdEff09->Eval(pt)*MuIsoEff09->Eval(pt);
-	if(eta>=0.9 && eta<1.2) eff = MuIdEff12->Eval(pt)*MuIsoEff12->Eval(pt);
-	if(eta>=1.2 && eta<2.1) eff = MuIdEff21->Eval(pt)*MuIsoEff21->Eval(pt);
-	if(eta>=2.1 && eta<2.4) eff = MuIdEff24->Eval(pt)*MuIsoEff24->Eval(pt);
-	return eff;
-}
-
-double ZtoEMu_Skim::MuonHiggsIDeff(unsigned int i){
-	double pt = Ntp->Muon_p4(i).Pt();
-	double eta = fabs(Ntp->Muon_p4(i).Eta());
-	double eff = 1.;
-	if(pt>10 && pt<=15){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9771;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9746;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9644;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9891;
+bool ZtoEMu_Skim::isLooseElectron(unsigned int idx){
+	if(fabs(Ntp->Electron_supercluster_eta(idx))<=1.479){ //barrel
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)<0.007 &&
+				Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)<0.15 &&
+				Ntp->Electron_sigmaIetaIeta(idx)<0.01 &&
+				Ntp->Electron_hadronicOverEm(idx)<0.12 &&
+				fabs(1/Ntp->Electron_ecalEnergy(idx)-1/Ntp->Electron_trackMomentumAtVtx(idx))<0.05 &&
+				Electron_RelIso(idx)<0.15 &&
+				!Ntp->Electron_HasMatchedConversions(idx) &&
+				Ntp->Electron_numberOfMissedHits(idx)<=1
+				){
+			return true;
 		}
-	}else if(pt>15 && pt<=20){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9548;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9701;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9766;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9892;
-		}
-	}else if(pt>20 && pt<=25){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9648;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9836;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9820;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9909;
-		}
-	}else if(pt>25 && pt<=30){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9676;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9817;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9886;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9883;
-		}
-	}else if(pt>30 && pt<=35){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9883;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9833;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9910;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9900;
-		}
-	}else if(pt>35){
-		if(eta>=0 && eta<0.8){
-			eff = 0.9826;
-		}else if(eta>=0.8 && eta<1.2){
-			eff = 0.9841;
-		}else if(eta>=1.2 && eta<1.6){
-			eff = 0.9900;
-		}else if(eta>=1.6 && eta<2.1){
-			eff = 0.9886;
-		}
-	}
-	return eff;
-}
-
-double ZtoEMu_Skim::ElectronIDeff(unsigned int i, std::string id){
-	if(id=="Trig") return ElectronTrigIDeff(i);
-	if(id=="NonTrig") return ElectronNonTrigIDeff(i);
-	if(id=="Higgs") return ElectronHiggsIDeff(i);
-	return 1.;
-}
-
-double ZtoEMu_Skim::ElectronTrigIDeff(unsigned int i){
-	double pt = Ntp->Electron_p4(i).Pt();
-	double eta = fabs(Ntp->Electron_supercluster_eta(i));
-	double eff = 1.;
-	if(eta<2.5){
-		eff = ElectronTrigEff->GetBinContent(ElectronTrigEff->FindFixBin(eta,pt));
-	}
-	return eff;
-}
-
-double ZtoEMu_Skim::ElectronNonTrigIDeff(unsigned int i){
-	double pt = Ntp->Electron_p4(i).Pt();
-	double eta = Ntp->Electron_supercluster_eta(i);
-	double eff = 1.;
-	if(fabs(eta)<2.5){
-		eff = ElectronNonTrigEff->GetBinContent(ElectronNonTrigEff->FindFixBin(pt,eta));
-	}
-	return eff;
-}
-
-double ZtoEMu_Skim::ElectronHiggsIDeff(unsigned int i){
-	double pt = Ntp->Electron_p4(i).Pt();
-	double eta = Ntp->Electron_supercluster_eta(i);
-	double eff = 1.;
-	if(fabs(eta)<2.5){
-		if(pt>10 && pt<=15){
-			if(eta>=0 && eta<0.8){
-				eff = 0.7654;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.7693;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.5719;
-			}
-		}else if(pt>15 && pt<=20){
-			if(eta>=0 && eta<0.8){
-				eff = 0.8394;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.8457;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.7024;
-			}
-		}else if(pt>20 && pt<=25){
-			if(eta>=0 && eta<0.8){
-				eff = 0.8772;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.8530;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.7631;
-			}
-		}else if(pt>25 && pt<=30){
-			if(eta>=0 && eta<0.8){
-				eff = 0.9006;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.8874;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.8092;
-			}
-		}else if(pt>30 && pt<=35){
-			if(eta>=0 && eta<0.8){
-				eff = 0.9261;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.9199;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.8469;
-			}
-		}else if(pt>35){
-			if(eta>=0 && eta<0.8){
-				eff = 0.9514;
-			}else if(eta>=0.8 && eta<1.5){
-				eff = 0.9445;
-			}else if(eta>=1.5 && eta<2.3){
-				eff = 0.9078;
+	}else if(fabs(Ntp->Electron_supercluster_eta(idx))>1.479 && fabs(Ntp->Electron_supercluster_eta(idx))<2.5){ //endcaps
+		if(Ntp->Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(idx)<0.009 &&
+				Ntp->Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(idx)<0.10 &&
+				Ntp->Electron_sigmaIetaIeta(idx)<0.03 &&
+				Ntp->Electron_hadronicOverEm(idx)<0.10 &&
+				fabs(1/Ntp->Electron_ecalEnergy(idx)-1/Ntp->Electron_trackMomentumAtVtx(idx))<0.05 &&
+				!Ntp->Electron_HasMatchedConversions(idx) &&
+				Ntp->Electron_numberOfMissedHits(idx)<=1
+				){
+			if(Ntp->Electron_p4(idx).Pt()>=20.0 && Electron_RelIso(idx)<0.15){
+				return true;
+			}else if(Ntp->Electron_p4(idx).Pt()<20.0 && Electron_RelIso(idx)<0.10){
+				return true;
 			}
 		}
 	}
-	return eff;
-}
-
-//////////////////////////////
-//
-// Calculate fakerate
-//
-
-double ZtoEMu_Skim::Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type){
-	
-	double eta1, eta2;
-	int ptbin = 0;
-	int etabin = 0;
-	double FakePt = vec.Pt();
-	double FakeEta = vec.Eta();
-	double fakerate = 0.;
-	
-	if(type=="muon"){
-		eta1 = 2.1;
-		eta2 = 1.2;
-	}else if(type=="electron"){
-		eta1 = 2.;
-		eta2 = 1.479;
-	}
-	
-	if(FakePt<15.)ptbin = 1;
-	else if(FakePt>=15. && FakePt<20.)ptbin = 2;
-	else if(FakePt>=20. && FakePt<25.)ptbin = 3;
-	else if(FakePt>=25. && FakePt<30.)ptbin = 4;
-	else if(FakePt>=30.)ptbin = 5;
-	
-	if(FakeEta<-eta1)etabin = 1;
-	else if(FakeEta>=-eta1 && FakeEta<-eta2)etabin = 2;
-	else if(FakeEta>=-eta2 && FakeEta<-0.8)etabin = 3;
-	else if(FakeEta>=-0.8 && FakeEta<0.)etabin = 4;
-	else if(FakeEta>=0. && FakeEta<0.8)etabin = 5;
-	else if(FakeEta>=0.8 && FakeEta<eta2)etabin = 6;
-	else if(FakeEta>=eta2 && FakeEta<eta1)etabin = 7;
-	else if(FakeEta>=eta1)etabin = 8;
-	
-	if(ptbin==0 || etabin==0){
-		fakerate = 0;
-	}else{
-		fakerate = fakeRateHist->GetBinContent(ptbin,etabin);
-	}
-	
-	return fakerate;//(1-fakerate);
-}
-
-double ZtoEMu_Skim::FakerateWW(unsigned int i, std::string type){
-	double fakerate = 0.;
-	double pt(0),eta(0);
-	if(type=="muon"){
-		pt = Ntp->Muon_p4(i).Pt();
-		eta = fabs(Ntp->Muon_p4(i).Eta());
-		if(eta<=1.){
-			if(pt>10. && pt<=15.) fakerate = 0.131;
-			if(pt>15. && pt<=20.) fakerate = 0.143;
-			if(pt>20. && pt<=25.) fakerate = 0.198;
-			if(pt>25. && pt<=30.) fakerate = 0.182;
-			if(pt>30.) fakerate = 0.170;
-		}
-		if(eta>1. && eta<=1.479){
-			if(pt>10. && pt<=15.) fakerate = 0.154;
-			if(pt>15. && pt<=20.) fakerate = 0.191;
-			if(pt>20. && pt<=25.) fakerate = 0.239;
-			if(pt>25. && pt<=30.) fakerate = 0.228;
-			if(pt>30.) fakerate = 0.244;
-		}
-		if(eta>1.479 && eta<=2.){
-			if(pt>10. && pt<=15.) fakerate = 0.194;
-			if(pt>15. && pt<=20.) fakerate = 0.235;
-			if(pt>20. && pt<=25.) fakerate = 0.221;
-			if(pt>25. && pt<=30.) fakerate = 0.195;
-			if(pt>30.) fakerate = 0.195;
-		}
-		if(eta>2. && eta<=2.5){
-			if(pt>10. && pt<=15.) fakerate = 0.241;
-			if(pt>15. && pt<=20.) fakerate = 0.308;
-			if(pt>20. && pt<=25.) fakerate = 0.271;
-			if(pt>25. && pt<=30.) fakerate = 0.287;
-			if(pt>30.) fakerate = 0.289;
-		}
-	}else if(type=="electron"){
-		pt = Ntp->Electron_p4(i).Pt();
-		eta = fabs(Ntp->Electron_supercluster_eta(i));
-		if(eta<=1.){
-			if(pt>10. && pt<=15.) fakerate = 0.045;
-			if(pt>15. && pt<=20.) fakerate = 0.044;
-			if(pt>20. && pt<=25.) fakerate = 0.041;
-			if(pt>25. && pt<=30.) fakerate = 0.059;
-			if(pt>30.) fakerate = 0.084;
-		}
-		if(eta>1. && eta<=1.479){
-			if(pt>10. && pt<=15.) fakerate = 0.033;
-			if(pt>15. && pt<=20.) fakerate = 0.049;
-			if(pt>20. && pt<=25.) fakerate = 0.064;
-			if(pt>25. && pt<=30.) fakerate = 0.101;
-			if(pt>30.) fakerate = 0.111;
-		}
-		if(eta>1.479 && eta<=2.){
-			if(pt>10. && pt<=15.) fakerate = 0.008;
-			if(pt>15. && pt<=20.) fakerate = 0.017;
-			if(pt>20. && pt<=25.) fakerate = 0.025;
-			if(pt>25. && pt<=30.) fakerate = 0.041;
-			if(pt>30.) fakerate = 0.058;
-		}
-		if(eta>2. && eta<=2.5){
-			if(pt>10. && pt<=15.) fakerate = 0.021;
-			if(pt>15. && pt<=20.) fakerate = 0.017;
-			if(pt>20. && pt<=25.) fakerate = 0.025;
-			if(pt>25. && pt<=30.) fakerate = 0.043;
-			if(pt>30.) fakerate = 0.066;
-		}
-	}
-	return fakerate;
+	return false;
 }
 
 //////////////////////////////

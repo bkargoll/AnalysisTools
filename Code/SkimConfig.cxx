@@ -172,19 +172,35 @@ void SkimConfig::CheckNEvents(std::vector<int> ids, std::vector<float> nevts){
     }
   }
 
+  ofstream output;
+  output.open("DQM.tex", ios::out);
+  
+  output << "\\section{Data Quality Table}" << std::endl;
+  output << "\\begin{landscape}" << std::endl;
+  output << "\\begin{table}[t]" << std::endl;
+  output << "\\tiny " << std::endl;
+  output << "\\begin{center}" << std::endl;
+  output << "\\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|} \\hline" << endl; 
+  output << "ID & DQM Status & Events Read & Events Expected & Ratio \\\\  \\hline " << std::endl;
   for(unsigned int i=0; i<ids.size();i++){
-    if(fabs(nevts.at(i)-NEvents_noweight_sel.at(i))>0.01){
-      std::cout << "Failed " << ids.at(i) << " incorrect number of events "
-		<< "Found: " << nevts.at(i) << " Expected: " << NEvents_noweight_sel.at(i) 
-		<< " Ratio " <<   nevts.at(i)/NEvents_noweight_sel.at(i)
-		<< std::endl;
+    if(fabs(nevts.at(i)-NEvents_noweight_sel.at(i))>0.0001){
+      output << ids.at(i) << " & \\textcolor{red}{FAILED} & ";
     }
-    else if(fabs(nevts.at(i)-NEvents_noweight_sel.at(i))<0.01){
-      std::cout << "Passed " <<  ids.at(i) << " all events analysed "
-		<< "Found: " << nevts.at(i) << " Expected: " << NEvents_noweight_sel.at(i)
-		<< std::endl;
+    else{
+      output << ids.at(i) << " & \\textcolor{green}{PASSED} & ";
     }
+    output <<  nevts.at(i) << " & " << NEvents_noweight_sel.at(i) << " & " <<   nevts.at(i)/NEvents_noweight_sel.at(i) 
+	   << " \\\\  " << std::endl;
   }
+  output << " \\hline"                                      << std::endl;
+  output << "\\end{tabular}"                                << std::endl;
+  output << "\\caption[Data Quality]{Data Quality}"         << std::endl;
+  output << "\\end{center}"                                 << std::endl;
+  output << "\\end{table}"                                  << std::endl;
+  output << "\\normalsize"                                  << std::endl;
+  output << "\\end{landscape}"                              << std::endl;
+  output.close();
+
   return;
 }
 
