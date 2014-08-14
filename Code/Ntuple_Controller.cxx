@@ -607,7 +607,30 @@ bool Ntuple_Controller::isJetID(unsigned int i){
   return false;
 }
 
+// https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECL2ResidualTimeStability#2012Rereco
+double Ntuple_Controller::rundependentJetPtCorrection(double jeteta, int runnumber){
+	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded)
+		return 1.;
+	const double corrs[5] = {0.0, -0.454e-6, -0.952e-6, 1.378e-6, 0.0};
+	const int run0 = 201000;
+	double eta = fabs(jeteta);
+	double corr = 0.;
+	if(eta<1.3) corr = corrs[0];
+	else if(eta<2.0) corr = corrs[1];
+	else if(eta<2.5) corr = corrs[2];
+	else if(eta<3.0) corr = corrs[3];
+	else if(eta<5.0) corr = corrs[4];
+	return (1.+corr*(runnumber-run0));
+}
 
+TLorentzVector Ntuple_Controller::PFJet_p4(unsigned int i, TString corr){
+	TLorentzVector vec = TLorentzVector(Ntp->PFJet_p4->at(i).at(1),Ntp->PFJet_p4->at(i).at(2),Ntp->PFJet_p4->at(i).at(3),Ntp->PFJet_p4->at(i).at(0));
+	// apply run-dependent pT corrections
+	if (corr.Contains("run")){
+		vec.SetPerp(vec.Pt() * rundependentJetPtCorrection(vec.Eta(), RunNumber()));
+	}
+	return vec;
+}
 
 double Ntuple_Controller::TauSpinerGet(int SpinType){
 #ifdef USE_TauSpinner
@@ -723,9 +746,32 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
   return false;
 }
 
+//// Generator Information
+int Ntuple_Controller::matchTruth(TLorentzVector tvector){
+	double testdr=0.3;
+	int pdgid = 0;
+	for(unsigned i=0;i<NMCParticles();i++){
+		if(MCParticle_p4(i).Pt()>0.){
+			if(tvector.DeltaR(MCParticle_p4(i))<testdr){
+				testdr = tvector.DeltaR(MCParticle_p4(i));
+				pdgid = MCParticle_pdgid(i);
+			}
+		}
+	}
+	return pdgid;
+}
+bool Ntuple_Controller::matchTruth(TLorentzVector tvector, int pid, double dr){
+	for(unsigned i=0;i<NMCParticles();i++){
+		if(MCParticle_p4(i).Pt()>0.){
+			if(fabs(MCParticle_pdgid(i))==pid){
+				if(tvector.DeltaR(MCParticle_p4(i))<dr) return true;
+			}
+		}
+	}
+	return false;
+}
 
-
-
+//// Trigger Information
 bool Ntuple_Controller::TriggerAccept(TString n){
   unsigned int i=0;
   if(GetTriggerIndex(n,i))return TriggerAccept(i);
@@ -750,6 +796,54 @@ bool Ntuple_Controller::GetTriggerIndex(TString n, unsigned int &i){
     if(name.Contains(n))return true;
   }
   return false;
+}
+
+double Ntuple_Controller::matchTrigger(unsigned int i_obj, std::vector<TString> trigger, std::string objectType){
+	unsigned int id = 0;
+	TLorentzVector particle(0.,0.,0.,0.);
+	TLorentzVector triggerObj(0.,0.,0.,0.);
+	if(objectType=="tau"){
+		id = 84;
+		particle = PFTau_p4(i_obj);
+	}
+	if(objectType=="muon"){
+		id = 83;
+		particle = Muon_p4(i_obj);
+	}
+	if(objectType=="electron"){
+		id = 82;
+		particle = Electron_p4(i_obj);
+	}
+
+	double minDR = 100.;
+	for(unsigned i_trig = 0; i_trig < trigger.size(); i_trig++){
+		for(unsigned i=0;i<NHLTTrigger_objs();i++){
+			if(HLTTrigger_objs_trigger(i).find(trigger.at(i_trig)) != string::npos){
+				for(unsigned j=0;j<NHLTTrigger_objs(i);j++){
+					if(HLTTrigger_objs_Id(i,j)==id){
+						triggerObj.SetPtEtaPhiE(HLTTrigger_objs_Pt(i,j),
+								HLTTrigger_objs_Eta(i,j),
+								HLTTrigger_objs_Phi(i,j),
+								HLTTrigger_objs_E(i,j));
+					}
+					if( triggerObj.Pt()>0. && particle.Pt()>0. ) {
+						double dr = particle.DeltaR(triggerObj);
+						if (dr < minDR) minDR = dr;
+					}
+				}
+			}
+		}
+	}
+	return minDR;
+}
+bool Ntuple_Controller::matchTrigger(unsigned int i_obj, double dr_cut, std::vector<TString> trigger, std::string objectType){
+	double dr = matchTrigger(i_obj, trigger, objectType);
+	return dr < dr_cut;
+}
+bool Ntuple_Controller::matchTrigger(unsigned int i_obj, double dr_cut, TString trigger, std::string objectType){
+	std::vector<TString> triggerVec;
+	triggerVec.push_back(trigger);
+	return matchTrigger(i_obj, dr_cut, triggerVec, objectType);
 }
 
 
@@ -862,12 +956,19 @@ TVector3 Ntuple_Controller::PF_Tau_FlightLegth3d_TauFrame(unsigned int i){
   return TVector3(Resp(0,0),Resp(1,0),Resp(2,0));
 }
 
+float Ntuple_Controller::dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
+	return (-(poca.X()-vtx.X())*fourvector.Py()+(poca.Y()-vtx.Y())*fourvector.Px())/fourvector.Pt();
+}
 float Ntuple_Controller::dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
-	return fabs((-(poca.X()-vtx.X())*fourvector.Py()+(poca.Y()-vtx.Y())*fourvector.Px())/fourvector.Pt());
+	return fabs(dxySigned(fourvector, poca, vtx));
 }
 
+
+float Ntuple_Controller::dzSigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
+	return poca.Z()-vtx.Z()-((poca.X()-vtx.X())*fourvector.Px()+(poca.Y()-vtx.Y())*fourvector.Py())*fourvector.Pz()/pow(fourvector.Pt(),2);
+}
 float Ntuple_Controller::dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
-	return fabs(poca.Z()-vtx.Z()-((poca.X()-vtx.X())*fourvector.Px()+(poca.Y()-vtx.Y())*fourvector.Py())*fourvector.Pz()/pow(fourvector.Pt(),2));
+	return fabs(dzSigned(fourvector, poca, vtx));
 }
 
 float Ntuple_Controller::vertexSignificance(TVector3 vec, unsigned int vertex){
@@ -954,4 +1055,59 @@ bool Ntuple_Controller::findCorrMVAMuTauSrcTau(unsigned int tau_idx, int &mvaMuT
 	}
 	if (minDr < 0.05) return true;
 	else return false;
+}
+
+// function to sort any objects by any value in descending order
+std::vector<int> Ntuple_Controller::sortObjects(std::vector<int> indices, std::vector<double> values){
+	if (indices.size() != values.size()){
+		std::cout << "WARNING: Please make sure indices and values have same size for sorting. Abort." << std::endl;
+		return std::vector<int>();
+	}
+	// create vector of pairs to allow for sorting by value
+	std::vector< std::pair<int, double> > pairs;
+	for (unsigned i = 0; i<values.size(); i++ ){
+		pairs.push_back( std::make_pair(indices.at(i),values.at(i)) );
+	}
+	// sort vector of pairs
+	std::sort(pairs.begin(), pairs.end(), sortIdxByValue());
+	// create vector of indices in correct order
+	std::vector<int> sortedIndices;
+	for (unsigned i = 0; i<pairs.size(); i++){
+		sortedIndices.push_back(pairs.at(i).first);
+	}
+	return sortedIndices;
+}
+
+std::vector<int> Ntuple_Controller::sortDefaultObjectsByPt(TString objectType){
+	std::vector<int> indices;
+	std::vector<double> values;
+	if (objectType == "Jets" || objectType == "PFJets"){
+		for (unsigned i = 0; i<NPFJets(); i++ ){
+			indices.push_back(i);
+			values.push_back(PFJet_p4(i).Pt());
+		}
+	}
+	else if (objectType == "Taus" || objectType == "PFTaus"){
+		for (unsigned i = 0; i<NPFTaus(); i++ ){
+			indices.push_back(i);
+			values.push_back(PFTau_p4(i).Pt());
+		}
+	}
+	else if (objectType == "Muons"){
+		for (unsigned i = 0; i<NMuons(); i++ ){
+			indices.push_back(i);
+			values.push_back(Muon_p4(i).Pt());
+		}
+	}
+	else if (objectType == "Electrons"){
+		for (unsigned i = 0; i<NElectrons(); i++ ){
+			indices.push_back(i);
+			values.push_back(Electron_p4(i).Pt());
+		}
+	}
+	else{
+		std::cout << "WARNING: sortDefaultObjectsByPt is only implemented for Jets, Taus, Muons and Electrons. Abort." << std::endl;
+		return std::vector<int>();
+	}
+	return sortObjects(indices, values);
 }

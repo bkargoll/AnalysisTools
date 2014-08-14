@@ -85,11 +85,11 @@ void MuTauSync::doEvent(){
 		q_1 = Ntp->Muon_Charge(selMuon);
 		iso_1 = Ntp->Muon_RelIso(selMuon);
 		mva_1 = 0; // to be set to 0 for muons
-		d0_1 = Ntp->dxy(Ntp->Muon_p4(selMuon),Ntp->Muon_Poca(selMuon),Ntp->Vtx(selVertex));
-		dZ_1 = Ntp->dz(Ntp->Muon_p4(selMuon),Ntp->Muon_Poca(selMuon),Ntp->Vtx(selVertex));
+		d0_1 = Ntp->dxySigned(Ntp->Muon_p4(selMuon),Ntp->Muon_Poca(selMuon),Ntp->Vtx(selVertex));
+		dZ_1 = Ntp->dzSigned(Ntp->Muon_p4(selMuon),Ntp->Muon_Poca(selMuon),Ntp->Vtx(selVertex));
 		passid_1 = true; // passes obviously, as it was selected
 		passiso_1 = true;
-		mt_1 = transverseMass(pt_1,phi_1,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
+		mt_1 = Ntp->transverseMass(pt_1,phi_1,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
 		 // Second lepton : hadronic Tau for mu Tau had for e Tau, Muon for e mu, Trailing (in pT) Tau for Tau Tau
 		pt_2 = Ntp->PFTau_p4(selTau).Pt();
 		phi_2 = Ntp->PFTau_p4(selTau).Phi();
@@ -109,7 +109,7 @@ void MuTauSync::doEvent(){
 		mva_2 = -10;
 		passid_2 = true;
 		passiso_2 = true;
-		mt_2 = transverseMass(pt_2,phi_2,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
+		mt_2 = Ntp->transverseMass(pt_2,phi_2,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
 		 // Met related variables
 		met = Ntp->MET_Uncorr_et();
 		metphi = Ntp->MET_Uncorr_phi();

@@ -43,6 +43,14 @@
 #include "SimpleFits/FitSoftware/interface/MultiProngTauSolver.h"
 #include "SimpleFits/FitSoftware/interface/ErrorMatrixPropagator.h"
 #include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
+
+// small struct needed to allow sorting indices by some value
+struct sortIdxByValue {
+    bool operator()(const std::pair<int,double> &left, const std::pair<int,double> &right) {
+        return left.second > right.second;
+    }
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //*****************************************************************************
 //*
@@ -439,7 +447,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
       // Jet Information
    unsigned int       NPFJets(){return Ntp->PFJet_p4->size();}
-   TLorentzVector     PFJet_p4(unsigned int i){return TLorentzVector(Ntp->PFJet_p4->at(i).at(1),Ntp->PFJet_p4->at(i).at(2),Ntp->PFJet_p4->at(i).at(3),Ntp->PFJet_p4->at(i).at(0));}
+   TLorentzVector     PFJet_p4(unsigned int i, TString corr = "");
    float              PFJet_chargedEmEnergy(unsigned int i){return Ntp->PFJet_chargedEmEnergy->at(i);}
    float              PFJet_chargedHadronEnergy(unsigned int i){return Ntp->PFJet_chargedHadronEnergy->at(i);}
    float              PFJet_chargedHadronMultiplicity(unsigned int i){return Ntp->PFJet_chargedHadronMultiplicity->at(i);}
@@ -487,6 +495,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              PFJet_partonFlavour(unsigned int i){return Ntp->PFJet_partonFlavour->at(i);}
    float              PFJet_bDiscriminator(unsigned int i){return Ntp->PFJet_bDiscriminator->at(i);}
    //float              PFJet_BTagWeight(unsigned int i){return Ntp->PFJet_BTagWeight->at(i);} // not implemented at the moment
+
+   double 			  rundependentJetPtCorrection(double jeteta, int runnumber);
 
    //MET information
    float              MET_Uncorr_et(){return Ntp->MET_Uncorr_et;}
@@ -619,6 +629,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    int                        MCParticle_charge(unsigned int i){return Ntp->MC_charge->at(i);}
    int                        MCParticle_midx(unsigned int i){return Ntp->MC_midx->at(i);}
    std::vector<int>           MCParticle_childpdgid(unsigned int i){return Ntp->MC_childpdgid->at(i);}
+   int						  matchTruth(TLorentzVector tvector);
+   bool						  matchTruth(TLorentzVector tvector, int pid, double dr);
 
    // Tau decays (Tau is first element of vector)
    int NMCTaus(){return Ntp->MCTauandProd_p4->size();}
@@ -740,6 +752,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    unsigned int HLTPrescale(TString n);
    unsigned int L1SEEDPrescale(TString n);
    bool         GetTriggerIndex(TString n, unsigned int &i);
+   double 		matchTrigger(unsigned int i_obj, std::vector<TString> trigger, std::string objectType);
+   bool 		matchTrigger(unsigned int i_obj, double dr_cut, std::vector<TString> trigger, std::string objectType);
+   bool			matchTrigger(unsigned int i_obj, double dr_cut, TString trigger, std::string objectType);
    unsigned int NHLTTriggers(){return Ntp->HTLTriggerName->size();}
    std::string  HTLTriggerName(unsigned int i){return Ntp->HTLTriggerName->at(i);}
    bool         TriggerAccept(unsigned int i){return Ntp->TriggerAccept->at(i);}
@@ -749,10 +764,6 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    unsigned int NHLTL1GTSeeds(unsigned int i){return Ntp->NHLTL1GTSeeds->at(i);}
    unsigned int L1SEEDPrescale(unsigned int i){return Ntp->L1SEEDPrescale->at(i);}
    bool         L1SEEDInvalidPrescale(unsigned int i){return Ntp->L1SEEDInvalidPrescale->at(i);}
-   float        MuonTriggerMatch(unsigned int i, unsigned int j){if(j<Ntp->TriggerMatchMuon->at(i).size()) return Ntp->TriggerMatchMuon->at(i).at(j); return 999;}
-   //float        ElectronTriggerMatch(unsigned int i, unsigned int j){if(j<Ntp->ElectronTriggerMatch->at(i).size()) return Ntp->ElectronTriggerMatch->at(i).at(j);return 999;}
-   float        JetTriggerMatch(unsigned int i, unsigned int j){if(j<Ntp->TriggerMatchJet->at(i).size()) return Ntp->TriggerMatchJet->at(i).at(j);return 999;}
-   float        TauTriggerMatch(unsigned int i, unsigned int j){if(j<Ntp->TriggerMatchTau->at(i).size()) return Ntp->TriggerMatchTau->at(i).at(j);return 999;}
    unsigned int NHLTTriggerObject(unsigned int i){return Ntp->HLTTrigger_objs_Eta->at(i).size();}
    TLorentzVector HLTTriggerObject_p4(unsigned int i, unsigned int j){
      TLorentzVector L(0,0,0,0); 
@@ -770,8 +781,14 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    // helper functions
    float        dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   float		dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
    float        dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   float        dzSigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
    float        vertexSignificance(TVector3 vec, unsigned int vertex);
+   double		transverseMass(double pt1, double phi1, double pt2, double phi2){return sqrt(2 * pt1 * pt2 * (1 - cos(phi1 - phi2)));}
+   std::vector<int> sortObjects(std::vector<int> indices, std::vector<double> values);
+   std::vector<int> sortPFJetsByPt();
+   std::vector<int> sortDefaultObjectsByPt(TString objectType);
 
 };
 

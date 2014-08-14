@@ -429,16 +429,16 @@ void  HToTaumuTauh::Configure(){
 
   TauIsoFullSel = HConfig.GetTH1D(Name+"_TauIsoFullSel","TauIsoFullSel",50,0.,25.,"Iso(#tau_{sel})/GeV");
 
-  MtAfterMuon = HConfig.GetTH1D(Name+"_MtAfterMuon","MtAfterMuon",125,0.,250.,"m_{T}/GeV");
-  MtAfterDiMuonVeto = HConfig.GetTH1D(Name+"_MtAfterDiMuonVeto","MtAfterDiMuonVeto",125,0.,250.,"m_{T}/GeV");
-  MtAfterTau = HConfig.GetTH1D(Name+"_MtAfterTau","MtAfterTau",125,0.,250.,"m_{T}/GeV");
-  MtAfterTriLepVeto = HConfig.GetTH1D(Name+"_MtAfterTriLepVeto","MtAfterTriLepVeto",125,0.,250.,"m_{T}/GeV");
-  MtAfterOppCharge = HConfig.GetTH1D(Name+"_MtAfterOppCharge","MtAfterOppCharge",125,0.,250.,"m_{T}/GeV");
-  MtAfterBJetVeto = HConfig.GetTH1D(Name+"_MtAfterBJetVeto","MtAfterBJetVeto",125,0.,250.,"m_{T}/GeV");
-  MtOnlyTau = HConfig.GetTH1D(Name+"_MtOnlyTau","MtOnlyTau",125,0.,250.,"m_{T}/GeV");
-  MtOnlyTriLepVeto = HConfig.GetTH1D(Name+"_MtOnlyTriLepVeto","MtOnlyTriLepVeto",125,0.,250.,"m_{T}/GeV");
-  MtOnlyOppCharge = HConfig.GetTH1D(Name+"_MtOnlyOppCharge","MtOnlyOppCharge",125,0.,250.,"m_{T}/GeV");
-  MtOnlyBJet = HConfig.GetTH1D(Name+"_MtOnlyBJet","MtOnlyBJet",125,0.,250.,"m_{T}/GeV");
+  MtAfterMuon = HConfig.GetTH1D(Name+"_MtAfterMuon","MtAfterMuon",50,0.,100.,"m_{T}/GeV");
+  MtAfterDiMuonVeto = HConfig.GetTH1D(Name+"_MtAfterDiMuonVeto","MtAfterDiMuonVeto",50,0.,100.,"m_{T}/GeV");
+  MtAfterTau = HConfig.GetTH1D(Name+"_MtAfterTau","MtAfterTau",50,0.,100.,"m_{T}/GeV");
+  MtAfterTriLepVeto = HConfig.GetTH1D(Name+"_MtAfterTriLepVeto","MtAfterTriLepVeto",50,0.,100.,"m_{T}/GeV");
+  MtAfterOppCharge = HConfig.GetTH1D(Name+"_MtAfterOppCharge","MtAfterOppCharge",50,0.,100.,"m_{T}/GeV");
+  MtAfterBJetVeto = HConfig.GetTH1D(Name+"_MtAfterBJetVeto","MtAfterBJetVeto",50,0.,100.,"m_{T}/GeV");
+  MtOnlyTau = HConfig.GetTH1D(Name+"_MtOnlyTau","MtOnlyTau",50,0.,100.,"m_{T}/GeV");
+  MtOnlyTriLepVeto = HConfig.GetTH1D(Name+"_MtOnlyTriLepVeto","MtOnlyTriLepVeto",50,0.,100.,"m_{T}/GeV");
+  MtOnlyOppCharge = HConfig.GetTH1D(Name+"_MtOnlyOppCharge","MtOnlyOppCharge",50,0.,100.,"m_{T}/GeV");
+  MtOnlyBJet = HConfig.GetTH1D(Name+"_MtOnlyBJet","MtOnlyBJet",50,0.,100.,"m_{T}/GeV");
 
   Cat0JetLowMt = HConfig.GetTH1D(Name+"_Cat0JetLowMt","Cat0JetLowMt",125,0.,250.,"0JL: m_{T}/GeV");
   Cat0JetLowMtSideband = HConfig.GetTH1D(Name+"_Cat0JetLowMtSideband","Cat0JetLowMtSideband",90,70.,250.,"0JL: m_{T}/GeV");
@@ -797,6 +797,7 @@ void  HToTaumuTauh::doEvent(){
   diMuonVetoMuonsPositive.clear();
   std::vector<int> diMuonVetoMuonsNegative;	// muons selected for the dimuon veto
   diMuonVetoMuonsNegative.clear();
+  int diMuonNeg(-1), diMuonPos(-1);
   for(unsigned i=0;i<Ntp->NMuons();i++){
 	  if( selectMuon_diMuonVeto(i, selVertex) ) {
 		  if (Ntp->Muon_Charge(i) == 1) {
@@ -811,8 +812,18 @@ void  HToTaumuTauh::doEvent(){
 	  value.at(DiMuonVeto) = 0.0;
   }
   else{
-	  // todo: test ALL dimuon pairs, not only leading
-	  value.at(DiMuonVeto) = Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)) );
+	  double dRmax(0.0);
+	  for (std::vector<int>::iterator it_mup = diMuonVetoMuonsPositive.begin(); it_mup != diMuonVetoMuonsPositive.end(); ++it_mup){
+		  for (std::vector<int>::iterator it_mun = diMuonVetoMuonsNegative.begin(); it_mun != diMuonVetoMuonsNegative.end(); ++it_mun){
+			  double dr = Ntp->Muon_p4(*it_mup).DeltaR( Ntp->Muon_p4(*it_mun) );
+			  if (dr > dRmax){
+				  dRmax = dr;
+				  diMuonPos = *it_mup;
+				  diMuonNeg = *it_mun;
+			  }
+		  }
+	  }
+	  value.at(DiMuonVeto) = dRmax;
   }
   pass.at(DiMuonVeto) = (value.at(DiMuonVeto) < cut.at(DiMuonVeto));
 
@@ -902,7 +913,7 @@ void  HToTaumuTauh::doEvent(){
 	  double phi	= Ntp->Muon_p4(selMuon).Phi();
 	  double eTmiss = Ntp->MET_CorrMVAMuTau_et();
 	  double eTmPhi = Ntp->MET_CorrMVAMuTau_phi();
-	  value.at(MT)	= transverseMass(pT,phi,eTmiss,eTmPhi);
+	  value.at(MT)	= Ntp->transverseMass(pT,phi,eTmiss,eTmPhi);
   }
   if (cut.at(MT) == 999) // set to 999 to disable mt cut
 	  pass.at(MT) = true;
@@ -910,7 +921,7 @@ void  HToTaumuTauh::doEvent(){
 	  pass.at(MT) = (value.at(MT) < cut.at(MT));
 
   // sort jets by corrected pt
-  std::vector<int> sortedPFJets = sortPFjets();
+  std::vector<int> sortedPFJets = Ntp->sortDefaultObjectsByPt("Jets");
   // select jets for categories
   // PFJet and bjet collections can have mutual elements!
   std::vector<int> selectedJetsClean;
@@ -1084,8 +1095,8 @@ void  HToTaumuTauh::doEvent(){
   if(passedVertex){
 	  for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
 		  if(	Ntp->isTightMuon(i_mu,selVertex) ){
-			  MuDxy.at(t).Fill(dxy(Ntp->Muon_p4(i_mu),Ntp->Muon_Poca(i_mu),Ntp->Vtx(selVertex)), w);
-			  MuDz.at(t).Fill(dz(Ntp->Muon_p4(i_mu),Ntp->Muon_Poca(i_mu),Ntp->Vtx(selVertex)), w);
+			  MuDxy.at(t).Fill(Ntp->dxySigned(Ntp->Muon_p4(i_mu),Ntp->Muon_Poca(i_mu),Ntp->Vtx(selVertex)), w);
+			  MuDz.at(t).Fill(Ntp->dzSigned(Ntp->Muon_p4(i_mu),Ntp->Muon_Poca(i_mu),Ntp->Vtx(selVertex)), w);
 			  MuRelIso.at(t).Fill(Ntp->Muon_RelIso(i_mu), w);
 		  }
 	  }
@@ -1142,17 +1153,17 @@ void  HToTaumuTauh::doEvent(){
   if(passedObjectsFailDiMuonVeto){
 	  // Investigate events discarded by the DiMuon Veto
 	  if (Ntp->Muon_Charge(selMuon) == 1){
-		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
-		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
+		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonNeg).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
+		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonNeg).DeltaR(Ntp->PFTau_p4(selTau)), w);
 	  }
 	  else if (Ntp->Muon_Charge(selMuon) == -1){
-		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
-		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR(Ntp->PFTau_p4(selTau)), w);
+		  MuVetoDPtSelMuon.at(t).Fill( Ntp->Muon_p4(diMuonPos).Pt() - Ntp->Muon_p4(selMuon).Pt(), w );
+		  MuVetoDRTau.at(t).Fill( Ntp->Muon_p4(diMuonPos).DeltaR(Ntp->PFTau_p4(selTau)), w);
 	  }
-	  MuVetoInvM.at(t).Fill( (Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)) + Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0))).M() , w);
-	  MuVetoPtPositive.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).Pt(), w);
-	  MuVetoPtNegative.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0)).Pt(), w);
-	  MuVetoDeltaR.at(t).Fill( Ntp->Muon_p4(diMuonVetoMuonsPositive.at(0)).DeltaR(Ntp->Muon_p4(diMuonVetoMuonsNegative.at(0))), w );
+	  MuVetoInvM.at(t).Fill( (Ntp->Muon_p4(diMuonPos) + Ntp->Muon_p4(diMuonNeg)).M() , w);
+	  MuVetoPtPositive.at(t).Fill( Ntp->Muon_p4(diMuonPos).Pt(), w);
+	  MuVetoPtNegative.at(t).Fill( Ntp->Muon_p4(diMuonNeg).Pt(), w);
+	  MuVetoDeltaR.at(t).Fill( Ntp->Muon_p4(diMuonPos).DeltaR(Ntp->Muon_p4(diMuonNeg)), w );
   }
 
   if(passedDiMuonVeto){
@@ -1516,56 +1527,12 @@ void HToTaumuTauh::Finish() {
 // Definition of selection and helper functions
 /////////////////////////////////////////
 
-///////// Helper functions
-double HToTaumuTauh::dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
-	return (-(poca.X()-vtx.X())*fourvector.Py()+(poca.Y()-vtx.Y())*fourvector.Px())/fourvector.Pt();
-}
-
-double HToTaumuTauh::dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
-	return poca.Z()-vtx.Z()-((poca.X()-vtx.X())*fourvector.Px()+(poca.Y()-vtx.Y())*fourvector.Py())*fourvector.Pz()/pow(fourvector.Pt(),2);
-}
-
-double HToTaumuTauh::matchTrigger(unsigned int i_obj, std::vector<TString> trigger, std::string objectType){
-	unsigned int id = 0;
-	TLorentzVector particle(0.,0.,0.,0.);
-	TLorentzVector triggerObj(0.,0.,0.,0.);
-	if(objectType=="tau"){
-		id = 84;
-		particle = Ntp->PFTau_p4(i_obj);
-	}
-	if(objectType=="muon"){
-		id = 83;
-		particle = Ntp->Muon_p4(i_obj);
-	}
-
-	double minDR = 100.;
-	for(unsigned i_trig = 0; i_trig < trigger.size(); i_trig++){
-		for(unsigned i=0;i<Ntp->NHLTTrigger_objs();i++){
-			if(Ntp->HLTTrigger_objs_trigger(i).find(trigger.at(i_trig)) != string::npos){
-				for(unsigned j=0;j<Ntp->NHLTTrigger_objs(i);j++){
-					if(Ntp->HLTTrigger_objs_Id(i,j)==id){
-						triggerObj.SetPtEtaPhiE(Ntp->HLTTrigger_objs_Pt(i,j),
-								Ntp->HLTTrigger_objs_Eta(i,j),
-								Ntp->HLTTrigger_objs_Phi(i,j),
-								Ntp->HLTTrigger_objs_E(i,j));
-					}
-					if( triggerObj.Pt()>0. && particle.Pt()>0. ) {
-						double dr = particle.DeltaR(triggerObj);
-						if (dr < minDR) minDR = dr;
-					}
-				}
-			}
-		}
-	}
-	return minDR;
-}
-
 ///////// Muons
 
 bool HToTaumuTauh::selectMuon_Id(unsigned i, unsigned vertex){
 	if(	Ntp->isSelectedMuon(i,vertex,cMu_dxy,cMu_dz) &&
 		Ntp->Muon_RelIso(i) < cMu_relIso &&
-		matchTrigger(i,cTriggerNames,"muon") < cMu_dRHltMatch
+		Ntp->matchTrigger(i,cTriggerNames,"muon") < cMu_dRHltMatch
 			){
 		return true;
 	}
@@ -1585,7 +1552,7 @@ bool HToTaumuTauh::selectMuon_antiIso(unsigned i, unsigned vertex) {
 	if (Ntp->isSelectedMuon(i, vertex, cMu_dxy, cMu_dz) &&
 		Ntp->Muon_RelIso(i) <= 0.5 &&
 		Ntp->Muon_RelIso(i) >= 0.2 &&
-		matchTrigger(i, cTriggerNames, "muon") < cMu_dRHltMatch &&
+		Ntp->matchTrigger(i, cTriggerNames, "muon") < cMu_dRHltMatch &&
 		selectMuon_Kinematics(i)) {
 		return true;
 	}
@@ -1599,7 +1566,7 @@ bool HToTaumuTauh::selectMuon_diMuonVeto(unsigned i, unsigned i_vtx){
 		Ntp->Muon_isGlobalMuon(i) &&
 		Ntp->Muon_isTrackerMuon(i) &&
 		Ntp->Muon_RelIso(i) < 0.3 &&
-		fabs(dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx))) < 0.2
+		Ntp->dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx)) < 0.2
 		) {
 	  return true;
 	}
@@ -1609,8 +1576,8 @@ bool HToTaumuTauh::selectMuon_diMuonVeto(unsigned i, unsigned i_vtx){
 bool HToTaumuTauh::selectMuon_triLeptonVeto(unsigned i, int selectedMuon, unsigned i_vtx){
 	if(	i != selectedMuon &&
 		Ntp->isTightMuon(i,i_vtx) &&
-		fabs(dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx))) < cMu_dxy &&
-		fabs(dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx))) < cMu_dz &&
+		Ntp->dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx)) < cMu_dxy &&
+		Ntp->dz(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx)) < cMu_dz &&
 		Ntp->Muon_RelIso(i) < 0.3 &&
 		Ntp->Muon_p4(i).Pt() > cMuTriLep_pt &&
 		fabs(Ntp->Muon_p4(i).Eta()) < cMuTriLep_eta
@@ -1663,7 +1630,7 @@ bool HToTaumuTauh::selectPFTau_Id(unsigned i, std::vector<int> muonCollection){
 	  }
 	}
 	// trigger matching
-	if (matchTrigger(i,cTriggerNames,"tau") > cMu_dRHltMatch) {
+	if (Ntp->matchTrigger(i,cTriggerNames,"tau") > cMu_dRHltMatch) {
 		return false;
 	}
 
@@ -1697,22 +1664,6 @@ bool HToTaumuTauh::selectPFTau_relaxedIso(unsigned i, std::vector<int> muonColle
 		return true;
 	}
 	return false;
-}
-
-std::vector<int> HToTaumuTauh::sortPFjets(){
-	// create vector of pairs to allow for sorting by jet pt
-	std::vector< std::pair<int, double> > jetIdxPt;
-	for (unsigned i = 0; i<Ntp->NPFJets(); i++ ){
-		jetIdxPt.push_back( std::make_pair(i,Ntp->PFJet_p4(i).Pt()) );
-	}
-	// sort vector of pairs
-	std::sort(jetIdxPt.begin(), jetIdxPt.end(), sortIdxByValue());
-	// create vector of indices in correct order
-	std::vector<int> sortedJets;
-	for (unsigned i = 0; i<jetIdxPt.size(); i++){
-		sortedJets.push_back(jetIdxPt.at(i).first);
-	}
-	return sortedJets;
 }
 
 bool HToTaumuTauh::selectPFJet_Cleaning(unsigned i, int selectedMuon, int selectedTau){

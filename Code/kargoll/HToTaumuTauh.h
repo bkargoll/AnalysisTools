@@ -11,13 +11,6 @@
 class TLorentzVector;
 class TVector3;
 
-// small struct needed to allow sorting indices by some value
-struct sortIdxByValue {
-    bool operator()(const std::pair<int,double> &left, const std::pair<int,double> &right) {
-        return left.second > right.second;
-    }
-};
-
 class HToTaumuTauh : public Selection {
 
  public:
@@ -310,11 +303,6 @@ class HToTaumuTauh : public Selection {
 
 
   // function definitions
-  double dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-  double dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-
-  double matchTrigger(unsigned int i_obj, std::vector<TString> trigger, std::string objectType);
-
   bool selectMuon_Id(unsigned i, unsigned vertex);
   bool selectMuon_Kinematics(unsigned i);
 
@@ -332,15 +320,10 @@ class HToTaumuTauh : public Selection {
 
   bool selectPFTau_relaxedIso(unsigned i, std::vector<int> muonCollection);
 
-  std::vector<int> sortPFjets();
   bool selectPFJet_Cleaning(unsigned i, int selectedMuon, int selectedTau);
   bool selectPFJet_Kinematics(unsigned i);
   bool selectPFJet_Id(unsigned i);
   bool selectBJet(unsigned i, int selectedMuon, int selectedTau);
-
-  inline double transverseMass(double pt1, double phi1, double pt2, double phi2){
-	  return sqrt(2 * pt1 * pt2 * (1 - cos(phi1 - phi2)));
-  }
 
   // categories
   std::vector<float> cut_VBFTight, cut_VBFLoose;
