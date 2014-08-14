@@ -6,6 +6,7 @@
 #include "TString.h"
 #include "TF1.h"
 #include "TGraphAsymmErrors.h"
+#include "ReferenceScaleFactors.h"
 
 class ZtoEMu : public Selection {
 
@@ -22,7 +23,6 @@ class ZtoEMu : public Selection {
 		 NE,
 		 ptthreshold,
 		 mll,
-		 drEMu,
 		 diMuonVeto,
 		 triLeptonVeto,
 		 charge,
@@ -39,6 +39,7 @@ class ZtoEMu : public Selection {
 
  private:
   // Selection Variables
+  ReferenceScaleFactors *RSF;
 
   std::vector<TH1D> RelIsoE;
   std::vector<TH1D> RelIsoMu;
@@ -77,7 +78,6 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> invmass_vetos_m;
   std::vector<TH1D> invmass_only_object_id_m;
 
-  std::vector<TH1D> invmass_dremu_only;
   std::vector<TH1D> invmass_dimuon_only;
   std::vector<TH1D> invmass_trilepton_only;
   std::vector<TH1D> invmass_charge_only;
@@ -142,8 +142,9 @@ class ZtoEMu : public Selection {
   std::vector<TH2D> eta_mu_e;
   std::vector<TH2D> pt_vs_eta_mu;
   std::vector<TH2D> pt_vs_eta_e;
+  std::vector<TH1D> nfakes;
 
-  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,zmin,zmax,mtmu,ptbalance,mmin;
+  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,singlejet,zmin,zmax,mtmu,ptbalance,mmin;
   int n_mu,n_e;
   bool doHiggsObjects;
   bool doWWObjects;
@@ -155,39 +156,20 @@ class ZtoEMu : public Selection {
   double calculatePzetaDQM(int muiterator, int eiterator);
   double cosphi2d(double px1, double py1, double px2, double py2);
   double cosphi3d(TVector3 vec1, TVector3 vec2);
-  double dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-  double dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-  bool jetFromVtx(std::vector<int> vtx_track_idx, int leadingtrack_idx);
-  bool isGoodVtx(unsigned int i);
-  double vertexSignificance(TVector3 vec, unsigned int vertex);
   bool matchTrigger(unsigned int i, double dr, std::string trigger, std::string object);
   int matchTruth(TLorentzVector tvector);
   bool matchTruth(TLorentzVector tvector, int pid, double dr);
   int findBin(TGraphAsymmErrors* graph, double xval);
+  int nCutsAboveZero(int id);
   
-  bool isTightMuon(unsigned int idx);
-  bool isTightMuon(unsigned int idx, unsigned int vtx);
   bool isHiggsMuon(unsigned int idx, unsigned int vtx);
-  bool isLooseMuon(unsigned int idx);
   bool isFakeMuon(unsigned int idx);
   bool isFakeMuon(unsigned int idx, unsigned int vtx);
-  double Muon_RelIso(unsigned int idx);
-  
-  bool isTrigPreselElectron(unsigned int idx);
-  bool isTrigNoIPPreselElectron(unsigned int idx);
-  bool isMVATrigElectron(unsigned int idx);
-  bool isMVATrigNoIPElectron(unsigned int idx);
-  bool isMVANonTrigElectron(unsigned int idx, unsigned int vtx);
   bool isHiggsElectron(unsigned int idx, unsigned int vtx);
   bool isWWElectron(unsigned int idx, unsigned int vtx);
-  bool isTightElectron(unsigned int idx);
-  bool isTightElectron(unsigned int idx, unsigned int vtx);
   bool isLooseElectron(unsigned int idx);
   bool isFakeElectron(unsigned int idx);
   bool isFakeElectron(unsigned int idx, unsigned int vtx);
-  double Electron_RelIso(unsigned int idx);
-  double Electron_Aeff_R04(double Eta);
-  double Electron_Aeff_R03(double Eta);
   
   double MuonIDeff(unsigned int idx);
   double MuonIDerrUp(unsigned int idx);
@@ -205,6 +187,8 @@ class ZtoEMu : public Selection {
   double ElectronTriggerEff(unsigned int idx);
   double ElectronTriggerErr(unsigned int idx);
   double ElectronEmbeddedEff(unsigned int idx);
+  double ElectronReconstructionEff(unsigned int idx);
+  double ElectronReconstructionErr(unsigned int idx);
   
   double TriggerEff(unsigned int muid, unsigned int eid, TString path);
   double SingleEle(unsigned int idx);
@@ -246,11 +230,11 @@ class ZtoEMu : public Selection {
   TFile* ENonTrigIdEffFile;
   TFile* TriggerEfficiencies;
   TFile* FakeRates;
-  TFile* ENonTrigIdRecoEffFile;
+  TFile* ERecoEffFile;
 
   TH2D* ElectronTrigEff;
   TH2D* ElectronNonTrigEff;
-  TH2D* ElectronNonTrigRecoEff;
+  TH2D* ElectronRecoEff;
   TGraphAsymmErrors* MuIdEff09;
   TGraphAsymmErrors* MuIdEff12;
   TGraphAsymmErrors* MuIdEff21;
@@ -259,23 +243,6 @@ class ZtoEMu : public Selection {
   TGraphAsymmErrors* MuIsoEff12;
   TGraphAsymmErrors* MuIsoEff21;
   TGraphAsymmErrors* MuIsoEff24;
-
-  /*TGraphAsymmErrors* SingleEle15;
-  TGraphAsymmErrors* SingleEle25;
-  TGraphAsymmErrors* DoubleEleLead15;
-  TGraphAsymmErrors* DoubleEleLead25;
-  TGraphAsymmErrors* DoubleEleTrail15;
-  TGraphAsymmErrors* DoubleEleTrail25;
-  TGraphAsymmErrors* SingleMu08;
-  TGraphAsymmErrors* SingleMu12;
-  TGraphAsymmErrors* SingleMu21;
-  TGraphAsymmErrors* SingleMu25;
-  TGraphAsymmErrors* DoubleMuLead12;
-  TGraphAsymmErrors* DoubleMuLead21;
-  TGraphAsymmErrors* DoubleMuLead25;
-  TGraphAsymmErrors* DoubleMuTrail12;
-  TGraphAsymmErrors* DoubleMuTrail21;
-  TGraphAsymmErrors* DoubleMuTrail25;*/
 
   TH1D* SingleEle15;
   TH1D* SingleEle25;
@@ -303,11 +270,18 @@ class ZtoEMu : public Selection {
   TGraphAsymmErrors* MuFake2;
   TGraphAsymmErrors* MuFake25;
 
-  TF1* gause;
+  // for scale and resolution studies
+  std::vector<TLorentzVector> muons;
+  std::vector<TLorentzVector> electrons;
+  std::vector<TLorentzVector> jets;
+  TF1* gauseb;
+  TF1* gausee;
   TF1* gausmu;
-  TH1D* eres;
+  TH1D* eresb;
+  TH1D* erese;
   TH1D* mures;
-  double eleres;
+  double eleresb;
+  double elerese;
   double muonres;
 
 };

@@ -353,18 +353,15 @@ bool Ntuple_Controller::isSelectedMuon(unsigned int i, unsigned int j, double im
 
 bool Ntuple_Controller::isTrigPreselElectron(unsigned int i){
 	if(fabs(Electron_supercluster_eta(i))>2.5) return false;
+	if(Electron_numberOfMissedHits(i)>0) return false;
+	if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
+	if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
 	if(fabs(Electron_supercluster_eta(i))<1.479){
 		if(Electron_sigmaIetaIeta(i)>0.014) return false;
 		if(Electron_hadronicOverEm(i)>0.15) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}else{
 		if(Electron_sigmaIetaIeta(i)>0.035) return false;
 		if(Electron_hadronicOverEm(i)>0.1) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}
 	return true;
 }
@@ -373,58 +370,60 @@ bool Ntuple_Controller::isMVATrigElectron(unsigned int i){
 	// !!! make sure to also apply Electron_RelIso<0.15 in your analysis !!!
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvapt<10.) return false;
+	if(mvaeta>2.5) return false;
 	if(Electron_numberOfMissedHits(i)>0) return false;
 	if(Electron_HasMatchedConversions(i)) return false;
 	if(!isTrigPreselElectron(i)) return false;
 	if(mvapt>10. && mvapt<20.){
 		if(mvaeta<0.8 && Electron_MVA_Trig_discriminator(i)<=0.00) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.10) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.62) return false;
-	}else if(mvapt>=20.){
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.10) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.62) return false;
+	}
+	if(mvapt>=20.){
 		if(mvaeta<0.8 && Electron_MVA_Trig_discriminator(i)<=0.94) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.85) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.92) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.85) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.92) return false;
 	}
 	return true;
 }
 
 bool Ntuple_Controller::isTrigNoIPPreselElectron(unsigned int i){
 	if(fabs(Electron_supercluster_eta(i))>2.5) return false;
+	if(Electron_numberOfMissedHits(i)>0) return false;
+	if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
+	if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
 	if(fabs(Electron_supercluster_eta(i))<1.479){
 		if(Electron_sigmaIetaIeta(i)>0.01) return false;
 		if(Electron_hadronicOverEm(i)>0.12) return false;
 		if(fabs(Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.007) return false;
 		if(fabs(Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.15) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}else{
 		if(Electron_sigmaIetaIeta(i)>0.03) return false;
 		if(Electron_hadronicOverEm(i)>0.1) return false;
 		if(fabs(Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.009) return false;
 		if(fabs(Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.1) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}
 	return true;
 }
 
 bool Ntuple_Controller::isMVATrigNoIPElectron(unsigned int i){
+	// at present there are no recommendations on the isolation
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvaeta>2.5) return false;
 	if(Electron_HasMatchedConversions(i)) return false;
 	if(Electron_numberOfMissedHits(i)>0) return false;
 	if(!isTrigNoIPPreselElectron(i)) return false;
 	if(mvapt<20){
 		if(mvaeta<0.8 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.5375) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.375) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.025) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.375) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.025) return false;
 	}
 	if(mvapt>=20){
 		if(mvaeta<0.8 && Electron_MVA_TrigNoIP_discriminator(i)<=0.325) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
 	}
 	return true;
 }
@@ -433,17 +432,19 @@ bool Ntuple_Controller::isMVANonTrigElectron(unsigned int i, unsigned int j){
 	// !!! make sure to also apply Electron_RelIso<0.4 in your analysis !!!
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvapt<7.) return false;
+	if(mvaeta>2.5) return false;
 	if(Electron_numberOfMissedHits(i)>1) return false;
 	if(vertexSignificance(Electron_Poca(i),j)>=4) return false;
 	if(mvapt>7. && mvapt<10.){
 		if(mvaeta<0.8 && Electron_MVA_NonTrig_discriminator(i)<=0.47) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=0.004) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.295) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=0.004) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.295) return false;
 	}
 	if(mvapt>=10.){
 		if(mvaeta<0.8 && Electron_MVA_NonTrig_discriminator(i)<=-0.34) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=-0.65) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.6) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=-0.65) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.6) return false;
 	}
 	return true;
 }

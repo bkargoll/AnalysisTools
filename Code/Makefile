@@ -43,7 +43,8 @@ TARGETS       =	Ntuple_Controller \
 		Example \
 		TauSolver \
 		TauSpinExample \
-		TauSpinerInterface
+		TauSpinerInterface \
+		ReferenceScaleFactors
 
 # now include conditional options set by flags in make.inc
 ifdef USE_TauSpinner
