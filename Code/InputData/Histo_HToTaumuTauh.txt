@@ -2,6 +2,7 @@ Histo: 1   -1 Data Data 1
 Histo: 11  1.233664 MC_ggFHTauTauM125 H_{ggF}#rightarrow{}^{}#tau#tau 632
 Histo: 12  0.0997296 MC_VBFHTauTauM125 H_{VBF}#rightarrow{}^{}#tau#tau 633
 Histo: 13  0.0771792 MC_WHZHTTHTauTauM125 H_{AP}#rightarrow{}^{}#tau#tau 634
+Histo: 60  -1 QCD QCD 606
 Histo: 33  1168.0 MC_DY_tautau Z/#gamma#rightarrow{}^{}#tau#tau 400
 Histo: 30  2336.0 MC_DY_ll Z/#gamma#rightarrow{}^{}ll 800
 Histo: 56  5.824 MC_WW_2l2nu WW#rightarrow{}^{}2l2#nu 417
