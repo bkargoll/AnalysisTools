@@ -252,7 +252,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 
 	//////////// QCD ////////////
 	// calculate the OS/SS factor
-	std::vector<TH2D> catQcdABCD(nCat,TH2D());
+	std::vector<TH1D> catQcdABCD(nCat,TH1D());
 	std::vector<double> catOsSsRatio(nCat,0.0);
 	if (HConfig.GetHisto(true,1,histo)){
 		catQcdABCD.at(0) = Cat0JetLowQcdAbcd.at(histo);
@@ -265,7 +265,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 		catQcdABCD.at(7) = CatInclusiveQcdAbcd.at(histo);
 	}
 	for (unsigned int icat = 0; icat < nCat; icat++){
-		catOsSsRatio.at(icat) = catQcdABCD.at(icat).GetBinContent(2,1) / catQcdABCD.at(icat).GetBinContent(2,2);
+		catOsSsRatio.at(icat) = catQcdABCD.at(icat).GetBinContent(2) / catQcdABCD.at(icat).GetBinContent(4);
 	}
 
 	// get events in SS region
@@ -277,18 +277,18 @@ void HToTaumuTauhBackgrounds::Finish() {
 	for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
 		if (id == 60) continue; // 60 = QCD
 		if (HConfig.GetHisto(false,id,histo)){
-			catQcdSSYieldMCBG.at(0) += Cat0JetLowQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(1) += Cat0JetHighQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(2) += Cat1JetLowQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(3) += Cat1JetHighQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(4) += Cat1JetBoostQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(5) += CatVBFLooseQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(6) += CatVBFTightQcdAbcd.at(histo).GetBinContent(1,2);
-			catQcdSSYieldMCBG.at(7) += CatInclusiveQcdAbcd.at(histo).GetBinContent(1,2);
+			catQcdSSYieldMCBG.at(0) += Cat0JetLowQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(1) += Cat0JetHighQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(2) += Cat1JetLowQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(3) += Cat1JetHighQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(4) += Cat1JetBoostQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(5) += CatVBFLooseQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(6) += CatVBFTightQcdAbcd.at(histo).GetBinContent(3);
+			catQcdSSYieldMCBG.at(7) += CatInclusiveQcdAbcd.at(histo).GetBinContent(3);
 		}
 	}
 	for (unsigned int icat = 0; icat < nCat; icat++){
-		catQcdSSYieldData.at(icat) = catQcdABCD.at(icat).GetBinContent(1,2);
+		catQcdSSYieldData.at(icat) = catQcdABCD.at(icat).GetBinContent(3);
 		catQcdSSYieldWJets.at(icat) = catWJetsYieldSS.at(icat);
 
 		catQcdSSYieldBGCleaned.at(icat) = catQcdSSYieldData.at(icat) - catQcdSSYieldWJets.at(icat) - catQcdSSYieldMCBG.at(icat);
@@ -299,8 +299,8 @@ void HToTaumuTauhBackgrounds::Finish() {
 	printf("%12s  %12s / %12s = %12s\n", "Category", "N(OS)", "N(SS)", "OS/SS ratio");
 	format = "%12s  %12.1f / %12.1f = %12f\n";
 	for (unsigned int icat = 0; icat < nCat; icat++){
-		double os = catQcdABCD.at(icat).GetBinContent(2,1);
-		double ss = catQcdABCD.at(icat).GetBinContent(2,2);
+		double os = catQcdABCD.at(icat).GetBinContent(2);
+		double ss = catQcdABCD.at(icat).GetBinContent(4);
 		printf(format, catNames.at(icat).Data(), os, ss, catOsSsRatio.at(icat));
 	}
 

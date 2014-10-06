@@ -205,6 +205,8 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MtOnlyTriLepVeto;
   std::vector<TH1D> MtOnlyOppCharge;
   std::vector<TH1D> MtOnlyBJet;
+  std::vector<TH1D> MtMuPlusOnly;
+  std::vector<TH1D> MtMuMinusOnly;
 
   std::vector<TH1D> Cat0JetLowQcdShapeRegion;
   std::vector<TH1D> Cat0HighLowQcdShapeRegion;
@@ -265,14 +267,14 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatInclusiveMtSidebandSS;
   std::vector<TH1D> CatInclusiveMtExtrapolationSS;
 
-  std::vector<TH2D> Cat0JetLowQcdAbcd;
-  std::vector<TH2D> Cat0JetHighQcdAbcd;
-  std::vector<TH2D> Cat1JetLowQcdAbcd;
-  std::vector<TH2D> Cat1JetHighQcdAbcd;
-  std::vector<TH2D> Cat1JetBoostQcdAbcd;
-  std::vector<TH2D> CatVBFLooseQcdAbcd;
-  std::vector<TH2D> CatVBFTightQcdAbcd;
-  std::vector<TH2D> CatInclusiveQcdAbcd;
+  std::vector<TH1D> Cat0JetLowQcdAbcd;
+  std::vector<TH1D> Cat0JetHighQcdAbcd;
+  std::vector<TH1D> Cat1JetLowQcdAbcd;
+  std::vector<TH1D> Cat1JetHighQcdAbcd;
+  std::vector<TH1D> Cat1JetBoostQcdAbcd;
+  std::vector<TH1D> CatVBFLooseQcdAbcd;
+  std::vector<TH1D> CatVBFTightQcdAbcd;
+  std::vector<TH1D> CatInclusiveQcdAbcd;
 
   std::vector<TH1D> Cat0JetLowQcdOSMuIso;
   std::vector<TH1D> Cat0JetLowQcdOSTauIso;
