@@ -206,6 +206,15 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MtOnlyOppCharge;
   std::vector<TH1D> MtOnlyBJet;
 
+  std::vector<TH1D> Cat0JetLowQcdShapeRegion;
+  std::vector<TH1D> Cat0HighLowQcdShapeRegion;
+  std::vector<TH1D> Cat1JetLowQcdShapeRegion;
+  std::vector<TH1D> Cat1JetHighQcdShapeRegion;
+  std::vector<TH1D> Cat1JetBoostQcdShapeRegion;
+  std::vector<TH1D> CatVBFLooseQcdShapeRegion;
+  std::vector<TH1D> CatVBFTightQcdShapeRegion;
+  std::vector<TH1D> CatInclusiveQcdShapeRegion;
+
   std::vector<TH1D> Cat0JetLowMt;
   std::vector<TH1D> Cat0JetLowMtSideband;
   std::vector<TH1D> Cat0JetLowMtExtrapolation;
@@ -232,6 +241,29 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatInclusiveMt;
   std::vector<TH1D> CatInclusiveMtSideband;
   std::vector<TH1D> CatInclusiveMtExtrapolation;
+
+  std::vector<TH1D> Cat0JetLowMtSS;
+  std::vector<TH1D> Cat0JetLowMtSidebandSS;
+  std::vector<TH1D> Cat0JetLowMtExtrapolationSS;
+  std::vector<TH1D> Cat0JetHighMtSS;
+  std::vector<TH1D> Cat0JetHighMtSidebandSS;
+  std::vector<TH1D> Cat0JetHighMtExtrapolationSS;
+  std::vector<TH1D> Cat1JetLowMtSS;
+  std::vector<TH1D> Cat1JetLowMtSidebandSS;
+  std::vector<TH1D> Cat1JetLowMtExtrapolationSS;
+  std::vector<TH1D> Cat1JetHighMtSS;
+  std::vector<TH1D> Cat1JetHighMtSidebandSS;
+  std::vector<TH1D> Cat1JetHighMtExtrapolationSS;
+  std::vector<TH1D> Cat1JetBoostMtSS;
+  std::vector<TH1D> Cat1JetBoostMtSidebandSS;
+  std::vector<TH1D> Cat1JetBoostMtExtrapolationSS;
+  std::vector<TH1D> CatVBFLooseMtSS;
+  std::vector<TH1D> CatVBFLooseMtSidebandSS;
+  std::vector<TH1D> CatVBFTightMtSS;
+  std::vector<TH1D> CatVBFTightMtSidebandSS;
+  std::vector<TH1D> CatInclusiveMtSS;
+  std::vector<TH1D> CatInclusiveMtSidebandSS;
+  std::vector<TH1D> CatInclusiveMtExtrapolationSS;
 
   std::vector<TH2D> Cat0JetLowQcdAbcd;
   std::vector<TH2D> Cat0JetHighQcdAbcd;
@@ -288,10 +320,15 @@ class HToTaumuTauh : public Selection {
   TString categoryFlag;
   // flag for WJets background source
   TString wJetsBGSource;
+  // flag for data-driven QCD shape (set to false for yield estimation!)
+  bool qcdShapeFromData;
 
   // map to hold WJets yields for each category
   std::map<TString, double> wJetsYieldMap;
   //std::map<TString, double> wJetsYieldScaleMap;
+
+  // map to hold QCD yields for each category
+  std::map<TString, double> qcdYieldMap;
 
   // variables to hold selected objects (to be used e.g. for sync Ntuple)
   int selVertex;
@@ -301,6 +338,32 @@ class HToTaumuTauh : public Selection {
   double selMjj, selJetdeta;
   int selNjetingap;
 
+  // booleans for different analysis stages
+  void setStatusBooleans(bool resetAll = false);
+  bool passedVertex;
+  bool passedMuId;
+  bool passedMu;
+  bool passedTauIdIso;
+  bool passedTau;
+  bool passedObjects;
+  bool passedDiMuonVeto;
+  bool passedFullInclusiveSelNoBVeto;
+  bool passedFullInclusiveSel;
+  bool passedFullInclusiveSelNoMt;
+  bool passedFullInclusiveSelNoMtNoOS;
+  bool passedFullInclusiveNoTauNoMuNoCharge;
+  bool passedObjectsFailDiMuonVeto;
+  bool passed_VBFTight;
+  bool passed_VBFLoose;
+  bool passed_VBF;
+  bool passed_OneJetHigh;
+  bool passed_OneJetLow;
+  bool passed_OneJetBoost;
+  bool passed_ZeroJetHigh;
+  bool passed_ZeroJetLow;
+  bool passed_NoCategory;
+  bool passed_VBFTightRelaxed;
+  bool passed_VBFLooseRelaxed;
 
   // function definitions
   bool selectMuon_Id(unsigned i, unsigned vertex);

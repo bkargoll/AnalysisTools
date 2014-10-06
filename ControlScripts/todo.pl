@@ -240,6 +240,9 @@ if( $ARGV[0] eq "--TauNtuple"){
     system(sprintf("echo \"git clone https://github.com/violatingcp/Jets_Short.git\" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"cp -r Jets_Short/* .\" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"rm -rf Jets_Short\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    
+    # PDF weights for systematicd
+    system(sprintf("echo \"git cms-addpkg ElectroWeakAnalysis/Utilities \" >> Install_TauNtuple_$CMSSWRel-$time"));
 
 	# Ntuple code
     system(sprintf("echo \"git clone https://github.com/inugent/TauDataFormat TauDataFormat; cd TauDataFormat; git checkout; cd ../; \" >> Install_TauNtuple_$CMSSWRel-$time"));
@@ -260,7 +263,11 @@ if( $ARGV[0] eq "--TauNtuple"){
     system(sprintf("echo \"source /cvmfs/cms.cern.ch/cmsset_default.sh\" >> Setup_$CMSSWRel-$time "));
     system(sprintf("echo \"source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh\" >> Setup_$CMSSWRel-$time"));
 
-    #build
+	# make sure lhapdf is properly linked
+	system(sprintf("echo \"scram setup lhapdffull \" >> Install_TauNtuple_$CMSSWRel-$time"));
+	system(sprintf("echo \"touch $CMSSW_BASE/src/ElectroWeakAnalysis/Utilities/BuildFile.xml \" >> Install_TauNtuple_$CMSSWRel-$time"));
+
+    # build
     system(sprintf("echo \"scram b -j 4 \" >> Install_TauNtuple_$CMSSWRel-$time"));
 
     # print Instructions
@@ -374,6 +381,7 @@ if( $ARGV[0] eq "--Local" ){
                         # Setup Set_$B.sh
 			system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			system(sprintf("echo \"echo 'Starting Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"export workdir=\\\"$OutputDir/workdir$set/\\\"\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Code/; source config \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			system(sprintf("chmod +x $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
@@ -552,6 +560,7 @@ if( $ARGV[0] eq "--DCache" ){
 			# Setup Set_$B.sh
 			system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			system(sprintf("echo \"echo 'Starting Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"export workdir=\\\"$OutputDir/workdir$set/\\\"\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Code/; source config \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-get.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));

@@ -222,7 +222,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   // Muon information
   unsigned int   NMuons(){return Ntp->Muon_p4->size();}
-  TLorentzVector Muon_p4(unsigned int i){return TLorentzVector(Ntp->Muon_p4->at(i).at(1),Ntp->Muon_p4->at(i).at(2),Ntp->Muon_p4->at(i).at(3),Ntp->Muon_p4->at(i).at(0));}
+  TLorentzVector Muon_p4(unsigned int i, TString corr = "");
   TVector3       Muon_Poca(unsigned int i){return TVector3(Ntp->Muon_Poca->at(i).at(0),Ntp->Muon_Poca->at(i).at(1),Ntp->Muon_Poca->at(i).at(2));}
   bool           Muon_isGlobalMuon(unsigned int i){return Ntp->Muon_isGlobalMuon->at(i);}
   bool           Muon_isStandAloneMuon(unsigned int i){return Ntp->Muon_isStandAloneMuon->at(i);}
@@ -304,7 +304,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   //Base Tau Information (PF)
    unsigned int      NPFTaus(){return Ntp->PFTau_p4->size();}
-   TLorentzVector    PFTau_p4(unsigned int i){return TLorentzVector(Ntp->PFTau_p4->at(i).at(1),Ntp->PFTau_p4->at(i).at(2),Ntp->PFTau_p4->at(i).at(3),Ntp->PFTau_p4->at(i).at(0));}
+   TLorentzVector	 PFTau_p4(unsigned int i, TString corr = "");
    TVector3          PFTau_Poca(unsigned int i){return TVector3(Ntp->PFTau_Poca->at(i).at(0),Ntp->PFTau_Poca->at(i).at(1),Ntp->PFTau_Poca->at(i).at(2));}
    bool PFTau_isTightIsolation(unsigned int i){return Ntp->PFTau_isTightIsolation->at(i);}
    bool PFTau_isMediumIsolation(unsigned int i){return  Ntp->PFTau_isMediumIsolation->at(i);}
@@ -658,7 +658,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    // Electrons
    unsigned int       NElectrons(){return Ntp->Electron_p4->size();}
-   TLorentzVector     Electron_p4(unsigned int i){return TLorentzVector(Ntp->Electron_p4->at(i).at(1),Ntp->Electron_p4->at(i).at(2),Ntp->Electron_p4->at(i).at(3),Ntp->Electron_p4->at(i).at(0));}
+   TLorentzVector	  Electron_p4(unsigned int i, TString corr = "");
    TVector3           Electron_Poca(unsigned int i){return TVector3(Ntp->Electron_Poca->at(i).at(0),Ntp->Electron_Poca->at(i).at(1),Ntp->Electron_Poca->at(i).at(2));}
    int   Electron_Charge(unsigned int i){return Ntp->Electron_charge->at(i);}
    float   Electron_Gsf_deltaEtaEleClusterTrackAtCalo(unsigned int i){return Ntp->Electron_Gsf_deltaEtaEleClusterTrackAtCalo->at(i);}

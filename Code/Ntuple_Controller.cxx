@@ -4,6 +4,8 @@
 #include "Ntuple_Controller.h"
 #include "Tools.h"
 #include "PDG_Var.h"
+#include "TF1.h"
+
 
 // External code
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
@@ -303,6 +305,27 @@ bool Ntuple_Controller::isGoodMuon_nooverlapremoval(unsigned int i){
 }
 
 /////////////////////////////////////////////////////////////////////
+
+TLorentzVector Ntuple_Controller::Muon_p4(unsigned int i, TString corr){
+	TLorentzVector vec = TLorentzVector(Ntp->Muon_p4->at(i).at(1),Ntp->Muon_p4->at(i).at(2),Ntp->Muon_p4->at(i).at(3),Ntp->Muon_p4->at(i).at(0));
+	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
+		if(corr.Contains("scale")){
+			if(!corr.Contains("minus")) vec.SetPerp(vec.Perp()*1.02);
+			else vec.SetPerp(vec.Perp()*0.98);
+		}
+		else if(corr.Contains("res")){
+			gRandom->SetSeed(1234);
+			TF1* muresf = new TF1("muresf","TMath::Gaus(x,0.,1.006)/TMath::Sqrt(2*TMath::Pi())/1.006",-5.,5.);
+			TH1D* muresh = new TH1D("mures","mures",100,-5.,5.);
+			muresh->FillRandom("muresf",1000000);
+			if(!corr.Contains("minus")) vec.SetPerp(vec.Perp()+muresh->GetRandom());
+			else vec.SetPerp(vec.Perp()-muresh->GetRandom());
+		}
+	}
+	return vec;
+}
+
+/////////////////////////////////////////////////////////////////////
 //
 // Official muon id code
 //
@@ -347,24 +370,51 @@ bool Ntuple_Controller::isSelectedMuon(unsigned int i, unsigned int j, double im
 }
 
 /////////////////////////////////////////////////////////////////////
+
+TLorentzVector Ntuple_Controller::Electron_p4(unsigned int i, TString corr){
+	TLorentzVector vec = TLorentzVector(Ntp->Electron_p4->at(i).at(1),Ntp->Electron_p4->at(i).at(2),Ntp->Electron_p4->at(i).at(3),Ntp->Electron_p4->at(i).at(0));
+	// apply scale variations (1.6% in barrel, 4.1% in endcap. see EGM-13-001)
+	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
+		if(corr.Contains("res")){
+			gRandom->SetSeed(1234);
+			if(fabs(vec.Eta())<1.479){
+				TF1* barrelf = new TF1("barrelf","TMath::Gaus(x,0.,1.016)/TMath::Sqrt(2*TMath::Pi())/1.016",-5.,5.);
+				TH1D* barrelh = new TH1D("barrelh","barrelh",100,-5.,5.);
+				barrelh->FillRandom("barrelf",1000000);
+				if(!corr.Contains("minus")) vec.SetE(vec.E()+barrelh->GetRandom());
+				else vec.SetE(vec.E()-barrelh->GetRandom());
+			}
+			else if(fabs(vec.Eta())<2.5){
+				TF1* endcapf = new TF1("endcapf","TMath::Gaus(x,0.,1.041)/TMath::Sqrt(2*TMath::Pi())/1.041",-5.,5.);
+				TH1D* endcaph = new TH1D("endcaph","endcaph",100,-5.,5.);
+				endcaph->FillRandom("endcapf",1000000);
+				if(!corr.Contains("minus")) vec.SetE(vec.E()+endcaph->GetRandom());
+				else vec.SetE(vec.E()-endcaph->GetRandom());
+			}
+			else{
+				std::cout << "Eta out of range: " << vec.Eta() << ". Returning fourvector w/o corrections." << std::endl;
+			}
+		}
+	}
+	return vec;
+}
+
+/////////////////////////////////////////////////////////////////////
 //
 // Official electron id code
 //
 
 bool Ntuple_Controller::isTrigPreselElectron(unsigned int i){
 	if(fabs(Electron_supercluster_eta(i))>2.5) return false;
+	if(Electron_numberOfMissedHits(i)>0) return false;
+	if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
+	if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
 	if(fabs(Electron_supercluster_eta(i))<1.479){
 		if(Electron_sigmaIetaIeta(i)>0.014) return false;
 		if(Electron_hadronicOverEm(i)>0.15) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}else{
 		if(Electron_sigmaIetaIeta(i)>0.035) return false;
 		if(Electron_hadronicOverEm(i)>0.1) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}
 	return true;
 }
@@ -373,58 +423,60 @@ bool Ntuple_Controller::isMVATrigElectron(unsigned int i){
 	// !!! make sure to also apply Electron_RelIso<0.15 in your analysis !!!
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvapt<10.) return false;
+	if(mvaeta>2.5) return false;
 	if(Electron_numberOfMissedHits(i)>0) return false;
 	if(Electron_HasMatchedConversions(i)) return false;
 	if(!isTrigPreselElectron(i)) return false;
 	if(mvapt>10. && mvapt<20.){
 		if(mvaeta<0.8 && Electron_MVA_Trig_discriminator(i)<=0.00) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.10) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.62) return false;
-	}else if(mvapt>=20.){
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.10) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.62) return false;
+	}
+	if(mvapt>=20.){
 		if(mvaeta<0.8 && Electron_MVA_Trig_discriminator(i)<=0.94) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.85) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.92) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_Trig_discriminator(i)<=0.85) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_Trig_discriminator(i)<=0.92) return false;
 	}
 	return true;
 }
 
 bool Ntuple_Controller::isTrigNoIPPreselElectron(unsigned int i){
 	if(fabs(Electron_supercluster_eta(i))>2.5) return false;
+	if(Electron_numberOfMissedHits(i)>0) return false;
+	if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
+	if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
 	if(fabs(Electron_supercluster_eta(i))<1.479){
 		if(Electron_sigmaIetaIeta(i)>0.01) return false;
 		if(Electron_hadronicOverEm(i)>0.12) return false;
 		if(fabs(Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.007) return false;
 		if(fabs(Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.15) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}else{
 		if(Electron_sigmaIetaIeta(i)>0.03) return false;
 		if(Electron_hadronicOverEm(i)>0.1) return false;
 		if(fabs(Electron_Gsf_deltaEtaSuperClusterTrackAtVtx(i))>0.009) return false;
 		if(fabs(Electron_Gsf_deltaPhiSuperClusterTrackAtVtx(i))>0.1) return false;
-		if(Electron_Gsf_dr03TkSumPt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_Gsf_dr03HcalTowerSumEt(i)/Electron_p4(i).Pt()>0.2) return false;
-		if(Electron_numberOfMissedHits(i)>0) return false;
 	}
 	return true;
 }
 
 bool Ntuple_Controller::isMVATrigNoIPElectron(unsigned int i){
+	// at present there are no recommendations on the isolation
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvaeta>2.5) return false;
 	if(Electron_HasMatchedConversions(i)) return false;
 	if(Electron_numberOfMissedHits(i)>0) return false;
 	if(!isTrigNoIPPreselElectron(i)) return false;
 	if(mvapt<20){
 		if(mvaeta<0.8 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.5375) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.375) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.025) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.375) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=-0.025) return false;
 	}
 	if(mvapt>=20){
 		if(mvaeta<0.8 && Electron_MVA_TrigNoIP_discriminator(i)<=0.325) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_TrigNoIP_discriminator(i)<=0.775) return false;
 	}
 	return true;
 }
@@ -433,17 +485,19 @@ bool Ntuple_Controller::isMVANonTrigElectron(unsigned int i, unsigned int j){
 	// !!! make sure to also apply Electron_RelIso<0.4 in your analysis !!!
 	double mvapt = Electron_p4(i).Pt();
 	double mvaeta = fabs(Electron_supercluster_eta(i));
+	if(mvapt<7.) return false;
+	if(mvaeta>2.5) return false;
 	if(Electron_numberOfMissedHits(i)>1) return false;
 	if(vertexSignificance(Electron_Poca(i),j)>=4) return false;
 	if(mvapt>7. && mvapt<10.){
 		if(mvaeta<0.8 && Electron_MVA_NonTrig_discriminator(i)<=0.47) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=0.004) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.295) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=0.004) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.295) return false;
 	}
 	if(mvapt>=10.){
 		if(mvaeta<0.8 && Electron_MVA_NonTrig_discriminator(i)<=-0.34) return false;
-		else if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=-0.65) return false;
-		else if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.6) return false;
+		if(mvaeta>=0.8 && mvaeta<1.479 && Electron_MVA_NonTrig_discriminator(i)<=-0.65) return false;
+		if(mvaeta>=1.479 && mvaeta<2.5 && Electron_MVA_NonTrig_discriminator(i)<=0.6) return false;
 	}
 	return true;
 }
@@ -704,7 +758,20 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 }
 
 
-
+TLorentzVector Ntuple_Controller::PFTau_p4(unsigned int i, TString corr){
+	TLorentzVector vec = TLorentzVector(Ntp->PFTau_p4->at(i).at(1),Ntp->PFTau_p4->at(i).at(2),Ntp->PFTau_p4->at(i).at(3),Ntp->PFTau_p4->at(i).at(0));
+	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
+		if(corr.Contains("scalecorr")){
+			if(PFTau_hpsDecayMode(i)>0 && PFTau_hpsDecayMode(i)<5){
+				vec *= 1.025+0.001*min(max(vec.Pt()-45.,0.),10.);
+			}
+			else if(PFTau_hpsDecayMode(i)>=10){
+				vec *= 1.012+0.001*min(max(vec.Pt()-32.,0.),18.);
+			}
+		}
+	}
+	return vec;
+}
 
 
 bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,unsigned int &Boson_idx,TauDecay::JAK tau_jak, unsigned int &tau_idx){

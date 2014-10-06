@@ -55,6 +55,15 @@ void HToTaumuTauhBackgrounds::Finish() {
 	std::vector<double> catWJetsMCRatio(nCat,-9.9);
 	std::vector<double> catWJetsRelaxedMCRatio(nCat,-9.9);
 
+	// do the stuff in SS region for QCD method
+	std::vector<double> catEPSignalSS(nCat,0.0);
+	std::vector<double> catEPSidebandSS(nCat,0.0);
+	std::vector<double> catEPFactorSS(nCat,-9.9);
+	std::vector<double> catSBDataSS(nCat,-9.9);
+	std::vector<double> catSBBackgroundsSS(nCat,0.0);
+	std::vector<double> catWJetsInSBSS(nCat,-9.9);
+	std::vector<double> catWJetsYieldSS(nCat,-9.9);
+
 	int lowBin = Cat0JetLowMt.at(0).FindFixBin(0.0);
 	int highBin = Cat0JetLowMt.at(0).FindFixBin(30.0) - 1;
 	//printf("lowBin = %i, highBin = %i \n", lowBin, highBin);
@@ -86,16 +95,49 @@ void HToTaumuTauhBackgrounds::Finish() {
 
 			catEPSignal.at(7)+= CatInclusiveMtExtrapolation.at(histo).GetBinContent(1);
 			catEPSideband.at(7) += CatInclusiveMtExtrapolation.at(histo).GetBinContent(2);
+
+			catEPSignalSS.at(0) += Cat0JetLowMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(0) += Cat0JetLowMtExtrapolationSS.at(histo).GetBinContent(2);
+			catEPSignalSS.at(1) += Cat0JetHighMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(1)+= Cat0JetHighMtExtrapolationSS.at(histo).GetBinContent(2);
+			catEPSignalSS.at(2) += Cat1JetLowMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(2) += Cat1JetLowMtExtrapolationSS.at(histo).GetBinContent(2);
+			catEPSignalSS.at(3)+= Cat1JetHighMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(3) += Cat1JetHighMtExtrapolationSS.at(histo).GetBinContent(2);
+			catEPSignalSS.at(4) += Cat1JetBoostMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(4) += Cat1JetBoostMtExtrapolationSS.at(histo).GetBinContent(2);
+			catEPSignalSS.at(5) += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(1); // no OS for VBT mT extrapolation
+			catEPSidebandSS.at(5) += CatVBFLooseRelaxMtExtrapolation.at(histo).GetBinContent(2); // no OS for VBT mT extrapolation
+			catEPSignalSS.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(1); // no OS for VBT mT extrapolation
+			catEPSidebandSS.at(6) += CatVBFTightRelaxMtExtrapolation.at(histo).GetBinContent(2); // no OS for VBT mT extrapolation
+			catEPSignalSS.at(7)+= CatInclusiveMtExtrapolationSS.at(histo).GetBinContent(1);
+			catEPSidebandSS.at(7) += CatInclusiveMtExtrapolationSS.at(histo).GetBinContent(2);
 		}
 	}
 	for (unsigned int icat = 0; icat < nCat; icat++){
 		catEPFactor.at(icat) = catEPSignal.at(icat)/catEPSideband.at(icat);
+		catEPFactorSS.at(icat) = catEPSignalSS.at(icat)/catEPSidebandSS.at(icat);
 	}
 
+	// print MC scales before scaling
+	for (unsigned id = 2; id < 100; id++){
+			if (HConfig.GetHisto(false,id,histo)){
+				double scale = Lumi * HConfig.GetCrossSection(id) / Npassed.at(histo).GetBinContent(0);
+				printf("ID = %2i will be scaled by %4f \n", id, scale);
+			}
+	}
 
 	// do plotting and scale histograms
 	Selection::Finish();
 	// all histograms below this are scaled to luminosity!
+
+	// print MC scales after scaling
+	for (unsigned id = 2; id < 100; id++){
+			if (HConfig.GetHisto(false,id,histo)){
+				double scale = Lumi * HConfig.GetCrossSection(id) / Npassed.at(histo).GetBinContent(0);
+				printf("ID = %2i has scale of %4f after scaling\n", id, scale);
+			}
+	}
 
 	// MC prediction of WJet in signal region (for cross-checking)
 	for (unsigned id = 20; id < 24; id++){ //only for WJets processes
@@ -122,6 +164,15 @@ void HToTaumuTauhBackgrounds::Finish() {
 		catSBData.at(5) = CatVBFLooseMtSideband.at(histo).Integral();
 		catSBData.at(6) = CatVBFTightMtSideband.at(histo).Integral();
 		catSBData.at(7) = CatInclusiveMtSideband.at(histo).Integral();
+
+		catSBDataSS.at(0) = Cat0JetLowMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(1) = Cat0JetHighMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(2) = Cat1JetLowMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(3) = Cat1JetHighMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(4) = Cat1JetBoostMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(5) = CatVBFLooseMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(6) = CatVBFTightMtSidebandSS.at(histo).Integral();
+		catSBDataSS.at(7) = CatInclusiveMtSidebandSS.at(histo).Integral();
 	}
 	for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
 		if (id == 60) continue; // 60 = QCD
@@ -134,6 +185,15 @@ void HToTaumuTauhBackgrounds::Finish() {
 			catSBBackgrounds.at(5) += CatVBFLooseMtSideband.at(histo).Integral();
 			catSBBackgrounds.at(6) += CatVBFTightMtSideband.at(histo).Integral();
 			catSBBackgrounds.at(7) += CatInclusiveMtSideband.at(histo).Integral();
+
+			catSBBackgroundsSS.at(0) += Cat0JetLowMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(1) += Cat0JetHighMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(2) += Cat1JetLowMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(3) += Cat1JetHighMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(4) += Cat1JetBoostMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(5) += CatVBFLooseMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(6) += CatVBFTightMtSidebandSS.at(histo).Integral();
+			catSBBackgroundsSS.at(7) += CatInclusiveMtSidebandSS.at(histo).Integral();
 		}
 	}
 	for (unsigned int icat = 0; icat < nCat; icat++){
@@ -141,6 +201,9 @@ void HToTaumuTauhBackgrounds::Finish() {
 		catWJetsYield.at(icat) = catWJetsInSB.at(icat) * catEPFactor.at(icat);
 		catWJetsMCRatio.at(icat) = catWJetsYield.at(icat) / catWJetMCPrediction.at(icat);
 		catWJetsRelaxedMCRatio.at(icat) = catWJetsYield.at(icat) / catWJetRelaxedMCPrediction.at(icat);
+
+		catWJetsInSBSS.at(icat) = catSBDataSS.at(icat) - catSBBackgroundsSS.at(icat);
+		catWJetsYieldSS.at(icat) = catWJetsInSBSS.at(icat) * catEPFactorSS.at(icat);
 	}
 
 	// print MC scales
@@ -186,11 +249,6 @@ void HToTaumuTauhBackgrounds::Finish() {
 	for (unsigned int icat = 5; icat <= 6; icat++){
 		printf(format,catNames.at(icat).Data(), catWJetsYield.at(icat), catWJetMCPrediction.at(icat), catWJetsMCRatio.at(icat), catWJetRelaxedMCPrediction.at(icat), catWJetsRelaxedMCRatio.at(icat));
 	}
-	std::cout << "  ##########################################################\n" << std::endl;
-	printf("Please copy the following numbers in order to use the data driven WJets yield:\n");
-	for (unsigned int icat = 0; icat < nCat; icat++){
-		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsYield.at(icat));
-	}
 
 	//////////// QCD ////////////
 	// calculate the OS/SS factor
@@ -212,11 +270,10 @@ void HToTaumuTauhBackgrounds::Finish() {
 
 	// get events in SS region
 	std::vector<double> catQcdSSYieldData(nCat,0.0);
-	std::vector<double> catQcdSSYieldWJets(nCat,0.0); // todo: this has to be implemented!
+	std::vector<double> catQcdSSYieldWJets(nCat,0.0);
 	std::vector<double> catQcdSSYieldMCBG(nCat,0.0);
-	for (unsigned int icat = 0; icat < nCat; icat++){
-		catQcdSSYieldData.at(icat) = catQcdABCD.at(icat).GetBinContent(1,2);
-	}
+	std::vector<double> catQcdSSYieldBGCleaned(nCat,0.0);
+	std::vector<double> catQcdOSYield(nCat,0.0);
 	for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
 		if (id == 60) continue; // 60 = QCD
 		if (HConfig.GetHisto(false,id,histo)){
@@ -230,6 +287,13 @@ void HToTaumuTauhBackgrounds::Finish() {
 			catQcdSSYieldMCBG.at(7) += CatInclusiveQcdAbcd.at(histo).GetBinContent(1,2);
 		}
 	}
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		catQcdSSYieldData.at(icat) = catQcdABCD.at(icat).GetBinContent(1,2);
+		catQcdSSYieldWJets.at(icat) = catWJetsYieldSS.at(icat);
+
+		catQcdSSYieldBGCleaned.at(icat) = catQcdSSYieldData.at(icat) - catQcdSSYieldWJets.at(icat) - catQcdSSYieldMCBG.at(icat);
+		catQcdOSYield.at(icat) = catQcdSSYieldBGCleaned.at(icat) * catOsSsRatio.at(icat);
+	}
 
 	std::cout << "  ############# QCD: OS/SS ratio #######################" << std::endl;
 	printf("%12s  %12s / %12s = %12s\n", "Category", "N(OS)", "N(SS)", "OS/SS ratio");
@@ -240,5 +304,27 @@ void HToTaumuTauhBackgrounds::Finish() {
 		printf(format, catNames.at(icat).Data(), os, ss, catOsSsRatio.at(icat));
 	}
 
+	std::cout << "  ############# QCD: SS Yield #######################" << std::endl;
+	printf("%12s  %12s - %12s - %12s = %12s\n", "Category", "N(Data)", "N(WJets)", "N(MC BG)", "QCD SS Yield");
+	format = "%12s  %12.1f - %12.1f - %12.1f = %12f\n";
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		printf(format, catNames.at(icat).Data(), catQcdSSYieldData.at(icat), catQcdSSYieldWJets.at(icat), catQcdSSYieldMCBG.at(icat), catQcdSSYieldBGCleaned.at(icat));
+	}
 
+	std::cout << "  ############# QCD: OS Yield #######################" << std::endl;
+	printf("%12s  %12s * %12s = %12s\n", "Category", "SS Yield", "OS/SS ratio", "QCD OS Yield");
+	format = "%12s  %12.1f * %12.5f = %12f\n";
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		printf(format, catNames.at(icat).Data(), catQcdSSYieldBGCleaned.at(icat), catOsSsRatio.at(icat), catQcdOSYield.at(icat));
+	}
+
+	std::cout << "  ##########################################################\n" << std::endl;
+	printf("Please copy the following numbers in order to use the data driven WJets yield:\n");
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsYield.at(icat));
+	}
+	printf("Please copy the following numbers in order to use the data driven QCD yield:\n");
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catQcdOSYield.at(icat));
+	}
 }

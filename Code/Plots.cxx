@@ -523,7 +523,7 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 		TString tempname = histo.at(0).GetName();
 		tempname += "TotalMC";
 		histo.insert(it + 1, *((TH2D*) histo.at(0).Clone(tempname.Data())));
-		types.insert(types.begin()+1, 1);
+		if (types.size() > 0) types.insert(types.begin()+1, 1);
 		std::vector<TString>::iterator itleg = legend.begin();
 		legend.insert(itleg + 1, "Total MC");
 		std::vector<int>::iterator itcol = colour.begin();

@@ -16,6 +16,9 @@ OneJetHigh::OneJetHigh(TString Name_, TString id_):
 
 	// run Categories using data-driven WJets BG
 	wJetsBGSource = "Data";
+
+	// run Categories using data-driven QCD BG
+	qcdShapeFromData = true;
 }
 
 OneJetHigh::~OneJetHigh() {
