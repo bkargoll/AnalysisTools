@@ -40,7 +40,7 @@ public :
    vector<vector<vector<float> > > *Vtx_Cov;
    vector<vector<int> > *Vtx_Track_idx;
    vector<vector<float> > *Vtx_Track_Weights;
-   vector<float>   *Vtx_isFake;
+   vector<bool>   *Vtx_isFake;
    vector<vector<vector<float> > > *Vtx_TracksP4;
    Bool_t          isPatMuon;
    vector<vector<float> > *Muon_p4;
@@ -94,6 +94,7 @@ public :
    vector<int>     *Muon_numberofValidPixelHits;
    vector<int>     *Muon_trackerLayersWithMeasurement;
    vector<int>     *Muon_charge;
+   vector<int>     *Muon_trackCharge;
    vector<int>     *Muon_pdgid;
    vector<float>   *Muon_B;
    vector<float>   *Muon_M;
@@ -151,6 +152,7 @@ public :
    vector<bool>    *Electron_HasMatchedConversions;
    Float_t         RhoIsolationAllInputTags;
    vector<int>     *Electron_charge;
+   vector<int>     *Electron_trackCharge;
    vector<int>     *Electron_pdgid;
    vector<float>   *Electron_B;
    vector<float>   *Electron_M;
@@ -293,6 +295,10 @@ public :
    vector<vector<vector<float> > > *PFJet_TracksP4;
    vector<float>   *PFJet_nTrk;
    vector<float>   *PFJet_JECuncertainty;
+   vector<vector<float> > *PFJet_GenJet_p4;
+   vector<vector<vector<float> > > *PFJet_GenJet_Constituents_p4;
+   vector<vector<float> > *PFJet_GenJetNoNu_p4;
+   vector<vector<vector<float> > > *PFJet_GenJetNoNu_Constituents_p4;
    Bool_t          isPatMET;
    Float_t         MET_Uncorr_et;
    Float_t         MET_Uncorr_pt;
@@ -526,6 +532,12 @@ public :
    Float_t         GenEventInfoProduct_qScale;
    Float_t         GenEventInfoProduct_alphaQED;
    Float_t         GenEventInfoProduct_alphaQCD;
+   int             GenEventInfoProduct_id1;
+   int             GenEventInfoProduct_id2;
+   float           GenEventInfoProduct_x1;
+   float           GenEventInfoProduct_x2;
+   float           GenEventInfoProduct_scalePDF;
+   vector<vector<double> > *PdfWeights;
    vector<vector<float> > *MC_p4;
    vector<int>     *MC_pdgid;
    vector<int>     *MC_charge;
@@ -638,6 +650,7 @@ public :
    TBranch        *b_Muon_numberofValidPixelHits;   //!
    TBranch        *b_Muon_trackerLayersWithMeasurement;   //!
    TBranch        *b_Muon_charge;   //!
+   TBranch        *b_Muon_trackCharge;   //!
    TBranch        *b_Muon_pdgid;   //!
    TBranch        *b_Muon_B;   //!
    TBranch        *b_Muon_M;   //!
@@ -695,6 +708,7 @@ public :
    TBranch        *b_Electron_HasMatchedConversions;   //!
    TBranch        *b_RhoIsolationAllInputTags;   //!
    TBranch        *b_Electron_charge;   //!
+   TBranch        *b_Electron_trackCharge;   //!
    TBranch        *b_Electron_pdgid;   //!
    TBranch        *b_Electron_B;   //!
    TBranch        *b_Electron_M;   //!
@@ -837,6 +851,10 @@ public :
    TBranch        *b_PFJet_TracksP4;   //!
    TBranch        *b_PFJet_nTrk;   //!
    TBranch        *b_PFJet_JECuncertainty;   //!
+   TBranch        *b_PFJet_GenJet_p4;   //!
+   TBranch        *b_PFJet_GenJet_Constituents_p4;   //!
+   TBranch        *b_PFJet_GenJetNoNu_p4;   //!
+   TBranch        *b_PFJet_GenJetNoNu_Constituents_p4;   //!
    TBranch        *b_isPatMET;   //!
    TBranch        *b_MET_Uncorr_et;   //!
    TBranch        *b_MET_Uncorr_pt;   //!
@@ -1070,6 +1088,12 @@ public :
    TBranch        *b_GenEventInfoProduct_qScale;   //!
    TBranch        *b_GenEventInfoProduct_alphaQED;   //!
    TBranch        *b_GenEventInfoProduct_alphaQCD;   //!
+   TBranch        *b_GenEventInfoProduct_id1;   //!
+   TBranch        *b_GenEventInfoProduct_id2;   //!
+   TBranch        *b_GenEventInfoProduct_x1;   //!
+   TBranch        *b_GenEventInfoProduct_x2;   //!
+   TBranch        *b_GenEventInfoProduct_scalePDF;   //!
+   TBranch        *b_PdfWeights;   //!
    TBranch        *b_MC_p4;   //!
    TBranch        *b_MC_pdgid;   //!
    TBranch        *b_MC_charge;   //!
@@ -1254,6 +1278,7 @@ void NtupleReader::Init(TTree *tree)
    Muon_numberofValidPixelHits = 0;
    Muon_trackerLayersWithMeasurement = 0;
    Muon_charge = 0;
+   Muon_trackCharge = 0;
    Muon_pdgid = 0;
    Muon_B = 0;
    Muon_M = 0;
@@ -1309,6 +1334,7 @@ void NtupleReader::Init(TTree *tree)
    Electron_numberOfMissedHits = 0;
    Electron_HasMatchedConversions = 0;
    Electron_charge = 0;
+   Electron_trackCharge = 0;
    Electron_pdgid = 0;
    Electron_B = 0;
    Electron_M = 0;
@@ -1450,6 +1476,10 @@ void NtupleReader::Init(TTree *tree)
    PFJet_TracksP4 = 0;
    PFJet_nTrk = 0;
    PFJet_JECuncertainty = 0;
+   PFJet_GenJet_p4 = 0;
+   PFJet_GenJet_Constituents_p4 = 0;
+   PFJet_GenJetNoNu_p4 = 0;
+   PFJet_GenJetNoNu_Constituents_p4 = 0;
    MET_CorrMVA_srcMuon_p4 = 0;
    MET_CorrMVA_srcElectron_p4 = 0;
    MET_CorrMVA_srcTau_p4 = 0;
@@ -1469,6 +1499,7 @@ void NtupleReader::Init(TTree *tree)
    Track_par = 0;
    Track_cov = 0;
    GenEventInfoProduct_weights = 0;
+   PdfWeights = 0;
    MC_p4 = 0;
    MC_pdgid = 0;
    MC_charge = 0;
@@ -1585,6 +1616,7 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("Muon_numberofValidPixelHits", &Muon_numberofValidPixelHits, &b_Muon_numberofValidPixelHits);
    fChain->SetBranchAddress("Muon_trackerLayersWithMeasurement", &Muon_trackerLayersWithMeasurement, &b_Muon_trackerLayersWithMeasurement);
    fChain->SetBranchAddress("Muon_charge", &Muon_charge, &b_Muon_charge);
+   fChain->SetBranchAddress("Muon_trackCharge", &Muon_trackCharge, &b_Muon_trackCharge);
    fChain->SetBranchAddress("Muon_pdgid", &Muon_pdgid, &b_Muon_pdgid);
    fChain->SetBranchAddress("Muon_B", &Muon_B, &b_Muon_B);
    fChain->SetBranchAddress("Muon_M", &Muon_M, &b_Muon_M);
@@ -1642,6 +1674,7 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("Electron_HasMatchedConversions", &Electron_HasMatchedConversions, &b_Electron_HasMatchedConversions);
    fChain->SetBranchAddress("RhoIsolationAllInputTags", &RhoIsolationAllInputTags, &b_RhoIsolationAllInputTags);
    fChain->SetBranchAddress("Electron_charge", &Electron_charge, &b_Electron_charge);
+   fChain->SetBranchAddress("Electron_trackCharge", &Electron_trackCharge, &b_Electron_trackCharge);
    fChain->SetBranchAddress("Electron_pdgid", &Electron_pdgid, &b_Electron_pdgid);
    fChain->SetBranchAddress("Electron_B", &Electron_B, &b_Electron_B);
    fChain->SetBranchAddress("Electron_M", &Electron_M, &b_Electron_M);
@@ -1784,6 +1817,10 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("PFJet_TracksP4", &PFJet_TracksP4, &b_PFJet_TracksP4);
    fChain->SetBranchAddress("PFJet_nTrk", &PFJet_nTrk, &b_PFJet_nTrk);
    fChain->SetBranchAddress("PFJet_JECuncertainty", &PFJet_JECuncertainty, &b_PFJet_JECuncertainty);
+   fChain->SetBranchAddress("PFJet_GenJet_p4", &PFJet_GenJet_p4, &b_PFJet_GenJet_p4);
+   fChain->SetBranchAddress("PFJet_GenJet_Constituents_p4", &PFJet_GenJet_Constituents_p4, &b_PFJet_GenJet_Constituents_p4);
+   fChain->SetBranchAddress("PFJet_GenJetNoNu_p4", &PFJet_GenJetNoNu_p4, &b_PFJet_GenJetNoNu_p4);
+   fChain->SetBranchAddress("PFJet_GenJetNoNu_Constituents_p4", &PFJet_GenJetNoNu_Constituents_p4, &b_PFJet_GenJetNoNu_Constituents_p4);
    fChain->SetBranchAddress("isPatMET", &isPatMET, &b_isPatMET);
    fChain->SetBranchAddress("MET_Uncorr_et", &MET_Uncorr_et, &b_MET_Uncorr_et);
    fChain->SetBranchAddress("MET_Uncorr_pt", &MET_Uncorr_pt, &b_MET_Uncorr_pt);
@@ -2017,6 +2054,12 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("GenEventInfoProduct_qScale", &GenEventInfoProduct_qScale, &b_GenEventInfoProduct_qScale);
    fChain->SetBranchAddress("GenEventInfoProduct_alphaQED", &GenEventInfoProduct_alphaQED, &b_GenEventInfoProduct_alphaQED);
    fChain->SetBranchAddress("GenEventInfoProduct_alphaQCD", &GenEventInfoProduct_alphaQCD, &b_GenEventInfoProduct_alphaQCD);
+   fChain->SetBranchAddress("GenEventInfoProduct_id1", &GenEventInfoProduct_id1, &b_GenEventInfoProduct_id1);
+   fChain->SetBranchAddress("GenEventInfoProduct_id2", &GenEventInfoProduct_id2, &b_GenEventInfoProduct_id2);
+   fChain->SetBranchAddress("GenEventInfoProduct_x1", &GenEventInfoProduct_x1, &b_GenEventInfoProduct_x1);
+   fChain->SetBranchAddress("GenEventInfoProduct_x2", &GenEventInfoProduct_x2, &b_GenEventInfoProduct_x2);
+   fChain->SetBranchAddress("GenEventInfoProduct_scalePDF", &GenEventInfoProduct_scalePDF, &b_GenEventInfoProduct_scalePDF);
+   fChain->SetBranchAddress("PdfWeights", &PdfWeights, &b_PdfWeights);
    fChain->SetBranchAddress("MC_p4", &MC_p4, &b_MC_p4);
    fChain->SetBranchAddress("MC_pdgid", &MC_pdgid, &b_MC_pdgid);
    fChain->SetBranchAddress("MC_charge", &MC_charge, &b_MC_charge);

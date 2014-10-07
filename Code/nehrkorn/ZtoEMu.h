@@ -7,6 +7,7 @@
 #include "TF1.h"
 #include "TGraphAsymmErrors.h"
 #include "ReferenceScaleFactors.h"
+#include "PDFweights.h"
 
 class ZtoEMu : public Selection {
 
@@ -23,10 +24,9 @@ class ZtoEMu : public Selection {
 		 NE,
 		 ptthreshold,
 		 mll,
-		 diMuonVeto,
 		 triLeptonVeto,
 		 charge,
-		 jetVeto,
+		 oneJet,
 		 MtMu,
 	     ptBalance,
 	     ZMassmax,
@@ -78,7 +78,6 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> invmass_vetos_m;
   std::vector<TH1D> invmass_only_object_id_m;
 
-  std::vector<TH1D> invmass_dimuon_only;
   std::vector<TH1D> invmass_trilepton_only;
   std::vector<TH1D> invmass_charge_only;
   std::vector<TH1D> invmass_jetveto_only;
@@ -133,152 +132,73 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> ptbal_chargepass;
   std::vector<TH1D> ptbal_chargefail;
 
-  std::vector<TH1D> Dxy_trig;
-  std::vector<TH1D> Dz_trig;
-  std::vector<TH1D> Dxy_nontrig;
-  std::vector<TH1D> Dz_nontrig;
-  std::vector<TH1D> Dxy_trignoip;
-  std::vector<TH1D> Dz_trignoip;
   std::vector<TH2D> eta_mu_e;
   std::vector<TH2D> pt_vs_eta_mu;
   std::vector<TH2D> pt_vs_eta_e;
   std::vector<TH1D> nfakes;
+  std::vector<TH2D> pt_vs_eta_mu_gen;
+  std::vector<TH2D> pt_vs_eta_e_gen;
+  std::vector<TH1D> mll_gen;
+  std::vector<TH1D> higgs_mass;
+  std::vector<TH1D> ht_pseudo;
+  std::vector<TH1D> zmass_zoom;
+  std::vector<TH2D> mtmu_vs_ptbal;
+  std::vector<TH2D> met_vs_ptbal;
+  std::vector<TH2D> met_vs_mtmu;
+  std::vector<TH1D> invmass_high;
+  std::vector<TH1D> ptsum;
+  std::vector<TH1D> ptsum_nm0;
+  std::vector<TH1D> mvamet;
+  std::vector<TH1D> mva_mtmu;
+
+  std::vector<TH1D> pdf_w0;
+  std::vector<TH1D> pdf_w1;
 
   double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,singlejet,zmin,zmax,mtmu,ptbalance,mmin;
   int n_mu,n_e;
   bool doHiggsObjects;
   bool doWWObjects;
   bool useMadgraphZ;
+  bool doPDFuncertainty;
+  TString mucorr, ecorr, jetcorr;
   
   double csvl,csvm,csvt;
+
+  TString pdfname1;
+  TString pdfname2;
+  PDFweights* pdf;
+  int nPDFmembers;
 
   double calculatePzeta(int muiterator, int eiterator);
   double calculatePzetaDQM(int muiterator, int eiterator);
   double cosphi2d(double px1, double py1, double px2, double py2);
   double cosphi3d(TVector3 vec1, TVector3 vec2);
   int findBin(TGraphAsymmErrors* graph, double xval);
-  int nCutsAboveZero(int id);
   
-  bool isHiggsMuon(unsigned int idx, unsigned int vtx);
-  bool isFakeMuon(unsigned int idx);
-  bool isFakeMuon(unsigned int idx, unsigned int vtx);
-  bool isHiggsElectron(unsigned int idx, unsigned int vtx);
-  bool isWWElectron(unsigned int idx, unsigned int vtx);
-  bool isLooseElectron(unsigned int idx);
-  bool isFakeElectron(unsigned int idx);
-  bool isFakeElectron(unsigned int idx, unsigned int vtx);
-  
-  double MuonIDeff(unsigned int idx);
-  double MuonIDerrUp(unsigned int idx);
-  double MuonIDerrDown(unsigned int idx);
-  double MuonHiggsIDeff(unsigned int idx);
-  double MuonTriggerEff(unsigned int idx);
-  double MuonTriggerErr(unsigned int idx);
-  double ElectronIDeff(unsigned int idx, std::string id);
-  double ElectronIDerr(unsigned int idx, std::string id);
-  double ElectronTrigIDeff(unsigned int idx);
-  double ElectronTrigIDerr(unsigned int idx);
-  double ElectronNonTrigIDeff(unsigned int idx);
-  double ElectronNonTrigIDerr(unsigned int idx);
-  double ElectronHiggsIDeff(unsigned int idx);
-  double ElectronTriggerEff(unsigned int idx);
-  double ElectronTriggerErr(unsigned int idx);
-  double ElectronEmbeddedEff(unsigned int idx);
-  double ElectronReconstructionEff(unsigned int idx);
-  double ElectronReconstructionErr(unsigned int idx);
-  
-  double TriggerEff(unsigned int muid, unsigned int eid, TString path);
-  double SingleEle(unsigned int idx);
-  double DoubleEleLeading(unsigned int idx);
-  double DoubleEleTrailing(unsigned int idx);
-  double SingleMu(unsigned int idx);
-  double DoubleMuLeading(unsigned int idx);
-  double DoubleMuTrailing(unsigned int idx);
+  bool isFakeMuon(unsigned int idx, TString corr="");
+  bool isFakeMuon(unsigned int idx, unsigned int vtx, TString corr="");
+  bool isWWElectron(unsigned int idx, unsigned int vtx, TString corr="");
+  bool isFakeElectron(unsigned int idx, TString corr="");
+  bool isFakeElectron(unsigned int idx, unsigned int vtx, TString corr="");
 
-  double TrackingEff(double eta);
-
-  double ElectronMassScale(unsigned int idx);
   double ZPtReweight(double zpt);
   double PowhegReweight(double zpt);
-  double CorrectJER(unsigned int idx);
-  double JetEnergyResolutionCorr(double jeteta);
-  double JetEnergyResolutionCorrErr(double jeteta);
-  TLorentzVector GenJet(unsigned int recjet);
 
-  double Fakerate(TLorentzVector vec, TH2D *fakeRateHist, std::string type);
-  double FakerateWW(unsigned int idx, std::string type);
-  double FakerateWWerror(unsigned int idx, std::string type);
+  double Fakerate(double pt, double eta, TH2D *fakeRateHist);
+  double FakerateError(double pt, double eta, TH2D *fakeRateHist);
   
   TFile* FRFile;
-  TFile* EmbEffFile;
   TFile* ZptCorrFile;
   TH1D* ZptCorrection;
-  TH2D* ElectronFakeRate;
-  TH2D* MuonFakeRate;
-  TH2D* EmbEff;
+  TH2D* ElectronFakeRate35;
+  TH2D* ElectronFakeRate20;
+  TH2D* ElectronFakeRate50;
+  TH2D* MuonFakeRate15;
+  TH2D* MuonFakeRate5;
+  TH2D* MuonFakeRate30;
   double fakeRate;
   double fakeRateMu;
   double fakeRateE;
-  
-  TFile* MuIdEffFile;
-  TFile* MuIsoEffFile;
-  TFile* ETrigIdEffFile;
-  TFile* ENonTrigIdEffFile;
-  TFile* TriggerEfficiencies;
-  TFile* FakeRates;
-  TFile* ERecoEffFile;
-
-  TH2D* ElectronTrigEff;
-  TH2D* ElectronNonTrigEff;
-  TH2D* ElectronRecoEff;
-  TGraphAsymmErrors* MuIdEff09;
-  TGraphAsymmErrors* MuIdEff12;
-  TGraphAsymmErrors* MuIdEff21;
-  TGraphAsymmErrors* MuIdEff24;
-  TGraphAsymmErrors* MuIsoEff09;
-  TGraphAsymmErrors* MuIsoEff12;
-  TGraphAsymmErrors* MuIsoEff21;
-  TGraphAsymmErrors* MuIsoEff24;
-
-  TH1D* SingleEle15;
-  TH1D* SingleEle25;
-  TH1D* DoubleEleLead15;
-  TH1D* DoubleEleLead25;
-  TH1D* DoubleEleTrail15;
-  TH1D* DoubleEleTrail25;
-  TH1D* SingleMu08;
-  TH1D* SingleMu12;
-  TH1D* SingleMu21;
-  TH1D* SingleMu25;
-  TH1D* DoubleMuLead12;
-  TH1D* DoubleMuLead21;
-  TH1D* DoubleMuLead25;
-  TH1D* DoubleMuTrail12;
-  TH1D* DoubleMuTrail21;
-  TH1D* DoubleMuTrail25;
-
-  TGraphAsymmErrors* EleFake1;
-  TGraphAsymmErrors* EleFake15;
-  TGraphAsymmErrors* EleFake2;
-  TGraphAsymmErrors* EleFake25;
-  TGraphAsymmErrors* MuFake1;
-  TGraphAsymmErrors* MuFake15;
-  TGraphAsymmErrors* MuFake2;
-  TGraphAsymmErrors* MuFake25;
-
-  // for scale and resolution studies
-  std::vector<TLorentzVector> muons;
-  std::vector<TLorentzVector> electrons;
-  std::vector<TLorentzVector> jets;
-  TF1* gauseb;
-  TF1* gausee;
-  TF1* gausmu;
-  TH1D* eresb;
-  TH1D* erese;
-  TH1D* mures;
-  double eleresb;
-  double elerese;
-  double muonres;
 
 };
 #endif

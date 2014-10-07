@@ -139,12 +139,12 @@ unsigned int HistoConfig::GetNHisto(){
 }
 
 TString HistoConfig::GetName(unsigned int i){
-  if(i<=0 && i<HistoName.size()) return HistoName.at(i);
+  if(i>=0 && i<HistoName.size()) return HistoName.at(i);
   return "unknown";
 }
 
 TString HistoConfig::GetLeg(unsigned int i){
-  if(i<=0 && i<HistoLegend.size()) return HistoLegend.at(i);
+  if(i>=0 && i<HistoLegend.size()) return HistoLegend.at(i);
   return "unknown";
 }
 

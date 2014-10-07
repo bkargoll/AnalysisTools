@@ -17,6 +17,7 @@ SHELL = /bin/sh
 SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple 
 SHAREDCXXFLAGS =-I./CommonUtils 
 SUBDIRS = CommonUtils/ 
+TAUSPINERFLAG = 
 
 CXXFLAGS      = -I$(ROOTSYS)/include -c -I/include $(SHAREDCXXFLAGS) -c -I./ -c
 LDFLAGS       =  
@@ -44,7 +45,8 @@ TARGETS       =	Ntuple_Controller \
 		TauSolver \
 		TauSpinExample \
 		TauSpinerInterface \
-		ReferenceScaleFactors
+		ReferenceScaleFactors \
+		rochcor2012jan22
 
 # now include conditional options set by flags in make.inc
 ifdef USE_TauSpinner
@@ -77,7 +79,13 @@ ifdef USE_kargoll
 endif 
 
 ifdef USE_nehrkorn
-	TARGETS += ZtoEMu ZtoEMu_Skim ZtoEMu_Fakerate ZtoEMu_Wjets ZtoEMu_QCD
+ifndef USE_TauSpinner
+	TAUSPINERFLAG = LHAPDF
+	SUBDIRS += TauSpiner/
+	SHAREDLIBFLAGS +=	-L./TauSpiner/lhapdf/lib -lLHAPDF
+	SHAREDCXXFLAGS +=	-I./TauSpiner/lhapdf/include/
+endif
+	TARGETS += PDFweights ZtoEMu ZtoEMu_Skim
 	DEFS += -DUSE_nehrkorn=1
 endif
 
@@ -108,6 +116,8 @@ vpath %.cxx kargoll
 vpath %.h kargoll
 vpath %.cxx nehrkorn
 vpath %.h nehrkorn
+vpath %.cxx CommonFiles
+vpath %.h CommonFiles
 
 #	@$(LD) $(LDFLAGS) $(OBJS) $(LIBS) -o ../$(PROGRAM)
 
@@ -140,7 +150,13 @@ all: sharedlib install
 sharedlib:
 	@for subdir in $(SUBDIRS); do \
 		echo "Making all in $$subdir"; \
-		cd $$subdir && $(MAKE) -f Makefile.standalone && cd ../ && pwd; \
+		if [ $$subdir == "TauSpiner/" ]; then \
+			echo with flag; \
+			cd $$subdir && $(MAKE) -f Makefile.standalone $(TAUSPINERFLAG) && cd ../ && pwd; \
+		else \
+			echo without flag ; \
+			cd $$subdir && $(MAKE) -f Makefile.standalone && cd ../ && pwd; \
+		fi \
 	done
 	$(install)
 

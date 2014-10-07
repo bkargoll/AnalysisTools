@@ -44,6 +44,9 @@
 #include "SimpleFits/FitSoftware/interface/ErrorMatrixPropagator.h"
 #include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
 
+// Rochester muon momentum correction
+#include "CommonFiles/rochcor2012jan22.h"
+
 // small struct needed to allow sorting indices by some value
 struct sortIdxByValue {
     bool operator()(const std::pair<int,double> &left, const std::pair<int,double> &right) {
@@ -214,7 +217,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   float        Vtx_ndof(unsigned int i){return Ntp->Vtx_ndof->at(i);}
   TMatrixF     Vtx_Cov(unsigned int i);
   std::vector<int>  Vtx_Track_idx(unsigned int i){return Ntp->Vtx_Track_idx->at(i);}
-  float Vtx_isFake(unsigned int i){return Ntp->Vtx_isFake->at(i);}
+  bool Vtx_isFake(unsigned int i){return Ntp->Vtx_isFake->at(i);}
   TLorentzVector Vtx_TracksP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->Vtx_TracksP4->at(i).at(j).at(1),Ntp->Vtx_TracksP4->at(i).at(j).at(2),Ntp->Vtx_TracksP4->at(i).at(j).at(3),Ntp->Vtx_TracksP4->at(i).at(j).at(0));}
 
   bool isVtxGood(unsigned int i);
@@ -256,6 +259,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   float          Muon_numberOfMatches(unsigned int i){return Ntp->Muon_numberOfMatches->at(i);}
   int            Muon_numberOfChambers(unsigned int i){return Ntp->Muon_numberOfChambers->at(i);}
   int            Muon_Charge(unsigned int i){return Ntp->Muon_charge->at(i);}
+  int            Muon_trackCharge(unsigned int i){return Ntp->Muon_trackCharge->at(i);}
 
   bool           Muon_isPFMuon(unsigned int i){return Ntp->Muon_isPFMuon->at(i);}                                                     
   float          Muon_sumChargedHadronPt03(unsigned int i){return Ntp->Muon_sumChargedHadronPt03->at(i);}                             // sum-pt of charged Hadron					                               
@@ -296,10 +300,11 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   bool           isGoodMuon_nooverlapremoval(unsigned int i);
 
   bool			 isTightMuon(unsigned int i);
-  bool			 isTightMuon(unsigned int i, unsigned int j);
-  bool           isSelectedMuon(unsigned int i, unsigned int j, double impact_xy, double impact_z);
+  bool			 isTightMuon(unsigned int i, unsigned int j, TString corr="");
+  bool           isSelectedMuon(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr="");
   bool			 isLooseMuon(unsigned int i);
-  float          Muon_RelIso(unsigned int i);
+  float          Muon_RelIso(unsigned int i, TString corr="");
+  rochcor2012*   rmcor;
 
 
   //Base Tau Information (PF)
@@ -481,11 +486,17 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              PFJet_neutralEmEnergyFraction(unsigned int i){return Ntp->PFJet_neutralEmEnergyFraction->at(i);}
    bool               isGoodJet(unsigned int i);
    bool               isGoodJet_nooverlapremoval(unsigned int i);
-   bool               isJetID(unsigned int i);
+   bool               isJetID(unsigned int i, TString corr="");
    float              PFJet_nTrk(unsigned int i){return Ntp->PFJet_nTrk->at(i);}
    TLorentzVector     PFJet_TracksP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_TracksP4->at(i).at(j).at(1),Ntp->PFJet_TracksP4->at(i).at(j).at(2),Ntp->PFJet_TracksP4->at(i).at(j).at(3),Ntp->PFJet_TracksP4->at(i).at(j).at(0));}
    int                PFJet_nTracks(unsigned int i){return Ntp->PFJet_TracksP4->at(i).size();}
    float			  PFJet_JECuncertainty(unsigned int i){return Ntp->PFJet_JECuncertainty->at(i);}
+   unsigned int       PFJet_NGenJets(){return Ntp->PFJet_GenJet_p4->size();}
+   unsigned int       PFJet_NGenJetsNoNu(){return Ntp->PFJet_GenJetNoNu_p4->size();}
+   TLorentzVector     PFJet_GenJet_p4(unsigned int i){return TLorentzVector(Ntp->PFJet_GenJet_p4->at(i).at(1),Ntp->PFJet_GenJet_p4->at(i).at(2),Ntp->PFJet_GenJet_p4->at(i).at(3),Ntp->PFJet_GenJet_p4->at(i).at(0));}
+   TLorentzVector     PFJet_GenJet_Constituents_p4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_GenJet_Constituents_p4->at(i).at(j).at(1),Ntp->PFJet_GenJet_Constituents_p4->at(i).at(j).at(2),Ntp->PFJet_GenJet_Constituents_p4->at(i).at(j).at(3),Ntp->PFJet_GenJet_Constituents_p4->at(i).at(j).at(0));}
+   TLorentzVector     PFJet_GenJetNoNu_p4(unsigned int i){return TLorentzVector(Ntp->PFJet_GenJetNoNu_p4->at(i).at(1),Ntp->PFJet_GenJetNoNu_p4->at(i).at(2),Ntp->PFJet_GenJetNoNu_p4->at(i).at(3),Ntp->PFJet_GenJetNoNu_p4->at(i).at(0));}
+   TLorentzVector     PFJet_GenJetNoNu_Constituents_p4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(1),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(2),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(3),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(0));}
 
    float              PFJet_PUJetID_discr(unsigned int i){return Ntp->PFJet_PUJetID_discr->at(i);}
    float              PFJet_PUJetID_looseWP(unsigned int i){return Ntp->PFJet_PUJetID_looseWP->at(i);}
@@ -497,6 +508,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    //float              PFJet_BTagWeight(unsigned int i){return Ntp->PFJet_BTagWeight->at(i);} // not implemented at the moment
 
    double 			  rundependentJetPtCorrection(double jeteta, int runnumber);
+   double             JERCorrection(TLorentzVector jet, double dr=0.25, TString unc=""); // dr=0.25 from AN2013_416_v4
+   TLorentzVector     PFJet_matchGenJet(TLorentzVector jet, double dr);
+   double             JetEnergyResolutionCorr(double jeteta);
+   double             JetEnergyResolutionCorrErr(double jeteta);
 
    //MET information
    float              MET_Uncorr_et(){return Ntp->MET_Uncorr_et;}
@@ -736,25 +751,25 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    bool isTrigPreselElectron(unsigned int i);
    bool isTrigNoIPPreselElectron(unsigned int i);
-   bool isMVATrigElectron(unsigned int i);
-   bool isMVATrigNoIPElectron(unsigned int i);
-   bool isMVANonTrigElectron(unsigned int i, unsigned int j);
-   bool isTightElectron(unsigned int i);
-   bool isTightElectron(unsigned int i, unsigned int j);
-   float Electron_RelIso03(unsigned int i);
-   float Electron_RelIso04(unsigned int i);
+   bool isMVATrigElectron(unsigned int i, TString corr="");
+   bool isMVATrigNoIPElectron(unsigned int i, TString corr="");
+   bool isMVANonTrigElectron(unsigned int i, unsigned int j, TString corr="");
+   bool isTightElectron(unsigned int i, TString corr="");
+   bool isTightElectron(unsigned int i, unsigned int j, TString corr="");
+   float Electron_RelIso03(unsigned int i, TString corr="");
+   float Electron_RelIso04(unsigned int i, TString corr="");
    float Electron_Aeff_R04(double Eta);
    float Electron_Aeff_R03(double Eta);
-   bool isSelectedElectron(unsigned int i, unsigned int j, double impact_xy, double impact_z);
+   bool isSelectedElectron(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr="");
 
    // Trigger
    bool         TriggerAccept(TString n);
    unsigned int HLTPrescale(TString n);
    unsigned int L1SEEDPrescale(TString n);
    bool         GetTriggerIndex(TString n, unsigned int &i);
-   double 		matchTrigger(unsigned int i_obj, std::vector<TString> trigger, std::string objectType);
-   bool 		matchTrigger(unsigned int i_obj, double dr_cut, std::vector<TString> trigger, std::string objectType);
-   bool			matchTrigger(unsigned int i_obj, double dr_cut, TString trigger, std::string objectType);
+   double 		matchTrigger(TLorentzVector obj, std::vector<TString> trigger, std::string objectType);
+   bool 		matchTrigger(TLorentzVector obj, double dr_cut, std::vector<TString> trigger, std::string objectType);
+   bool			matchTrigger(TLorentzVector obj, double dr_cut, TString trigger, std::string objectType);
    unsigned int NHLTTriggers(){return Ntp->HTLTriggerName->size();}
    std::string  HTLTriggerName(unsigned int i){return Ntp->HTLTriggerName->at(i);}
    bool         TriggerAccept(unsigned int i){return Ntp->TriggerAccept->at(i);}
@@ -789,6 +804,13 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::vector<int> sortObjects(std::vector<int> indices, std::vector<double> values);
    std::vector<int> sortPFJetsByPt();
    std::vector<int> sortDefaultObjectsByPt(TString objectType);
+
+   int          GenEventInfoProduct_id1(){return Ntp->GenEventInfoProduct_id1;}
+   int          GenEventInfoProduct_id2(){return Ntp->GenEventInfoProduct_id2;}
+   float        GenEventInfoProduct_x1(){return Ntp->GenEventInfoProduct_x1;}
+   float        GenEventInfoProduct_x2(){return Ntp->GenEventInfoProduct_x2;}
+   float        GenEventInfoProduct_scalePDF(){return Ntp->GenEventInfoProduct_scalePDF;}
+   double       PdfWeight(unsigned int i, unsigned j){return Ntp->PdfWeights->at(i).at(j);}
 
 };
 

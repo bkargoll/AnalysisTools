@@ -782,7 +782,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
 }
 
 void  HToTaumuTauh::doEvent(){
-  if (verbose) std::cout << "HToTaumuTauh::doEvent()" << std::endl;
+  if (verbose) std::cout << "HToTaumuTauh::doEvent() >>>>>>>>>>>>>>>>" << std::endl;
   // set variables to hold selected objects to default values
   selVertex = -1;
   selMuon = -1;
@@ -808,6 +808,7 @@ void  HToTaumuTauh::doEvent(){
   // Apply Selection
 
   // Vertex
+  if (verbose) std::cout << "	Cut: Vertex" << std::endl;
   unsigned int nGoodVtx=0;
   for(unsigned int i_vtx=0;i_vtx<Ntp->NVtx();i_vtx++){
     if(Ntp->isGoodVtx(i_vtx)){
@@ -820,6 +821,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
   
   // Trigger
+  if (verbose) std::cout << "	Cut: Trigger" << std::endl;
   value.at(TriggerOk) = -1;
   for (std::vector<TString>::iterator it_trig = cTriggerNames.begin(); it_trig != cTriggerNames.end(); ++it_trig){
 	  if(Ntp->TriggerAccept(*it_trig)){
@@ -832,6 +834,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(TriggerOk) = (value.at(TriggerOk) >= cut.at(TriggerOk));
   
   // Muon cuts
+  if (verbose) std::cout << "	Cut: Muon ID" << std::endl;
   std::vector<int> selectedMuonsId;
   selectedMuonsId.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -842,6 +845,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NMuId)=selectedMuonsId.size();
   pass.at(NMuId)=(value.at(NMuId)>=cut.at(NMuId));
 
+  if (verbose) std::cout << "	Cut: Muon Kinematics" << std::endl;
   std::vector<int> selectedMuons;	// full selection: ID and Kinematics
   selectedMuons.clear();
   for(std::vector<int>::iterator it_mu = selectedMuonsId.begin(); it_mu != selectedMuonsId.end(); ++it_mu){
@@ -853,6 +857,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(NMuKin)=(value.at(NMuKin)>=cut.at(NMuKin));
 
   // muons for QCD background method
+  if (verbose) std::cout << "	QCD Muons" << std::endl;
   std::vector<int> antiIsoMuons;
   antiIsoMuons.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -862,11 +867,13 @@ void  HToTaumuTauh::doEvent(){
   }
   bool hasAntiIsoMuon = (antiIsoMuons.size() > 0);
 
+  if (verbose) std::cout << "	select Muon" << std::endl;
   if (selectedMuons.size() > 0)
 	  selMuon = selectedMuons.at(0); // use signal muon
   if (selectedMuons.size() <= 0 && hasAntiIsoMuon)
 	  selMuon = antiIsoMuons.at(0); // for background methods: use anti-iso muon
 
+  if (verbose) std::cout << "	Cut: Di-muon Veto" << std::endl;
   std::vector<int> diMuonVetoMuonsPositive;	// muons selected for the dimuon veto
   diMuonVetoMuonsPositive.clear();
   std::vector<int> diMuonVetoMuonsNegative;	// muons selected for the dimuon veto
@@ -902,6 +909,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(DiMuonVeto) = (value.at(DiMuonVeto) < cut.at(DiMuonVeto));
 
   // Tau cuts
+  if (verbose) std::cout << "	Cut: Tau ID" << std::endl;
   std::vector<int> selectedTausId;
   selectedTausId.clear();
   for(unsigned i_tau=0; i_tau < Ntp->NPFTaus(); i_tau++){
@@ -912,6 +920,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NTauId)=selectedTausId.size();
   pass.at(NTauId)=(value.at(NTauId)>=cut.at(NTauId));
 
+  if (verbose) std::cout << "	Cut: Tau Iso" << std::endl;
   std::vector<int> selectedTausIso;
   selectedTausIso.clear();
   for(std::vector<int>::iterator it_tau = selectedTausId.begin(); it_tau != selectedTausId.end(); ++it_tau){
@@ -922,6 +931,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NTauIso)=selectedTausIso.size();
   pass.at(NTauIso)=(value.at(NTauIso)>=cut.at(NTauIso));
 
+  if (verbose) std::cout << "	Cut: Tau Kinematics" << std::endl;
   std::vector<int> selectedTaus;
   selectedTaus.clear();
   for(std::vector<int>::iterator it_tau = selectedTausIso.begin(); it_tau != selectedTausIso.end(); ++it_tau){
@@ -933,6 +943,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(NTauKin)=(value.at(NTauKin)>=cut.at(NTauKin));
 
   // taus for QCD background method
+  if (verbose) std::cout << "	QCD Taus" << std::endl;
   std::vector<int> relaxedIsoTaus;
   relaxedIsoTaus.clear();
   for(unsigned i_tau=0; i_tau < Ntp->NPFTaus(); i_tau++){
@@ -942,12 +953,14 @@ void  HToTaumuTauh::doEvent(){
   }
   bool hasRelaxedIsoTau = (relaxedIsoTaus.size() > 0);
 
+  if (verbose) std::cout << "	select Tau" << std::endl;
   if(selectedTaus.size() > 0)
 	  selTau = selectedTaus.at(0); // use signal tau
   if(selectedTaus.size() <= 0 && hasRelaxedIsoTau)
 	  selTau = relaxedIsoTaus.at(0); // relaxed isolation tau
 
   // Tri-lepton veto
+  if (verbose) std::cout << "	Cut: Tri-lepton veto" << std::endl;
   std::vector<int> triLepVetoMuons;
   triLepVetoMuons.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -966,6 +979,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(TriLeptonVeto) = (value.at(TriLeptonVeto) <= cut.at(TriLeptonVeto));
 
   // Opposite charge
+  if (verbose) std::cout << "	Cut: Opposite Charge" << std::endl;
   if (selMuon != -1 && selTau != -1){
 	  value.at(OppCharge) = Ntp->Muon_Charge(selMuon) + Ntp->PFTau_Charge(selTau);
   }
@@ -979,6 +993,7 @@ void  HToTaumuTauh::doEvent(){
 	  pass.at(OppCharge) = (value.at(OppCharge) == cut.at(OppCharge));
 
   // Transverse mass
+  if (verbose) std::cout << "	Cut: transverse mass" << std::endl;
   if(selMuon == -1){ // no good muon in event: set MT to small dummy value -10 -> pass cut
 	  value.at(MT) = -10.0;
   }
@@ -995,6 +1010,7 @@ void  HToTaumuTauh::doEvent(){
 	  pass.at(MT) = (value.at(MT) < cut.at(MT));
 
   // sort jets by corrected pt
+  if (verbose) std::cout << "	select Jets" << std::endl;
   std::vector<int> sortedPFJets = Ntp->sortDefaultObjectsByPt("Jets");
   // select jets for categories
   // PFJet and bjet collections can have mutual elements!
@@ -1024,6 +1040,7 @@ void  HToTaumuTauh::doEvent(){
   selBJets = selectedBJets;
 
   // b-Jet veto
+  if (verbose) std::cout << "	Cut: b-jet veto" << std::endl;
   value.at(BJetVeto) = selectedBJets.size();
   pass.at(BJetVeto) = (value.at(BJetVeto) <= cut.at(BJetVeto));
 
@@ -1034,6 +1051,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // calculate pt of higgs candidatef
+  if (verbose) std::cout << "	calculate Higgs pT" << std::endl;
   double higgsPt = -10;
   double higgsPhi = -10;
   if (selMuon != -1 && selTau != -1){
@@ -1046,6 +1064,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // calculate jet-related variables used by categories
+  if (verbose) std::cout << "	calculate VBF Jet variables" << std::endl;
   unsigned nJets = selectedJets.size();
 
   if (nJets >= 2){
@@ -1077,6 +1096,7 @@ void  HToTaumuTauh::doEvent(){
   setStatusBooleans();
 
   // remove some cuts for smoother WJet shape
+  if (verbose) std::cout << "	WJet shape" << std::endl;
   bool isWJetMC = (Ntp->GetMCID() >= DataMCType::W_lnu) && (Ntp->GetMCID() <= DataMCType::W_taunu);
   bool useRelaxedForPlots =  (wJetsBGSource == "Data") && isWJetMC; // overwrite pass-vector with relaxed categories (for WJets shape) only if wanted
   if (useRelaxedForPlots) {
@@ -1091,6 +1111,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // QCD background method
+  if (verbose) std::cout << "	QCD shape" << std::endl;
   bool isSS = ( abs(value.at(OppCharge)) == 2 );
   // use anti-iso muons and SS for QCD shape
   bool isQCDShapeEvent = passedFullInclusiveNoTauNoMuNoCharge && passedTau && !passedMu && hasAntiIsoMuon && isSS;
@@ -1108,6 +1129,7 @@ void  HToTaumuTauh::doEvent(){
   setStatusBooleans();
 
   // run categories
+  if (verbose) std::cout << "	run Categories" << std::endl;
   bool passed_VBFTight		= category_VBFTight(nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
   bool passed_VBFLoose		= category_VBFLoose(nJets, selJetdeta, selNjetingap, selMjj, passed_VBFTight);
   bool passed_VBF = passed_VBFTight || passed_VBFLoose;
@@ -1155,6 +1177,7 @@ void  HToTaumuTauh::doEvent(){
   // Add plots
   ///////////////////////////////////////////////////////////
 
+  if (verbose) std::cout << "	Fill Plots" << std::endl;
   //////// plots filled before any cuts
   // Vertex plots
   NVtx.at(t).Fill(Ntp->NVtx(),w);
@@ -1531,6 +1554,7 @@ void  HToTaumuTauh::doEvent(){
   //    C  |  D
   //   ---------> relIso(mu)
   //    A  |  B
+  if (verbose) std::cout << "	QCD Background plots (ABCD)" << std::endl;
   if (passedFullInclusiveNoTauNoMuNoCharge){
 	  // veto events with signal muon AND antiIsoMuon, as in these cases mT etc. are calculated using the signal muon
 	  bool isA = pass.at(OppCharge) && passedObjects;
@@ -1733,7 +1757,7 @@ void HToTaumuTauh::Finish() {
 bool HToTaumuTauh::selectMuon_Id(unsigned i, unsigned vertex){
 	if(	Ntp->isSelectedMuon(i,vertex,cMu_dxy,cMu_dz) &&
 		Ntp->Muon_RelIso(i) < cMu_relIso &&
-		Ntp->matchTrigger(i,cTriggerNames,"muon") < cMu_dRHltMatch
+		Ntp->matchTrigger(Ntp->Muon_p4(i),cTriggerNames,"muon") < cMu_dRHltMatch
 			){
 		return true;
 	}
@@ -1753,7 +1777,7 @@ bool HToTaumuTauh::selectMuon_antiIso(unsigned i, unsigned vertex) {
 	if (Ntp->isSelectedMuon(i, vertex, cMu_dxy, cMu_dz) &&
 		Ntp->Muon_RelIso(i) <= 0.5 &&
 		Ntp->Muon_RelIso(i) >= 0.2 &&
-		Ntp->matchTrigger(i, cTriggerNames, "muon") < cMu_dRHltMatch &&
+		Ntp->matchTrigger(Ntp->Muon_p4(i), cTriggerNames, "muon") < cMu_dRHltMatch &&
 		selectMuon_Kinematics(i)) {
 		return true;
 	}
@@ -1831,7 +1855,7 @@ bool HToTaumuTauh::selectPFTau_Id(unsigned i, std::vector<int> muonCollection){
 	  }
 	}
 	// trigger matching
-	if (Ntp->matchTrigger(i,cTriggerNames,"tau") > cMu_dRHltMatch) {
+	if (Ntp->matchTrigger(Ntp->PFTau_p4(i),cTriggerNames,"tau") > cMu_dRHltMatch) {
 		return false;
 	}
 

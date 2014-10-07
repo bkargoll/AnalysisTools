@@ -108,13 +108,10 @@ else
 	    mkdir build install
 	    cd ../../
 	fi 
-        # use cvs version since CERN version is 3.6G and wget is corrupted --- hopefully can be fiex later
-        #wget http://www.hepforge.org/downloads/lhapdf/lhapdf-5.8.6.tar.gz
-        #wget http://www.hepforge.org/archive/lhapdf/pdfsets/current/MSTW2008nnlo90cl.LHgrid
 	lhapdf=$(ls TauSpiner/* | grep  lhapdf | wc -l)
-	if [ $lhapdf == 1 ]; then
-	    cd TauSpiner
-	    tar -xzvf lhapdf-5.8.6.tgz
+	if [ $lhapdf == 0 ]; then
+		cd TauSpiner
+	    wget http://www.hepforge.org/archive/lhapdf/lhapdf-5.9.1.tar.gz
 	    cd ..
 	fi
 	pythia=$(ls TauSpiner/* | grep pythia8 | wc -l )

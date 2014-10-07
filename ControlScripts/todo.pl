@@ -825,6 +825,7 @@ if( $ARGV[0] eq "--GRID" ){
 			# Setup Set_$B.sh
 			system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			system(sprintf("echo \"echo 'Starting Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"export workdir=\\\"$OutputDir/workdir$set/\\\"\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Code/; source config \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-get.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
@@ -840,18 +841,19 @@ if( $ARGV[0] eq "--GRID" ){
 			system(sprintf("echo \"echo 'Completed Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 
-                        # Setup Set_$B-GRID.sh 
-                        system(sprintf("echo \"echo 'Starting Job'; ls; echo \\\$PWD \" > $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+            # Setup Set_$B-GRID.sh 
+            system(sprintf("echo \"echo 'Starting Job'; ls; echo \\\$PWD \" > $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo 'srmcp  srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set.tar file:////\$PWD/workdir$set.tar ; tar -xf workdir$set.tar; ' >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh  "));
 			system(sprintf("echo \"cp \\\$PWD/Inputgrid.txt \\\$PWD/Input.txt\" >>  $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh  "));
 			system(sprintf("echo \"cp -r \\\$PWD/Code/InputData/ \\\$PWD/InputData \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("chmod +x $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			#system(sprintf("echo \"source \\\$PWD/Set_$B-getGRID.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
-                        system(sprintf("echo \"cd Code/; chmod +x  \\\$PWD/config  \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
-                        system(sprintf("echo \"echo \\\$PWD | awk '{split(\\\$1,a,\\\"Code\\\"); print \\\"#! /bin/bash  \\n source \\\" \\\$1 \\\"/config --useRoot \\\" a[1] \\\"root/ \\\"}'  > \\\$PWD/junk; source \\\$PWD/junk; \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+            system(sprintf("echo \"cd Code/; chmod +x  \\\$PWD/config  \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+            system(sprintf("echo \"echo \\\$PWD | awk '{split(\\\$1,a,\\\"Code\\\"); print \\\"#! /bin/bash  \\n source \\\" \\\$1 \\\"/config --useRoot \\\" a[1] \\\"root/ \\\"}'  > \\\$PWD/junk; source \\\$PWD/junk; \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \" cd ../; echo \\\$PWD; ls  \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			#system(sprintf("echo \"chmod +x \\\$PWD/subs; \\\$PWD/subs '/user/scratch/$UserID' \\\$PWD Input.txt \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \"export LD_LIBRARY_PATH=\\\$LD_LIBRARY_PATH:\\\$ROOTSYS/lib/\" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
+			system(sprintf("echo \"export LHAPATH=\\\$PWD/Code/TauSpiner/lhapdf/share/lhapdf/PDFsets/\" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			system(sprintf("echo \"echo 'System Configured.'; printenv; ls ; echo \\\$PWD ; \\\$PWD/Code/Analysis.exe \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh"));
 			#
 			system(sprintf("echo \"if [ -f SKIMMED_NTUP.root ]; then \n \" >> $OutputDir/workdir$set/Set_$B/Set_$B-GRID.sh "));

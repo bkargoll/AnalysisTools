@@ -14,9 +14,9 @@ SHELL = /bin/sh
 ###                              ###
 ####################################
 
-.PHONY: clean install HEPMC LHAPDF PYTHIA8 TAUOLA LINKS 
+.PHONY: clean install HEPMC LHAPDF PYTHIA8 TAUOLA
 
-install: HEPMC LHAPDF PYTHIA8 TAUOLA LINKS
+install: HEPMC LHAPDF PYTHIA8 TAUOLA
 
 clean:
         @echo "============================="
@@ -31,11 +31,29 @@ HEPMC:
 	cd ../../;  
 
 LHAPDF:
-	@cd lhapdf/5.8.6/; \
-	./configure --prefix=${BASE}/lhapdf/; \
+	@tar xvfz lhapdf-5.9.1.tar.gz; \
+	cd lhapdf-5.9.1; \
+	./configure --prefix=${BASE}/lhapdf/ --libdir=${BASE}/lhapdf/lib/; \
 	make; \
 	make install; \
-	cd ../../; 
+	cd ../lhapdf/share/lhapdf; \
+	mkdir PDFsets; \
+	cd PDFsets; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 NNPDF23_nlo_as_0119.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 NNPDF23_nnlo_as_0119.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008lo68cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008nlo68cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008nnlo68cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008lo90cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008nlo90cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 MSTW2008nnlo90cl.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 CT10.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 CT10nlo.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 CT10nnlo.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 cteq66.LHgrid; \
+	../../../bin/lhapdf-getdata --repo=http://www.hepforge.org/archive/lhapdf/pdfsets/5.9.1 cteq6mE.LHgrid; \
+	wget http://cern.ch/alcaraz/cteq6ll.LHgrid; \
+	cd ../../../../../;
 
 PYTHIA8:
         @cd pythia8/176/; \
@@ -47,9 +65,3 @@ TAUOLA:
 	@cd tauola++/1.1.3/; \
 	 ./configure --with-hepmc=${BASE}/hepmc/install/ --with-pythia8libs=${BASE}/pythia8/176/ --with-lhapdf=${BASE}/lhapdf --with-tau-spinner ; \
 	make all; make install; 
-
-
-
-LINKS:
-	@ln -s ${BASE}/lhapdf/5.8.6/share/lhapdf/PDFsets/ ${BASE}/lhapdf/share/lhapdf/
-
