@@ -17,7 +17,7 @@ class HToTaumuTauh : public Selection {
   HToTaumuTauh(TString Name_, TString id_);
   virtual ~HToTaumuTauh();
 
-  virtual void  Configure();
+  virtual void Configure();
 
   enum cuts {
 	  TriggerOk=0,
@@ -91,6 +91,7 @@ class HToTaumuTauh : public Selection {
 	};
 
  protected:
+  virtual void Setup();
   virtual void doEvent();
   virtual void Store_ExtraDist();
   virtual void  Finish();
@@ -100,7 +101,6 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatFired;
 
   std::vector<TH1D> NVtx;
-  std::vector<TH1D> NVtxFullSelection;
   std::vector<TH1D> NGoodVtx;
   std::vector<TH1D> VtxZ;
   std::vector<TH1D> VtxRho;
@@ -118,12 +118,16 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MuSelPt;
   std::vector<TH1D> MuSelEta;
   std::vector<TH1D> MuSelPhi;
+  std::vector<TH1D> MuSelDxy;
+  std::vector<TH1D> MuSelDz;
+  std::vector<TH1D> MuSelRelIso;
   std::vector<TH1D> MuSelFakesTauID;
   std::vector<TH1D> MuSelDrHlt;
 
   std::vector<TH1D> TauPt;
   std::vector<TH1D> TauEta;
   std::vector<TH1D> TauPhi;
+  std::vector<TH1D> TauDecayMode;
   std::vector<TH1D> TauIso;
 
   std::vector<TH1D> TauSelPt;
@@ -193,7 +197,14 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> JetsInEtaGap;
   std::vector<TH1D> JetsInvM;
 
-  std::vector<TH1D> TauIsoFullSel;
+  std::vector<TH1D> MetPhiMet10GeV;
+  std::vector<TH1D> MtMet10GeV;
+  std::vector<TH1D> HiggsPtMet10GeV;
+  std::vector<TH1D> HiggsPhiMet10GeV;
+  std::vector<TH1D> MetPhiMet20GeV;
+  std::vector<TH1D> MtMet20GeV;
+  std::vector<TH1D> HiggsPtMet20GeV;
+  std::vector<TH1D> HiggsPhiMet20GeV;
 
   std::vector<TH1D> MtAfterMuon;
   std::vector<TH1D> MtAfterDiMuonVeto;
@@ -207,107 +218,20 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MtOnlyBJet;
   std::vector<TH1D> MtMuPlusOnly;
   std::vector<TH1D> MtMuMinusOnly;
+  std::vector<TH1D> MtMuPlusOnlyBGSubt;
+  std::vector<TH1D> MtMuMinusOnlyBGSubt;
+  std::vector<TH1D> Mt1ProngOnly;
+  std::vector<TH1D> Mt3ProngOnly;
+  std::vector<TH1D> Mt3ProngSV;
 
   std::vector<TH1D> Cat0JetLowQcdShapeRegion;
-  std::vector<TH1D> Cat0HighLowQcdShapeRegion;
+  std::vector<TH1D> Cat0JetHighLowQcdShapeRegion;
   std::vector<TH1D> Cat1JetLowQcdShapeRegion;
   std::vector<TH1D> Cat1JetHighQcdShapeRegion;
   std::vector<TH1D> Cat1JetBoostQcdShapeRegion;
   std::vector<TH1D> CatVBFLooseQcdShapeRegion;
   std::vector<TH1D> CatVBFTightQcdShapeRegion;
   std::vector<TH1D> CatInclusiveQcdShapeRegion;
-
-  std::vector<TH1D> Cat0JetLowMt;
-  std::vector<TH1D> Cat0JetLowMtSideband;
-  std::vector<TH1D> Cat0JetLowMtExtrapolation;
-  std::vector<TH1D> Cat0JetHighMt;
-  std::vector<TH1D> Cat0JetHighMtSideband;
-  std::vector<TH1D> Cat0JetHighMtExtrapolation;
-  std::vector<TH1D> Cat1JetLowMt;
-  std::vector<TH1D> Cat1JetLowMtSideband;
-  std::vector<TH1D> Cat1JetLowMtExtrapolation;
-  std::vector<TH1D> Cat1JetHighMt;
-  std::vector<TH1D> Cat1JetHighMtSideband;
-  std::vector<TH1D> Cat1JetHighMtExtrapolation;
-  std::vector<TH1D> Cat1JetBoostMt;
-  std::vector<TH1D> Cat1JetBoostMtSideband;
-  std::vector<TH1D> Cat1JetBoostMtExtrapolation;
-  std::vector<TH1D> CatVBFLooseMt;
-  std::vector<TH1D> CatVBFLooseMtSideband;
-  std::vector<TH1D> CatVBFLooseRelaxMt;
-  std::vector<TH1D> CatVBFLooseRelaxMtExtrapolation;
-  std::vector<TH1D> CatVBFTightMt;
-  std::vector<TH1D> CatVBFTightMtSideband;
-  std::vector<TH1D> CatVBFTightRelaxMt;
-  std::vector<TH1D> CatVBFTightRelaxMtExtrapolation;
-  std::vector<TH1D> CatInclusiveMt;
-  std::vector<TH1D> CatInclusiveMtSideband;
-  std::vector<TH1D> CatInclusiveMtExtrapolation;
-
-  std::vector<TH1D> Cat0JetLowMtSS;
-  std::vector<TH1D> Cat0JetLowMtSidebandSS;
-  std::vector<TH1D> Cat0JetLowMtExtrapolationSS;
-  std::vector<TH1D> Cat0JetHighMtSS;
-  std::vector<TH1D> Cat0JetHighMtSidebandSS;
-  std::vector<TH1D> Cat0JetHighMtExtrapolationSS;
-  std::vector<TH1D> Cat1JetLowMtSS;
-  std::vector<TH1D> Cat1JetLowMtSidebandSS;
-  std::vector<TH1D> Cat1JetLowMtExtrapolationSS;
-  std::vector<TH1D> Cat1JetHighMtSS;
-  std::vector<TH1D> Cat1JetHighMtSidebandSS;
-  std::vector<TH1D> Cat1JetHighMtExtrapolationSS;
-  std::vector<TH1D> Cat1JetBoostMtSS;
-  std::vector<TH1D> Cat1JetBoostMtSidebandSS;
-  std::vector<TH1D> Cat1JetBoostMtExtrapolationSS;
-  std::vector<TH1D> CatVBFLooseMtSS;
-  std::vector<TH1D> CatVBFLooseMtSidebandSS;
-  std::vector<TH1D> CatVBFTightMtSS;
-  std::vector<TH1D> CatVBFTightMtSidebandSS;
-  std::vector<TH1D> CatInclusiveMtSS;
-  std::vector<TH1D> CatInclusiveMtSidebandSS;
-  std::vector<TH1D> CatInclusiveMtExtrapolationSS;
-
-  std::vector<TH1D> Cat0JetLowQcdAbcd;
-  std::vector<TH1D> Cat0JetHighQcdAbcd;
-  std::vector<TH1D> Cat1JetLowQcdAbcd;
-  std::vector<TH1D> Cat1JetHighQcdAbcd;
-  std::vector<TH1D> Cat1JetBoostQcdAbcd;
-  std::vector<TH1D> CatVBFLooseQcdAbcd;
-  std::vector<TH1D> CatVBFTightQcdAbcd;
-  std::vector<TH1D> CatInclusiveQcdAbcd;
-
-  std::vector<TH1D> Cat0JetLowQcdOSMuIso;
-  std::vector<TH1D> Cat0JetLowQcdOSTauIso;
-  std::vector<TH1D> Cat0JetLowQcdSSMuIso;
-  std::vector<TH1D> Cat0JetLowQcdSSTauIso;
-  std::vector<TH1D> Cat0JetHighQcdOSMuIso;
-  std::vector<TH1D> Cat0JetHighQcdOSTauIso;
-  std::vector<TH1D> Cat0JetHighQcdSSMuIso;
-  std::vector<TH1D> Cat0JetHighQcdSSTauIso;
-  std::vector<TH1D> Cat1JetLowQcdOSMuIso;
-  std::vector<TH1D> Cat1JetLowQcdOSTauIso;
-  std::vector<TH1D> Cat1JetLowQcdSSMuIso;
-  std::vector<TH1D> Cat1JetLowQcdSSTauIso;
-  std::vector<TH1D> Cat1JetHighQcdOSMuIso;
-  std::vector<TH1D> Cat1JetHighQcdOSTauIso;
-  std::vector<TH1D> Cat1JetHighQcdSSMuIso;
-  std::vector<TH1D> Cat1JetHighQcdSSTauIso;
-  std::vector<TH1D> Cat1JetBoostQcdOSMuIso;
-  std::vector<TH1D> Cat1JetBoostQcdOSTauIso;
-  std::vector<TH1D> Cat1JetBoostQcdSSMuIso;
-  std::vector<TH1D> Cat1JetBoostQcdSSTauIso;
-  std::vector<TH1D> CatVBFLooseQcdOSMuIso;
-  std::vector<TH1D> CatVBFLooseQcdOSTauIso;
-  std::vector<TH1D> CatVBFLooseQcdSSMuIso;
-  std::vector<TH1D> CatVBFLooseQcdSSTauIso;
-  std::vector<TH1D> CatVBFTightQcdOSMuIso;
-  std::vector<TH1D> CatVBFTightQcdOSTauIso;
-  std::vector<TH1D> CatVBFTightQcdSSMuIso;
-  std::vector<TH1D> CatVBFTightQcdSSTauIso;
-  std::vector<TH1D> CatInclusiveQcdOSMuIso;
-  std::vector<TH1D> CatInclusiveQcdOSTauIso;
-  std::vector<TH1D> CatInclusiveQcdSSMuIso;
-  std::vector<TH1D> CatInclusiveQcdSSTauIso;
 
   unsigned verbose;
 
@@ -339,6 +263,9 @@ class HToTaumuTauh : public Selection {
   std::vector<int> selJets, selBJets;
   double selMjj, selJetdeta;
   int selNjetingap;
+  double w; // event weight
+  unsigned int t; // index of histogram
+  bool isWJetMC; // for Wjets background method
 
   // booleans for different analysis stages
   void setStatusBooleans(bool resetAll = false);
@@ -366,6 +293,8 @@ class HToTaumuTauh : public Selection {
   bool passed_NoCategory;
   bool passed_VBFTightRelaxed;
   bool passed_VBFLooseRelaxed;
+
+  bool hasRelaxedIsoTau, hasAntiIsoMuon;
 
   // function definitions
   bool selectMuon_Id(unsigned i, unsigned vertex);

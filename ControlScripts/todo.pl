@@ -951,13 +951,13 @@ if( $ARGV[0] eq "--GRID" ){
     # Finish Submit script
     system(sprintf("echo \"\n\n# Now setup up submission (try 3 times for good luck) \n  for (( l=1; l<=3; l++ )); do \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"    for (( c=1; c<=$B; c++ )); do \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"      issub=\\\$(grep workdir$set/Set_\\\${c} $OutputDir/workdir$set/jobs_submittedOrComplete | wc -l) \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"      issub=\\\$(grep \\\"workdir$set/Set_\\\${c} \\\" $OutputDir/workdir$set/jobs_submittedOrComplete | wc -l) \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"      if [[ \\\${issub} -eq 0 ]]; then  \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"        cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
     system(sprintf("echo \"        echo 'Submitting Set_'\\\${c}'/GRIDJob.jdl' \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"        isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_\\\${c}.root | wc -l) \n      if [[ \\\${isSkim} -eq 1 ]]; then \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"          srmrm srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_\\\${c}.root \n     fi \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx }' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx \\\" \\\"}' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"          cp $OutputDir/workdir$set/jobs_submitted $OutputDir/workdir$set/jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"      fi \n    done\n  done \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"  njobs=\\\$(cat jobs_submittedOrComplete | wc -l)  \" >> $OutputDir/workdir$set/Submit"));
