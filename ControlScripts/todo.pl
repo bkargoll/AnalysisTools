@@ -29,7 +29,10 @@ if($UserID eq "kargoll"){
 if($UserID eq "pistone"){
     $UserDir="--pistone";
 }
-
+if($UserID eq "zotz"){
+    $UserIDCern="azotz";
+    $UserDir="--zotz";
+}
 
 
 #Default vaules
@@ -46,6 +49,7 @@ $BTag="NO";
 $Cleaning ="NO";
 $maxdata=100;
 $maxmc=100;
+$ARCH="slc5_amd64_gcc462";
 
 if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\nThis code requires one input option. The systax is:./todo_Grid.pl [OPTION]");
@@ -59,6 +63,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --tag <tag for TauNuptle/SkimProduction/TiggerFiliter/...>");
     printf("\n                                                     --TauReco <tag for Recommended TauReco> current option: na, 4_4_Y_08_03_2012 or 5_2_3_patch3_Dec_08_2012");
     printf("\n                                                     --BTag <YES/NO> Default: NO");
+    printf("\n                                                     --ARCH <ARCH> define the arch to to be used"); 
     printf("\n./todo.pl --Local <Input.txt>                      INTENTED FOR SMALL SCALE TESTS ONLY");  
     printf("\n                                                   Configure a directory to run locally. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
@@ -71,6 +76,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --SetName <SetName>     Default value: $set ");
     printf("\n                                                     --NMaxData <Max Number of data files per job >     Default value: $maxdata ");
     printf("\n                                                     --NMaxMC <Max Number of MC files per job >     Default value: $maxmc ");
+    printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n./todo.pl --DCache <Input.txt> <ListofDS.txt>      INTENTED FOR REGULAR USE (DEFAULT)");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
@@ -81,6 +87,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --SetName <SetName> "); 
     printf("\n                                                     --NMaxData <Max Number of data files per job >     Default value: $maxdata ");
     printf("\n                                                     --NMaxMC <Max Number of MC files per job >     Default value: $maxmc ");
+    printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n  ");
     printf("\n./todo.pl --GRID <Input.txt> <ListofDS.txt>        ALTERNATIVE FOR REGULAR USE");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
@@ -170,6 +177,11 @@ for($l=2;$l<$numArgs; $l++){
 	$dcapgridsite="grid-dcap."+$ARGV[$l];
 	$gridsite="grid-srm."+$ARGV[$l];
     }
+    if($ARGV[$l] eq  "--ARCH" ){
+        $l++;
+        $ARCH=$ARGV[$l];
+    }
+
 }
 
 $time= strftime("%h_%d_%Y",localtime);
@@ -186,17 +198,17 @@ if( $ARGV[0] eq "--TauNtuple"){
 	printf("\nFor more details use: ./todo --help\n"); 
 	exit(0);
     }
-
+    
     printf("\nWorkingDir for CMSSW: $basedir");
     printf("\nCurrentDir is: $currentdir");
-    printf("\nUsing CMSSW Release: $CMSSWRel");
-
+    printf("\nUsing CMSSW Release: $CMSSWRel ARCH: $ARCH \n");
+    
     # setup CMSSW
     system(sprintf("rm Install_TauNtuple_$CMSSWRel-$time; rm Setup_$CMSSWRel-$time "));
     system(sprintf("echo \"rm $basedir/TauNtuple_$CMSSWRel-$time -rf; mkdir $basedir/TauNtuple_$CMSSWRel-$time\" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"cd $basedir/TauNtuple_$CMSSWRel-$time\" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"export SCRAM_ARCH=\\\"slc5_amd64_gcc462\\\"\" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"export SCRAM_ARCH=\\\"slc5_amd64_gcc462\\\"\" >> Setup_$CMSSWRel-$time"));
+    system(sprintf("echo \"export SCRAM_ARCH=\\\"$ARCH\\\"\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"export SCRAM_ARCH=\\\"$ARCH\\\"\" >> Setup_$CMSSWRel-$time"));
     
     system(sprintf("echo \"cd $basedir/TauNtuple_$CMSSWRel-$time\" >> Setup_$CMSSWRel-$time"));
     system(sprintf("echo \"source /cvmfs/cms.cern.ch/cmsset_default.sh\" >> Install_TauNtuple_$CMSSWRel-$time"));
@@ -205,29 +217,29 @@ if( $ARGV[0] eq "--TauNtuple"){
     system(sprintf("echo \"cmsrel CMSSW_$CMSSWRel\" >> Install_TauNtuple_$CMSSWRel-$time")); 
     system(sprintf("echo \"cd CMSSW_$CMSSWRel/src\" >> Install_TauNtuple_$CMSSWRel-$time")); 
     system(sprintf("echo \"cmsenv\" >> Install_TauNtuple_$CMSSWRel-$time")); 
-
+    
     system(sprintf("echo \"cd CMSSW_$CMSSWRel/src\" >> Setup_$CMSSWRel-$time"));
     system(sprintf("echo \"cmsenv\" >> Setup_$CMSSWRel-$time"));
-
+    
     system(sprintf("echo \"git init \" >> Setup_$CMSSWRel-$time"));
 
-	# for SimpleFits
-	system(sprintf("echo \"git cms-addpkg Validation/EventGenerator \" >> Install_TauNtuple_$CMSSWRel-$time"));
-	
+    # for SimpleFits
+    system(sprintf("echo \"git cms-addpkg Validation/EventGenerator \" >> Install_TauNtuple_$CMSSWRel-$time"));
+    
     # MVA-MET recipe for CMSSW_5_3_14_patchX (https://twiki.cern.ch/twiki/bin/viewauth/CMS/MVAMet#Installation)
     system(sprintf("echo \"git cms-addpkg PhysicsTools/PatAlgos \" >> Install_TauNtuple_$CMSSWRel-$time"));
-	system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_14-updateSelectorUtils\" >> Install_TauNtuple_$CMSSWRel-$time"));
-	system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_13_patch2-testNewTau\" >> Install_TauNtuple_$CMSSWRel-$time"));
-	system(sprintf("echo \"git cms-merge-topic -u TaiSakuma:53X-met-131120-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
-	system(sprintf("echo \"git-cms-merge-topic -u cms-met:53X-MVaNoPuMET-20131217-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
-
-	# ATTENTION: CMSSW_X_Y_Z/src must be completely EMPTY in order to run "git cms-addpkg"
+    system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_14-updateSelectorUtils\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_13_patch2-testNewTau\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git cms-merge-topic -u TaiSakuma:53X-met-131120-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git-cms-merge-topic -u cms-met:53X-MVaNoPuMET-20131217-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    
+    # ATTENTION: CMSSW_X_Y_Z/src must be completely EMPTY in order to run "git cms-addpkg"
     system(sprintf("echo \"mkdir data \" >> Install_TauNtuple_$CMSSWRel-$time"));
-
-   #Tau Package recomendation for 5_3_X (X>=12): nothing to do
+    
+    #Tau Package recomendation for 5_3_X (X>=12): nothing to do
     
     # embedding: seems that there is nothing to do
-
+    
     # Electron Tools
     system(sprintf("echo \"git cms-addpkg EgammaAnalysis/ElectronTools\" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"cd EgammaAnalysis/ElectronTools/data/\" >> Install_TauNtuple_$CMSSWRel-$time"));
@@ -243,8 +255,8 @@ if( $ARGV[0] eq "--TauNtuple"){
     
     # PDF weights for systematicd
     system(sprintf("echo \"git cms-addpkg ElectroWeakAnalysis/Utilities \" >> Install_TauNtuple_$CMSSWRel-$time"));
-
-	# Ntuple code
+    
+    # Ntuple code
     system(sprintf("echo \"git clone https://github.com/inugent/TauDataFormat TauDataFormat; cd TauDataFormat; git checkout; cd ../; \" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"git clone https://github.com/inugent/SkimProduction SkimProduction; cd SkimProduction; git checkout; cd ../; \" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"cp SkimProduction/CRAB/*.root data/ \" >> Install_TauNtuple_$CMSSWRel-$time"));
@@ -253,23 +265,32 @@ if( $ARGV[0] eq "--TauNtuple"){
     system(sprintf("echo \"cp SkimProduction/CRAB/JECuncertaintyMC.txt data/ \" >> Install_TauNtuple_$CMSSWRel-$time"));
     # SimpleFits
     system(sprintf("echo \"git clone https://github.com/inugent/SimpleFits SimpleFits; cd SimpleFits; git checkout; cd ../; \" >> Install_TauNtuple_$CMSSWRel-$time"));
-
+    
     # Setup CRAB
     system(sprintf("echo \"export VO_CMS_SW_DIR=\\\"/net/software_cms\\\"\" >> Install_TauNtuple_$CMSSWRel-$time"));
     system(sprintf("echo \"source /cvmfs/cms.cern.ch/cmsset_default.sh\" >> Install_TauNtuple_$CMSSWRel-$time "));
     system(sprintf("echo \"source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh\" >> Install_TauNtuple_$CMSSWRel-$time"));
-
+    
     system(sprintf("echo \"export VO_CMS_SW_DIR=\\\"/net/software_cms\\\"\" >> Setup_$CMSSWRel-$time"));
     system(sprintf("echo \"source /cvmfs/cms.cern.ch/cmsset_default.sh\" >> Setup_$CMSSWRel-$time "));
     system(sprintf("echo \"source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh\" >> Setup_$CMSSWRel-$time"));
+    
+    # make sure lhapdf is properly linked
+    system(sprintf("echo \"scram setup lhapdffull \" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"touch $CMSSW_BASE/src/ElectroWeakAnalysis/Utilities/BuildFile.xml \" >> Install_TauNtuple_$CMSSWRel-$time"));
 
-	# make sure lhapdf is properly linked
-	system(sprintf("echo \"scram setup lhapdffull \" >> Install_TauNtuple_$CMSSWRel-$time"));
-	system(sprintf("echo \"touch $CMSSW_BASE/src/ElectroWeakAnalysis/Utilities/BuildFile.xml \" >> Install_TauNtuple_$CMSSWRel-$time"));
-
+# Get files from desy for sl6 
+    if($ARCH eq "slc6_amd64_gcc472"){
+	printf("\nUsing files from kappa for sl6 patch - Thanks to joram.berger@cern.ch for the files.\n");
+	system(sprintf("echo \"cp $currentdir/sl6/CMSDAS12ThreejetTestAnalyzer.cc  RecoJets/JetAnalyzers/src/CMSDAS12ThreejetTestAnalyzer.cc\" >> Install_TauNtuple_$CMSSWRel-$time"));
+	system(sprintf("echo \"cp $currentdir/sl6/JetSubstructurePlotsExample.cc  RecoJets/JetAnalyzers/src/JetSubstructurePlotsExample.cc\" >> Install_TauNtuple_$CMSSWRel-$time"));
+	system(sprintf("echo \"cp $currentdir/sl6/myFastSimVal.cc RecoJets/JetAnalyzers/src/myFastSimVal.cc\" >> Install_TauNtuple_$CMSSWRel-$time"));
+	system(sprintf("echo \"cp $currentdir/sl6/myJetAna.cc RecoJets/JetAnalyzers/src/myJetAna.cc\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    }
+    
     # build
     system(sprintf("echo \"scram b -j 4 \" >> Install_TauNtuple_$CMSSWRel-$time"));
-
+    
     # print Instructions
     printf("\n\nInstructions");
     printf("\ngit config --global credential.helper 'cache --timeout=3600'");
@@ -695,6 +716,7 @@ if( $ARGV[0] eq "--GRID" ){
     system(sprintf("cd $OutputDir/workdir$set/; $dir/subs USERNAME $UserIDCern CheckandGet.sh; cd $dir"));
     system(sprintf("cd $OutputDir/workdir$set/; $dir/subs WORKDIR workdir$set CheckandGet.sh; cd $dir"));
     system(sprintf("cp $dir/Purge_Jobs.sh $OutputDir/workdir$set/"));
+    system(sprintf("cp $dir/Cancel_Jobs.sh $OutputDir/workdir$set/"));
     system(sprintf("cp $dir/Run.sh $OutputDir/workdir$set/"));
 
     # generate compile script 

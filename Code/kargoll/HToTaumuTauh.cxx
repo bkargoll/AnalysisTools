@@ -403,6 +403,9 @@ void  HToTaumuTauh::Setup(){
   MetLepNTau = HConfig.GetTH1D(Name+"_MetLepNTau","MetLepNTau",11,-0.5,10.5,"N(#tau_{h}^{MET})");
   MetLepNMuMinusNMu = HConfig.GetTH1D(Name+"_MetLepNMuMinusNMu","MetLepNMuMinusNMu",11,-5.5,5.5,"N(#mu^{MET}) - N(#mu^{sel}");
   MetLepNTauMinusNTau = HConfig.GetTH1D(Name+"_MetLepNTauMinusNTau","MetLepNTauMinusNTau",11,-5.5,5.5,"N(#tau_{h}^{MET}) - N(#tau_{h}^{sel}");
+  MetLepDiffMET  = HConfig.GetTH1D(Name+"_MetLepDiffMET","MetLepDiffMET",50,0.,200.,"#mu^{MET}#neq#mu^{sel}: E_{T}^{miss}/GeV");
+  MetLepDiffMETPhi = HConfig.GetTH1D(Name+"_MetLepDiffMETPhi","MetLepDiffMETPhi",50,-3.14159,3.14159,"#mu^{MET}#neq#mu^{sel}: #phi(E_{T}^{miss})");
+  MetLepDiffMt = HConfig.GetTH1D(Name+"_MetLepDiffMt","MetLepDiffMt",50,0.,100.,"#mu^{MET}#neq#mu^{sel}: m_{T}/GeV");
 
   NJetsKin = HConfig.GetTH1D(Name+"_NJetsKin","NJetsKin",11,-0.5,10.5,"N(j_{kin})");
   JetKin1Pt = HConfig.GetTH1D(Name+"_JetKin1Pt","JetKin1Pt",50,0.,200.,"p_{T}(j_{kin}^{1})/GeV");
@@ -441,7 +444,7 @@ void  HToTaumuTauh::Setup(){
   MetPhiMet20GeV = HConfig.GetTH1D(Name+"_MetPhiMet20GeV","MetPhiMet20GeV",50,-3.14159,3.14159,"#phi(E_{T}^{miss}) (E_{T}^{miss} > 20GeV)");
   MtMet20GeV = HConfig.GetTH1D(Name+"_MtMet20GeV","MtMet20GeV",50,0.,100.,"m_{T}/GeV (E_{T}^{miss} > 20GeV)");
   HiggsPtMet20GeV = HConfig.GetTH1D(Name+"_HiggsPtMet20GeV","HiggsPtMet20GeV",50,0.,200.,"p_{T}(H)/GeV (E_{T}^{miss} > 20GeV)");
-  HiggsPhiMet20GeV = HConfig.GetTH1D(Name+"_HiggsPhiMet20GeV","HiggsPhiMet20GeV",50,-3.14159,3.14159,"#phi(E_{T}^{miss}) (E_{T}^{miss} > 20GeV)");
+  HiggsPhiMet20GeV = HConfig.GetTH1D(Name+"_HiggsPhiMet20GeV","HiggsPhiMet20GeV",50,-3.14159,3.14159,"#phi(H) (E_{T}^{miss} > 20GeV)");
 
   MtAfterMuon = HConfig.GetTH1D(Name+"_MtAfterMuon","MtAfterMuon",50,0.,100.,"m_{T}/GeV");
   MtAfterDiMuonVeto = HConfig.GetTH1D(Name+"_MtAfterDiMuonVeto","MtAfterDiMuonVeto",50,0.,100.,"m_{T}/GeV");
@@ -460,6 +463,7 @@ void  HToTaumuTauh::Setup(){
   Mt1ProngOnly = HConfig.GetTH1D(Name+"_Mt1ProngOnly","Mt1ProngOnly",50,0.,100.,"m_{T}/GeV");
   Mt3ProngOnly = HConfig.GetTH1D(Name+"_Mt3ProngOnly","Mt3ProngOnly",50,0.,100.,"m_{T}/GeV");
   Mt3ProngSV = HConfig.GetTH1D(Name+"_Mt3ProngSV","Mt3ProngSV",50,0.,100.,"m_{T}/GeV");
+  Mt3ProngSVFlight = HConfig.GetTH1D(Name+"_Mt3ProngSVFlight","Mt3ProngSVFlight",50,0.,100.,"m_{T}/GeV");
 
   Cat0JetLowQcdShapeRegion = HConfig.GetTH1D(Name+"_Cat0JetLowQcdShapeRegion","Cat0JetLowQcdShapeRegion",100,0.,200.,"0JL: m_{inv}^{QCD}/GeV");
   Cat0JetHighLowQcdShapeRegion = HConfig.GetTH1D(Name+"_Cat0JetHighLowQcdShapeRegion","Cat0JetHighLowQcdShapeRegion",100,0.,200.,"0JH: m_{inv}^{QCD}/GeV");
@@ -562,6 +566,9 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&MetLepNTau);
  Extradist1d.push_back(&MetLepNMuMinusNMu);
  Extradist1d.push_back(&MetLepNTauMinusNTau);
+ Extradist1d.push_back(&MetLepDiffMET);
+ Extradist1d.push_back(&MetLepDiffMETPhi);
+ Extradist1d.push_back(&MetLepDiffMt);
 
  Extradist1d.push_back(&NJetsKin);
  Extradist1d.push_back(&JetKin1Pt);
@@ -619,6 +626,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&Mt1ProngOnly);
  Extradist1d.push_back(&Mt3ProngOnly);
  Extradist1d.push_back(&Mt3ProngSV);
+ Extradist1d.push_back(&Mt3ProngSVFlight);
 
  Extradist1d.push_back(&Cat0JetLowQcdShapeRegion);
  Extradist1d.push_back(&Cat0JetHighLowQcdShapeRegion);
@@ -1110,6 +1118,11 @@ void  HToTaumuTauh::doEvent(){
 	  MetLepNTau.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcTaus() );
 	  MetLepNMuMinusNMu.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcMuons() - selectedMuons.size(), w);
 	  MetLepNTauMinusNTau.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcTaus() - selectedTaus.size(), w);
+	  if(Ntp->NMET_CorrMVAMuTau_srcMuons() != selectedMuons.size()){
+		  MetLepDiffMET.at(t).Fill( Ntp->MET_CorrMVAMuTau_et(), w);
+		  MetLepDiffMETPhi.at(t).Fill( Ntp->MET_CorrMVAMuTau_phi(), w);
+		  MetLepDiffMt.at(t).Fill(value.at(MT), w);
+	  }
 
 	  // Jets
 	  NJetsKin.at(t).Fill( selectedJetsKin.size(), w);
@@ -1173,7 +1186,7 @@ void  HToTaumuTauh::doEvent(){
   if(passedMu && pass.at(TriLeptonVeto)) MtOnlyTriLepVeto.at(t).Fill(value.at(MT), w);
   if(passedMu && pass.at(OppCharge)) MtOnlyOppCharge.at(t).Fill(value.at(MT), w);
   if(passedMu && pass.at(BJetVeto)) MtOnlyBJet.at(t).Fill(value.at(MT), w);
-  if(status){
+  if(passedFullInclusiveSelNoMt){
 	  if(Ntp->Muon_Charge(selMuon) > 0) MtMuPlusOnly.at(t).Fill(value.at(MT), w);
 	  if(Ntp->Muon_Charge(selMuon) < 0) MtMuMinusOnly.at(t).Fill(value.at(MT), w);
 
@@ -1195,11 +1208,17 @@ void  HToTaumuTauh::doEvent(){
 		  Mt3ProngOnly.at(t).Fill(value.at(MT), w);
 		  if(Ntp->PFTau_TIP_hassecondaryVertex(selTau)){
 			  Mt3ProngSV.at(t).Fill(value.at(MT), w);
+
+			  double FlightLenghtSignificance = Ntp->PFTau_FlightLenght_significance(Ntp->PFTau_TIP_primaryVertex_pos(selTau),
+					  Ntp->PFTau_TIP_primaryVertex_cov(selTau),Ntp->PFTau_a1_lvp(selTau).Vertex(),Ntp->PFTau_a1_lvp(selTau).VertexCov());
+			  if(FlightLenghtSignificance > 2.2) {
+				  Mt3ProngSVFlight.at(t).Fill(value.at(MT), w);
+			  }
 		  }
 	  }
   }
 
-  //////// plots filled after full muon and tau selection
+  /////// plots filled after full muon and tau selection
   if(passedObjectsFailDiMuonVeto){
 	  // Investigate events discarded by the DiMuon Veto
 	  if (Ntp->Muon_Charge(selMuon) == 1){

@@ -19,6 +19,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   copyTree(false)
   ,ObjEvent(-1)
   ,verbose(false)
+  ,isInit(false)
 {
   // TChains the ROOTuple file
   TChain *chain = new TChain("t");
@@ -50,6 +51,23 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
 
 ///////////////////////////////////////////////////////////////////////
 //
+// Function: void InitEvent()
+//
+// Purpose: Initialize variables etc on event base
+//
+///////////////////////////////////////////////////////////////////////
+
+void Ntuple_Controller::InitEvent(){
+	Muon_corrected_p4.clear();
+	Muon_corrected_p4.resize(NMuons());
+	Muon_isCorrected = false;
+
+	// after everything is initialized
+	isInit = true;
+}
+
+///////////////////////////////////////////////////////////////////////
+//
 // Function: Int_t Get_Entries()
 //
 // Purpose: To get the number of events in the Ntuple
@@ -71,6 +89,8 @@ void Ntuple_Controller::Get_Event(int _jentry){
   jentry=_jentry;
   Int_t ientry = Ntp->LoadTree(jentry);
   nb = Ntp->fChain->GetEntry(jentry);   nbytes += nb;
+  isInit = false;
+  InitEvent();
 }
 
 
@@ -247,7 +267,7 @@ bool Ntuple_Controller::isGoodVtx(unsigned int i){
 	if(fabs(Vtx(i).z())>=24) return false;
 	if(Vtx(i).Perp()>=2) return false;
 	if(Vtx_ndof(i)<=4) return false;
-	if(Vtx_isFake(i)!=0) return false;
+	if(Vtx_isFake(i)) return false;
 	return true;
 }
 
@@ -313,6 +333,26 @@ bool Ntuple_Controller::isGoodMuon_nooverlapremoval(unsigned int i){
   return false;
 }
 
+void Ntuple_Controller::CorrectMuonP4(){
+	if(isInit){
+		for(unsigned i=0;i<NMuons();i++){
+			TLorentzVector mup4 = Muon_p4(i);
+			int runopt = 0; // 0: no run-dependece
+			float qter = 1.0; // 1.0: don't care about muon momentum uncertainty
+			if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
+				rmcor->momcor_mc(mup4,Muon_Charge(i),runopt,qter);
+			}else{
+				rmcor->momcor_data(mup4,Muon_Charge(i),runopt,qter);
+			}
+			Muon_corrected_p4.at(i) = mup4;
+		}
+		Muon_isCorrected = true;
+	}else{
+		Muon_isCorrected = false;
+		std::cout << "No muon corrections applied" << std::endl;
+	}
+}
+
 /////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
@@ -329,12 +369,13 @@ bool Ntuple_Controller::isGoodMuon_nooverlapremoval(unsigned int i){
 TLorentzVector Ntuple_Controller::Muon_p4(unsigned int i, TString corr){
 	TLorentzVector vec = TLorentzVector(Ntp->Muon_p4->at(i).at(1),Ntp->Muon_p4->at(i).at(2),Ntp->Muon_p4->at(i).at(3),Ntp->Muon_p4->at(i).at(0));
 	if(corr.Contains("roch")){
-		int runopt = 0; // 0: no run-dependece
-		float qter = 1.0; // 1.0: don't care about muon momentum uncertainty
-		if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
-			rmcor->momcor_mc(vec,Muon_Charge(i),runopt,qter);
+		if(!Muon_isCorrected){
+			CorrectMuonP4();
+		}
+		if(Muon_isCorrected){
+			vec = Muon_corrected_p4.at(i);
 		}else{
-			rmcor->momcor_data(vec,Muon_Charge(i),runopt,qter);
+			std::cout << "No muon corrections applied" << std::endl;
 		}
 	}
 	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
@@ -400,10 +441,15 @@ bool Ntuple_Controller::isSelectedMuon(unsigned int i, unsigned int j, double im
 //
 // Options:
 //  - "res": use this to estimate the impact of the electron energy resolution on your result (only MC).
+//
 
 TLorentzVector Ntuple_Controller::Electron_p4(unsigned int i, TString corr){
 	TLorentzVector vec = TLorentzVector(Ntp->Electron_p4->at(i).at(1),Ntp->Electron_p4->at(i).at(2),Ntp->Electron_p4->at(i).at(3),Ntp->Electron_p4->at(i).at(0));
 	if(!isData() && GetMCID()!=DataMCType::DY_emu_embedded && GetMCID()!=DataMCType::DY_mutau_embedded){
+		if(corr.Contains("scale") && Electron_RegEnergy(i)!=0){
+			if(!corr.Contains("down")) vec.SetPerp(vec.Perp() * (1+Electron_RegEnergyError(i)/Electron_RegEnergy(i)));
+			else vec.SetPerp(vec.Perp() * (1-Electron_RegEnergyError(i)/Electron_RegEnergy(i)));
+		}
 		if(corr.Contains("res")){
 			if(fabs(Electron_supercluster_eta(i))<1.479){
 				vec.SetPerp(gRandom->Gaus(vec.Perp(),1.016));
@@ -690,7 +736,7 @@ double Ntuple_Controller::rundependentJetPtCorrection(double jeteta, int runnumb
 	return (1.+corr*(runnumber-run0));
 }
 
-double Ntuple_Controller::JERCorrection(TLorentzVector jet, double dr, TString unc){
+double Ntuple_Controller::JERCorrection(TLorentzVector jet, double dr, TString corr){
 	double sf = jet.Pt();
 	if(isData() || GetMCID()==DataMCType::DY_emu_embedded || GetMCID()==DataMCType::DY_mutau_embedded
 			|| jet.Pt()<=10
@@ -699,8 +745,8 @@ double Ntuple_Controller::JERCorrection(TLorentzVector jet, double dr, TString u
 		return sf;
 	}else{
 		double c = JetEnergyResolutionCorr(jet.Eta());
-		if(unc.Contains("up")) c += JetEnergyResolutionCorrErr(jet.Eta());
-		if(unc.Contains("down")) c -= JetEnergyResolutionCorrErr(jet.Eta());
+		if(corr.Contains("up")) c += JetEnergyResolutionCorrErr(jet.Eta());
+		if(corr.Contains("down")) c -= JetEnergyResolutionCorrErr(jet.Eta());
 		sf = std::max(0.,c*jet.Pt()+(1.-c)*PFJet_matchGenJet(jet,dr).Pt());
 	}
 	return sf;
@@ -753,7 +799,7 @@ double Ntuple_Controller::JetEnergyResolutionCorrErr(double jeteta){
 //  - "JER": smears the jet pt in MC to match the resolution in data. Additional use of "up" or "down"
 //           varies the correction by its uncertainty -> systematics
 //  - "JEC": use this to estimate the impact of scale correction uncertainties on your result.
-//           use "up" for an upward variation. if you use nothing, the variation will be downward.
+//           use "plus" for an upward variation. if you use nothing, the variation will be downward.
 //
 
 TLorentzVector Ntuple_Controller::PFJet_p4(unsigned int i, TString corr){
@@ -766,7 +812,7 @@ TLorentzVector Ntuple_Controller::PFJet_p4(unsigned int i, TString corr){
 		vec.SetPerp(JERCorrection(vec,0.25,corr));
 	}
 	if(corr.Contains("JEC")){
-		if(corr.Contains("up")) vec.SetPerp(vec.Pt() * (1 + PFJet_JECuncertainty(i)));
+		if(corr.Contains("plus")) vec.SetPerp(vec.Pt() * (1 + PFJet_JECuncertainty(i)));
 		else vec.SetPerp(vec.Pt() * (1 - PFJet_JECuncertainty(i)));
 	}
 	return vec;
@@ -904,6 +950,45 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
     }
   }
   return false;
+}
+
+// calculate flight length significance from primary and secondary vertex info
+double Ntuple_Controller::PFTau_FlightLenght_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
+  TVector3 SVPV = sv - pv;
+  TVectorF FD;
+  FD.ResizeTo(3);
+  FD(0) = SVPV.X();
+  FD(1) = SVPV.Y();
+  FD(2) = SVPV.Z();
+
+  TMatrixT<double> PVcv;
+  PVcv.ResizeTo(3,3);
+  for(unsigned int nr =0; nr<PVcov.GetNrows(); nr++){
+    for(unsigned int nc =0; nc<PVcov.GetNcols(); nc++){
+      PVcv(nr,nc) = PVcov(nr,nc);
+    }
+  }
+  TMatrixT<double> SVcv;
+  SVcv.ResizeTo(3,3);
+  for(unsigned int nr =0; nr<SVcov.GetNrows(); nr++){
+    for(unsigned int nc =0; nc<SVcov.GetNcols(); nc++){
+      SVcv(nr,nc) = SVcov(nr,nc);
+    }
+  }
+
+  TMatrixT<double> SVPVMatrix(3,1);
+  for(int i=0; i<SVPVMatrix.GetNrows();i++){
+    SVPVMatrix(i,0)=FD(i);
+  }
+
+  TMatrixT<double> SVPVMatrixT=SVPVMatrix;
+  SVPVMatrixT.T();
+
+  TMatrixT<double> lambda2 = SVPVMatrixT*(SVcv + PVcv)*SVPVMatrix;
+  double sigmaabs = sqrt(lambda2(0,0))/SVPV.Mag();
+  double sign = SVPV.Mag()/sigmaabs;
+
+  return sign;
 }
 
 //// Generator Information

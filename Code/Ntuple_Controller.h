@@ -127,6 +127,7 @@ class Ntuple_Controller{
   double                              LC_chi2;
   double                              ndof;
   bool                                fitStatus;
+  bool                                isInit;
 
  public:
   // Constructor
@@ -134,6 +135,9 @@ class Ntuple_Controller{
 
   // Destructor
   ~Ntuple_Controller() ;
+
+  // Event initializer
+  void InitEvent();
 
   //TauSpiner function
   double TauSpinerGet(int SpinType);
@@ -305,6 +309,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   bool			 isLooseMuon(unsigned int i);
   float          Muon_RelIso(unsigned int i, TString corr="");
   rochcor2012*   rmcor;
+  std::vector<TLorentzVector> Muon_corrected_p4;
+  void           CorrectMuonP4();
+  bool           Muon_isCorrected;
 
 
   //Base Tau Information (PF)
@@ -362,6 +369,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TMatrixTSym<double> PF_Tau_FlightLegth3d_TauFrame_cov(unsigned int i);
    TVector3 PF_Tau_FlightLegth3d_TauFrame(unsigned int i);
    double   PFTau_FlightLength_significance(unsigned int i){float e=PFTau_FlightLength_error(0); if(e>0) return PFTau_FlightLength(i)/e; return 0;}
+   double	PFTau_FlightLenght_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov );
    double   PFTau_FlightLength_error(unsigned int i){return PF_Tau_FlightLegth3d_TauFrame_cov(i)(LorentzVectorParticle::vz,LorentzVectorParticle::vz);}
    double   PFTau_FlightLength(unsigned int i){return PFTau_FlightLength3d(i).Mag();}
    
@@ -508,7 +516,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    //float              PFJet_BTagWeight(unsigned int i){return Ntp->PFJet_BTagWeight->at(i);} // not implemented at the moment
 
    double 			  rundependentJetPtCorrection(double jeteta, int runnumber);
-   double             JERCorrection(TLorentzVector jet, double dr=0.25, TString unc=""); // dr=0.25 from AN2013_416_v4
+   double             JERCorrection(TLorentzVector jet, double dr=0.25, TString corr=""); // dr=0.25 from AN2013_416_v4
    TLorentzVector     PFJet_matchGenJet(TLorentzVector jet, double dr);
    double             JetEnergyResolutionCorr(double jeteta);
    double             JetEnergyResolutionCorrErr(double jeteta);

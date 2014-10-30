@@ -6,6 +6,7 @@
  */
 
 #include "HToTaumuTauhBackgrounds.h"
+#include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 
 HToTaumuTauhBackgrounds::HToTaumuTauhBackgrounds(TString Name_, TString id_):
 	HToTaumuTauh(Name_,id_)
@@ -85,6 +86,23 @@ void HToTaumuTauhBackgrounds::Setup(){
 	CatInclusiveMtSidebandSS = HConfig.GetTH1D(Name + "_CatInclusiveMtSidebandSS", "CatInclusiveMtSidebandSS", 90, 70., 250., "Incl SS: m_{T}/GeV");
 	CatInclusiveMtExtrapolationSS = HConfig.GetTH1D(Name + "_CatInclusiveMtExtrapolationSS", "CatInclusiveMtExtrapolationSS", 2, 0.5, 2.5, "Incl SS: m_{T} signal and sideband");
 
+	Cat0JetLowMtAntiIso = HConfig.GetTH1D(Name + "_Cat0JetLowMtAntiIso", "Cat0JetLowMtAntiIso", 100, 0., 150., "0JL noiso: m_{T}/GeV");
+	Cat0JetHighMtAntiIso = HConfig.GetTH1D(Name + "_Cat0JetHighMtAntiIso", "Cat0JetHighMtAntiIso", 100, 0., 150., "0JH noiso: m_{T}/GeV");
+	Cat1JetLowMtAntiIso = HConfig.GetTH1D(Name + "_Cat1JetLowMtAntiIso", "Cat1JetLowMtAntiIso", 100, 0., 150., "1JL noiso: m_{T}/GeV");
+	Cat1JetHighMtAntiIso = HConfig.GetTH1D(Name + "_Cat1JetHighMtAntiIso", "Cat1JetHighMtAntiIso", 100, 0., 150., "1JH noiso: m_{T}/GeV");
+	Cat1JetBoostMtAntiIso = HConfig.GetTH1D(Name + "_Cat1JetBoostMtAntiIso", "Cat1JetBoostMtAntiIso", 100, 0., 150., "1JB noiso: m_{T}/GeV");
+	CatVBFLooseMtAntiIso = HConfig.GetTH1D(Name + "_CatVBFLooseMtAntiIso", "CatVBFLooseMtAntiIso", 100, 0., 150., "VBFL noiso: m_{T}/GeV");
+	CatVBFTightMtAntiIso = HConfig.GetTH1D(Name + "_CatVBFTightMtAntiIso", "CatVBFTightMtAntiIso", 100, 0., 150., "VBFT noiso: m_{T}/GeV");
+	CatInclusiveMtAntiIso = HConfig.GetTH1D(Name + "_CatInclusiveMtAntiIso", "CatInclusiveMtAntiIso", 100, 0., 150., "Incl noiso: m_{T}/GeV");
+	Cat0JetLowMtAntiIsoSS = HConfig.GetTH1D(Name + "_Cat0JetLowMtAntiIsoSS", "Cat0JetLowMtAntiIsoSS", 100, 0., 150., "0JL noiso SS: m_{T}/GeV");
+	Cat0JetHighMtAntiIsoSS = HConfig.GetTH1D(Name + "_Cat0JetHighMtAntiIsoSS", "Cat0JetHighMtAntiIsoSS", 100, 0., 150., "0JH noiso SS: m_{T}/GeV");
+	Cat1JetLowMtAntiIsoSS = HConfig.GetTH1D(Name + "_Cat1JetLowMtAntiIsoSS", "Cat1JetLowMtAntiIsoSS", 100, 0., 150., "1JL noiso SS: m_{T}/GeV");
+	Cat1JetHighMtAntiIsoSS = HConfig.GetTH1D(Name + "_Cat1JetHighMtAntiIsoSS", "Cat1JetHighMtAntiIsoSS", 100, 0., 150., "1JH noiso SS: m_{T}/GeV");
+	Cat1JetBoostMtAntiIsoSS = HConfig.GetTH1D(Name + "_Cat1JetBoostMtAntiIsoSS", "Cat1JetBoostMtAntiIsoSS", 100, 0., 150., "1JB noiso SS: m_{T}/GeV");
+	CatVBFLooseMtAntiIsoSS = HConfig.GetTH1D(Name + "_CatVBFLooseMtAntiIsoSS", "CatVBFLooseMtAntiIsoSS", 100, 0., 150., "VBFL noiso SS: m_{T}/GeV");
+	CatVBFTightMtAntiIsoSS = HConfig.GetTH1D(Name + "_CatVBFTightMtAntiIsoSS", "CatVBFTightMtAntiIsoSS", 100, 0., 150., "VBFT noiso SS: m_{T}/GeV");
+	CatInclusiveMtAntiIsoSS = HConfig.GetTH1D(Name + "_CatInclusiveMtAntiIsoSS", "CatInclusiveMtAntiIsoSS", 100, 0., 150., "Incl noiso SS: m_{T}/GeV");
+
 	Cat0JetLowQcdAbcd = HConfig.GetTH1D(Name+"_Cat0JetLowQcdAbcd","Cat0JetLowQcdAbcd",5,-0.5,4.5,"0JL: ABCD");
 	Cat0JetHighQcdAbcd = HConfig.GetTH1D(Name+"_Cat0JetHighQcdAbcd","Cat0JetHighQcdAbcd",5,-0.5,4.5,"0JH: ABCD");
 	Cat1JetLowQcdAbcd = HConfig.GetTH1D(Name+"_Cat1JetLowQcdAbcd","Cat1JetLowQcdAbcd",5,-0.5,4.5,"1JL: ABCD");
@@ -126,6 +144,9 @@ void HToTaumuTauhBackgrounds::Setup(){
 	CatInclusiveQcdOSTauIso = HConfig.GetTH1D(Name + "_CatInclusiveQcdOSTauIso", "CatInclusiveQcdOSTauIso", 50, 0., 20., "iso(#tau_{h})");
 	CatInclusiveQcdSSMuIso = HConfig.GetTH1D(Name + "_CatInclusiveQcdSSMuIso", "CatInclusiveQcdSSMuIso", 50, 0., 1., "relIso(#mu)");
 	CatInclusiveQcdSSTauIso = HConfig.GetTH1D(Name + "_CatInclusiveQcdSSTauIso", "CatInclusiveQcdSSTauIso", 50, 0., 20., "iso(#tau_{h})");
+
+	CatInclusiveMtOSChargeSum = HConfig.GetTH1D(Name + "_CatInclusiveMtOSChargeSum", "CatInclusiveMtOSChargeSum", 5,-2.5,2.5, "q(#mu)+q(#tau)");
+	CatInclusiveMtSSChargeSum = HConfig.GetTH1D(Name + "_CatInclusiveMtSSChargeSum", "CatInclusiveMtSSChargeSum", 5,-2.5,2.5, "q(#mu)+q(#tau)");
 }
 
 void HToTaumuTauhBackgrounds::Configure(){
@@ -190,6 +211,23 @@ void HToTaumuTauhBackgrounds::Store_ExtraDist(){
 	Extradist1d.push_back(&CatInclusiveMtSidebandSS);
 	Extradist1d.push_back(&CatInclusiveMtExtrapolationSS);
 
+	Extradist1d.push_back(&Cat0JetLowMtAntiIso);
+	Extradist1d.push_back(&Cat0JetHighMtAntiIso);
+	Extradist1d.push_back(&Cat1JetLowMtAntiIso);
+	Extradist1d.push_back(&Cat1JetHighMtAntiIso);
+	Extradist1d.push_back(&Cat1JetBoostMtAntiIso);
+	Extradist1d.push_back(&CatVBFLooseMtAntiIso);
+	Extradist1d.push_back(&CatVBFTightMtAntiIso);
+	Extradist1d.push_back(&CatInclusiveMtAntiIso);
+	Extradist1d.push_back(&Cat0JetLowMtAntiIsoSS);
+	Extradist1d.push_back(&Cat0JetHighMtAntiIsoSS);
+	Extradist1d.push_back(&Cat1JetLowMtAntiIsoSS);
+	Extradist1d.push_back(&Cat1JetHighMtAntiIsoSS);
+	Extradist1d.push_back(&Cat1JetBoostMtAntiIsoSS);
+	Extradist1d.push_back(&CatVBFLooseMtAntiIsoSS);
+	Extradist1d.push_back(&CatVBFTightMtAntiIsoSS);
+	Extradist1d.push_back(&CatInclusiveMtAntiIsoSS);
+
 	Extradist1d.push_back(&Cat0JetLowQcdAbcd);
 	Extradist1d.push_back(&Cat0JetHighQcdAbcd);
 	Extradist1d.push_back(&Cat1JetLowQcdAbcd);
@@ -231,6 +269,8 @@ void HToTaumuTauhBackgrounds::Store_ExtraDist(){
 	Extradist1d.push_back(&CatInclusiveQcdOSTauIso);
 	Extradist1d.push_back(&CatInclusiveQcdSSMuIso);
 	Extradist1d.push_back(&CatInclusiveQcdSSTauIso);
+	Extradist1d.push_back(&CatInclusiveMtOSChargeSum);
+	Extradist1d.push_back(&CatInclusiveMtSSChargeSum);
 }
 
 void HToTaumuTauhBackgrounds::doEvent() {
@@ -388,6 +428,7 @@ void HToTaumuTauhBackgrounds::doEvent() {
 		if (pass.at(OppCharge)) {
 			CatInclusiveMt.at(t).Fill(value.at(MT), w);
 			CatInclusiveMtSideband.at(t).Fill(value.at(MT), w);
+			CatInclusiveMtOSChargeSum.at(t).Fill(Ntp->Muon_Charge(selMuon) + Ntp->PFTau_Charge(selTau));
 			if (isWJetMC) {
 				if (pass.at(MT))
 					CatInclusiveMtExtrapolation.at(t).Fill(1, w);
@@ -397,6 +438,7 @@ void HToTaumuTauhBackgrounds::doEvent() {
 		} else {
 			CatInclusiveMtSS.at(t).Fill(value.at(MT), w);
 			CatInclusiveMtSidebandSS.at(t).Fill(value.at(MT), w);
+			CatInclusiveMtSSChargeSum.at(t).Fill(Ntp->Muon_Charge(selMuon) + Ntp->PFTau_Charge(selTau));
 			if (isWJetMC) {
 				if (pass.at(MT))
 					CatInclusiveMtExtrapolationSS.at(t).Fill(1, w);
@@ -524,6 +566,31 @@ void HToTaumuTauhBackgrounds::doEvent() {
 					CatVBFTightQcdSSTauIso.at(t).Fill(Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(selTau), w);
 				}
 			}
+		}
+	}
+
+	if (verbose)
+			std::cout << "	Mt in AntiIso region" << std::endl;
+	if(!passedMu && hasRelaxedIsoTau && hasAntiIsoMuon){
+		if(pass.at(OppCharge)){
+			CatInclusiveMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_ZeroJetLow) Cat0JetLowMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_ZeroJetHigh) Cat0JetHighMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetLow) Cat1JetLowMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetHigh) Cat1JetHighMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetBoost) Cat1JetBoostMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_VBFLoose) CatVBFLooseMtAntiIso.at(t).Fill(value.at(MT), w);
+			if (passed_VBFTight) CatVBFTightMtAntiIso.at(t).Fill(value.at(MT), w);
+		}
+		else{
+			CatInclusiveMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_ZeroJetLow) Cat0JetLowMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_ZeroJetHigh) Cat0JetHighMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetLow) Cat1JetLowMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetHigh) Cat1JetHighMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_OneJetBoost) Cat1JetBoostMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_VBFLoose) CatVBFLooseMtAntiIsoSS.at(t).Fill(value.at(MT), w);
+			if (passed_VBFTight) CatVBFTightMtAntiIsoSS.at(t).Fill(value.at(MT), w);
 		}
 	}
 }

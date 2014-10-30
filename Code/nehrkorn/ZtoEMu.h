@@ -85,10 +85,15 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> invmass_ptbal_only;
 
   std::vector<TH1D> nm0_met;
-  std::vector<TH1D> nm0_jetsum;
+  std::vector<TH1D> nm0_mvamet;
   std::vector<TH1D> nm0_onejet;
   std::vector<TH1D> nm0_mtmu;
   std::vector<TH1D> nm0_ptbalance;
+  std::vector<TH1D> nmm_met;
+  std::vector<TH1D> nmm_mvamet;
+  std::vector<TH1D> nmm_onejet;
+  std::vector<TH1D> nmm_mtmu;
+  std::vector<TH1D> nmm_ptbalance;
   
   std::vector<TH1D> NPV;
   std::vector<TH1D> NPV3d;
@@ -98,39 +103,26 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> met;
   std::vector<TH1D> met_uncorr;
   std::vector<TH1D> onejet;
-  std::vector<TH1D> mte_mtmu;
+  std::vector<TH1D> onejet_eta;
   std::vector<TH1D> NbJets;
   std::vector<TH1D> NbJetsVtxL;
   std::vector<TH1D> NbJetsVtxM;
   std::vector<TH1D> NbJetsVtxT;
 
-  // binning tests
-  std::vector<TH1D> etaE_offBins;
-  std::vector<TH1D> etaE_manyBins;
-  std::vector<TH1D> etaMu_offBins;
-  std::vector<TH1D> etaMu_manyBins;
-
   // cross checks
-  std::vector<TH1D> mtmu_metgr30;
-  std::vector<TH1D> mtmu_metsm30;
-  std::vector<TH1D> jet1E;
-  std::vector<TH1D> jet2E;
-  std::vector<TH1D> jet1Mu;
-  std::vector<TH1D> jet2Mu;
+  std::vector<TH1D> mtmu_phicorr;
+  std::vector<TH1D> mte_mtmu;
+  std::vector<TH1D> mtmu_mufake;
+  std::vector<TH1D> mtmu_efake;
+  std::vector<TH1D> mtmu_onefake;
+  std::vector<TH1D> mtmu_twofakes;
+  std::vector<TH1D> mtmu_nmu;
 
   // comparison of generators
 
   std::vector<TH1D> zpt;
   std::vector<TH1D> zeta;
   std::vector<TH1D> zmass;
-  std::vector<TH1D> leadingjet_pt;
-  std::vector<TH1D> subleadingjet_pt;
-  std::vector<TH1D> leadingjet_eta;
-  std::vector<TH1D> subleadingjet_eta;
-  std::vector<TH1D> jetsumcustom;
-
-  std::vector<TH1D> ptbal_chargepass;
-  std::vector<TH1D> ptbal_chargefail;
 
   std::vector<TH2D> eta_mu_e;
   std::vector<TH2D> pt_vs_eta_mu;
@@ -138,7 +130,6 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> nfakes;
   std::vector<TH2D> pt_vs_eta_mu_gen;
   std::vector<TH2D> pt_vs_eta_e_gen;
-  std::vector<TH1D> mll_gen;
   std::vector<TH1D> higgs_mass;
   std::vector<TH1D> ht_pseudo;
   std::vector<TH1D> zmass_zoom;
@@ -154,7 +145,8 @@ class ZtoEMu : public Selection {
   std::vector<TH1D> pdf_w0;
   std::vector<TH1D> pdf_w1;
 
-  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,jet_sum,singlejet,zmin,zmax,mtmu,ptbalance,mmin;
+  double mu_ptlow,mu_pthigh,mu_eta,e_ptlow,e_pthigh,e_eta,jet_pt,jet_eta,singlejet,zmin,zmax,mtmu,ptbalance,mmin;
+  double normunc_dy,normunc_tt,normunc_tw,normunc_diboson,normunc_qcd;
   int n_mu,n_e;
   bool doHiggsObjects;
   bool doWWObjects;
@@ -183,6 +175,8 @@ class ZtoEMu : public Selection {
 
   double ZPtReweight(double zpt);
   double PowhegReweight(double zpt);
+  double ZPtRelUnc(double zpt);
+  double ZPtMadgraphRelUnc(double zpt);
 
   double Fakerate(double pt, double eta, TH2D *fakeRateHist);
   double FakerateError(double pt, double eta, TH2D *fakeRateHist);

@@ -3,9 +3,9 @@ include make.inc
 ### Defining Compiling variables              ###
 #################################################
 
-CXX           = g++ -Wno-deprecated
+CXX           = g++ -Wno-deprecated -Wall
 #-m32  -Wno-deprecated
-LD            = g++ -Wno-deprecated
+LD            = g++ -Wno-deprecated -Wall
 #-m32  -Wno-deprecated 
 INSTALL	      = /usr/bin/install
 SHELL = /bin/sh
@@ -19,7 +19,8 @@ SHAREDCXXFLAGS =-I./CommonUtils
 SUBDIRS = CommonUtils/ 
 TAUSPINERFLAG = 
 
-CXXFLAGS      = -I$(ROOTSYS)/include -c -I/include $(SHAREDCXXFLAGS) -c -I./ -c
+override CXXFLAGS += 
+ALLCXXFLAGS = $(CXXFLAGS) -I$(ROOTSYS)/include -c -I/include $(SHAREDCXXFLAGS) -c -I./ -c
 LDFLAGS       =  
 ROOTLIBS      =  -L$(ROOTSYS)/lib -L/usr/lib/ -L/lib/i686/  -lCore -lCint -lHist -lGraf  -lGraf3d -lGpad -lTree -lRint -lReflexDict -lReflex -lPostscript -lMatrix -lPhysics -lGui -LObj -lMinuit2 -lThread -rdynamic -Wl,--rpath $(ROOTSYS)/lib
 
@@ -90,7 +91,11 @@ endif
 endif
 
 ifdef USE_pistone
-        DEFS += -DUSE_pistone=1
+	DEFS += -DUSE_pistone=1
+endif
+ifdef USE_zotz
+	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive
+	DEFS += -DUSE_zotz=1
 endif
 
 
@@ -116,6 +121,8 @@ vpath %.cxx kargoll
 vpath %.h kargoll
 vpath %.cxx nehrkorn
 vpath %.h nehrkorn
+vpath %.cxx zotz
+vpath %.h zotz
 vpath %.cxx CommonFiles
 vpath %.h CommonFiles
 
@@ -126,7 +133,7 @@ vpath %.h CommonFiles
 ##########################################################
 
 $(OBJS): %.o : %.cxx
-	$(CXX) $(CXXFLAGS) $(DEFS) $< -o i386_linux/$@ 
+	$(CXX) $(ALLCXXFLAGS) $(DEFS) $< -o i386_linux/$@ 
 
 .PHONY: clean cleanall all install sharedlib 
 
@@ -155,7 +162,7 @@ sharedlib:
 			cd $$subdir && $(MAKE) -f Makefile.standalone $(TAUSPINERFLAG) && cd ../ && pwd; \
 		else \
 			echo without flag ; \
-			cd $$subdir && $(MAKE) -f Makefile.standalone && cd ../ && pwd; \
+			cd $$subdir echo $(CXXFLAGS) && $(MAKE) -f Makefile.standalone CXXFLAGS+='$(CXXFLAGS)' && cd ../ && pwd; \
 		fi \
 	done
 	$(install)

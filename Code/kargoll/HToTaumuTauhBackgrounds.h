@@ -73,6 +73,23 @@ protected:
 	std::vector<TH1D> CatInclusiveMtSidebandSS;
 	std::vector<TH1D> CatInclusiveMtExtrapolationSS;
 
+	std::vector<TH1D> Cat0JetLowMtAntiIso;
+	std::vector<TH1D> Cat0JetHighMtAntiIso;
+	std::vector<TH1D> Cat1JetLowMtAntiIso;
+	std::vector<TH1D> Cat1JetHighMtAntiIso;
+	std::vector<TH1D> Cat1JetBoostMtAntiIso;
+	std::vector<TH1D> CatVBFLooseMtAntiIso;
+	std::vector<TH1D> CatVBFTightMtAntiIso;
+	std::vector<TH1D> CatInclusiveMtAntiIso;
+	std::vector<TH1D> Cat0JetLowMtAntiIsoSS;
+	std::vector<TH1D> Cat0JetHighMtAntiIsoSS;
+	std::vector<TH1D> Cat1JetLowMtAntiIsoSS;
+	std::vector<TH1D> Cat1JetHighMtAntiIsoSS;
+	std::vector<TH1D> Cat1JetBoostMtAntiIsoSS;
+	std::vector<TH1D> CatVBFLooseMtAntiIsoSS;
+	std::vector<TH1D> CatVBFTightMtAntiIsoSS;
+	std::vector<TH1D> CatInclusiveMtAntiIsoSS;
+
 	std::vector<TH1D> Cat0JetLowQcdAbcd;
 	std::vector<TH1D> Cat0JetHighQcdAbcd;
 	std::vector<TH1D> Cat1JetLowQcdAbcd;
@@ -114,6 +131,9 @@ protected:
 	std::vector<TH1D> CatInclusiveQcdOSTauIso;
 	std::vector<TH1D> CatInclusiveQcdSSMuIso;
 	std::vector<TH1D> CatInclusiveQcdSSTauIso;
+
+	std::vector<TH1D> CatInclusiveMtOSChargeSum;
+	std::vector<TH1D> CatInclusiveMtSSChargeSum;
 };
 
 #endif /* HTOTAUMUTAUHBACKGROUNDS_H_ */

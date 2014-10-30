@@ -10,6 +10,7 @@ if [ "${1}"  == "--help" ]; then
     echo "--kargoll                 Configures the make file to compile files in the directory kargoll"
     echo "--nehrkorn                Configures the make file to compile files in the directory nehrkorn"
     echo "--pistone                 Configures the make file to compile files in the directory pistone"
+    echo "--zotz                    Configures the make file to compile files in the directory zotz"
 else
 
     echo "Configuring Environment...."
@@ -69,6 +70,10 @@ else
 	    if [ "${var}" == "--pistone" ]; then
 		echo "Configuring Code to use directory pistone"
 		echo "USE_pistone=1" >> make.inc
+	    fi
+	    if [ "${var}" == "--zotz" ]; then
+	    echo "Configuring Code to use directory zotz"
+	    echo "USE_zotz=1" >> make.inc
 	    fi
 	done
     fi

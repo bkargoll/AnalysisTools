@@ -166,6 +166,9 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> MetLepNTau;
   std::vector<TH1D> MetLepNMuMinusNMu;
   std::vector<TH1D> MetLepNTauMinusNTau;
+  std::vector<TH1D> MetLepDiffMET;
+  std::vector<TH1D> MetLepDiffMETPhi;
+  std::vector<TH1D> MetLepDiffMt;
 
   std::vector<TH1D> NJetsKin;
   std::vector<TH1D> JetKin1Pt;
@@ -223,6 +226,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> Mt1ProngOnly;
   std::vector<TH1D> Mt3ProngOnly;
   std::vector<TH1D> Mt3ProngSV;
+  std::vector<TH1D> Mt3ProngSVFlight;
 
   std::vector<TH1D> Cat0JetLowQcdShapeRegion;
   std::vector<TH1D> Cat0JetHighLowQcdShapeRegion;
