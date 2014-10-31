@@ -25,6 +25,7 @@ public:
 	double MuonIsoTight2012(TLorentzVector vect);
 	double MuonIsoUncTight2012(TLorentzVector vect);
 	double TrackingEfficiency2012(TLorentzVector vect);
+	double TrackingEfficiencyUnc2012(TLorentzVector vect);
 	double HiggsEMuId_Mu(TLorentzVector vect);
 	double HiggsEMuIdUnc_Mu(TLorentzVector vect);
 

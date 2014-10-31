@@ -45,7 +45,6 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 	doHiggsObjects = false;
 	doWWObjects = true;
 	useMadgraphZ = true;
-	doPDFuncertainty = false;
 	if(useMadgraphZ) mmin = 50;
 	if(doHiggsObjects){
 		mu_eta = 2.1;
@@ -56,6 +55,48 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 	mucorr = "roch";
 	ecorr = "";
 	jetcorr = "runJER";
+
+	// decide if and which systematics should be done
+
+	upwardUncertainty = false; // important for some uncertainties
+
+	doPDFuncertainty = false;
+	doTriggerUncertainty = false;
+	doPileupUncertainty = false;
+	doElectronIdUncertainty = false;
+	doElectronScaleUncertainty = false;
+	doElectronResUncertainty = false;
+	doMuonIdUncertainty = false;
+	doMuonScaleUncertainty = false;
+	doMuonResUncertainty = false;
+	doJECUncertainty = false;
+	doJERUncertainty = false;
+	doFakeRateUncertainty = false;
+
+	systValid = true;
+	if((doPDFuncertainty+doTriggerUncertainty+doPileupUncertainty+doElectronIdUncertainty+doElectronScaleUncertainty+doElectronResUncertainty+doMuonIdUncertainty+doMuonScaleUncertainty+doMuonResUncertainty+doJECUncertainty+doJERUncertainty+doFakeRateUncertainty)>1){
+		systValid = false;
+	}
+
+	// set correction strings for systematics
+	if(doElectronResUncertainty) ecorr += "res";
+	else if(doElectronScaleUncertainty){
+		ecorr += "scale";
+		if(!upwardUncertainty) ecorr += "down";
+	}
+	else if(doMuonResUncertainty) mucorr += "res";
+	else if(doMuonScaleUncertainty){
+		mucorr += "scale";
+		if(!upwardUncertainty) mucorr += "down";
+	}
+	else if(doJECUncertainty){
+		jetcorr += "JEC";
+		if(upwardUncertainty) jetcorr += "plus";
+	}
+	else if(doJERUncertainty){
+		if(upwardUncertainty) jetcorr += "up";
+		else jetcorr += "down";
+	}
 
 	// initialize pdf reweighting for systematics
 	if(doPDFuncertainty){
@@ -73,7 +114,7 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 }
 
 ZtoEMu::~ZtoEMu(){
-  for(int j=0; j<Npassed.size(); j++){
+  for(unsigned int j=0; j<Npassed.size(); j++){
     std::cout << "ZtoEMu::~ZtoEMu Selection Summary before: " 
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
@@ -770,14 +811,26 @@ void  ZtoEMu::doEvent(){
 	  for(unsigned i=0;i<Fakemuons.size();i++){
 		  if(Fakemuons.at(i)==muidx){
 			  fakemu=true;
-			  if(doHiggsObjects || doWWObjects) fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate15);
+			  if(doHiggsObjects || doWWObjects){
+				  fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate15);
+				  if(doFakeRateUncertainty){
+					  if(upwardUncertainty) fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate30);
+					  else fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate5);
+				  }
+			  }
 			  break;
 		  }
 	  }
 	  for(unsigned i=0;i<Fakeelectrons.size();i++){
 		  if(Fakeelectrons.at(i)==eidx){
 			  fakee=true;
-			  if(doHiggsObjects || doWWObjects) fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate35);
+			  if(doHiggsObjects || doWWObjects){
+				  fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate35);
+				  if(doFakeRateUncertainty){
+					  if(upwardUncertainty) fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate50);
+					  else fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate20);
+				  }
+			  }
 			  break;
 		  }
 	  }
@@ -920,25 +973,56 @@ void  ZtoEMu::doEvent(){
   if(verbose) std::cout << "do weights" << std::endl;
   double wobs(1),w(1);
   if(!Ntp->isData() && Ntp->GetMCID()!=DataMCType::DY_emu_embedded){
-    w*=Ntp->PUWeight()*fakeRate;
+    if(!doPileupUncertainty) w*=Ntp->PUWeight();
+    else{
+    	if(upwardUncertainty) w*=Ntp->PUWeight_p5();
+    	else w*= Ntp->PUWeight3D_m5();
+    }
+    w*=fakeRate;
     if(pass.at(NE)){
     	if(doHiggsObjects){
     		w*=RSF->HiggsTauTau_EMu_Id_E(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     		w*=RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     		w*=RSF->HiggsTauTau_EMu_Trigger_E(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     	}else{
-    		w*=RSF->ElectronIdTrig2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
-    		w*=RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
+    		double eidunc(0), erecunc(0);
+    		if(doElectronIdUncertainty){
+    			eidunc = RSF->ElectronIdTrigUnc2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
+    			erecunc = RSF->ElectronReconstructionUnc2012(Ntp->Electron_p4(eidx,ecorr).Pt(),Ntp->Electron_supercluster_eta(eidx));
+    			if(!upwardUncertainty){
+    				eidunc *= -1;
+    				erecunc *= -1;
+    			}
+    		}
+    		w*=(RSF->ElectronIdTrig2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx))+eidunc);
+			w*=RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx)+erecunc);
     	}
     }
-    if(pass.at(NMu)){ // for systematics: add systematic uncertainty of 1.5%(0.5%) when pt<20(>20) for Id and 0.2% for isolation when pt>20 to statistical in quadrature.
+    if(pass.at(NMu)){
     	if(doHiggsObjects){
     		w*=RSF->HiggsEMuId_Mu(Ntp->Muon_p4(muidx,mucorr));
     		w*=RSF->HiggsTauTau_EMu_Trigger_Mu(Ntp->Muon_p4(muidx,mucorr));
     	}else{
-    		w*=RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr));
-    		w*=RSF->MuonIsoTight2012(Ntp->Muon_p4(muidx,mucorr));
-    		w*=RSF->TrackingEfficiency2012(Ntp->Muon_p4(muidx,mucorr));
+    		// for systematics: add systematic uncertainty of 0.5%(1.5%) when pt>20(<20) for Id and 0.2% for isolation when pt>20 to statistical in quadrature.
+    		double muidunc(0), muisounc(0), mutrkunc(0);
+    		if(doMuonIdUncertainty){
+    			if(Ntp->Muon_p4(muidx,mucorr).Pt()>20){
+    				muidunc = sqrt(pow(RSF->MuonIdUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))*0.005,2));
+    				muisounc = sqrt(pow(RSF->MuonIsoUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(0.002,2));
+    			}else{
+    				muidunc = sqrt(pow(RSF->MuonIdUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))*0.015,2));
+    				muisounc = RSF->MuonIsoUncTight2012(Ntp->Muon_p4(muidx,mucorr));
+    			}
+    			mutrkunc = RSF->TrackingEfficiencyUnc2012(Ntp->Muon_p4(muidx,mucorr));
+    			if(!upwardUncertainty){
+    				muidunc *= -1;
+    				muisounc *= -1;
+    				mutrkunc *= -1;
+    			}
+    		}
+    		w*=(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))+muidunc);
+    		w*=(RSF->MuonIsoTight2012(Ntp->Muon_p4(muidx,mucorr))+muisounc);
+    		w*=(RSF->TrackingEfficiency2012(Ntp->Muon_p4(muidx,mucorr))+mutrkunc);
     	}
     }
     if(pass.at(TriggerOk)
@@ -946,8 +1030,15 @@ void  ZtoEMu::doEvent(){
     		&& pass.at(NE)
     		&& !doHiggsObjects
     		){
-    	if(leadingmu) w*=RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8");
-    	else w*=RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17");
+    	// for systematics: double mu uncertainty 0.5%, double e uncertainty 0.2%
+    	double trigunc(0);
+    	if(doTriggerUncertainty){
+    		if(leadingmu) trigunc = RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8")*sqrt(pow(0.005,2)+pow(0.002,2));
+    		else trigunc = RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17")*sqrt(pow(0.005,2)+pow(0.002,2));
+    		if(!upwardUncertainty) trigunc *= -1;
+    	}
+    	if(leadingmu) w*=(RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8")+trigunc);
+    	else w*=(RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17")+trigunc);
     }
     if(pass.at(NMu)
     		&& pass.at(NE)
@@ -1523,6 +1614,7 @@ void ZtoEMu::Finish(){
 	printf("Cases with one fake lepton: %f. Cases with two fake leptons: %f.\n",nfakes.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(1),nfakes.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(2));
 
 	printf("Difference in background events: %.3f%% and in signal events: %.3f%%\n",fabs(sumbkg/stdbkg-1)*100,fabs(sumsignal/stdsignal-1)*100);
+	if(!systValid) std::cout << "!!! WARNING: MORE THAN ONE SYSTEMATIC SET TO TRUE !!!" << std::endl;
 
 	if(doPDFuncertainty){
 		TString pdfname1_lower = pdfname1;

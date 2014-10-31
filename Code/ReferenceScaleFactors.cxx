@@ -365,6 +365,36 @@ double ReferenceScaleFactors::TrackingEfficiency2012(TLorentzVector vect){
 	return eff;
 }
 
+double ReferenceScaleFactors::TrackingEfficiencyUnc2012(TLorentzVector vect){
+	double eta = vect.Eta();
+	double eff = 0.;
+	if(eta>=-2.4 && eta<-2.2) eff = 0.0012;
+	if(eta>=-2.2 && eta<-2.0) eff = 0.0005;
+	if(eta>=-2.0 && eta<-1.8) eff = 0.0003;
+	if(eta>=-1.8 && eta<-1.6) eff = 0.0003;
+	if(eta>=-1.6 && eta<-1.4) eff = 0.0003;
+	if(eta>=-1.4 && eta<-1.2) eff = 0.0003;
+	if(eta>=-1.2 && eta<-1.0) eff = 0.0002;
+	if(eta>=-1.0 && eta<-0.8) eff = 0.0001;
+	if(eta>=-0.8 && eta<-0.6) eff = 0.0001;
+	if(eta>=-0.6 && eta<-0.4) eff = 0.0001;
+	if(eta>=-0.4 && eta<-0.2) eff = 0.0001;
+	if(eta>=-0.2 && eta<0.0) eff = 0.0001;
+	if(eta>=0.0 && eta<0.2) eff = 0.0002;
+	if(eta>=0.2 && eta<0.4) eff = 0.0001;
+	if(eta>=0.4 && eta<0.6) eff = 0.0001;
+	if(eta>=0.6 && eta<0.8) eff = 0.0001;
+	if(eta>=0.8 && eta<1.0) eff = 0.0002;
+	if(eta>=1.0 && eta<1.2) eff = 0.0002;
+	if(eta>=1.2 && eta<1.4) eff = 0.0004;
+	if(eta>=1.4 && eta<1.6) eff = 0.0003;
+	if(eta>=1.6 && eta<1.8) eff = 0.0002;
+	if(eta>=1.8 && eta<2.0) eff = 0.0002;
+	if(eta>=2.0 && eta<2.2) eff = 0.0004;
+	if(eta>=2.2 && eta<2.4) eff = 0.0013;
+	return eff;
+}
+
 double ReferenceScaleFactors::HiggsEMuId_Mu(TLorentzVector vect){
 	double pt = vect.Pt();
 	double eta = fabs(vect.Eta());

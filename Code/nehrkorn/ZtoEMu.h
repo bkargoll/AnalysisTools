@@ -152,6 +152,12 @@ class ZtoEMu : public Selection {
   bool doWWObjects;
   bool useMadgraphZ;
   bool doPDFuncertainty;
+  bool doTriggerUncertainty,doPileupUncertainty;
+  bool doElectronIdUncertainty,doElectronScaleUncertainty,doElectronResUncertainty;
+  bool doMuonIdUncertainty,doMuonScaleUncertainty,doMuonResUncertainty;
+  bool doJECUncertainty, doJERUncertainty;
+  bool doFakeRateUncertainty;
+  bool upwardUncertainty,systValid;
   TString mucorr, ecorr, jetcorr;
   
   double csvl,csvm,csvt;
