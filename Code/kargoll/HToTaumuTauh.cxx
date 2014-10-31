@@ -14,7 +14,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   cMu_pt(20.0),
   cMu_eta(2.1),
   cMu_dRHltMatch(0.5),
-  cTau_pt(20.0),
+  cTau_pt(30.0),
   cTau_eta(2.3),
   cTau_rawIso(1.5),
   cMuTau_dR(0.5),
