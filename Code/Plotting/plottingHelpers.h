@@ -1,3 +1,6 @@
+#ifndef plottingHelpers_h
+#define plottingHelpers_h
+
 /////////////////////////////////////////////////
 //
 // plotting helper functions
@@ -5,100 +8,37 @@
 //
 /////////////////////////////////////////////////
 
-#include "Riostream.h"
+#include <vector>
+#include "TMath.h"
+#include "THStack.h"
 
-// container to hold all information for one sample
-struct sample{
-	bool isCombinedSample = false;
-	std::vector<sample> sampleList;
-	int id = -1;
-	double xsec = -1;
-	int nEvt = -1;
-	int color = -1;
-	TString legName = "";
-	double mcScale = -1;
-	double syst = 0;
-};
-// create sample struct from raw numbers
-sample createSample(TString legName, double xsec, int nEvt, int color){
-	sample s;
-	s.legName = legName;
-	s.xsec = xsec;
-	s.nEvt = nEvt;
-	s.color = color;
-	s.mcScale = lumi * s.xsec / s.nEvt;
-	//todo: define syst
-	return s;
-}
-// create struct using dataMCType and SkimSummary info
-sample createSample(int dataMcType, TString legName, double xsec, int color, std::map<int,int> nEventsMap){
-	sample s;
-	s.id = dataMcType;
-	s.legName = legName;
-	s.xsec = xsec;
-	s.nEvt = nEventsMap[s.id];
-	s.color = color;
-	s.mcScale = lumi * s.xsec / s.nEvt;
-	//todo: define syst
-	return s;
-}
-// create slim structed without scaling information
-sample createSample(TString legName, int color){
-	sample s;
-	s.legName = legName;
-	s.color = color;
-	//todo: define syst
-	return s;
-}
-// combine sample structs into one
-sample combineSamples(){
-	sample s;
-	s.isCombinedSample = true;
+// include struct definitions
+#include "sample.h"
+#include "plotInfo.h"
+#include "configInfo.h"
+#include "userConfig.h"
 
-}
-
-// function to read number of events from SkimSummary
-std::map<int, int> readSkimSummary(TString skimsummaryFile){
-	ifstream input_file;
-	char *file_=(char*)skimsummaryFile.Data();
-	input_file.open(file_, std::ios::in);
-	if (!(input_file)){
-		std::cout << "\nERROR: Opening SkimSummary file "<< skimsummaryFile <<" fhas failed.\n" << std::endl;
-		return false;
+// test definiton of structs
+void testInputs(configInfo config, std::vector<sample> samples, std::vector<plotInfo> plots){
+	bool isValid = true;
+	isValid &= testConfigInfo(config, verbose);
+	isValid &= testSamples(samples, config);
+	isValid &= testPlots(plots);
+	if(!isValid){
+		std::cout << "========== WARNING: Your inputs (configInfo, plotInfo or sample) seem to be corrupted! ==========" << std::endl;
 	}
-	std::cout << "\nOpened SkimSummary SkimEff file: "<< skimsummaryFile <<".\n" << std::endl;
-	std::string s;
-	int a=0;
-	std::map<int, int> nEvtMap;
-	while(getline(input_file, s)){
-		a++;
-		if(a>1000) break;
-		std::stringstream line(s);
-		TString tmp;
-		int id;
-		float nevents;
-		float neventserr;
-		float nevents_sel;
-		float neventserr_sel;
-		float noweight;
-		float noweight_sel;
-		line >> tmp >> id >> tmp >> nevents >> tmp >> neventserr >> tmp >> nevents_sel >> tmp >> neventserr_sel >> tmp >> noweight >> tmp >> noweight_sel;
-		// only consider main data-mc-types, thus removing all but 2 last digits
-		nEvtMap[id%100] += nevents;
-	}
-	return nEvtMap;
 }
 
-TH1D* getHisto(TString name, TFile* file){
-	TString pre = "ztoemu_default_";
-	TH1D* hist = ((TH1D*)file->Get(pre+name));
+TH1D* getHisto(configInfo config, TString name){
+	if(verbose) std::cout << "--> getHisto(configInfo, TString)" << std::endl;
+	std::cout << config.prefix+name << std::endl;
+	TH1D* hist = ((TH1D*)config.file->Get(config.prefix+name));
 	return hist;
 }
 
-TH1D* getHisto(TString name, double scale, int color, TFile* file){
-	TString pre = "ztoemu_default_";
-	//TString pre = "ztoemu_skim_default_";
-	TH1D* hist = ((TH1D*)file->Get(pre+name));
+TH1D* getHisto(configInfo config, TString name, double scale, int color){
+	if(verbose) std::cout << "--> getHisto(configInfo, TString, double, int)" << std::endl;
+	TH1D* hist = getHisto(config, name);
 	hist->Scale(scale);
 	hist->SetFillColor(color);
 	hist->SetLineColor(1);
@@ -106,18 +46,13 @@ TH1D* getHisto(TString name, double scale, int color, TFile* file){
 	return hist;
 }
 
-TH1D* getHisto(TString name, double scale, int color, TFile* file, double systematic){
-	TString pre = "ztoemu_default_";
-	//TString pre = "ztoemu_skim_default_";
-	TH1D* hist = ((TH1D*)file->Get(pre+name));
-	hist->Scale(scale);
-	for(unsigned i=1;i<hist->GetNbinsX();i++){
+TH1D* getHisto(configInfo config, TString name, double scale, int color, double systematic){
+	if(verbose) std::cout << "--> getHisto(configInfo, TString, double, int, double)" << std::endl;
+	TH1D* hist = getHisto(config, name, scale, color);
+	for(int i=1;i<hist->GetNbinsX();i++){
 		hist->SetBinError(i,TMath::Sqrt(TMath::Power(hist->GetBinError(i),2)+TMath::Power(systematic*hist->GetBinContent(i),2)));
 	}
-	hist->SetFillColor(color);
-	hist->SetLineColor(1);
-	hist->SetLineWidth(1);
-	if(name.Contains("DY_emu")){
+	if(name.Contains("DY_emu")){ // todo: generalize. introduce "isSignal" in sample struct?
 	//if(name.Contains("emu_DY")){
 		hist->SetFillStyle(0);
 		hist->SetLineStyle(7);
@@ -127,6 +62,8 @@ TH1D* getHisto(TString name, double scale, int color, TFile* file, double system
 	return hist;
 }
 
+//todo: not adapted yet
+/*
 std::vector<TH1D*> getHistos(std::vector<TString> names, std::vector<double> scale, std::vector<int> color, TFile* file){
 	std::vector<TH1D*> histos;
 	for(unsigned i=0;i<names.size();i++){
@@ -134,41 +71,32 @@ std::vector<TH1D*> getHistos(std::vector<TString> names, std::vector<double> sca
 	}
 	return histos;
 }
+*/
 
-std::vector<TH1D*> getHistos(TString name, std::vector<double> scale, std::vector<int> color, TFile* file){
-	if(!dym50)TString append[14] = {"MC_QCD","MC_ZZ_4l","MC_ZZ_2l2q","MC_ZZ_2l2nu","MC_WZ_3l1nu","MC_WZ_2l2q","MC_WW_2l2nu","MC_ttbar","MC_tw","MC_tbarw","MC_ee_DY","MC_mumu_DY","MC_tautau_DY","MC_emu_DY"};
-	if(dym50)TString append[13] = {"MC_QCD","MC_ZZ_4l","MC_ZZ_2l2q","MC_ZZ_2l2nu","MC_WZ_3l1nu","MC_WZ_2l2q","MC_WW_2l2nu","MC_ttbar","MC_tw","MC_tbarw","MC_DY","MC_tautau_DY","MC_emu_DY"};
+/*
+//todo: does not take care of various subsamples within one sample
+//todo: is this still needed? does the same as "getHistos", or not?
+std::vector<TH1D*> getHistos(configInfo conf, plotInfo plot, std::vector<sample> samples){
 	TString histname;
+	sample sam;
 	std::vector<TH1D*> histos;
-	for(unsigned i=0;i<scale.size();i++){
-		histname = name+append[i];
-		histos.push_back(getHisto(histname,scale.at(i),color.at(i),file));
+	for(unsigned s=0; s<samples.size(); s++){
+		sam = samples.at(s);
+		histname = plot.identifier + sam.identifier;
+		histos.push_back(getHisto(conf, histname, sam.mcScale, sam.color));
 	}
 	return histos;
 }
-
-std::vector<TH1D*> getHistos(TString name, std::vector<double> scale, std::vector<int> color, TFile* file, std::vector<double> systematics){
-	if(dym50){
-		TString append[13] = {"MC_QCD","MC_ZZ_4l","MC_ZZ_2l2q","MC_ZZ_2l2nu","MC_WZ_3l1nu","MC_WZ_2l2q","MC_WW_2l2nu","MC_ttbar","MC_tw","MC_tbarw","MC_DY","MC_tautau_DY","MC_emu_DY"};
-	}else{
-		TString append[14] = {"MC_QCD","MC_ZZ_4l","MC_ZZ_2l2q","MC_ZZ_2l2nu","MC_WZ_3l1nu","MC_WZ_2l2q","MC_WW_2l2nu","MC_ttbar","MC_tw","MC_tbarw","MC_ee_DY","MC_mumu_DY","MC_tautau_DY","MC_emu_DY"};
-	}
-	TString histname;
-	std::vector<TH1D*> histos;
-	for(unsigned i=0;i<scale.size();i++){
-		histname = name+append[i];
-		histos.push_back(getHisto(histname,scale.at(i),color.at(i),file,systematics.at(i)));
-	}
-	return histos;
-}
+*/
 
 TH1D* getDataMC(TH1D* datahist, TH1D* MChist){
+	if(verbose) std::cout << "--> getDataMC(...)" << std::endl;
 	int nbins = datahist->GetNbinsX();
 	double xlow = datahist->GetXaxis()->GetXmin();
 	double xhigh = datahist->GetXaxis()->GetXmax();
 	TH1D* hist = new TH1D("hist",";;Data/MC",nbins,xlow,xhigh);
 
-	for(unsigned int i=1;i<=nbins;i++){
+	for(int i=1;i<=nbins;i++){
 		double data = datahist->GetBinContent(i);
 		double dataerror = datahist->GetBinError(i);
 		double mc = MChist->GetBinContent(i);
@@ -179,7 +107,7 @@ TH1D* getDataMC(TH1D* datahist, TH1D* MChist){
 		}
 	}
 	double min = 999;
-	for(unsigned i=1;i<nbins;i++){
+	for(int i=1;i<nbins;i++){
 		if(hist->GetBinContent(i)>0){
 			if(hist->GetBinContent(i)<min)min=hist->GetBinContent(i);
 		}
@@ -193,12 +121,13 @@ TH1D* getDataMC(TH1D* datahist, TH1D* MChist){
 }
 
 TH1D* getDataMC(TH1D* datahist, std::vector<TH1D*> MChists){
+	if(verbose) std::cout << "--> getDataMC(...)" << std::endl;
 	int nbins = datahist->GetNbinsX();
 	double xlow = datahist->GetXaxis()->GetXmin();
 	double xhigh = datahist->GetXaxis()->GetXmax();
 	TH1D* hist = new TH1D("hist",";;Data/MC",nbins,xlow,xhigh);
 
-	for(unsigned int i=1;i<=nbins;i++){
+	for(int i=1;i<=nbins;i++){
 		double data = datahist->GetBinContent(i);
 		double dataerror = datahist->GetBinError(i);
 		double mc = 0;
@@ -215,7 +144,7 @@ TH1D* getDataMC(TH1D* datahist, std::vector<TH1D*> MChists){
 		}
 	}
 	double min = 999;
-	for(unsigned i=1;i<nbins;i++){
+	for(int i=1;i<nbins;i++){
 		if(hist->GetBinContent(i)>0){
 			if(hist->GetBinContent(i)<min)min=hist->GetBinContent(i);
 		}
@@ -230,6 +159,7 @@ TH1D* getDataMC(TH1D* datahist, std::vector<TH1D*> MChists){
 }
 
 THStack* produceHistStack(std::vector<TH1D*> histos){
+	if(verbose) std::cout << "--> produceHistStack(...)" << std::endl;
 	THStack* stack = new THStack("stack","stack");
 	for(unsigned i=0;i<histos.size()-1;i++){ //
 		stack->Add(histos.at(i));
@@ -237,7 +167,9 @@ THStack* produceHistStack(std::vector<TH1D*> histos){
 	return stack;
 }
 
+//todo: should in principal be obsolete, since total histo can be accessed from stack
 TH1D* produceTotal(std::vector<TH1D*> histos){
+	if(verbose) std::cout << "--> produceTotal(...)" << std::endl;
 	TH1D* total = new TH1D("total","total",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
 	total->Sumw2();
 	for(unsigned i=0;i<histos.size()-1;i++){
@@ -251,6 +183,8 @@ TH1D* produceTotal(std::vector<TH1D*> histos){
 	return total;
 }
 
+//todo: should be obsolete, replaced by getHistos
+/*
 std::vector<TH1D*> produceReducedHistos(std::vector<TH1D*> histos, std::vector<int> colors){
 	if(!dym50){
 		TH1D* qcd = histos.at(0);
@@ -301,8 +235,89 @@ std::vector<TH1D*> produceReducedHistos(std::vector<TH1D*> histos, std::vector<i
 	reducedhistos.push_back(sig);
 	return reducedhistos;
 }
+*/
 
-void drawPlot(TH1D* data, TString name, TString title, TString unit){
+//todo: add systematics
+TH1D* getHistoFromSample(configInfo conf, plotInfo p, sample s){
+	if(verbose) std::cout << "--> getHistoFromSample(...)" << std::endl;
+	std::cout << p.identifier + s.identifier.at(0) << std::endl;
+	std::cout << s.mcScale.at(0) << std::endl;
+	std::cout << s.color << std::endl;
+	TH1D* tmp = getHisto(conf, p.identifier + s.identifier.at(0), s.mcScale.at(0), s.color);
+	std::cout << "b" << std::endl;
+	TH1D* histo = new TH1D(s.legName,s.legName,tmp->GetNbinsX(),tmp->GetXaxis()->GetXmin(),tmp->GetXaxis()->GetXmax());
+	std::cout << "c" << std::endl;
+	histo->Sumw2();
+	std::cout << "d" << std::endl;
+	// add up subsamples of this sample
+	for(unsigned ss = 0; ss < s.identifier.size(); ss++){
+		std::cout << "e" << std::endl;
+		histo->Add(getHisto(conf, p.identifier + s.identifier.at(ss), s.mcScale.at(ss), s.color));
+		std::cout << "f" << std::endl;
+	}
+	std::cout << "g" << std::endl;
+	histo->SetFillColor(s.color);
+	std::cout << "h" << std::endl;
+	//histo->SetLineColor(1);
+	return histo;
+}
+
+//todo: add systematics
+std::vector<TH1D*> getHistos(configInfo conf, plotInfo p, std::vector<sample> samples){
+	if(verbose) std::cout << "--> getHistos(configInfo, plotInfo, std::vector<sample>)" << std::endl;
+	std::vector<TH1D*> histos;
+	for(unsigned s = 0; s < samples.size(); s++){
+		histos.push_back(getHistoFromSample(conf, p, samples.at(s)));
+	}
+	return histos;
+}
+
+// needs to be adapted
+TLegend* createLegend(TH1D* histo1, TH1D* histo2, TString name1, TString name2){
+	if(verbose) std::cout << "--> createLegend(TH1D*, TH1D*, TString, TString)" << std::endl;
+	TLegend* legend = new TLegend(0.7,0.77,0.90,0.87);
+	legend->SetFillColor(0);
+	legend->SetBorderSize(0);
+	legend->SetFillStyle(0);
+	legend->AddEntry(histo1,name1,"pe");
+	legend->AddEntry(histo2,name2,"F");
+	return legend;
+}
+
+// needs to be adapted
+TLegend* createLegend(TH1D* data, TString name){
+	if(verbose) std::cout << "--> createLegend(TH1D*, TString)" << std::endl;
+	TLegend* legend = new TLegend(0.7,0.77,0.90,0.87);
+	legend->SetFillColor(0);
+	legend->SetBorderSize(0);
+	legend->SetFillStyle(0);
+	legend->AddEntry(data,name,"F");
+	return legend;
+}
+
+TLegend* createLegend(TH1D* data, std::vector<TH1D*> histos, std::vector<sample> samples){
+	if(verbose) std::cout << "--> createLegend(TH1D*, vector<TH1D*>, vector<sample>)" << std::endl;
+	TLegend* legend = new TLegend(0.73,0.37,0.93,0.87);
+	legend->SetFillColor(0);
+	legend->SetBorderSize(0);
+	legend->SetFillStyle(0);
+	legend->AddEntry(data,"Data","pe");
+	if(histos.size() != samples.size()) std::cout << "ERROR: createLegend: histos and samples have unequal size!" << std::endl;
+	for(int i=histos.size()-1;i>=0;i--){
+		if(samples.at(i).legName.Contains("Signal")){
+			legend->AddEntry(histos.at(i),samples.at(i).legName,"l");
+		}else{
+			legend->AddEntry(histos.at(i),samples.at(i).legName,"F");
+		}
+	}
+	return legend;
+}
+
+//todo: Should be fine as is. But doesn't compile yet. Adapt.
+/*
+void drawDataOnlyPlot(TH1D* data, TString name, TString title, TString unit){
+	if(verbose) std::cout << "--> drawDataOnlyPlot(...)" << std::endl;
+	//todo: why is this set here??
 	gStyle->SetPadTickX(1);
 	gStyle->SetPadTickY(1);
 	gStyle->SetPalette(1);
@@ -331,17 +346,21 @@ void drawPlot(TH1D* data, TString name, TString title, TString unit){
 	can->SetWindowSize(800,800);
 	CMS_lumi(Pad1,2,0);
 }
+*/
 
-void drawPlot(TH1D* data, std::vector<TH1D*> allhistos, std::vector<int> reducedColors, std::vector<TString> names, TString title, TString unit){
+void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> samples, TString title = ""){
+	if(verbose) std::cout << "--> drawPlot(configInfo, plotInfo, TH1D*, vector<sample>, TString)" << std::endl;
+	// todo: why is this set here??
 	gStyle->SetPadTickX(1);
 	gStyle->SetPadTickY(1);
 	gStyle->SetPalette(1);
 	gROOT->ForceStyle(true);
 
-	std::vector<TH1D*> histos = produceReducedHistos(allhistos,reducedColors);
-	TH1D* ratio = getDataMC(data,allhistos);
+	std::vector<TH1D*> histos = getHistos(conf, plot, samples);
+	TH1D* ratio = getDataMC(data,histos);
 
 	TCanvas* can = new TCanvas();
+	//todo: make sure that signal is only stacked if wanted
 	THStack* stack = produceHistStack(histos);
 	TH1D* total = produceTotal(histos);
 	TLine* line = new TLine(data->GetXaxis()->GetXmin(),1,data->GetXaxis()->GetXmax(),1);
@@ -366,13 +385,14 @@ void drawPlot(TH1D* data, std::vector<TH1D*> allhistos, std::vector<int> reduced
 	data->SetMarkerColor(kBlack);
 	data->SetMarkerStyle(20);
 	TString ytit = "Events / %.2f ";
-	TString yTitle = ytit+unit;
+	TString yTitle = ytit+plot.unit;
 	data->GetYaxis()->SetTitle(Form(yTitle.Data(),data->GetBinWidth(1)));
 	data->SetTitle(title);
 	data->SetTitle("CMS preliminary, #sqrt{s}=8 TeV, L=19.7 fb^{-1}");
 	data->Draw("E");
+	//todo: make sure that signal is only stacked if wanted
 	int signalhist = histos.size()-1;
-	TH1D* signal = histos.at(signalhist)->Clone();
+	TH1D* signal = (TH1D*) histos.at(signalhist)->Clone();
 	if(signaltop)stack->Add(signal);
 	stack->Draw("Histsame");
 	total->Draw("E2same");
@@ -390,12 +410,12 @@ void drawPlot(TH1D* data, std::vector<TH1D*> allhistos, std::vector<int> reduced
 	data->Draw("axissame");
 	data->SetMinimum(1.001);
 	histos.push_back(total);
-	names.push_back("Bkg uncertainty");
-	TLegend* legend = createLegend(data,histos,names);
+	samples.push_back( sample("Bkg uncertainty",0,"")); //dummy sample for bkg uncertainty in legeend
+	TLegend* legend = createLegend(data,histos,samples);
 	legend->Draw("same");
 	can->cd();
 	TH1D* ratioband = new TH1D("ratioband","ratioband",data->GetNbinsX(),data->GetXaxis()->GetXmin(),data->GetXaxis()->GetXmax());
-	for(unsigned i=1;i<=ratioband->GetNbinsX();i++){
+	for(int i=1;i<=ratioband->GetNbinsX();i++){
 		ratioband->SetBinContent(i,1);
 		ratioband->SetBinError(i,total->GetBinError(i)/total->GetBinContent(i));
 	}
@@ -436,15 +456,20 @@ void drawPlot(TH1D* data, std::vector<TH1D*> allhistos, std::vector<int> reduced
 	can->cd();
 	can->SetWindowSize(800,800);
 	CMS_lumi(Pad1,2,0);
+	
+	//todo: safe plot
 }
 
+//todo: needs more reasonable name like "drawHistoComparison". Needs adaption?
+//todo: avoid all this duplication of plotting style within drawHisto functions
 void drawPlot(TH1D* histo1, TH1D* histo2, TH1D* ratio, TString name1, TString name2, TString title, TString unit){
+	if(verbose) std::cout << "--> drawPlot(TH1D*, TH1D*, TH1D*, TString, TString, TString, TString)" << std::endl;
 	gStyle->SetPadTickX(1);
 	gStyle->SetPadTickY(1);
 	gStyle->SetPalette(1);
 	gROOT->ForceStyle(true);
 
-	TH1D* total = histo2->Clone();
+	TH1D* total = (TH1D*)histo2->Clone();
 	total->SetFillStyle(3005);
 	total->SetFillColor(1);
 	total->SetLineColor(18);
@@ -516,7 +541,10 @@ void drawPlot(TH1D* histo1, TH1D* histo2, TH1D* ratio, TString name1, TString na
 	CMS_lumi(Pad1,2,0);
 }
 
+//todo: What is this for? Do we need it? Needs adaption.
+/*
 void drawPlot(TH1D* data, std::vector<TH1D*> histos, TH1D* ratio, std::vector<TString> names, TString title, TString unit){
+	if(verbose) std::cout << "--> drawPlot(TH1D*, vector<TH1D*>, TH1D*, vector<TString>, TString, TString)" << std::endl;
 	gStyle->SetPadTickX(1);
 	gStyle->SetPadTickY(1);
 	gStyle->SetPalette(1);
@@ -551,7 +579,7 @@ void drawPlot(TH1D* data, std::vector<TH1D*> histos, TH1D* ratio, std::vector<TS
 	stack->Draw("Histsame");
 	total->Draw("E2same");
 	int bla = histos.size()-1;
-	TH1D* signal = histos.at(bla)->Clone();
+	TH1D* signal = (TH1D*) histos.at(bla)->Clone();
 	//signal->SetFillColor(10);
 	//signal->SetFillStyle(3004);
 	//signal->SetLineStyle(9);
@@ -595,46 +623,16 @@ void drawPlot(TH1D* data, std::vector<TH1D*> histos, TH1D* ratio, std::vector<TS
 	can->SetWindowSize(800,800);
 	CMS_lumi(Pad1,2,0);
 }
-
-TLegend* createLegend(TH1D* histo1, TH1D* histo2, TString name1, TString name2){
-	TLegend* legend = new TLegend(0.7,0.77,0.90,0.87);
-	legend->SetFillColor(0);
-	legend->SetBorderSize(0);
-	legend->SetFillStyle(0);
-	legend->AddEntry(histo1,name1,"pe");
-	legend->AddEntry(histo2,name2,"F");
-	return legend;
-}
-
-TLegend* createLegend(TH1D* data, TString name){
-	TLegend* legend = new TLegend(0.7,0.77,0.90,0.87);
-	legend->SetFillColor(0);
-	legend->SetBorderSize(0);
-	legend->SetFillStyle(0);
-	legend->AddEntry(data,name,"F");
-	return legend;
-}
-
-TLegend* createLegend(TH1D* data, std::vector<TH1D*> histos, std::vector<TString> names){
-	TLegend* legend = new TLegend(0.73,0.37,0.93,0.87);
-	legend->SetFillColor(0);
-	legend->SetBorderSize(0);
-	legend->SetFillStyle(0);
-	legend->AddEntry(data,"Data","pe");
-	for(int i=histos.size()-1;i>=0;i--){
-		if(names.at(i).Contains("Signal")){
-			legend->AddEntry(histos.at(i),names.at(i),"l");
-		}else{
-			legend->AddEntry(histos.at(i),names.at(i),"F");
-		}
-	}
-	return legend;
-}
+*/
 
 double QuadraticSum(int nval, double values[]){
+	if(verbose) std::cout << "--> QuadraticSum(...)" << std::endl;
 	double sum = 0.;
-	for(unsigned i=0;i<nval;i++){
+	for(int i=0;i<nval;i++){
 		sum+=TMath::Power(values[i],2);
 	}
 	return TMath::Sqrt(sum);
 }
+
+#endif
+

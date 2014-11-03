@@ -2,10 +2,10 @@
 
 // tdrGrid: Turns the grid lines on (true) or off (false)
 
-void tdrGrid(bool gridOn) {
-  tdrStyle->SetPadGridX(gridOn);
-  tdrStyle->SetPadGridY(gridOn);
-}
+//void tdrGrid(bool gridOn) {
+//  tdrStyle->SetPadGridX(gridOn);
+//  tdrStyle->SetPadGridY(gridOn);
+//}
 
 // fixOverlay: Redraws the axis
 
@@ -13,8 +13,11 @@ void fixOverlay() {
   gPad->RedrawAxis();
 }
 
-void setTDRStyle() {
+void setTDRStyle(bool gridOn = false) {
   TStyle *tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
+
+  tdrStyle->SetPadGridX(gridOn);
+  tdrStyle->SetPadGridY(gridOn);
 
 // For the canvas:
   tdrStyle->SetCanvasBorderMode(0);

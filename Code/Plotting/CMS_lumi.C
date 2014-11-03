@@ -1,4 +1,5 @@
 #include "CMS_lumi.h"
+#include <iostream>
 
 void 
 CMS_lumi( TPad* pad, int iPeriod, int iPosX )
@@ -71,7 +72,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       lumiText += "8 TeV";
     }
    
-  cout << lumiText << endl;
+  std::cout << lumiText << std::endl;
 
   TLatex latex;
   latex.SetNDC();

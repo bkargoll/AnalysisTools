@@ -1,3 +1,6 @@
+#ifndef CMS_lumi_h
+#define CMS_lumi_h
+
 #include "TPad.h"
 #include "TLatex.h"
 #include "TLine.h"
@@ -9,11 +12,11 @@
 //
 
 TString cmsText     = "CMS";
-float cmsTextFont   = 61;  // default is helvetic-bold
+short cmsTextFont   = 61;  // default is helvetic-bold
 
 bool writeExtraText = false;
 TString extraText   = "Preliminary";
-float extraTextFont = 52;  // default is helvetica-italics
+short extraTextFont = 52;  // default is helvetica-italics
 
 // text sizes and text offsets with respect to the top frame
 // in unit of the top margin size
@@ -37,3 +40,4 @@ bool drawLogo      = false;
 
 void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 );
 
+#endif

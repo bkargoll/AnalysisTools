@@ -1,172 +1,84 @@
+#include "TROOT.h"
 #include "TFile.h"
-
 #include "TCanvas.h"
 #include "TH1D.h"
 #include "TLegend.h"
 
 #include <vector>
 
-bool testPlotting = false;
-bool signaltop = false;
+#include "tdrstyle.C"
+#include "CMS_lumi.C"
 
-bool verbose = true;
-
-// define lumi
-double lumi = 19712.;
-// enter filename here
-TFile* infile = new TFile("/user/nehrkorn/analysis_new.root");
-bool isFileLumiScaled = true;
+#include "userConfig.h"
+#include "plottingHelpers.h"
 
 void plotting(){
+	if(verbose) std::cout << "--> plotting()" << std::endl;
 	gROOT->LoadMacro("tdrstyle.C");
 	setTDRStyle();
 	gROOT->LoadMacro("CMS_lumi.C");
 	writeExtraText = true;
 	gStyle->SetOptStat(0);
-	
+		
 	// define samples to use
-	sample s_ggHiggs	= createSample("H_{gg}"					, 632);
-	sample s_vbfHiggs	= createSample("H_{VBF}"				, 633);
-	sample s_apHiggs	= createSample("H_{AP}"					, 634);
-	sample s_qcd		= createSample("QCD"					, 606);
-	sample s_ztt		= createSample("Z#rightarrow#tau#tau"	, 400);
-	sample s_zll		= createSample("Z#rightarrowll"			, 800);
-	sample s_ww			= createSample("WW"						, 417);
-	sample s_wz2l2q		= createSample("WZ#rightarrowllqq"		, 418);
-	sample s_wz3l1nu	= createSample("WZ#rightarrowlll#nu"	, 419);
-	sample s_zz4l		= createSample("ZZ#rightarrowllll"		, 420);
-	sample s_zz2l2nu	= createSample("ZZ#rightarrowll#nu#nu"	, 416);
-	sample s_zz2l2q		= createSample("ZZ#rightarrowllqq"		, 415);
-	sample s_ttbar		= createSample("t#bar{t}"				, 600);
-	sample s_tw			= createSample("tW"						, 603);
-	sample s_tbarW		= createSample("#bar{t}W"				, 591);
-	sample s_Wlnu		= createSample("W#rightarrowl#nu"		, 876);
-	sample s_Wtaunu		= createSample("W#rightarrow#tau#nu"	, 874);
-
+	sample s_ggHiggs	("H_{gg}"				, 632, "MC_ggFHTauTauM125");
+	sample s_vbfHiggs	("H_{VBF}"				, 633, "MC_VBFHTauTauM125");
+	sample s_apHiggs	("H_{AP}"				, 634, "MC_WHZHTTHTauTauM125");
+	sample s_qcd		("QCD"					, 606, "MC_QCD");
+	sample s_ztt		("Z#rightarrow#tau#tau"	, 400, "MC_DY_tautau");
+	sample s_zll		("Z#rightarrowll"		, 800, "MC_DY_ll");
+	sample s_ww			("WW"					, 417, "MC_WW_2l2nu");
+	sample s_wz2l2q		("WZ#rightarrowllqq"	, 418, "MC_WZ_2l2q");
+	sample s_wz3l1nu	("WZ#rightarrowlll#nu"	, 419, "MC_WZ_3l1nu");
+	sample s_zz4l		("ZZ#rightarrowllll"	, 420, "MC_ZZ_4l");
+	sample s_zz2l2nu	("ZZ#rightarrowll#nu#nu", 416, "MC_ZZ_2l2nu");
+	sample s_zz2l2q		("ZZ#rightarrowllqq"	, 415, "MC_ZZ_2l2q");
+	sample s_ttbar		("t#bar{t}"				, 600, "MC_ttbar");
+	sample s_tw			("tW"					, 603, "MC_tw");
+	sample s_tbarW		("#bar{t}W"				, 591, "MC_tbarw");
+	sample s_Wlnu		("W#rightarrowl#nu"		, 876, "MC_W_lnu");
+	sample s_Wtaunu		("W#rightarrow#tau#nu"	, 874, "MC_W_taunu");
+	
 	// *** examples for sample creation when scaling manually ***
 	// std::map<int, int> MnEvents = readSkimSummary("mySkimSummary.log");
-	// sample s_ggHiggs =	createSample(11,"H_{gg}", 1.233664, 632, MnEvents );
-	// sample s_vbfHiggs =	createSample(12,"H_{VBF}", 0.0997296, 633, MnEvents );
-	// sample s_apHiggs =	createSample(13,"H_{AP}", 0.0771792, 634, MnEvents );
+	// sample s_ggHiggs(11,"H_{gg}", 1.233664, lumi, 632, "MC_ggFHTauTauM125", MnEvents );
+	// sample s_vbfHigg(12,"H_{VBF}", 0.0997296, lumi, 633, "MC_VBFHTauTauM125", MnEvents );
+	// sample s_apHiggs(13,"H_{AP}", 0.0771792, lumi, 634, "MC_WHZHTTHTauTauM125", MnEvents );
 
 	// combine samples for plotting
+	sample s_higgs(s_ggHiggs, "H", 630);
+	s_higgs += s_vbfHiggs;
+	s_higgs += s_apHiggs;
+	sample s_diboson(s_ww, "diboson", 416);
+	s_diboson += s_wz2l2q;
+	s_diboson += s_wz3l1nu;
+	s_diboson += s_zz4l;
+	s_diboson += s_zz2l2nu;
+	s_diboson += s_zz2l2q;
+	sample s_top(s_ttbar, "top", 600);
+	s_top += s_tw;
+	s_top += s_tbarW;
 
-
-	// define which samples to plot
+	// define which samples to plot and in which order
 	std::vector<sample> samples;
+	samples.push_back(s_higgs);
+	// samples.push_back(s_qcd); // no qcd in background plots
+	samples.push_back(s_ztt);
+	samples.push_back(s_zll);
+	samples.push_back(s_diboson);
+	samples.push_back(s_top);
+	samples.push_back(s_Wlnu);
+	samples.push_back(s_Wtaunu);
 
-	// define crosssections and lumi
-	double xsignal = 0.057;
-	double xdytautau = 1966.7;
-	double xdyee = 1966.7;
-	double xdymumu = 1966.7;
-	double xww = 5.824;
-	double xtt = 239.;//245.8;
-	double xtw = 11.1;
-	double xtbarw = 11.1;
-	double xwz3lnu = 1.058;
-	double xwz2l2q = 2.207;
-	double xzz4l = 0.181;
-	double xzz2l2q = 2.502;
-	double xzz2l2nu = 0.716;
-	double xdytautaum50 = 1177.3;
-	double xdyllm50 = 2354.6;
+	if (verbose){
+		std::cout << "###>-- The following samples will be plotted:" << std::endl;
+		for(unsigned i = 0; i<samples.size(); i++){
+			printSample(samples.at(i), conf);
+		}
+	}
 
-	int nsignal = 100000;
-	int ndytautau = 48790562;
-	int ndyee = 3297045;
-	int ndymumu = 3293740;
-	int nww = 1933235;
-	int ntt = 21675970;
-	int ntw = 497658;
-	int ntbarw = 493460;
-	int nwz3lnu = 2017254;
-	int nwz2l2q = 3212348;
-	int nzz4l = 3854021;
-	int nzz2l2q = 1577042;
-	int nzz2l2nu = 777964;
-	int ndytautaum50 = 10152445;
-	int ndyllm50 = 20307058;
-	
-	// define colors
-	int csignal = 10;
-	int cqcd = 619;
-	int cdytautau = 5;
-	int cdyll = 53;
-	int cdyee = 8;
-	int cdymumu = 9;
-	int cww = 7;
-	int ctt = 2;
-	int ctw = 3;
-	int ctbarw = 4;
-	int cwz3lnu = 20;
-	int cwz2l2q = 21;
-	int czz4l = 22;
-	int czz2l2q = 23;
-	int czz2l2nu = 24;
-	int cwz = 20;
-	int czz = 30;
-	
-	// define order of backgrounds
-	std::vector<TString> legendnames;
-	legendnames.push_back("QCD/W+jets");
-	legendnames.push_back("ZZ");
-	legendnames.push_back("WZ");
-	legendnames.push_back("WW");
-	legendnames.push_back("t#bar{t}");
-	legendnames.push_back("tW");
-	legendnames.push_back("#bar{t}W");
-	legendnames.push_back("Z#rightarrow#mu#mu /ee");
-	legendnames.push_back("Z#rightarrow#tau#tau");
-	legendnames.push_back("Z#rightarrow e#mu (Signal)");
-	
-	std::vector<TString> leg;
-	leg.push_back("QCD/W(Z)+jets");
-	leg.push_back("electroweak");
-	leg.push_back("t#bar{t} + singletop");
-	leg.push_back("Z#rightarrow#tau#tau");
-	leg.push_back("Z#rightarrow e#mu (Signal)");
-	
-	std::vector<double> mcscale;
-	std::vector<int> colors;
-	mcscale.push_back(1);
-	mcscale.push_back(lumi*xzz4l/nzz4l);
-	mcscale.push_back(lumi*xzz2l2q/nzz2l2q);
-	mcscale.push_back(lumi*xzz2l2nu/nzz2l2nu);
-	mcscale.push_back(lumi*xwz3lnu/nwz3lnu);
-	mcscale.push_back(lumi*xwz2l2q/nwz2l2q);
-	mcscale.push_back(lumi*xww/nww);
-	mcscale.push_back(lumi*xtt/ntt);
-	mcscale.push_back(lumi*xtw/ntw);
-	mcscale.push_back(lumi*xtbarw/ntbarw);
-	mcscale.push_back(lumi*xdyllm50/ndyllm50);
-	mcscale.push_back(lumi*xdytautaum50/ndytautaum50);
-	mcscale.push_back(lumi*xsignal/nsignal);
-
-	colors.push_back(cqcd);
-	colors.push_back(czz4l);
-	colors.push_back(czz2l2q);
-	colors.push_back(czz2l2nu);
-	colors.push_back(cwz3lnu);
-	colors.push_back(cwz2l2q);
-	colors.push_back(cww);
-	colors.push_back(ctt);
-	colors.push_back(ctw);
-	colors.push_back(ctbarw);
-	colors.push_back(cdyll);
-	colors.push_back(cdytautau);
-	colors.push_back(csignal);
-	
-	TColor* darkblue = new TColor(1234,0.,0.328125,0.62109375,"",1.);
-	TColor* lightblue = new TColor(2345,0.5546875,0.7265625,0.89453125,"",1.);
-	
-	std::vector<int> reducedColors;
-	reducedColors.push_back(1234);
-	reducedColors.push_back(38);
-	reducedColors.push_back(2345);
-	reducedColors.push_back(18);
-	reducedColors.push_back(0);
-	
+	/* THIS STUFF STILL NEEDS TO BE ADAPTED
+	// todo: implement syst
 	std::vector<double> syst;
 	// lumi + xsec + eid + muid + pileup + trigger
 	const int nsyst = 6;
@@ -196,26 +108,32 @@ void plotting(){
 	syst.push_back(QuadraticSum(nsyst,dyll));
 	syst.push_back(QuadraticSum(nsyst,dytt));
 	syst.push_back(QuadraticSum(nsyst+1,dyemu));
+	*/
+	
+	// define which plots to draw
+	std::vector<plotInfo> plots;
+	plots.push_back( plotInfo("CatFired", "") );
+	plots.push_back( plotInfo("MuPt", "GeV") );
+
+	// test validity of structs
+	testInputs(conf, samples, plots);
 	
 	// create plots
 	if(testPlotting){
-		TString plot = "NPV";
-		TString unit = "";
-		TH1D* datahist = getHisto(plot+"Data",1,1,infile);
-		drawPlot(datahist,getHistos(plot,mcscale,colors,infile,syst),reducedColors,leg,"",unit);
+		plotInfo testPlot = plots.at(0);
+		TH1D* datahist = getHisto(conf, testPlot.identifier+"Data", 1, 1);
+		drawPlot(conf, testPlot, datahist, samples);
 	}else{
-		const int nplots = 19;
-		TString plots[nplots] = {"PtMu","etaMu","PtE","etaE","onejet","met","mtMu","ptbal","invmass_ptbalance_m","NPV","invmass_vetos_m","invmass_jetveto_m","zmass_zoom","nm0_met","nm0_onejet","nm0_mtmu","nm0_ptbalance","Cut_10_Nminus0_ptBalance_","mtmu_phicorr"};
-		TString units[nplots] = {"GeV","","GeV","","GeV","GeV","GeV","GeV","GeV","","GeV","GeV","GeV","GeV","GeV","GeV","GeV","GeV","GeV"};
 		std::vector<TH1D*> datahists;
-		for(unsigned i=0;i<nplots;i++){
-			datahists.push_back(getHisto(plots[i]+"Data",1,1,infile));
+		for(unsigned p = 0; p < plots.size(); p++){
+			datahists.push_back(getHisto(conf, plots.at(p).identifier+"Data", 1, 1));
 		}
-		for(unsigned i=0;i<nplots;i++){
-			drawPlot(datahists.at(i),getHistos(plots[i],mcscale,colors,infile,syst),reducedColors,leg,"",units[i]);
+		for(unsigned p = 0; p < plots.size(); p++){
+			drawPlot(conf, plots.at(p), datahists.at(p), samples);
 		}
 	}
 
+	/*
 	//TH1D* onejet_signal = getHisto("onejetMC_emu_DY",mcscale.at(mcscale.size()-1),0,infile,syst.at(syst.size()-1));
 	//TH1D* onejet_dy = getHisto("onejetMC_tautau_DY",mcscale.at(mcscale.size()-2),2345,infile,syst.at(syst.size()-2));
 	//onejet_signal->Scale(1./onejet_signal->Integral());
@@ -253,6 +171,6 @@ void plotting(){
 	njets_dy->Scale(1./njets_dy->Integral());
 	TH1D* njets_ratio = getDataMC(njets_signal,njets_dy);
 	//drawPlot(njets_signal,njets_dy,njets_ratio,"Custom MC","Official MC","Number of jets","");
-
+*/
 }
 
