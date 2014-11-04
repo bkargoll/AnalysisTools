@@ -54,14 +54,14 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	wJetsBGSource = "MC";
 
 	// this one is used to set the event yield for W+Jet
-	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow",  6563.19881424) );
-	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh", 1123.73302862) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",   4750.07152276) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",   660.05349714) );
-	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost",  149.35272929) );
-	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",      62.42946531) );
-	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",       4.63724615) );
-	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",  13271.59050205) );
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetLow", 2088.31196430) );
+	wJetsYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",1132.38070133) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetLow",  1755.28440931) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetHigh",  664.60436481) );
+	wJetsYieldMap.insert(std::pair<TString,double>("OneJetBoost", 150.83396478) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFLoose",     30.19799951) );
+	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",      2.21439535) );
+	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",  5738.73553737) );
 
 	// flat to switch data-driven QCD on/off
 	// set to "true" if running analyses (i.e. in categories)
@@ -69,14 +69,14 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	qcdShapeFromData = false;
 
 	// these are used to set the event yield for QCD
-	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetLow",   16001.31926599) );
-	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",    468.70761685) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetLow",     4769.93237729) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetHigh",     270.72412791) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetBoost",     55.06752318) );
-	qcdYieldMap.insert(std::pair<TString,double>("VBFLoose",        38.36569582) );
-	qcdYieldMap.insert(std::pair<TString,double>("VBFTight",         5.73986779) );
-	qcdYieldMap.insert(std::pair<TString,double>("Inclusive",    21779.44470046) );
+	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetLow",  3602.56796887) );
+	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",  470.99866017) );
+	qcdYieldMap.insert(std::pair<TString,double>("OneJetLow",   1175.72415234) );
+	qcdYieldMap.insert(std::pair<TString,double>("OneJetHigh",   272.46391178) );
+	qcdYieldMap.insert(std::pair<TString,double>("OneJetBoost",   24.64657470) );
+	qcdYieldMap.insert(std::pair<TString,double>("VBFLoose",       8.83644782) );
+	qcdYieldMap.insert(std::pair<TString,double>("VBFTight",       5.23687411) );
+	qcdYieldMap.insert(std::pair<TString,double>("Inclusive",   5610.54691001) );
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
