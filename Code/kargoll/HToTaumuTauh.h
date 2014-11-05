@@ -228,6 +228,18 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> Mt3ProngSV;
   std::vector<TH1D> Mt3ProngSVFlight;
 
+  std::vector<TH1D> MetPt1ProngOnly;
+  std::vector<TH1D> MetPhi1ProngOnly;
+  std::vector<TH1D> MetPt3ProngOnly;
+  std::vector<TH1D> MetPhi3ProngOnly;
+
+  std::vector<TH1D> MetPtNoMtCut;
+  std::vector<TH1D> MetPhiNoMtCut;
+  std::vector<TH1D> MetPtNoMtCut1ProngOnly;
+  std::vector<TH1D> MetPhiNoMtCut1ProngOnly;
+  std::vector<TH1D> MetPtNoMtCut3ProngOnly;
+  std::vector<TH1D> MetPhiNoMtCut3ProngOnly;
+
   std::vector<TH1D> Cat0JetLowQcdShapeRegion;
   std::vector<TH1D> Cat0JetHighLowQcdShapeRegion;
   std::vector<TH1D> Cat1JetLowQcdShapeRegion;
