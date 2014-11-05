@@ -3,6 +3,7 @@
 #include "TCanvas.h"
 #include "TH1D.h"
 #include "TLegend.h"
+#include "TColor.h"
 
 #include <vector>
 
@@ -10,6 +11,7 @@
 #include "CMS_lumi.C"
 
 #include "userConfig.h"
+#include "defineSamplesAndPlots.h"
 #include "plottingHelpers.h"
 
 void plotting(){
@@ -19,63 +21,12 @@ void plotting(){
 	gROOT->LoadMacro("CMS_lumi.C");
 	writeExtraText = true;
 	gStyle->SetOptStat(0);
-		
-	// define samples to use
-	sample s_ggHiggs	("H_{gg}"				, 632, "MC_ggFHTauTauM125");
-	sample s_vbfHiggs	("H_{VBF}"				, 633, "MC_VBFHTauTauM125");
-	sample s_apHiggs	("H_{AP}"				, 634, "MC_WHZHTTHTauTauM125");
-	sample s_qcd		("QCD"					, 606, "MC_QCD");
-	sample s_ztt		("Z#rightarrow#tau#tau"	, 400, "MC_DY_tautau");
-	sample s_zll		("Z#rightarrowll"		, 800, "MC_DY_ll");
-	sample s_ww			("WW"					, 417, "MC_WW_2l2nu");
-	sample s_wz2l2q		("WZ#rightarrowllqq"	, 418, "MC_WZ_2l2q");
-	sample s_wz3l1nu	("WZ#rightarrowlll#nu"	, 419, "MC_WZ_3l1nu");
-	sample s_zz4l		("ZZ#rightarrowllll"	, 420, "MC_ZZ_4l");
-	sample s_zz2l2nu	("ZZ#rightarrowll#nu#nu", 416, "MC_ZZ_2l2nu");
-	sample s_zz2l2q		("ZZ#rightarrowllqq"	, 415, "MC_ZZ_2l2q");
-	sample s_ttbar		("t#bar{t}"				, 600, "MC_ttbar");
-	sample s_tw			("tW"					, 603, "MC_tw");
-	sample s_tbarW		("#bar{t}W"				, 591, "MC_tbarw");
-	sample s_Wlnu		("W#rightarrowl#nu"		, 876, "MC_W_lnu");
-	sample s_Wtaunu		("W#rightarrow#tau#nu"	, 874, "MC_W_taunu");
-	
-	// *** examples for sample creation when scaling manually ***
-	// std::map<int, int> MnEvents = readSkimSummary("mySkimSummary.log");
-	// sample s_ggHiggs(11,"H_{gg}", 1.233664, lumi, 632, "MC_ggFHTauTauM125", MnEvents );
-	// sample s_vbfHigg(12,"H_{VBF}", 0.0997296, lumi, 633, "MC_VBFHTauTauM125", MnEvents );
-	// sample s_apHiggs(13,"H_{AP}", 0.0771792, lumi, 634, "MC_WHZHTTHTauTauM125", MnEvents );
 
-	// combine samples for plotting
-	sample s_higgs(s_ggHiggs, "H", 630);
-	s_higgs += s_vbfHiggs;
-	s_higgs += s_apHiggs;
-	sample s_diboson(s_ww, "diboson", 416);
-	s_diboson += s_wz2l2q;
-	s_diboson += s_wz3l1nu;
-	s_diboson += s_zz4l;
-	s_diboson += s_zz2l2nu;
-	s_diboson += s_zz2l2q;
-	sample s_top(s_ttbar, "top", 600);
-	s_top += s_tw;
-	s_top += s_tbarW;
+	// define which samples to use
+	std::vector<sample> samples = defineSamples();
 
-	// define which samples to plot and in which order
-	std::vector<sample> samples;
-	samples.push_back(s_higgs);
-	// samples.push_back(s_qcd); // no qcd in background plots
-	samples.push_back(s_ztt);
-	samples.push_back(s_zll);
-	samples.push_back(s_diboson);
-	samples.push_back(s_top);
-	samples.push_back(s_Wlnu);
-	samples.push_back(s_Wtaunu);
-
-	if (verbose){
-		std::cout << "###>-- The following samples will be plotted:" << std::endl;
-		for(unsigned i = 0; i<samples.size(); i++){
-			printSample(samples.at(i), conf);
-		}
-	}
+	// define which plots to draw
+	std::vector<plotInfo> plots = definePlots();
 
 	/* THIS STUFF STILL NEEDS TO BE ADAPTED
 	// todo: implement syst
@@ -109,11 +60,6 @@ void plotting(){
 	syst.push_back(QuadraticSum(nsyst,dytt));
 	syst.push_back(QuadraticSum(nsyst+1,dyemu));
 	*/
-	
-	// define which plots to draw
-	std::vector<plotInfo> plots;
-	plots.push_back( plotInfo("CatFired", "") );
-	plots.push_back( plotInfo("MuPt", "GeV") );
 
 	// test validity of structs
 	testInputs(conf, samples, plots);
@@ -122,18 +68,25 @@ void plotting(){
 	if(testPlotting){
 		plotInfo testPlot = plots.at(0);
 		TH1D* datahist = getHisto(conf, testPlot.identifier+"Data", 1, 1);
+		manipulateHisto(datahist, testPlot);
 		drawPlot(conf, testPlot, datahist, samples);
 	}else{
 		std::vector<TH1D*> datahists;
 		for(unsigned p = 0; p < plots.size(); p++){
-			datahists.push_back(getHisto(conf, plots.at(p).identifier+"Data", 1, 1));
+			TH1D* datahist = getHisto(conf, plots.at(p).identifier+"Data", 1, 1);
+			manipulateHisto(datahist, plots.at(p));
+			datahists.push_back(datahist);
 		}
 		for(unsigned p = 0; p < plots.size(); p++){
 			drawPlot(conf, plots.at(p), datahists.at(p), samples);
 		}
 	}
 
-	/*
+	// convert all created eps files into pdf
+	std::cout << "Plots created. Convert all eps into pdf..." << std::endl;
+	system("for i in `ls -1 *.eps`; do epstopdf $i; done");
+
+	/* THIS STUFF STILL NEEDS TO BE ADAPTED
 	//TH1D* onejet_signal = getHisto("onejetMC_emu_DY",mcscale.at(mcscale.size()-1),0,infile,syst.at(syst.size()-1));
 	//TH1D* onejet_dy = getHisto("onejetMC_tautau_DY",mcscale.at(mcscale.size()-2),2345,infile,syst.at(syst.size()-2));
 	//onejet_signal->Scale(1./onejet_signal->Integral());

@@ -18,6 +18,7 @@
 #include <istream>
 
 #include "configInfo.h"
+#include "userConfig.h"
 
 // container to hold all information for one sample
 struct sample{

@@ -29,9 +29,14 @@ void testInputs(configInfo config, std::vector<sample> samples, std::vector<plot
 	}
 }
 
+void manipulateHisto(TH1D* hist, const plotInfo plot){
+	hist->Rebin(plot.rebin);
+	if(plot.xRangeLow != -9.9) hist->GetXaxis()->SetRangeUser(plot.xRangeLow, hist->GetXaxis()->GetXmax());
+	if(plot.xRangeHigh != -9.9) hist->GetXaxis()->SetRangeUser(hist->GetXaxis()->GetXmin(), plot.xRangeHigh);
+}
+
 TH1D* getHisto(configInfo config, TString name){
-	if(verbose) std::cout << "--> getHisto(configInfo, TString)" << std::endl;
-	std::cout << config.prefix+name << std::endl;
+	if(verbose) std::cout << "--> getHisto(configInfo, TString): " << config.prefix+name << std::endl;
 	TH1D* hist = ((TH1D*)config.file->Get(config.prefix+name));
 	return hist;
 }
@@ -125,7 +130,8 @@ TH1D* getDataMC(TH1D* datahist, std::vector<TH1D*> MChists){
 	int nbins = datahist->GetNbinsX();
 	double xlow = datahist->GetXaxis()->GetXmin();
 	double xhigh = datahist->GetXaxis()->GetXmax();
-	TH1D* hist = new TH1D("hist",";;Data/MC",nbins,xlow,xhigh);
+	TString name = (TString)datahist->GetName()+"_MCRatio";
+	TH1D* hist = new TH1D(name.Data(),";;Data/MC",nbins,xlow,xhigh);
 
 	for(int i=1;i<=nbins;i++){
 		double data = datahist->GetBinContent(i);
@@ -170,7 +176,8 @@ THStack* produceHistStack(std::vector<TH1D*> histos){
 //todo: should in principal be obsolete, since total histo can be accessed from stack
 TH1D* produceTotal(std::vector<TH1D*> histos){
 	if(verbose) std::cout << "--> produceTotal(...)" << std::endl;
-	TH1D* total = new TH1D("total","total",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
+	TString name = (TString)histos.at(0)->GetName() + "_TotalMC";
+	TH1D* total = new TH1D(name.Data(),"total",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
 	total->Sumw2();
 	for(unsigned i=0;i<histos.size()-1;i++){
 		total->Add(histos.at(i));
@@ -240,24 +247,16 @@ std::vector<TH1D*> produceReducedHistos(std::vector<TH1D*> histos, std::vector<i
 //todo: add systematics
 TH1D* getHistoFromSample(configInfo conf, plotInfo p, sample s){
 	if(verbose) std::cout << "--> getHistoFromSample(...)" << std::endl;
-	std::cout << p.identifier + s.identifier.at(0) << std::endl;
-	std::cout << s.mcScale.at(0) << std::endl;
-	std::cout << s.color << std::endl;
 	TH1D* tmp = getHisto(conf, p.identifier + s.identifier.at(0), s.mcScale.at(0), s.color);
-	std::cout << "b" << std::endl;
-	TH1D* histo = new TH1D(s.legName,s.legName,tmp->GetNbinsX(),tmp->GetXaxis()->GetXmin(),tmp->GetXaxis()->GetXmax());
-	std::cout << "c" << std::endl;
+	TH1D* histo = new TH1D(s.legName+"_"+p.identifier,s.legName,tmp->GetNbinsX(),tmp->GetXaxis()->GetXmin(),tmp->GetXaxis()->GetXmax());
 	histo->Sumw2();
-	std::cout << "d" << std::endl;
 	// add up subsamples of this sample
 	for(unsigned ss = 0; ss < s.identifier.size(); ss++){
-		std::cout << "e" << std::endl;
 		histo->Add(getHisto(conf, p.identifier + s.identifier.at(ss), s.mcScale.at(ss), s.color));
-		std::cout << "f" << std::endl;
 	}
-	std::cout << "g" << std::endl;
 	histo->SetFillColor(s.color);
-	std::cout << "h" << std::endl;
+	// todo: is this a good place to do the rebinning and xRange setting? or move to getHisto?
+	manipulateHisto(histo, p);
 	//histo->SetLineColor(1);
 	return histo;
 }
@@ -359,11 +358,16 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	std::vector<TH1D*> histos = getHistos(conf, plot, samples);
 	TH1D* ratio = getDataMC(data,histos);
 
+	//get correct xAxis range
+	double xLow = (plot.xRangeLow != -9.9) ? plot.xRangeLow : data->GetXaxis()->GetXmin();
+	double xHigh = (plot.xRangeHigh != -9.9) ? plot.xRangeHigh : data->GetXaxis()->GetXmax();
+	int nBins = data->GetXaxis()->FindBin(xHigh) - data->GetXaxis()->FindBin(xLow);
+
 	TCanvas* can = new TCanvas();
 	//todo: make sure that signal is only stacked if wanted
 	THStack* stack = produceHistStack(histos);
 	TH1D* total = produceTotal(histos);
-	TLine* line = new TLine(data->GetXaxis()->GetXmin(),1,data->GetXaxis()->GetXmax(),1);
+	TLine* line = new TLine(xLow,1,xHigh,1);
 	TPad* Pad1 = new TPad("Pad1","Pad1",0.,0.3,1.,1.);
 	Pad1->SetTopMargin(0.07);
 	Pad1->SetLeftMargin(0.15);
@@ -391,6 +395,7 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	data->SetTitle("CMS preliminary, #sqrt{s}=8 TeV, L=19.7 fb^{-1}");
 	data->Draw("E");
 	//todo: make sure that signal is only stacked if wanted
+	//todo: somehow the stack doesn't work anymore, if there is no signal sample
 	int signalhist = histos.size()-1;
 	TH1D* signal = (TH1D*) histos.at(signalhist)->Clone();
 	if(signaltop)stack->Add(signal);
@@ -410,11 +415,12 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	data->Draw("axissame");
 	data->SetMinimum(1.001);
 	histos.push_back(total);
-	samples.push_back( sample("Bkg uncertainty",0,"")); //dummy sample for bkg uncertainty in legeend
+	samples.push_back( sample("Bkg uncertainty",0,"")); //dummy sample for bkg uncertainty in legend
 	TLegend* legend = createLegend(data,histos,samples);
 	legend->Draw("same");
 	can->cd();
-	TH1D* ratioband = new TH1D("ratioband","ratioband",data->GetNbinsX(),data->GetXaxis()->GetXmin(),data->GetXaxis()->GetXmax());
+	TString ratioName = plot.identifier + "_ratioband";
+	TH1D* ratioband = new TH1D(ratioName.Data(), ratioName.Data(),nBins,xLow,xHigh);
 	for(int i=1;i<=ratioband->GetNbinsX();i++){
 		ratioband->SetBinContent(i,1);
 		ratioband->SetBinError(i,total->GetBinError(i)/total->GetBinContent(i));
@@ -448,7 +454,7 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	ratio->SetLineColor(kBlack);
 
 	ratio->GetYaxis()->SetNdivisions(4,5,0,kTRUE);
-	ratio->GetXaxis()->Set(data->GetXaxis()->GetNbins(),data->GetXaxis()->GetXmin(),data->GetXaxis()->GetXmax());
+	ratio->GetXaxis()->Set(nBins, xLow, xHigh);
 	ratio->Draw("E");
 	ratioband->Draw("E2same");
 	line->Draw("same");
@@ -457,7 +463,9 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	can->SetWindowSize(800,800);
 	CMS_lumi(Pad1,2,0);
 	
-	//todo: safe plot
+	//todo: safe plot in a nice way
+	TString filename = plot.identifier + ".eps";
+	can->SaveAs(filename.Data());
 }
 
 //todo: needs more reasonable name like "drawHistoComparison". Needs adaption?
@@ -634,5 +642,27 @@ double QuadraticSum(int nval, double values[]){
 	return TMath::Sqrt(sum);
 }
 
-#endif
+// === some useful color definitions ===
+// htautau colors
+int col_htt_qcd = TColor::GetColor(250,202,255);
+int col_htt_W = TColor::GetColor(222,90,106);
+int col_htt_ZJ = TColor::GetColor(222,90,106);
+int col_htt_tt = TColor::GetColor(155,152,204);
+int col_htt_Ztt = TColor::GetColor(248,206,104);
 
+// RWTH colors
+// http://www9.rwth-aachen.de/global/show_document.asp?id=aaaaaaaaaadpbhq
+int col_rwth_darkblue	= TColor::GetColor(0,84,159);
+int col_rwth_lightblue	= TColor::GetColor(142,186,229);
+int col_rwth_magenta	= TColor::GetColor(227,0,102);
+int col_rwth_yellow		= TColor::GetColor(255,237,0);
+int col_rwth_petrol		= TColor::GetColor(0,97,101);
+int col_rwth_turquoise	= TColor::GetColor(0,152,161);
+int col_rwth_green		= TColor::GetColor(87,171,39);
+int col_rwth_maygreen	= TColor::GetColor(189,205,0);
+int col_rwth_orange		= TColor::GetColor(246,168,0);
+int col_rwth_red		= TColor::GetColor(204,7,30);
+int col_rwth_violett	= TColor::GetColor(97,33,88);
+int col_rwth_purple		= TColor::GetColor(122,111,172);
+
+#endif
