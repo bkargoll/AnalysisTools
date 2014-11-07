@@ -13,7 +13,7 @@ struct plotInfo{
 	TString unit;
 	unsigned rebin;
 	double xRangeLow;
-	double xRangeHigh; // todo: axis does not care about this yet
+	double xRangeHigh;
 
 	/* ideas for further members:
 	bool log;

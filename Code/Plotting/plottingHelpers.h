@@ -78,22 +78,6 @@ std::vector<TH1D*> getHistos(std::vector<TString> names, std::vector<double> sca
 }
 */
 
-/*
-//todo: does not take care of various subsamples within one sample
-//todo: is this still needed? does the same as "getHistos", or not?
-std::vector<TH1D*> getHistos(configInfo conf, plotInfo plot, std::vector<sample> samples){
-	TString histname;
-	sample sam;
-	std::vector<TH1D*> histos;
-	for(unsigned s=0; s<samples.size(); s++){
-		sam = samples.at(s);
-		histname = plot.identifier + sam.identifier;
-		histos.push_back(getHisto(conf, histname, sam.mcScale, sam.color));
-	}
-	return histos;
-}
-*/
-
 TH1D* getDataMC(TH1D* datahist, TH1D* MChist){
 	if(verbose) std::cout << "--> getDataMC(...)" << std::endl;
 	int nbins = datahist->GetNbinsX();
@@ -189,60 +173,6 @@ TH1D* produceTotal(std::vector<TH1D*> histos){
 	total->SetMarkerSize(0.001);
 	return total;
 }
-
-//todo: should be obsolete, replaced by getHistos
-/*
-std::vector<TH1D*> produceReducedHistos(std::vector<TH1D*> histos, std::vector<int> colors){
-	if(!dym50){
-		TH1D* qcd = histos.at(0);
-		TH1D* dyt = histos.at(12);
-		TH1D* sig = histos.at(13);
-		TH1D* top = new TH1D("top","top",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
-		top->Add(histos.at(7));
-		top->Add(histos.at(8));
-		top->Add(histos.at(9));
-		TH1D* ewk = new TH1D("ewk","ewk",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
-		ewk->Add(histos.at(1));
-		ewk->Add(histos.at(2));
-		ewk->Add(histos.at(3));
-		ewk->Add(histos.at(4));
-		ewk->Add(histos.at(5));
-		ewk->Add(histos.at(6));
-		ewk->Add(histos.at(10));
-		ewk->Add(histos.at(11));
-	}
-	if(dym50){
-		TH1D* qcd = histos.at(0);
-		TH1D* dyt = histos.at(11);
-		TH1D* sig = histos.at(12);
-		TH1D* top = new TH1D("top","top",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
-		top->Add(histos.at(7));
-		top->Add(histos.at(8));
-		top->Add(histos.at(9));
-		TH1D* ewk = new TH1D("ewk","ewk",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
-		ewk->Add(histos.at(1));
-		ewk->Add(histos.at(2));
-		ewk->Add(histos.at(3));
-		ewk->Add(histos.at(4));
-		ewk->Add(histos.at(5));
-		ewk->Add(histos.at(6));
-		ewk->Add(histos.at(10));
-	}
-	qcd->SetFillColor(colors.at(0));
-	ewk->SetFillColor(colors.at(1));
-	top->SetFillColor(colors.at(2));
-	dyt->SetFillColor(colors.at(3));
-	sig->SetFillColor(colors.at(4));
-	ewk->SetLineColor(1);
-	std::vector<TH1D*> reducedhistos;
-	reducedhistos.push_back(qcd);
-	reducedhistos.push_back(ewk);
-	reducedhistos.push_back(top);
-	reducedhistos.push_back(dyt);
-	reducedhistos.push_back(sig);
-	return reducedhistos;
-}
-*/
 
 //todo: add systematics
 TH1D* getHistoFromSample(configInfo conf, plotInfo p, sample s){
