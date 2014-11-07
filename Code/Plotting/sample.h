@@ -153,8 +153,32 @@ std::map<int, int> readSkimSummary(TString skimsummaryFile){
 	return nEvtMap;
 }
 
+// test validity of individual sample
+bool testSample(sample sam){
+	if(sam.identifier.size() == 0){
+		printf(" Empty sample. Why are you even looking at this?\n");
+		return false;
+	}
+	if(sam.identifier.size() != sam.mcScale.size()){
+		printf(" ERROR: sizes of vectors in sample differ! \n");
+		printf(" size(identifier) = %i, size(mcScale) = %i\n", sam.identifier.size(), sam.mcScale.size());
+		return false;
+	}
+	if(sam.legName == ""){
+		std::cout << "ERROR: Sample has no LegName." << std::endl;
+		return false;
+	}
+	for(unsigned ss = 0; ss < sam.identifier.size(); ss++){
+		if(sam.identifier.at(ss) == ""){
+			std::cout << "ERROR: Sample has no identifier." << std::endl;
+			return false;
+		}
+	}
+	return true;
+}
+
 // test validity of sample vector
-bool testSamples(std::vector<sample> samples, configInfo conf){
+bool testSamples(std::vector<sample> samples){
 	if(samples.size() < 1){
 		std::cout << "ERROR: No sample specified." << std::endl;
 		return false;
