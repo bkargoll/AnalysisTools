@@ -22,7 +22,7 @@
 void testInputs(configInfo config, std::vector<sample> samples, std::vector<plotInfo> plots){
 	bool isValid = true;
 	isValid &= testConfigInfo(config, verbose);
-	isValid &= testSamples(samples, config);
+	isValid &= testSamples(samples);
 	isValid &= testPlots(plots);
 	if(!isValid){
 		std::cout << "========== WARNING: Your inputs (configInfo, plotInfo or sample) seem to be corrupted! ==========" << std::endl;
@@ -42,7 +42,7 @@ TH1D* getHisto(configInfo config, TString name){
 }
 
 TH1D* getHisto(configInfo config, TString name, double scale, int color){
-	if(verbose) std::cout << "--> getHisto(configInfo, TString, double, int)" << std::endl;
+	if(verbose) std::cout << "--> getHisto(configInfo, TString, double, int): " << name << std::endl;
 	TH1D* hist = getHisto(config, name);
 	hist->Scale(scale);
 	hist->SetFillColor(color);
@@ -167,7 +167,7 @@ TH1D* getDataMC(TH1D* datahist, std::vector<TH1D*> MChists){
 THStack* produceHistStack(std::vector<TH1D*> histos){
 	if(verbose) std::cout << "--> produceHistStack(...)" << std::endl;
 	THStack* stack = new THStack("stack","stack");
-	for(unsigned i=0;i<histos.size()-1;i++){ //
+	for(unsigned i=0;i<histos.size();i++){ //
 		stack->Add(histos.at(i));
 	}
 	return stack;
@@ -179,7 +179,7 @@ TH1D* produceTotal(std::vector<TH1D*> histos){
 	TString name = (TString)histos.at(0)->GetName() + "_TotalMC";
 	TH1D* total = new TH1D(name.Data(),"total",histos.at(0)->GetNbinsX(),histos.at(0)->GetXaxis()->GetXmin(),histos.at(0)->GetXaxis()->GetXmax());
 	total->Sumw2();
-	for(unsigned i=0;i<histos.size()-1;i++){
+	for(unsigned i=0;i<histos.size();i++){
 		total->Add(histos.at(i));
 	}
 	total->SetFillStyle(3013);
@@ -247,7 +247,7 @@ std::vector<TH1D*> produceReducedHistos(std::vector<TH1D*> histos, std::vector<i
 //todo: add systematics
 TH1D* getHistoFromSample(configInfo conf, plotInfo p, sample s){
 	if(verbose) std::cout << "--> getHistoFromSample(...)" << std::endl;
-	TH1D* tmp = getHisto(conf, p.identifier + s.identifier.at(0), s.mcScale.at(0), s.color);
+	TH1D* tmp = getHisto(conf, p.identifier + s.identifier.at(0), 1, s.color);
 	TH1D* histo = new TH1D(s.legName+"_"+p.identifier,s.legName,tmp->GetNbinsX(),tmp->GetXaxis()->GetXmin(),tmp->GetXaxis()->GetXmax());
 	histo->Sumw2();
 	// add up subsamples of this sample
@@ -396,21 +396,21 @@ void drawPlot(configInfo conf, plotInfo plot, TH1D* data, std::vector<sample> sa
 	data->Draw("E");
 	//todo: make sure that signal is only stacked if wanted
 	//todo: somehow the stack doesn't work anymore, if there is no signal sample
-	int signalhist = histos.size()-1;
-	TH1D* signal = (TH1D*) histos.at(signalhist)->Clone();
-	if(signaltop)stack->Add(signal);
+//	int signalhist = histos.size()-1;
+//	TH1D* signal = (TH1D*) histos.at(signalhist)->Clone();
+//	if(signaltop)stack->Add(signal);
 	stack->Draw("Histsame");
 	total->Draw("E2same");
-	if(!signaltop){
-		//signal->SetFillColor(10);
-		//signal->SetFillStyle(3004);
-		//signal->SetLineStyle(9);
-		//signal->SetFillStyle(0);
-		//signal->SetLineWidth(2);
-		signal->SetLineColor(kBlack);
-		signal->Scale(1);
-		signal->Draw("Histsame");
-	}
+//	if(!signaltop){
+//		//signal->SetFillColor(10);
+//		//signal->SetFillStyle(3004);
+//		//signal->SetLineStyle(9);
+//		//signal->SetFillStyle(0);
+//		//signal->SetLineWidth(2);
+//		signal->SetLineColor(kBlack);
+//		signal->Scale(1);
+//		signal->Draw("Histsame");
+//	}
 	data->Draw("Esame");
 	data->Draw("axissame");
 	data->SetMinimum(1.001);
