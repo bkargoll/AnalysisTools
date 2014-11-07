@@ -21,9 +21,11 @@ bool signaltop = false;
 double lumi = 19712.;
 //TString infile = "/net/scratch_cms/institut_3b/kargoll/Taus30GeV/Categories/workdirAnalysis_Nov_04_2014/LOCAL_COMBINED_inclusive_default_LumiScaled.root";
 //TString ident = "inclusive_default_";
-TString infile = "/net/scratch_cms/institut_3b/kargoll/Taus30GeV/Backgrounds/workdirAnalysis_Oct_31_2014/LOCAL_COMBINED_htotaumutauhbackgrounds_default_LumiScaled.root";
-TString ident = "htotaumutauhbackgrounds_default_";
-bool isLumiScaled = true;
+//TString infile = "/net/scratch_cms/institut_3b/kargoll/Taus30GeV/Backgrounds/workdirAnalysis_Oct_31_2014/LOCAL_COMBINED_htotaumutauhbackgrounds_default_LumiScaled.root";
+//TString ident = "htotaumutauhbackgrounds_default_";
+TString infile = "/user/nehrkorn/analysis_dym50_jeteta52.root";
+TString ident = "ztoemu_default_";
+bool isLumiScaled = false;
 // define user-specific config
 configInfo conf(infile, isLumiScaled, ident, lumi);
 

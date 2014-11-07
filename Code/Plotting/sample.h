@@ -105,12 +105,6 @@ void printSample(sample& s, configInfo conf){
 		return;
 	}
 
-	if (!conf.isFileLumiScaled && s.identifier.size() == 0){
-		if (s.id != -1 || s.xsec != -1 || s.nEvt != -1) printf("  id = %i, xsec = %.2f, nEvt = %i\n", s.id, s.xsec, s.nEvt);
-		else printf("  WARNING: Necessary info for scaling not available!\n");
-	}
-	else printf("  Information to compute scale will not be used for this sample.\n");
-
 	if( !conf.isFileLumiScaled && (s.identifier.size() != s.mcScale.size()) ){
 			printf("  WARNING: sizes of vectors in sample differ! mcScale info is needed!\n");
 			printf("  size(identifier) = %i, size(mcScale) = %i\n", s.identifier.size(), s.mcScale.size());
@@ -121,7 +115,7 @@ void printSample(sample& s, configInfo conf){
 	printf("  sample consists of %i subsamples:\n", s.identifier.size());
 	for(unsigned i = 0; i<s.identifier.size(); i++){
 		printf("    subsample %i has identifier %s \n", i+1, s.identifier.at(i).Data());
-		if(!conf.isFileLumiScaled) printf("      and mcScale = %.2f\n", s.mcScale.at(i));
+		if(!conf.isFileLumiScaled) printf("      and mcScale = %.6f\n", s.mcScale.at(i));
 	}
 	//todo: add syst
 	return;
@@ -179,6 +173,13 @@ bool testSamples(std::vector<sample> samples, configInfo conf){
 			if(sam.mcScale.at(0) == 0){
 				std::cout << "ERROR: Sample has no mcScale, but needs to be scaled." << std::endl;
 				return false;
+			}
+		}else{
+			for(unsigned ss = 0; ss < sam.mcScale.size(); ss++){
+				if(sam.mcScale.at(ss) != 1){
+					sam.mcScale.at(ss) = 1;
+					std::cout << "WARNING: Sample " << sam.identifier.at(ss) << " is already scaled but additional scale was given. Scale set to 1." << std::endl;
+				}
 			}
 		}
 
