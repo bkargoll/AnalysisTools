@@ -100,11 +100,22 @@ struct sample{
 // print sample, for debugging purposes
 void printSample(sample& s, configInfo conf){
 	printf("**** Printing sample %s ****\n", s.legName.Data());
+	if(s.identifier.size() == 0){
+		printf("  Empty sample. Why are you even looking at this?\n");
+		return;
+	}
+
+	if( !conf.isFileLumiScaled && (s.identifier.size() != s.mcScale.size()) ){
+			printf("  WARNING: sizes of vectors in sample differ! mcScale info is needed!\n");
+			printf("  size(identifier) = %i, size(mcScale) = %i\n", s.identifier.size(), s.mcScale.size());
+			return;
+	}
+
 	printf("  will be drawn with color = %i\n", s.color);
 	printf("  sample consists of %i subsamples:\n", s.identifier.size());
 	for(unsigned i = 0; i<s.identifier.size(); i++){
 		printf("    subsample %i has identifier %s \n", i+1, s.identifier.at(i).Data());
-		if(!conf.isFileLumiScaled) printf("      and mcScale = %.2f\n", s.mcScale.at(i));
+		if(!conf.isFileLumiScaled) printf("      and mcScale = %.6f\n", s.mcScale.at(i));
 	}
 	//todo: add syst
 	return;
@@ -145,13 +156,13 @@ std::map<int, int> readSkimSummary(TString skimsummaryFile){
 // test validity of individual sample
 bool testSample(sample sam){
 	if(sam.identifier.size() == 0){
-		printf("  Empty sample. Why are you even looking at this?\n");
+		printf(" Empty sample. Why are you even looking at this?\n");
 		return false;
 	}
 	if(sam.identifier.size() != sam.mcScale.size()){
-			printf("  ERROR: sizes of vectors in sample differ! \n");
-			printf("  size(identifier) = %i, size(mcScale) = %i\n", sam.identifier.size(), sam.mcScale.size());
-			return false;
+		printf(" ERROR: sizes of vectors in sample differ! \n");
+		printf(" size(identifier) = %i, size(mcScale) = %i\n", sam.identifier.size(), sam.mcScale.size());
+		return false;
 	}
 	if(sam.legName == ""){
 		std::cout << "ERROR: Sample has no LegName." << std::endl;
@@ -159,12 +170,13 @@ bool testSample(sample sam){
 	}
 	for(unsigned ss = 0; ss < sam.identifier.size(); ss++){
 		if(sam.identifier.at(ss) == ""){
-				std::cout << "ERROR: Sample has no identifier." << std::endl;
-				return false;
+			std::cout << "ERROR: Sample has no identifier." << std::endl;
+			return false;
 		}
 	}
 	return true;
 }
+
 // test validity of sample vector
 bool testSamples(std::vector<sample> samples){
 	if(samples.size() < 1){
@@ -173,7 +185,28 @@ bool testSamples(std::vector<sample> samples){
 	}
 	for(unsigned s = 0; s < samples.size(); s++){
 		sample sam = samples.at(s);
-		testSample(sam);
+		if(sam.legName == ""){
+			std::cout << "ERROR: Sample has no LegName." << std::endl;
+			return false;
+		}
+		if(sam.identifier.at(0) == ""){
+			std::cout << "ERROR: Sample has no identifier." << std::endl;
+			return false;
+		}
+		if(!conf.isFileLumiScaled){
+			if(sam.mcScale.at(0) == 0){
+				std::cout << "ERROR: Sample has no mcScale, but needs to be scaled." << std::endl;
+				return false;
+			}
+		}else{
+			for(unsigned ss = 0; ss < sam.mcScale.size(); ss++){
+				if(sam.mcScale.at(ss) != 1){
+					sam.mcScale.at(ss) = 1;
+					std::cout << "WARNING: Sample " << sam.identifier.at(ss) << " is already scaled but additional scale was given. Scale set to 1." << std::endl;
+				}
+			}
+		}
+
 	}
 	return true;
 }
