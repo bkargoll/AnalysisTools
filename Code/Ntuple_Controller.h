@@ -111,6 +111,12 @@ class Ntuple_Controller{
   std::vector<TLorentzVector> taus;
   TLorentzVector              met;
 
+  // TString flags for object corrections
+  TString tauCorrection;
+  TString muonCorrection;
+  TString elecCorrection;
+  TString jetCorrection;
+
   // Systematic controls variables
   int theSys;
   HistoConfig HConfig;
@@ -134,7 +140,7 @@ class Ntuple_Controller{
   Ntuple_Controller(std::vector<TString> RootFiles);
 
   // Destructor
-  ~Ntuple_Controller() ;
+  virtual ~Ntuple_Controller() ;
 
   // Event initializer
   void InitEvent();
@@ -176,6 +182,12 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   bool isData(){return Ntp->Event_isRealData;}
   void ThinTree();
 
+  // Set object corrections to be applied
+  void SetTauCorrections(TString tauCorr){tauCorrection = tauCorr;}
+  void SetMuonCorrections(TString muonCorr){muonCorrection = muonCorr;}
+  void SetElecCorrections(TString elecCorr){elecCorrection = elecCorr;}
+  void SetJetCorrections(TString jetCorr){jetCorrection = jetCorr;}
+
   // Physics Varible Get Functions
   // Event Varibles
   int GetMCID();
@@ -194,7 +206,18 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   double        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
   double        PUWeight_m5(){return Ntp->PUWeight_m5;}
   double		PUWeightFineBins(){return Ntp->PUWeightFineBins;}
-  double        EmbeddedWeight(){return Ntp->EmbeddedWeight;}
+
+  // embedding
+  double	Embedding_TauSpinnerWeight(){return Ntp->TauSpinnerWeight;};
+  double 	Embedding_SelEffWeight(){return Ntp->SelEffWeight;}
+  double 	Embedding_MinVisPtFilter(){return Ntp->MinVisPtFilter;}
+  double 	Embedding_KinWeightPt(){return Ntp->KinWeightPt;}
+  double 	Embedding_KinWeightEta(){return Ntp->KinWeightEta;}
+  double 	Embedding_KinWeightMassPt(){return Ntp->KinWeightMassPt;}
+  // don't use this combined weight blindly. Check which weights you should apply.
+  double	EmbeddedWeight(){
+	  return Ntp->TauSpinnerWeight * Ntp->SelEffWeight * Ntp->MinVisPtFilter * Ntp->KinWeightPt * Ntp->KinWeightEta * Ntp->KinWeightMassPt;
+  }
 
   TVectorT<double>      beamspot_par(){TVectorT<double> BS(NBS_par);for(unsigned int i=0;i<NBS_par;i++)BS(i)=Ntp->beamspot_par->at(i);return BS;}
 
@@ -229,7 +252,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   // Muon information
   unsigned int   NMuons(){return Ntp->Muon_p4->size();}
-  TLorentzVector Muon_p4(unsigned int i, TString corr = "");
+  TLorentzVector Muon_p4(unsigned int i, TString corr = "default");
   TVector3       Muon_Poca(unsigned int i){return TVector3(Ntp->Muon_Poca->at(i).at(0),Ntp->Muon_Poca->at(i).at(1),Ntp->Muon_Poca->at(i).at(2));}
   bool           Muon_isGlobalMuon(unsigned int i){return Ntp->Muon_isGlobalMuon->at(i);}
   bool           Muon_isStandAloneMuon(unsigned int i){return Ntp->Muon_isStandAloneMuon->at(i);}
@@ -304,10 +327,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   bool           isGoodMuon_nooverlapremoval(unsigned int i);
 
   bool			 isTightMuon(unsigned int i);
-  bool			 isTightMuon(unsigned int i, unsigned int j, TString corr="");
-  bool           isSelectedMuon(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr="");
+  bool			 isTightMuon(unsigned int i, unsigned int j, TString corr = "default");
+  bool           isSelectedMuon(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr = "default");
   bool			 isLooseMuon(unsigned int i);
-  float          Muon_RelIso(unsigned int i, TString corr="");
+  float          Muon_RelIso(unsigned int i, TString corr = "default");
   rochcor2012*   rmcor;
   std::vector<TLorentzVector> Muon_corrected_p4;
   void           CorrectMuonP4();
@@ -316,7 +339,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   //Base Tau Information (PF)
    unsigned int      NPFTaus(){return Ntp->PFTau_p4->size();}
-   TLorentzVector	 PFTau_p4(unsigned int i, TString corr = "");
+   TLorentzVector	 PFTau_p4(unsigned int i, TString corr = "default");
    TVector3          PFTau_Poca(unsigned int i){return TVector3(Ntp->PFTau_Poca->at(i).at(0),Ntp->PFTau_Poca->at(i).at(1),Ntp->PFTau_Poca->at(i).at(2));}
    bool PFTau_isTightIsolation(unsigned int i){return Ntp->PFTau_isTightIsolation->at(i);}
    bool PFTau_isMediumIsolation(unsigned int i){return  Ntp->PFTau_isMediumIsolation->at(i);}
@@ -368,9 +391,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TVector3 PFTau_FlightLength3d(unsigned int i){return PFTau_TIP_secondaryVertex_pos(i)-PFTau_TIP_primaryVertex_pos(i);}
    TMatrixTSym<double> PF_Tau_FlightLegth3d_TauFrame_cov(unsigned int i);
    TVector3 PF_Tau_FlightLegth3d_TauFrame(unsigned int i);
-   double   PFTau_FlightLength_significance(unsigned int i){float e=PFTau_FlightLength_error(0); if(e>0) return PFTau_FlightLength(i)/e; return 0;}
+   double   PFTau_FlightLength_significance(unsigned int i){float e=PFTau_FlightLength_error(i); if(e>0) return PFTau_FlightLength(i)/e; return 0;}
    double	PFTau_FlightLenght_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov );
-   double   PFTau_FlightLength_error(unsigned int i){return PF_Tau_FlightLegth3d_TauFrame_cov(i)(LorentzVectorParticle::vz,LorentzVectorParticle::vz);}
+   double   PFTau_FlightLength_error(unsigned int i){return sqrt(PF_Tau_FlightLegth3d_TauFrame_cov(i)(LorentzVectorParticle::vz,LorentzVectorParticle::vz));}
    double   PFTau_FlightLength(unsigned int i){return PFTau_FlightLength3d(i).Mag();}
    
    bool ThreeProngTauFit(unsigned int i, unsigned int j,LorentzVectorParticle &theTau,std::vector<LorentzVectorParticle> &daughter,double &LC_chi2){
@@ -460,7 +483,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
       // Jet Information
    unsigned int       NPFJets(){return Ntp->PFJet_p4->size();}
-   TLorentzVector     PFJet_p4(unsigned int i, TString corr = "");
+   TLorentzVector     PFJet_p4(unsigned int i, TString corr = "default");
    float              PFJet_chargedEmEnergy(unsigned int i){return Ntp->PFJet_chargedEmEnergy->at(i);}
    float              PFJet_chargedHadronEnergy(unsigned int i){return Ntp->PFJet_chargedHadronEnergy->at(i);}
    float              PFJet_chargedHadronMultiplicity(unsigned int i){return Ntp->PFJet_chargedHadronMultiplicity->at(i);}
@@ -494,7 +517,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float              PFJet_neutralEmEnergyFraction(unsigned int i){return Ntp->PFJet_neutralEmEnergyFraction->at(i);}
    bool               isGoodJet(unsigned int i);
    bool               isGoodJet_nooverlapremoval(unsigned int i);
-   bool               isJetID(unsigned int i, TString corr="");
+   bool               isJetID(unsigned int i, TString corr = "default");
    float              PFJet_nTrk(unsigned int i){return Ntp->PFJet_nTrk->at(i);}
    TLorentzVector     PFJet_TracksP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_TracksP4->at(i).at(j).at(1),Ntp->PFJet_TracksP4->at(i).at(j).at(2),Ntp->PFJet_TracksP4->at(i).at(j).at(3),Ntp->PFJet_TracksP4->at(i).at(j).at(0));}
    int                PFJet_nTracks(unsigned int i){return Ntp->PFJet_TracksP4->at(i).size();}
@@ -516,7 +539,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    //float              PFJet_BTagWeight(unsigned int i){return Ntp->PFJet_BTagWeight->at(i);} // not implemented at the moment
 
    double 			  rundependentJetPtCorrection(double jeteta, int runnumber);
-   double             JERCorrection(TLorentzVector jet, double dr=0.25, TString corr=""); // dr=0.25 from AN2013_416_v4
+   double             JERCorrection(TLorentzVector jet, double dr=0.25, TString corr = "default"); // dr=0.25 from AN2013_416_v4
    TLorentzVector     PFJet_matchGenJet(TLorentzVector jet, double dr);
    double             JetEnergyResolutionCorr(double jeteta);
    double             JetEnergyResolutionCorrErr(double jeteta);
@@ -663,7 +686,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    unsigned int MCTau_JAK(unsigned int i){return Ntp->MCTau_JAK->at(i);}
    unsigned int MCTau_DecayBitMask(unsigned int i){return Ntp->MCTau_DecayBitMask->at(i);}
    //Tau and decay products
-   int NMCTauDecayProducts(unsigned int i){if(0<=i && i<NMCTaus()) return Ntp->MCTauandProd_p4->at(i).size(); return 0;}
+   int NMCTauDecayProducts(unsigned int i){if(0<=i && i<(unsigned int)NMCTaus()) return Ntp->MCTauandProd_p4->at(i).size(); return 0;}
    TLorentzVector MCTauandProd_p4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->MCTauandProd_p4->at(i).at(j).at(1),Ntp->MCTauandProd_p4->at(i).at(j).at(2),Ntp->MCTauandProd_p4->at(i).at(j).at(3),Ntp->MCTauandProd_p4->at(i).at(j).at(0));}
    int MCTauandProd_pdgid(unsigned int i, unsigned int j){return Ntp->MCTauandProd_pdgid->at(i).at(j);}
    unsigned int MCTauandProd_midx(unsigned int i, unsigned int j){return Ntp->MCTauandProd_midx->at(i).at(j);}
@@ -681,7 +704,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    // Electrons
    unsigned int       NElectrons(){return Ntp->Electron_p4->size();}
-   TLorentzVector	  Electron_p4(unsigned int i, TString corr = "");
+   TLorentzVector	  Electron_p4(unsigned int i, TString corr = "default");
    TVector3           Electron_Poca(unsigned int i){return TVector3(Ntp->Electron_Poca->at(i).at(0),Ntp->Electron_Poca->at(i).at(1),Ntp->Electron_Poca->at(i).at(2));}
    int   Electron_Charge(unsigned int i){return Ntp->Electron_charge->at(i);}
    float   Electron_Gsf_deltaEtaEleClusterTrackAtCalo(unsigned int i){return Ntp->Electron_Gsf_deltaEtaEleClusterTrackAtCalo->at(i);}
@@ -759,16 +782,16 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    bool isTrigPreselElectron(unsigned int i);
    bool isTrigNoIPPreselElectron(unsigned int i);
-   bool isMVATrigElectron(unsigned int i, TString corr="");
-   bool isMVATrigNoIPElectron(unsigned int i, TString corr="");
-   bool isMVANonTrigElectron(unsigned int i, unsigned int j, TString corr="");
-   bool isTightElectron(unsigned int i, TString corr="");
-   bool isTightElectron(unsigned int i, unsigned int j, TString corr="");
-   float Electron_RelIso03(unsigned int i, TString corr="");
-   float Electron_RelIso04(unsigned int i, TString corr="");
+   bool isMVATrigElectron(unsigned int i, TString corr = "default");
+   bool isMVATrigNoIPElectron(unsigned int i, TString corr = "default");
+   bool isMVANonTrigElectron(unsigned int i, unsigned int j, TString corr = "default");
+   bool isTightElectron(unsigned int i, TString corr = "default");
+   bool isTightElectron(unsigned int i, unsigned int j, TString corr = "default");
+   float Electron_RelIso03(unsigned int i, TString corr = "default");
+   float Electron_RelIso04(unsigned int i, TString corr = "default");
    float Electron_Aeff_R04(double Eta);
    float Electron_Aeff_R03(double Eta);
-   bool isSelectedElectron(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr="");
+   bool isSelectedElectron(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr = "default");
 
    // Trigger
    bool         TriggerAccept(TString n);

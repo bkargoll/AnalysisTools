@@ -93,7 +93,7 @@ SkimConfig::~SkimConfig(){
 
 
 double SkimConfig::GetNEvents(int id){
-  for(int i=0; i<SkimIDs.size();i++){
+  for(unsigned int i=0; i<SkimIDs.size();i++){
     if(id==SkimIDs.at(i))return NEvents.at(i);
   }
   return 0;
@@ -115,10 +115,10 @@ void SkimConfig::SaveEfficiency(TString Name,std::vector<int> ids,std::vector<TH
   ofstream output;
   output.open(Name+"SkimEff.dat", std::ios::out);
   int nbins=NPassed.at(0).GetNbinsX();
-  for(int i=0; i<ids.size();i++){
+  for(unsigned int i=0; i<ids.size();i++){
     double Eff(0),Eff_w(0);
     if(NPassed.at(i).GetBinContent(1)>0) Eff=NPassed.at(i).GetBinContent(nbins)/NPassed.at(i).GetBinContent(1);
-    if(NPassed_noweight.at(i).GetBinContent(1)>0) NPassed_noweight.at(i).GetBinContent(nbins)/NPassed_noweight.at(i).GetBinContent(1);
+    if(NPassed_noweight.at(i).GetBinContent(1)>0) Eff_w=NPassed_noweight.at(i).GetBinContent(nbins)/NPassed_noweight.at(i).GetBinContent(1);
     (output) << "ID= "             << ids.at(i)  << setprecision (15)
 	     << "AllEvt= "         << NPassed.at(i).GetBinContent(1)           
 	     << "AllEvtErr= "      << NPassed.at(i).GetBinError(1)

@@ -47,6 +47,8 @@ class Selection : public Selection_Base {
   unsigned int DataIdx(){return data;}
   virtual void ResetEvent();
   virtual void ScaleAllHistOfType(unsigned int t,float);
+  bool passAllBut(std::vector<int> index);
+  bool passAllBut(int i_cut);
 
   HistoConfig HConfig;
 

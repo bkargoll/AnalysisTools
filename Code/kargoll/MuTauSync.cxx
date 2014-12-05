@@ -32,8 +32,10 @@ void  MuTauSync::Configure(){
 
 	// set up synch ntuple
 	syncFile = new TFile("MuTauSyncTree.root", "RECREATE");
-	syncTree = new TTree("syncTree", "syncTree");
-	defineBranches();
+	syncTree_TauPlusXA = new TTree("syncTree_TauPlusXA", "syncTree_TauPlusXA");
+	syncTree_VBFHiggs = new TTree("syncTree_VBFHiggs", "syncTree_VBFHiggs");
+	defineBranches(syncTree_TauPlusXA);
+	defineBranches(syncTree_VBFHiggs);
 }
 
 void MuTauSync::doEvent(){
@@ -58,15 +60,15 @@ void MuTauSync::doEvent(){
 		 // Event Weights
 		mcweight = -10;
 		puweight = Ntp->PUWeightFineBins();
-		trigweight_1 = -10;
-		trigweight_2 = -10;
-		idweight_1 = -10;
+		trigweight_1 = (!Ntp->isData()) ? RSF->HiggsTauTau_MuTau_Trigger_Mu(Ntp->Muon_p4(selMuon)) : -10;
+		trigweight_2 = (!Ntp->isData()) ? RSF->HiggsTauTau_MuTau_Trigger_Tau(Ntp->PFTau_p4(selTau, "")) : -10;
+		idweight_1 = (!Ntp->isData()) ? RSF->HiggsTauTau_MuTau_Id_Mu(Ntp->Muon_p4(selMuon)) : -10;
 		idweight_2 = -10;
-		isoweight_1 = -10;
+		isoweight_1 = (!Ntp->isData()) ? RSF->HiggsTauTau_MuTau_Iso_Mu(Ntp->Muon_p4(selMuon)) : -10;
 		isoweight_2 = -10;
 		fakeweight = -10;
-		effweight = -10;
-		weight = -10;
+		effweight = trigweight_1 * trigweight_2 * idweight_1 * isoweight_1;
+		weight = w;
 		embeddedWeight = -10;
 		signalWeight = -10;
 		 // SV Fit variables
@@ -91,14 +93,14 @@ void MuTauSync::doEvent(){
 		passiso_1 = true;
 		mt_1 = Ntp->transverseMass(pt_1,phi_1,Ntp->MET_CorrMVAMuTau_et(),Ntp->MET_CorrMVAMuTau_phi());
 		 // Second lepton : hadronic Tau for mu Tau had for e Tau, Muon for e mu, Trailing (in pT) Tau for Tau Tau
-		pt_2 = Ntp->PFTau_p4(selTau).Pt();
-		phi_2 = Ntp->PFTau_p4(selTau).Phi();
-		eta_2 = Ntp->PFTau_p4(selTau).Eta();
-		m_2 = Ntp->PFTau_p4(selTau).M();
+		pt_2 = Ntp->PFTau_p4(selTau, "").Pt();
+		phi_2 = Ntp->PFTau_p4(selTau, "").Phi();
+		eta_2 = Ntp->PFTau_p4(selTau, "").Eta();
+		m_2 = Ntp->PFTau_p4(selTau, "").M();
 		q_2 = Ntp->PFTau_Charge(selTau);
 		iso_2 = -10; //MVA iso for hadronic Tau
-		d0_2 = Ntp->dxy(Ntp->PFTau_p4(selTau),Ntp->PFTau_Poca(selTau),Ntp->Vtx(selVertex));
-		dZ_2 = Ntp->dz(Ntp->PFTau_p4(selTau),Ntp->PFTau_Poca(selTau),Ntp->Vtx(selVertex));
+		d0_2 = Ntp->dxy(Ntp->PFTau_p4(selTau, ""),Ntp->PFTau_Poca(selTau),Ntp->Vtx(selVertex));
+		dZ_2 = Ntp->dz(Ntp->PFTau_p4(selTau, ""),Ntp->PFTau_Poca(selTau),Ntp->Vtx(selVertex));
 		pt_tt = -10; //(Ntp->Muon_p4(selMuon) + Ntp->PFTau_p4(selTau) + met_p4).Pt()
 		byCombinedIsolationDeltaBetaCorrRaw3Hits_2 = Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(selTau);
 		againstElectronMVA3raw_2 = -10;
@@ -212,171 +214,173 @@ void MuTauSync::doEvent(){
 		mva_gf = -10;
 		mva_vbf = 10;
 
-
-		syncTree->Fill();
+		if(Ntp->isData()) 	syncTree_TauPlusXA->Fill();
+		else				syncTree_VBFHiggs->Fill();
 	}
 }
 
 void MuTauSync::Finish(){
 	HToTaumuTauh::Finish();
 
-	syncTree->SetDirectory(syncFile);
-	syncTree->GetCurrentFile()->Write();
+	syncTree_TauPlusXA->SetDirectory(syncFile);
+	syncTree_TauPlusXA->GetCurrentFile()->Write();
+	syncTree_VBFHiggs->SetDirectory(syncFile);
+	syncTree_VBFHiggs->GetCurrentFile()->Write();
 	syncFile->Close();
 }
 
-void MuTauSync::defineBranches(){
+void MuTauSync::defineBranches(TTree* tree){
 	// copied from here: https://github.com/ajgilbert/ICHiggsTauTau/blob/master/Analysis/HiggsTauTau/src/HTTSync.cc#L48-L201
-	syncTree->Branch("run" ,			&run,"run/I" );//Run
-	syncTree->Branch("lumi" ,			&lumi,"lumi/I" );//Lumi
-	syncTree->Branch("evt" ,			&evt ,"evt/I" );//Evt
+	tree->Branch("run" ,			&run,"run/I" );//Run
+	tree->Branch("lumi" ,			&lumi,"lumi/I" );//Lumi
+	tree->Branch("evt" ,			&evt ,"evt/I" );//Evt
 
 	    //Event Variables
-	syncTree->Branch("npv" ,			&npv ,"npv/I" );//NPV
-	syncTree->Branch("npu" ,			&npu ,"npu/I" );//NPU
-	syncTree->Branch("rho" ,			&rho,"rho/F" );//Rho
+	tree->Branch("npv" ,			&npv ,"npv/I" );//NPV
+	tree->Branch("npu" ,			&npu ,"npu/I" );//NPU
+	tree->Branch("rho" ,			&rho,"rho/F" );//Rho
 
 	    //Event Weights
-	syncTree->Branch("mcweight" ,		&mcweight ,"mcweight/F");//MC Weight (xs/nevents * additional wieght (ie pt weight for gghiggs))
-	syncTree->Branch("puweight" ,		&puweight ,"puweight/F");//Pielup Weight
+	tree->Branch("mcweight" ,		&mcweight ,"mcweight/F");//MC Weight (xs/nevents * additional wieght (ie pt weight for gghiggs))
+	tree->Branch("puweight" ,		&puweight ,"puweight/F");//Pielup Weight
 
-	syncTree->Branch("trigweight_1" ,	&trigweight_1,"trigweight_1/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("trigweight_2" ,	&trigweight_2 ,"trigweight_2/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("idweight_1" ,		&idweight_1 ,"idweight_1/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("idweight_2" ,		&idweight_2 ,"idweight_2/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("isoweight_1" ,	&isoweight_1,"isoweight_1/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("isoweight_2" ,	&isoweight_2 ,"isoweight_2/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("fakeweight" ,		&fakeweight ,"fakeweight/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("trigweight_1" ,	&trigweight_1,"trigweight_1/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("trigweight_2" ,	&trigweight_2 ,"trigweight_2/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("idweight_1" ,		&idweight_1 ,"idweight_1/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("idweight_2" ,		&idweight_2 ,"idweight_2/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("isoweight_1" ,	&isoweight_1,"isoweight_1/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("isoweight_2" ,	&isoweight_2 ,"isoweight_2/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("fakeweight" ,		&fakeweight ,"fakeweight/F");//Effieiency Scale factor (all components multiplied in)
 
-	syncTree->Branch("effweight" ,		&effweight ,"effweight/F");//Effieiency Scale factor (all components multiplied in)
-	syncTree->Branch("weight" ,			&weight,"weight/F" );//mcweight*puweight*effweight
-	syncTree->Branch("embeddedWeight" ,	&embeddedWeight ,"embeddedWeight/F" );
-	syncTree->Branch("signalWeight" ,	&signalWeight ,"signalWeight/F" );
+	tree->Branch("effweight" ,		&effweight ,"effweight/F");//Effieiency Scale factor (all components multiplied in)
+	tree->Branch("weight" ,			&weight,"weight/F" );//mcweight*puweight*effweight
+	tree->Branch("embeddedWeight" ,	&embeddedWeight ,"embeddedWeight/F" );
+	tree->Branch("signalWeight" ,	&signalWeight ,"signalWeight/F" );
 
 	    //SV Fit variables
-	syncTree->Branch("mvis" ,			&mvis ,"mvis/F" );//SV Fit using integration method
-	syncTree->Branch("m_sv" ,			&m_sv,"m_sv/F" );//SV Fit using integration method
-	syncTree->Branch("pt_sv" ,			&pt_sv,"pt_sv/F" );//SV Fit using integration method
-	syncTree->Branch("eta_sv" ,			&eta_sv ,"eta_sv/F" );//SV Fit using integration method
-	syncTree->Branch("phi_sv" ,			&phi_sv,"phi_sv/F" );//SV Fit using integration method
-	syncTree->Branch("m_sv_Up" ,		&m_sv_Up ,"m_sv_Up/F" );//High Energy scale shape
-	syncTree->Branch("m_sv_Down" ,		&m_sv_Down ,"m_sv_Down/F" );//Low Energy Scale Shape
+	tree->Branch("mvis" ,			&mvis ,"mvis/F" );//SV Fit using integration method
+	tree->Branch("m_sv" ,			&m_sv,"m_sv/F" );//SV Fit using integration method
+	tree->Branch("pt_sv" ,			&pt_sv,"pt_sv/F" );//SV Fit using integration method
+	tree->Branch("eta_sv" ,			&eta_sv ,"eta_sv/F" );//SV Fit using integration method
+	tree->Branch("phi_sv" ,			&phi_sv,"phi_sv/F" );//SV Fit using integration method
+	tree->Branch("m_sv_Up" ,		&m_sv_Up ,"m_sv_Up/F" );//High Energy scale shape
+	tree->Branch("m_sv_Down" ,		&m_sv_Down ,"m_sv_Down/F" );//Low Energy Scale Shape
 
 	    ///First lepton : muon for mu Tau, electron for e Tau, electron for e mu, Leading (in pT) Tau for Tau Tau
-	syncTree->Branch("pt_1" ,			&pt_1 ,"pt_1/F" ); //pT
-	syncTree->Branch("phi_1" ,			&phi_1 ,"phi_1/F" ); //Phi
-	syncTree->Branch("eta_1" ,			&eta_1 ,"eta_1/F" ); //Eta
-	syncTree->Branch("m_1" ,			&m_1 ,"m_1/F" ); //Mass
-	syncTree->Branch("q_1" ,			&q_1 ,"q_1/I" ); //Mass
-	syncTree->Branch("iso_1" ,			&iso_1 ,"iso_1/F" ); //Delta Beta iso value
-	syncTree->Branch("mva_1" ,			&mva_1 ,"mva_1/F" );//MVA id (when using electron) 0 otherwise
-	syncTree->Branch("d0_1" ,			&d0_1,"d0_1/F" );//d0 with respect to primary vertex
-	syncTree->Branch("dZ_1" ,			&dZ_1 ,"dZ_1/F" );//dZ with respect to primary vertex
-	syncTree->Branch("passid_1" ,		&passid_1 ,"passid_1/B" );//Whether it passes id (not necessarily iso)
-	syncTree->Branch("passiso_1" ,		&passiso_1,"passiso_1/B");//Whether it passes iso (not necessarily id)
-	syncTree->Branch("mt_1" ,			&mt_1 ,"mt_1/F" );//mT of first lepton wrt to MVA met
+	tree->Branch("pt_1" ,			&pt_1 ,"pt_1/F" ); //pT
+	tree->Branch("phi_1" ,			&phi_1 ,"phi_1/F" ); //Phi
+	tree->Branch("eta_1" ,			&eta_1 ,"eta_1/F" ); //Eta
+	tree->Branch("m_1" ,			&m_1 ,"m_1/F" ); //Mass
+	tree->Branch("q_1" ,			&q_1 ,"q_1/I" ); //Mass
+	tree->Branch("iso_1" ,			&iso_1 ,"iso_1/F" ); //Delta Beta iso value
+	tree->Branch("mva_1" ,			&mva_1 ,"mva_1/F" );//MVA id (when using electron) 0 otherwise
+	tree->Branch("d0_1" ,			&d0_1,"d0_1/F" );//d0 with respect to primary vertex
+	tree->Branch("dZ_1" ,			&dZ_1 ,"dZ_1/F" );//dZ with respect to primary vertex
+	tree->Branch("passid_1" ,		&passid_1 ,"passid_1/B" );//Whether it passes id (not necessarily iso)
+	tree->Branch("passiso_1" ,		&passiso_1,"passiso_1/B");//Whether it passes iso (not necessarily id)
+	tree->Branch("mt_1" ,			&mt_1 ,"mt_1/F" );//mT of first lepton wrt to MVA met
 
 	    ///Second lepton : hadronic Tau for mu Tau had for e Tau, Muon for e mu, Trailing (in pT) Tau for Tau Tau
-	syncTree->Branch("pt_2" ,&pt_2 ,"pt_2/F" );//pT
-	syncTree->Branch("phi_2" ,&phi_2 ,"phi_2/F" );//Phi
-	syncTree->Branch("eta_2" ,&eta_2 ,"eta_2/F" );//Eta
-	syncTree->Branch("m_2" ,&m_2 ,"m_2/F" );//Mass (visible mass for hadronic Tau)
-	syncTree->Branch("q_2" ,&q_2 ,"q_2/I" ); //Mass
-	syncTree->Branch("iso_2" ,&iso_2,"iso_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
-	syncTree->Branch("d0_2" ,&d0_2 ,"d0_2/F" );//d0 with respect to primary vertex
-	syncTree->Branch("dZ_2" ,&dZ_2 ,"dZ_2/F" );//dZ with respect to primary vertex
+	tree->Branch("pt_2" ,&pt_2 ,"pt_2/F" );//pT
+	tree->Branch("phi_2" ,&phi_2 ,"phi_2/F" );//Phi
+	tree->Branch("eta_2" ,&eta_2 ,"eta_2/F" );//Eta
+	tree->Branch("m_2" ,&m_2 ,"m_2/F" );//Mass (visible mass for hadronic Tau)
+	tree->Branch("q_2" ,&q_2 ,"q_2/I" ); //Mass
+	tree->Branch("iso_2" ,&iso_2,"iso_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("d0_2" ,&d0_2 ,"d0_2/F" );//d0 with respect to primary vertex
+	tree->Branch("dZ_2" ,&dZ_2 ,"dZ_2/F" );//dZ with respect to primary vertex
 
-	syncTree->Branch("pt_tt" ,&pt_tt ,"pt_tt/F" );//pT
+	tree->Branch("pt_tt" ,&pt_tt ,"pt_tt/F" );//pT
 
-	syncTree->Branch("byCombinedIsolationDeltaBetaCorrRaw3Hits_2" ,&byCombinedIsolationDeltaBetaCorrRaw3Hits_2 ,"byCombinedIsolationDeltaBetaCorrRaw3Hits_2/F" );
-	syncTree->Branch("againstElectronMVA3raw_2" ,&againstElectronMVA3raw_2 ,"againstElectronMVA3raw_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
-	syncTree->Branch("byIsolationMVA2raw_2" ,&byIsolationMVA2raw_2 ,"byIsolationMVA2raw_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
-	syncTree->Branch("againstMuonLoose2_2" ,&againstMuonLoose2_2 ,"againstMuonLoose2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
-	syncTree->Branch("againstMuonMedium2_2" ,&againstMuonMedium2_2 ,"againstMuonMedium2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
-	syncTree->Branch("againstMuonTight2_2" ,&againstMuonTight2_2 ,"againstMuonTight2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("byCombinedIsolationDeltaBetaCorrRaw3Hits_2" ,&byCombinedIsolationDeltaBetaCorrRaw3Hits_2 ,"byCombinedIsolationDeltaBetaCorrRaw3Hits_2/F" );
+	tree->Branch("againstElectronMVA3raw_2" ,&againstElectronMVA3raw_2 ,"againstElectronMVA3raw_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("byIsolationMVA2raw_2" ,&byIsolationMVA2raw_2 ,"byIsolationMVA2raw_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("againstMuonLoose2_2" ,&againstMuonLoose2_2 ,"againstMuonLoose2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("againstMuonMedium2_2" ,&againstMuonMedium2_2 ,"againstMuonMedium2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
+	tree->Branch("againstMuonTight2_2" ,&againstMuonTight2_2 ,"againstMuonTight2_2/F" );//MVA iso for hadronic Tau, Delta Beta for muon
 
 
-	syncTree->Branch("mva_2" ,&mva_2 ,"mva_2/F" );//MVA id (for anti electron id)
-	syncTree->Branch("passid_2" ,&passid_2 ,"passid_2/B" );//Whether it passes id (not necessarily iso)
-	syncTree->Branch("passiso_2" ,&passiso_2 ,"passiso_2/B");//Whether it passes iso (not necessarily id)
-	syncTree->Branch("mt_2" ,&mt_2,"mt_2/F" );//mT of 2nd lepton wrt to MVA met
+	tree->Branch("mva_2" ,&mva_2 ,"mva_2/F" );//MVA id (for anti electron id)
+	tree->Branch("passid_2" ,&passid_2 ,"passid_2/B" );//Whether it passes id (not necessarily iso)
+	tree->Branch("passiso_2" ,&passiso_2 ,"passiso_2/B");//Whether it passes iso (not necessarily id)
+	tree->Branch("mt_2" ,&mt_2,"mt_2/F" );//mT of 2nd lepton wrt to MVA met
 
 	    //Met related variables
-	syncTree->Branch("met" ,&met,"met/F" ); //pfmet
-	syncTree->Branch("metphi" ,&metphi ,"metphi/F" ); //pfmet Phi
+	tree->Branch("met" ,&met,"met/F" ); //pfmet
+	tree->Branch("metphi" ,&metphi ,"metphi/F" ); //pfmet Phi
 
-	syncTree->Branch("l1met" ,&l1met ,"l1met/F" ); //l1met
-	syncTree->Branch("l1metphi" ,&l1metphi ,"l1metphi/F" ); //pfmet Phi
-	syncTree->Branch("l1metcorr" ,&l1metcorr ,"l1metcorr/F" ); //l1met
+	tree->Branch("l1met" ,&l1met ,"l1met/F" ); //l1met
+	tree->Branch("l1metphi" ,&l1metphi ,"l1metphi/F" ); //pfmet Phi
+	tree->Branch("l1metcorr" ,&l1metcorr ,"l1metcorr/F" ); //l1met
 
-	syncTree->Branch("calomet" ,&calomet ,"calomet/F" );
-	syncTree->Branch("calometphi" ,&calometphi ,"calometphi/F" );
-	syncTree->Branch("calometcorr" ,&calometcorr ,"calometcorr/F" );
-	syncTree->Branch("calometphicorr" ,&calometphicorr ,"calometphicorr/F" );
+	tree->Branch("calomet" ,&calomet ,"calomet/F" );
+	tree->Branch("calometphi" ,&calometphi ,"calometphi/F" );
+	tree->Branch("calometcorr" ,&calometcorr ,"calometcorr/F" );
+	tree->Branch("calometphicorr" ,&calometphicorr ,"calometphicorr/F" );
 
-	syncTree->Branch("mvamet" ,&mvamet ,"mvamet/F" ); //mvamet
-	syncTree->Branch("mvametphi" ,&mvametphi ,"mvametphi/F" ); //mvamet Phi
-	syncTree->Branch("pzetavis" ,&pzetavis ,"pzetavis/F" ); //pZeta Visible
-	syncTree->Branch("pzetamiss" ,&pzetamiss,"pzetamiss/F"); //pZeta Missing
+	tree->Branch("mvamet" ,&mvamet ,"mvamet/F" ); //mvamet
+	tree->Branch("mvametphi" ,&mvametphi ,"mvametphi/F" ); //mvamet Phi
+	tree->Branch("pzetavis" ,&pzetavis ,"pzetavis/F" ); //pZeta Visible
+	tree->Branch("pzetamiss" ,&pzetamiss,"pzetamiss/F"); //pZeta Missing
 	    //MET covariance matrices
-	syncTree->Branch("metcov00" ,&metcov00 ,"metcov00/F"); //pf met covariance matrix 00
-	syncTree->Branch("metcov01" ,&metcov01 ,"metcov01/F"); //pf met covariance matrix 01
-	syncTree->Branch("metcov10" ,&metcov10 ,"metcov10/F"); //pf met covariance matrix 10
-	syncTree->Branch("metcov11" ,&metcov11 ,"metcov11/F"); //pf met covariance matrix 11
+	tree->Branch("metcov00" ,&metcov00 ,"metcov00/F"); //pf met covariance matrix 00
+	tree->Branch("metcov01" ,&metcov01 ,"metcov01/F"); //pf met covariance matrix 01
+	tree->Branch("metcov10" ,&metcov10 ,"metcov10/F"); //pf met covariance matrix 10
+	tree->Branch("metcov11" ,&metcov11 ,"metcov11/F"); //pf met covariance matrix 11
 	    //MVAMet covariance matrices
-	syncTree->Branch("mvacov00" ,&mvacov00 ,"mvacov00/F"); //mva met covariance matrix 00
-	syncTree->Branch("mvacov01" ,&mvacov01 ,"mvacov01/F"); //mva met covariance matrix 01
-	syncTree->Branch("mvacov10" ,&mvacov10 ,"mvacov10/F"); //mva met covariance matrix 10
-	syncTree->Branch("mvacov11" ,&mvacov11,"mvacov11/F"); //mva met covariance matrix 11
+	tree->Branch("mvacov00" ,&mvacov00 ,"mvacov00/F"); //mva met covariance matrix 00
+	tree->Branch("mvacov01" ,&mvacov01 ,"mvacov01/F"); //mva met covariance matrix 01
+	tree->Branch("mvacov10" ,&mvacov10 ,"mvacov10/F"); //mva met covariance matrix 10
+	tree->Branch("mvacov11" ,&mvacov11,"mvacov11/F"); //mva met covariance matrix 11
 
 	    //First Jet : leading jet after applying Jet energy corrections (excluding hadronic Tau)
-	syncTree->Branch("jpt_1" ,&jpt_1 ,"jpt_1/F" );//Jet Pt after corrections
-	syncTree->Branch("jeta_1" ,&jeta_1 ,"jeta_1/F" );//Jet Eta
-	syncTree->Branch("jphi_1" ,&jphi_1 ,"jphi_1/F" );//Jet Phi
-	syncTree->Branch("jptraw_1" ,&jptraw_1 ,"jptraw_1/F" );//Jet Raw Pt (before corrections)
-	syncTree->Branch("jptunc_1" ,&jptunc_1 ,"jptunc_1/F" );//Jet Unc (relative to Jet corrected pT)
-	syncTree->Branch("jmva_1" ,&jmva_1 ,"jmva_1/F" );//Jet MVA id value
-	syncTree->Branch("jlrm_1" ,&jlrm_1 ,"jlrm_1/F" );//Jet MVA id value
-	syncTree->Branch("jctm_1" ,&jctm_1 ,"jctm_1/I" );//Jet MVA id value
-	syncTree->Branch("jpass_1" ,&jpass_1 ,"jpass_1/B" );//Whether Jet pass PU Id Loose WP
+	tree->Branch("jpt_1" ,&jpt_1 ,"jpt_1/F" );//Jet Pt after corrections
+	tree->Branch("jeta_1" ,&jeta_1 ,"jeta_1/F" );//Jet Eta
+	tree->Branch("jphi_1" ,&jphi_1 ,"jphi_1/F" );//Jet Phi
+	tree->Branch("jptraw_1" ,&jptraw_1 ,"jptraw_1/F" );//Jet Raw Pt (before corrections)
+	tree->Branch("jptunc_1" ,&jptunc_1 ,"jptunc_1/F" );//Jet Unc (relative to Jet corrected pT)
+	tree->Branch("jmva_1" ,&jmva_1 ,"jmva_1/F" );//Jet MVA id value
+	tree->Branch("jlrm_1" ,&jlrm_1 ,"jlrm_1/F" );//Jet MVA id value
+	tree->Branch("jctm_1" ,&jctm_1 ,"jctm_1/I" );//Jet MVA id value
+	tree->Branch("jpass_1" ,&jpass_1 ,"jpass_1/B" );//Whether Jet pass PU Id Loose WP
 
 	    //Second Jet : 2nd leading jet (in pt) afer applying Jet energy corrections (excluding Tau)
-	syncTree->Branch("jpt_2" ,&jpt_2 ,"jpt_2/F" );//Jet Pt after corrections
-	syncTree->Branch("jeta_2" ,&jeta_2 ,"jeta_2/F" );//Jet Eta
-	syncTree->Branch("jphi_2" ,&jphi_2 ,"jphi_2/F" );//Jet Phi
-	syncTree->Branch("jptraw_2" ,&jptraw_2 ,"jptraw_2/F" );//Jet Raw Pt (before corrections)
-	syncTree->Branch("jptunc_2" ,&jptunc_2,"jptunc_2/F" );//Jet Unc (relative to Jet corrected pT)
-	syncTree->Branch("jmva_2" ,&jmva_2 ,"jmva_2/F" );//Jet MVA id value
-	syncTree->Branch("jlrm_2" ,&jlrm_2 ,"jlrm_2/F" );//Jet MVA id value
-	syncTree->Branch("jctm_2" ,&jctm_2 ,"jctm_2/I" );//Jet MVA id value
-	syncTree->Branch("jpass_2" ,&jpass_2 ,"jpass_2/B" );//Whether jet passes PU Id Loose WP
+	tree->Branch("jpt_2" ,&jpt_2 ,"jpt_2/F" );//Jet Pt after corrections
+	tree->Branch("jeta_2" ,&jeta_2 ,"jeta_2/F" );//Jet Eta
+	tree->Branch("jphi_2" ,&jphi_2 ,"jphi_2/F" );//Jet Phi
+	tree->Branch("jptraw_2" ,&jptraw_2 ,"jptraw_2/F" );//Jet Raw Pt (before corrections)
+	tree->Branch("jptunc_2" ,&jptunc_2,"jptunc_2/F" );//Jet Unc (relative to Jet corrected pT)
+	tree->Branch("jmva_2" ,&jmva_2 ,"jmva_2/F" );//Jet MVA id value
+	tree->Branch("jlrm_2" ,&jlrm_2 ,"jlrm_2/F" );//Jet MVA id value
+	tree->Branch("jctm_2" ,&jctm_2 ,"jctm_2/I" );//Jet MVA id value
+	tree->Branch("jpass_2" ,&jpass_2 ,"jpass_2/B" );//Whether jet passes PU Id Loose WP
 
 	    //B Tagged Jet : leading btagged jet (in pt) passing btag wp (pt > 20 + cvs medium)
-	syncTree->Branch("bpt" ,&bpt ,"bpt/F" );//Corrected BTag Pt
-	syncTree->Branch("beta" ,&beta,"beta/F" );//Btag Eta
-	syncTree->Branch("bphi" ,&bphi ,"bphi/F" );//Btag Phi
+	tree->Branch("bpt" ,&bpt ,"bpt/F" );//Corrected BTag Pt
+	tree->Branch("beta" ,&beta,"beta/F" );//Btag Eta
+	tree->Branch("bphi" ,&bphi ,"bphi/F" );//Btag Phi
 
 	    //Di Jet kinematic variables for VBF selection ==> Two leading pT Jets
-	syncTree->Branch("mjj" ,&mjj ,"mjj/F" );//Mass Di Jet system
-	syncTree->Branch("jdeta" ,&jdeta ,"jdeta/F" );//|jeta_1-jeta_2|
-	syncTree->Branch("njetingap" ,&njetingap ,"njetingap/I");//# of Jets between two jets
-	syncTree->Branch("mva" ,&mva ,"mva/F" );//VBF MVA value
+	tree->Branch("mjj" ,&mjj ,"mjj/F" );//Mass Di Jet system
+	tree->Branch("jdeta" ,&jdeta ,"jdeta/F" );//|jeta_1-jeta_2|
+	tree->Branch("njetingap" ,&njetingap ,"njetingap/I");//# of Jets between two jets
+	tree->Branch("mva" ,&mva ,"mva/F" );//VBF MVA value
 
 	    //Variables that go into the VBF MVA
-	syncTree->Branch("jdphi" ,&jdphi ,"jdphi/F" );//Delta Phi between two leading jets
-	syncTree->Branch("dijetpt" ,&dijetpt ,"dijetpt/F" );//Pt of the di jet system
-	syncTree->Branch("dijetphi" ,&dijetphi ,"dijetphi/F" );//Phi of the di jet system
-	syncTree->Branch("hdijetphi" ,&hdijetphi ,"hdijetphi/F" );//Phi of the di jet system - Higgs system phi
-	syncTree->Branch("visjeteta" ,&visjeteta ,"visjeteta/F");//TMath::Min(eta_vis - jeta,eta_vis,jeta2);
-	syncTree->Branch("ptvis" ,&ptvis,"ptvis/F" );//Pt Vis
+	tree->Branch("jdphi" ,&jdphi ,"jdphi/F" );//Delta Phi between two leading jets
+	tree->Branch("dijetpt" ,&dijetpt ,"dijetpt/F" );//Pt of the di jet system
+	tree->Branch("dijetphi" ,&dijetphi ,"dijetphi/F" );//Phi of the di jet system
+	tree->Branch("hdijetphi" ,&hdijetphi ,"hdijetphi/F" );//Phi of the di jet system - Higgs system phi
+	tree->Branch("visjeteta" ,&visjeteta ,"visjeteta/F");//TMath::Min(eta_vis - jeta,eta_vis,jeta2);
+	tree->Branch("ptvis" ,&ptvis,"ptvis/F" );//Pt Vis
 
 	    //number of btags passing btag id ( pt > 20 )
-	syncTree->Branch("nbtag" ,&nbtag ,"nbtag/I");
+	tree->Branch("nbtag" ,&nbtag ,"nbtag/I");
 
 	    //number of jets passing jet id ( pt > 30 )
-	syncTree->Branch("njets" ,&njets ,"njets/I");
-	syncTree->Branch("njetspt20" ,&njetspt20 ,"njetspt20/I");
+	tree->Branch("njets" ,&njets ,"njets/I");
+	tree->Branch("njetspt20" ,&njetspt20 ,"njetspt20/I");
 
-	syncTree->Branch("mva_gf" ,&mva_gf ,"mva_gf/F");
-	syncTree->Branch("mva_vbf" ,&mva_vbf ,"mva_vbf/F");
+	tree->Branch("mva_gf" ,&mva_gf ,"mva_gf/F");
+	tree->Branch("mva_vbf" ,&mva_vbf ,"mva_vbf/F");
 }

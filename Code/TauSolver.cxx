@@ -18,9 +18,9 @@ void TauSolver::SolvebyRotation(TLorentzVector &Tau1,TLorentzVector &Tau2,TLoren
   double phi(Tau.Phi()),theta(Tau.Theta());
   a1rot.RotateZ(-phi);
   a1rot.RotateY(-theta);
-  double Enu1(0), Enu2(0), Ea1(a1.E()),Pz(a1rot.Pz()),mtau(PDG_Var::Tau_mass()),Pt(a1rot.Pt()),ma1(a1.M());
+  double Enu1(0), Enu2(0), Ea1(a1.E()),Pz(a1rot.Pz()),Pt(a1rot.Pt()),ma1(a1.M());
   if(mode==PZ)PzSolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
-  if(mode=E)ESolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
+  if(mode==E)ESolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
   TLorentzVector Neutrino1(-a1rot.Px(),-a1rot.Py(),sqrt(Enu1*Enu1-Pt*Pt),Enu1);
   Neutrino1.RotateY(theta);
   Neutrino1.RotateZ(phi);
@@ -34,15 +34,15 @@ void TauSolver::SolvebyRotation(TLorentzVector &Tau1,TLorentzVector &Tau2,TLoren
 }
 
 void TauSolver::SolvebyProjection(TLorentzVector &Tau1,TLorentzVector &Tau2,TLorentzVector &nu1,TLorentzVector &nu2, int mode){
-  double Enu1(0), Enu2(0), Ea1(a1.E()),Pz(0),mtau(PDG_Var::Tau_mass()),Pt(0),ma1(a1.M());
+  double Enu1(0), Enu2(0), Ea1(a1.E()),Pz(0),Pt(0),ma1(a1.M());
   Pz=Tau.Dot(a1.Vect());
   TVector3 Pz_vec=Tau;
   Pz_vec*=Pz;
   TVector3 Pt_vec=a1.Vect();
   Pt_vec-=Pz_vec;
   Pt=Pt_vec.Mag();
-  if(mode==PZ)PzSolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
-  if(mode=E)ESolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
+  if(mode==PZ) PzSolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
+  if(mode==E) ESolver(Enu1,Enu2,Ea1,ma1,Pz,Pt);
   double Pnuz1=0;if(Enu1-Pt>0)Pnuz1=sqrt(Enu1*Enu1-Pt*Pt);
   double Pnuz2=0;if(Enu2-Pt>0)Pnuz1=sqrt(Enu2*Enu2-Pt*Pt);
   TLorentzVector Neutrino1(Pnuz1*Tau.Px()-Pt_vec.Px(),Pnuz1*Tau.Py()-Pt_vec.Py(),Pnuz1*Tau.Pz()-Pt_vec.Pz(),Enu1);
@@ -99,11 +99,11 @@ bool TauSolver::EulerAnglesfor3prong(std::vector<TLorentzVector> Particle, std::
     return false;
   }
   double chargesum=0;
-  for(Int_t i=0; i<Charge.size();i++){
+  for(unsigned int i=0; i<Charge.size();i++){
     chargesum+=Charge.at(i);
   }
   bool foundq1=false;
-  for(Int_t i=0; i<Charge.size();i++){
+  for(unsigned int i=0; i<Charge.size();i++){
     Q_LV+=Particle.at(i);
     if(chargesum!=Charge.at(i)){ 
       q3_LV=Particle.at(i); 

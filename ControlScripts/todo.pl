@@ -41,7 +41,7 @@ $OutputDir="/net/scratch_cms/institut_3b/$UserID";
 #$OutputDir="~/";
 $CodeDir="../Code";
 $set="Analysis_";
-$CMSSWRel="5_3_14_patch2";
+$CMSSWRel="5_3_22_patch1";
 $PileupVersion="V08-03-17";
 $tag="03-00-12";
 $TauReco="5_2_3_patch3_Dec_08_2012";
@@ -49,7 +49,7 @@ $BTag="NO";
 $Cleaning ="NO";
 $maxdata=100;
 $maxmc=100;
-$ARCH="slc5_amd64_gcc462";
+$ARCH="slc6_amd64_gcc472";
 
 if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\nThis code requires one input option. The systax is:./todo_Grid.pl [OPTION]");
@@ -226,12 +226,12 @@ if( $ARGV[0] eq "--TauNtuple"){
     # for SimpleFits
     system(sprintf("echo \"git cms-addpkg Validation/EventGenerator \" >> Install_TauNtuple_$CMSSWRel-$time"));
     
-    # MVA-MET recipe for CMSSW_5_3_14_patchX (https://twiki.cern.ch/twiki/bin/viewauth/CMS/MVAMet#Installation)
+    # MVA-MET recipe for CMSSW_5_3_22_patch1 (https://twiki.cern.ch/twiki/bin/viewauth/CMS/MVAMet#CMSSW_5_3_22_patch1_requires_slc)
     system(sprintf("echo \"git cms-addpkg PhysicsTools/PatAlgos \" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_14-updateSelectorUtils\" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"git cms-merge-topic cms-analysis-tools:5_3_13_patch2-testNewTau\" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"git cms-merge-topic -u TaiSakuma:53X-met-131120-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
-    system(sprintf("echo \"git-cms-merge-topic -u cms-met:53X-MVaNoPuMET-20131217-01\" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git cms-merge-topic -u cms-analysis-tools:5_3_16_patch1-testNewTau \" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git cms-merge-topic -u TaiSakuma:53X-met-140217-01 \" >> Install_TauNtuple_$CMSSWRel-$time"));
+    system(sprintf("echo \"git-cms-merge-topic -u cms-met:53X-MVaNoPuMET-20140606-01 \" >> Install_TauNtuple_$CMSSWRel-$time"));
+	# make sure to use the correct weight files as given in https://twiki.cern.ch/twiki/bin/viewauth/CMS/MVAMet#Choice_of_weight_file
     
     # ATTENTION: CMSSW_X_Y_Z/src must be completely EMPTY in order to run "git cms-addpkg"
     system(sprintf("echo \"mkdir data \" >> Install_TauNtuple_$CMSSWRel-$time"));
@@ -980,7 +980,7 @@ if( $ARGV[0] eq "--GRID" ){
     system(sprintf("echo \"        isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_\\\${c}.root | wc -l) \n      if [[ \\\${isSkim} -eq 1 ]]; then \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"          srmrm srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_\\\${c}.root \n     fi \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx \\\" \\\"}' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
-    system(sprintf("echo \"          cp $OutputDir/workdir$set/jobs_submitted $OutputDir/workdir$set/jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ; 
+    #system(sprintf("echo \"          cp $OutputDir/workdir$set/jobs_submitted $OutputDir/workdir$set/jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"      fi \n    done\n  done \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"  njobs=\\\$(cat jobs_submittedOrComplete | wc -l)  \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"  if [[ \\\${njobs} -ne $B ]]; then \" >> $OutputDir/workdir$set/Submit"));

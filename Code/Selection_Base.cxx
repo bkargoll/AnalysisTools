@@ -1,9 +1,9 @@
 #include "Selection_Base.h"
-
+ 
 Selection_Base::Selection_Base(TString Name_, TString id_):  
   GeV(1000)
-  ,Name(Name_)
   ,Analysis(Name_)
+  ,Name(Name_)
   ,systype(id_)
   ,isNtp(false)
   ,runtype(GRID)

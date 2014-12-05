@@ -94,7 +94,7 @@ ifdef USE_pistone
 	DEFS += -DUSE_pistone=1
 endif
 ifdef USE_zotz
-	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive
+	TARGETS += ZToTaumuTauh
 	DEFS += -DUSE_zotz=1
 endif
 

@@ -18,7 +18,7 @@ TauSpinExample::TauSpinExample(TString Name_, TString id_):
 }
 
 TauSpinExample::~TauSpinExample(){
-  for(int j=0; j<Npassed.size(); j++){
+  for(unsigned int j=0; j<Npassed.size(); j++){
     std::cout << "TauSpinExample::~TauSpinExample Selection Summary before: " 
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
@@ -36,7 +36,7 @@ void  TauSpinExample::Configure(){
   }
 
   TString hlabel;
-  TString htitle; for(unsigned int i=0; i<NCuts; i++){
+  TString htitle; for(int i=0; i<NCuts; i++){
     title.push_back("");
     distindx.push_back(false);
     dist.push_back(std::vector<float>());
@@ -285,7 +285,7 @@ void  TauSpinExample::doEvent(){
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
-      for(unsigned int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+      for(int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
         if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::tau_minus)){
           Tau_LV=Ntp->MCTauandProd_p4(tau_idx,i);
         }
@@ -313,7 +313,7 @@ void  TauSpinExample::doEvent(){
 	mu_WT_FlipSpin.at(t).Fill(FlipSpin_WT,w);
 
 	if(verbose){
-	  for(unsigned int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+	  for(int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
 	    TLorentzVector LV=Ntp->MCTauandProd_p4(tau_idx,i);
 	    std::cout << Ntp->MCTauandProd_pdgid(tau_idx,i) << " " << LV.Px() << " " << LV.Py() << " " << LV.Pz() << " " << LV.E() << std::endl;
 	  }
@@ -332,7 +332,7 @@ void  TauSpinExample::doEvent(){
 	TLorentzVector tautau=LVTau;
 	TLorentzVector pipi(0,0,0,0);
 	int charge=Ntp->MCTau_charge(tau2_idx);
-	for(unsigned int i=0;i<Ntp->NMCTauDecayProducts(tau2_idx);i++){
+	for(int i=0;i<Ntp->NMCTauDecayProducts(tau2_idx);i++){
 	  if(abs(Ntp->MCTauandProd_pdgid(tau2_idx,i))==abs(PDGInfo::pi_plus)){
 	    TLorentzVector LVpi=Ntp->MCTauandProd_p4(tau2_idx,i);
 	    pipi+=LVpi;
@@ -346,7 +346,7 @@ void  TauSpinExample::doEvent(){
 	LVTau.Boost(-1*Zboson.BoostVector());
 	tautau+=LVTau;
         charge=Ntp->MCTau_charge(tau1_idx);
-        for(unsigned int i=0;i<Ntp->NMCTauDecayProducts(tau1_idx);i++){
+        for(int i=0;i<Ntp->NMCTauDecayProducts(tau1_idx);i++){
           if(abs(Ntp->MCTauandProd_pdgid(tau1_idx,i))==abs(PDGInfo::pi_plus)){
             TLorentzVector LVpi=Ntp->MCTauandProd_p4(tau1_idx,i);
             pipi+=LVpi;
@@ -391,7 +391,7 @@ void  TauSpinExample::doEvent(){
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
-      for(unsigned int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+      for(int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
         if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::tau_minus)){
           Tau_LV=Ntp->MCTauandProd_p4(tau_idx,i);
         }
@@ -429,7 +429,7 @@ void  TauSpinExample::doEvent(){
       TLorentzVector X_LV(0,0,0,0);
       std::vector<TLorentzVector> pions;
       std::vector<float> pions_charge;
-      for(unsigned int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+      for(int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
         if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::tau_minus)){
           Tau_LV=Ntp->MCTauandProd_p4(tau_idx,i);
         }
@@ -467,7 +467,7 @@ void  TauSpinExample::doEvent(){
 	TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
 	int charge=Ntp->MCTau_charge(tau_idx);
 	TLorentzVector a1(0,0,0,0),pi(0,0,0,0);
-	for(unsigned int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+	for(int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
 	  TLorentzVector LV=Ntp->MCTauandProd_p4(tau_idx,i);
 	  if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi_plus) && Ntp->MCTauandProd_pdgid(tau_idx,i)/abs(Ntp->MCTauandProd_pdgid(tau_idx,i))!=charge){pi+=LV; a1+=LV;}
           else if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi0) || abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi_plus)){a1+=LV;}
@@ -493,7 +493,7 @@ void  TauSpinExample::doEvent(){
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
-      for(unsigned int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+      for(int i=0; i<Ntp->NMCTauDecayProducts(tau_idx);i++){
 	  if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::tau_minus)){
 	    Tau_LV=Ntp->MCTauandProd_p4(tau_idx,i);
 	  }
@@ -520,9 +520,9 @@ void  TauSpinExample::doEvent(){
 	rho_ExoverEtau_hminus.at(t).Fill(X_LV.E()/Tau_LV.E(),w*hminus*UnSpin_WT);
 
         TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
-        int charge=Ntp->MCTau_charge(tau_idx);
+        //int charge=Ntp->MCTau_charge(tau_idx);
         TLorentzVector rho(0,0,0,0),pi(0,0,0,0);
-        for(unsigned int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
+        for(int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
           TLorentzVector LV=Ntp->MCTauandProd_p4(tau_idx,i);
 	  //std::cout << Ntp->MCTauandProd_pdgid(tau_idx,i) << " " << LV.Px() << " " << LV.Py() << " " << LV.Pz() << " " << LV.E() << std::endl;
           if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi_plus)){pi+=LV; rho+=LV;}

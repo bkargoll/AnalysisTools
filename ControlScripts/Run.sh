@@ -60,15 +60,19 @@ else
 		  echo "Starting Combine"
 		  source Combine >& log_Combine
 		  if [[ ${nretries} -eq 0 ]]; then
-		      nsetspad=10+${nsets}
-		      echo "Searching " ${nsetspad} " line for failed jobs." 
+		      let nsetspad=10+${nsets}
+		      echo "Searching " ${nsetspad} " line for failed jobs."
 		      touch junk_cleaner
-		      grep -A  ${nsetspad} "List of Bad Files:"  junk | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_complete | tee tmplist; cp tmplist jobs_complete"}' >> junk_cleaner
-		      grep -A  ${nsetspad} "List of Bad Files:"  junk | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_submitted | tee tmplist; cp tmplist jobs_submitted"}' >> junk_cleaner
-		      grep -A  ${nsetspad} "List of Bad Files:"  junk | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_submittedOrComplete | tee tmplist; cp tmplist jobs_submittedOrComplete"}' >> junk_cleaner
-		      source junk_cleaner
-		      rm junk_cleaner
+		      grep -A  ${nsetspad} "List of Bad Files:"  log_Combine | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_complete | tee tmplist; cp tmplist jobs_complete"}' >> junk_cleaner
+		      grep -A  ${nsetspad} "List of Bad Files:"  log_Combine | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_submitted | tee tmplist; cp tmplist jobs_submitted"}' >> junk_cleaner
+		      grep -A  ${nsetspad} "List of Bad Files:"  log_Combine | grep $PWD | awk -v pwd=${PWD} '{gsub(pwd,"",$1);gsub("/","",$1); print "sed \x27/"$1"/d\x27 jobs_submittedOrComplete | tee tmplist; cp tmplist jobs_submittedOrComplete"}' >> junk_cleaner
+		      nBAD=`cat junk_cleaner | grep jobs_submittedOrComplete | wc -l`
+		      echo "Number of FailedJobs ${nBAD}"
+		      echo 
+		      source junk_cleaner >& junk2
+		      rm junk_cleaner junk2
 		      let nretries=nretries+1
+		      source Submit --Submit
 		  fi
 	      fi
 	      nrunning=`cat jobs_submitted  | wc -l`

@@ -13,11 +13,11 @@
 
 Selection::Selection(TString Name_, TString id_):
   Selection_Base(Name_,id_)
+  ,HConfig()
   ,NGoodFiles(0)
   ,NBadFiles(0)
   ,isStored(false)
   ,data(0)
-  ,HConfig()
 {
   if(Name_)
   ListofBadFiles.clear();
@@ -31,7 +31,7 @@ Selection::~Selection(){
   //Check the number of files read
   std::cout << Get_Name() << " NGoodFile= " <<  NGoodFiles << " NBadFiles=" << NBadFiles << std::endl;
   if(ListofBadFiles.size()>0)std::cout <<  "WARNING: Output could be comprimised!!! \nList of Bad Files:" << std::endl;
-  for(int i=0; i< ListofBadFiles.size(); i++){
+  for(unsigned int i=0; i< ListofBadFiles.size(); i++){
     std::cout <<  ListofBadFiles.at(i) << std::endl;
   }
 }
@@ -56,7 +56,7 @@ void Selection::LoadResults(std::vector<TString> files){
   if(!isStored){
     ConfigureHistograms();
   }
-  for(int f=0;f<files.size();f++){
+  for(unsigned int f=0;f<files.size();f++){
     TString file=files.at(f);
     if(!file.Contains(".root")){
       vector<TString> filelist;
@@ -73,7 +73,7 @@ void Selection::LoadResults(std::vector<TString> files){
 	closedir(dp);
       }
       TString ID=Get_Name()+".root";
-      for(int i=0;i<filelist.size();i++){
+      for(unsigned int i=0;i<filelist.size();i++){
 	if(filelist.at(i).Contains(ID)){
 	  file+=filelist.at(i);
 	  break;
@@ -147,7 +147,7 @@ bool Selection::AnalysisCuts(int t,double w,double wobjs){
     std::cout << "ERROR Histograms not Configured. Please fix your code!!!! Running Selection::ConfigureHistograms()" << std::endl;
     Selection::ConfigureHistograms();
   }
-   if(0<=t && t<types.size()){
+  if(0<=t && t<(int)types.size()){
     int nfail=0;
     int fail=-1;
     Npassed.at(t).Fill(-0.5,w);
@@ -162,14 +162,14 @@ bool Selection::AnalysisCuts(int t,double w,double wobjs){
 	Npassed_noweight.at(t).Fill((float)i+0.5,1);
 	if(i+1<ncuts){
 	  if(distindx.at(i+1)){
-	    for(int k=0;k<dist.at(i+1).size();k++){
+	    for(unsigned int k=0;k<dist.at(i+1).size();k++){
 	      Accumdist.at(i+1).at(t).Fill(dist.at(i+1).at(k),w*wobjs);
 	    }
 	  }
 	}
 	if(i==0){
 	  if(distindx.at(i)){
-	    for(int k=0;k<dist.at(i).size();k++){
+	    for(unsigned int k=0;k<dist.at(i).size();k++){
 	      Accumdist.at(i).at(t).Fill(dist.at(i).at(k),w*wobjs);
 	    }
 	  }
@@ -181,7 +181,7 @@ bool Selection::AnalysisCuts(int t,double w,double wobjs){
 	if(fail==i || nfail==0){
 	  Nminus1.at(i).at(t).Fill(value.at(i),w*wobjs);
 	  if(distindx.at(i)){
-	    for(int k=0;k<dist.at(i).size();k++){
+	    for(unsigned int k=0;k<dist.at(i).size();k++){
 	      Nminus1dist.at(i).at(t).Fill(dist.at(i).at(k),w*wobjs);
 	    }
 	  }
@@ -221,7 +221,7 @@ void  Selection::Finish(){
   std::cout << "Writing out "+Name+".root Complete" << std::endl;
   SkimConfig SC;
   SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
-	for(int i=0; i<Npassed.size();i++){
+	for(unsigned int i=0; i<Npassed.size();i++){
 		nevents_noweight_default.push_back(Npassed_noweight.at(i).GetBinContent(1));
 	}
 
@@ -231,12 +231,18 @@ void  Selection::Finish(){
     //Check that the correct number of events are run over and make Table
     SC.CheckNEvents(types,nevents_noweight_default);
     // Make Tables
-    T.MakeNEventsTable(Npassed,title);
+    T.MakeNEventsTable(Npassed_noweight,title);
 
     // weight all Histograms
-    for(int i=0;i<CrossSectionandAcceptance.size();i++){
-      std::cout << i << " CrossSectionandAcceptance " << CrossSectionandAcceptance.at(i) << " " << Npassed.at(i).GetBinContent(0) << " " << Npassed_noweight.at(i).GetBinContent(0) << std::endl;
-      if(CrossSectionandAcceptance.at(i)>0) ScaleAllHistOfType(i,Lumi*CrossSectionandAcceptance.at(i)/Npassed.at(i).GetBinContent(0));
+    std::cout << "#### Scale factors for MC samples:" << std::endl;
+    printf("%8s %10s : %7s * %9s / %10s = %6s \n", "Position", "DataMCType", "Lumi", "xsec*acc.", "N(events)", "Scale");
+    for(unsigned int i=0;i<CrossSectionandAcceptance.size();i++){
+      printf("%8d %10d : %7.1f * %9.4f / %10.0f = %6f", i, HConfig.GetID(i), Lumi, CrossSectionandAcceptance.at(i), Npassed.at(i).GetBinContent(0), Lumi*CrossSectionandAcceptance.at(i)/Npassed.at(i).GetBinContent(0));
+      if(CrossSectionandAcceptance.at(i)>0){
+    	  ScaleAllHistOfType(i,Lumi*CrossSectionandAcceptance.at(i)/Npassed.at(i).GetBinContent(0));
+    	  printf("\n");
+      }
+      else printf("  --> will not be scaled \n");
     }
     Save(fName+"_LumiScaled");// Save file with Lumi-scaled events - required for combining code
 
@@ -313,7 +319,7 @@ void Selection::Save(TString fName){
 }
 
 bool Selection::Passed(){
-  for(int i=0; i<pass.size();i++){
+  for(unsigned int i=0; i<pass.size();i++){
     if(!pass.at(i)) return false;
   }
   return true;
@@ -321,7 +327,7 @@ bool Selection::Passed(){
 
 bool Selection::NMinusL(int a, int b, int c, int d, int e){
   bool good=true;
-  for(int i=0; i<(int)(pass.size()); i++){
+  for(int i=0; i<(int)pass.size(); i++){
     if(i!=a && i!=b && i!=c && i!=d && i!=e){
       if(!pass.at(i)) good=false;
     }
@@ -348,14 +354,14 @@ double Selection::Compute(double thisdata,double thissignal, double thissignalTo
 
 void Selection::EvaluateSystematics(Selection_Base* &selectionsys, double w){
   Selection *selsys=(Selection*)selectionsys;
-  for(int j=0; j<Npassed.size();j++){
+  for(unsigned int j=0; j<Npassed.size();j++){
     for(int l=0; l<=Npassed.at(j).GetNbinsX();l++){
       double err=Npassed.at(j).GetBinError(l);
       if(Npassed.at(j).GetBinContent(l)!=0){
 	Npassed.at(j).SetBinError(l,sqrt(err*err+w*w*pow(selsys->Get_Npassed().at(j).GetBinContent(l)-Npassed.at(j).GetBinContent(l),2.0)));
       }
     }
-    for(int k=0;k<Nminus1.size();k++){
+    for(unsigned int k=0;k<Nminus1.size();k++){
       for(int l=0; l<=Nminus1.at(k).at(j).GetNbinsX();l++){
 	double err=Nminus1.at(k).at(j).GetBinError(l);
 	Nminus1.at(k).at(j).SetBinError(l,sqrt(err*err+w*w*pow(selsys->Get_Nminus1().at(k).at(j).GetBinContent(l)-Nminus1.at(k).at(j).GetBinContent(l),2.0)));
@@ -375,13 +381,13 @@ void Selection::EvaluateSystematics(Selection_Base* &selectionsys, double w){
 	}
       }
     }
-    for(int k=0;k<Extradist1d.size();k++){
+    for(unsigned int k=0;k<Extradist1d.size();k++){
       for(int l=0; l<=Extradist1d.at(k)->at(j).GetNbinsX();l++){
 	double err=Extradist1d.at(k)->at(j).GetBinError(l);
 	Extradist1d.at(k)->at(j).SetBinError(l,sqrt(err*err+w*w*pow(selsys->Get_Extradist1d().at(k)->at(j).GetBinContent(l)-Extradist1d.at(k)->at(j).GetBinContent(l),2.0)));
       }
     }
-    for(int k=0;k<Extradist2d.size();k++){
+    for(unsigned int k=0;k<Extradist2d.size();k++){
       for(int l=0; l<=Extradist2d.at(k)->at(j).GetBin(Extradist2d.at(k)->at(j).GetNbinsX(),Extradist2d.at(k)->at(j).GetNbinsY());l++){
 	double err=Extradist2d.at(k)->at(j).GetBinError(l);
 	Extradist2d.at(k)->at(j).SetBinError(l,sqrt(err*err+w*w*pow(selsys->Get_Extradist2d().at(k)->at(j).GetBinContent(l)-Extradist2d.at(k)->at(j).GetBinContent(l),2.0)));
@@ -406,10 +412,10 @@ TString Selection::splitString(const std::string &s, char delim, std::string spl
 }
 
 void Selection::ResetEvent(){
-  for(int i=0; i<pass.size();i++){
+  for(unsigned int i=0; i<pass.size();i++){
     pass.at(i)=false;
   }
-  for(int i=0; i<dist.size();i++){
+  for(unsigned int i=0; i<dist.size();i++){
     dist.at(i).clear();
   }
 }
@@ -430,5 +436,24 @@ void Selection::ScaleAllHistOfType(unsigned int t,float w){
   for(unsigned int k=0; k<Extradist2d.size();k++){
     if(Extradist2d.at(k)->size()>t)Extradist2d.at(k)->at(t).Scale(w);
   }
+}
+
+// Returns true, if all cuts except for those in vector 'indices' passed.
+// Elements of vector 'indices' are the indices i_cut of the vector cut
+bool Selection::passAllBut(std::vector<int> indices){
+	  std::vector<int>::iterator it;
+	  for(int i_cut=0; i_cut<pass.size(); i_cut++){
+		  it = std::find (indices.begin(), indices.end(), i_cut);	// tries to find i_cut in vector 'indices'
+		  if(i_cut!=*it){											// checks if cut at i_cut is not a cut you want to exclude
+			  if(!pass.at(i_cut)) return false;						// checks whether cut passed or not
+		  }
+	  }
+	  return true;
+}
+
+bool Selection::passAllBut(int i_cut){
+	  std::vector<int> index;
+	  index.push_back(i_cut);
+	  return passAllBut(index);
 }
 

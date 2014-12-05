@@ -6,7 +6,8 @@
 #include <cmath>
 #include <vector>
 
-#include "../Selection.h"
+#include "Selection.h"
+#include "ReferenceScaleFactors.h"
 
 class TLorentzVector;
 class TVector3;
@@ -228,6 +229,18 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> Mt3ProngSV;
   std::vector<TH1D> Mt3ProngSVFlight;
 
+  std::vector<TH1D> MetPt1ProngOnly;
+  std::vector<TH1D> MetPhi1ProngOnly;
+  std::vector<TH1D> MetPt3ProngOnly;
+  std::vector<TH1D> MetPhi3ProngOnly;
+
+  std::vector<TH1D> MetPtNoMtCut;
+  std::vector<TH1D> MetPhiNoMtCut;
+  std::vector<TH1D> MetPtNoMtCut1ProngOnly;
+  std::vector<TH1D> MetPhiNoMtCut1ProngOnly;
+  std::vector<TH1D> MetPtNoMtCut3ProngOnly;
+  std::vector<TH1D> MetPhiNoMtCut3ProngOnly;
+
   std::vector<TH1D> Cat0JetLowQcdShapeRegion;
   std::vector<TH1D> Cat0JetHighLowQcdShapeRegion;
   std::vector<TH1D> Cat1JetLowQcdShapeRegion;
@@ -260,6 +273,12 @@ class HToTaumuTauh : public Selection {
   // map to hold QCD yields for each category
   std::map<TString, double> qcdYieldMap;
 
+  // object corrections to use
+  TString correctTaus;
+  TString correctMuons;
+  TString correctElecs;
+  TString correctJets;
+
   // variables to hold selected objects (to be used e.g. for sync Ntuple)
   int selVertex;
   int selMuon;
@@ -270,6 +289,9 @@ class HToTaumuTauh : public Selection {
   double w; // event weight
   unsigned int t; // index of histogram
   bool isWJetMC; // for Wjets background method
+
+  // instance of reference scale factor class
+  ReferenceScaleFactors* RSF;
 
   // booleans for different analysis stages
   void setStatusBooleans(bool resetAll = false);

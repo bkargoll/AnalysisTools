@@ -78,7 +78,7 @@ bool HistoConfig::Load(TString Name_)
     }
   }
   input_file.close();
-  for(int i=0; i<ID.size();i++){
+  for(unsigned int i=0; i<ID.size();i++){
     std::cout << "Hitogram Data/MC ID: " << ID.at(i) << " CS: " << CS.at(i) << " Name: " <<  HistoName.at(i) << " Legend: " <<  HistoLegend.at(i) << " Colour: " << HistoColour.at(i) << std::endl;
   }
 
@@ -96,7 +96,7 @@ bool HistoConfig::GetHisto(bool isdata,int id,unsigned int &histo){
   if(isdata){
     id=1;
   }
-  for(int i=0; i<ID.size(); i++){
+  for(unsigned int i=0; i<ID.size(); i++){
     if(ID.at(i)==id){
       histo=i;
       return true;
@@ -106,7 +106,7 @@ bool HistoConfig::GetHisto(bool isdata,int id,unsigned int &histo){
 }
 
 double HistoConfig::GetCrossSection(int id){
-  for(int i=0; i<ID.size(); i++){
+  for(unsigned int i=0; i<ID.size(); i++){
     if(ID.at(i)==id){
       return CS.at(i);
     }
@@ -115,7 +115,7 @@ double HistoConfig::GetCrossSection(int id){
 }
 
 bool HistoConfig::SetCrossSection(int id, double xsec){
-	for(int i=0; i<ID.size(); i++){
+	for(unsigned int i=0; i<ID.size(); i++){
 		if(ID.at(i)==id){
 			CS.at(i) = xsec;
 			return true;
@@ -129,7 +129,7 @@ void HistoConfig::GetHistoInfo(std::vector<int> &types,std::vector<float> &Cross
   legend=HistoLegend;
   colour=HistoColour;
   CrossSectionandAcceptance.clear();
-  for(int i=0; i<HistoName.size();i++){
+  for(unsigned int i=0; i<HistoName.size();i++){
     CrossSectionandAcceptance.push_back(CS.at(i));
   }
 }
@@ -151,7 +151,7 @@ TString HistoConfig::GetLeg(unsigned int i){
 std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, double min, double max, TString xaxis, TString yaxis){
   std::vector<TH1D> histos;
   std::cout << "Adding TH1D " << name << " " << title << std::endl;
-  for(int i=0;i<HistoName.size();i++){
+  for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH1D(name+HistoName.at(i),HistoLegend.at(i),nbins,min,max));
     histos.at(i).Sumw2();
     histos.at(i).SetXTitle(xaxis);
@@ -163,7 +163,7 @@ std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, do
 std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, double* xbins, TString xaxis,TString yaxis){
   std::vector<TH1D> histos;
   std::cout << "Adding TH1D " << name << " " << title << std::endl;
-  for(int i=0;i<HistoName.size();i++){
+  for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH1D(name+HistoName.at(i),HistoLegend.at(i),nbins,xbins));
     histos.at(i).Sumw2();
     histos.at(i).SetXTitle(xaxis);
@@ -176,7 +176,7 @@ std::vector<TH2D> HistoConfig::GetTH2D(TString name,TString title,int nbinsx, do
 				       int nbinsy, double miny, double maxy, TString xaxis, TString yaxis){
   std::vector<TH2D> histos;
   std::cout << "Adding TH2D " << name << " " << title << std::endl;
-  for(int i=0;i<HistoName.size();i++){
+  for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH2D(name+HistoName.at(i),HistoLegend.at(i),nbinsx,minx,maxx, nbinsy,miny,maxy));
     histos.at(i).Sumw2();
     histos.at(i).SetXTitle(xaxis);
@@ -191,7 +191,7 @@ std::vector<TH3F> HistoConfig::GetTH3F(TString name,TString title, int nbinsx, d
 
   std::vector<TH3F> histos;
   std::cout << "Adding TH2D " << name << " " << title << std::endl;
-  for(int i=0;i<HistoName.size();i++){
+  for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH3F(name+HistoName.at(i),HistoLegend.at(i),nbinsx,minx,maxx,nbinsy,miny,maxy,nbinsz,minz,maxz));
     histos.at(i).Sumw2();
     histos.at(i).SetXTitle(xaxis);
@@ -217,7 +217,7 @@ int HistoConfig::GetID(unsigned int i){
 }
 
 int HistoConfig::GetType(int id){
-	for(int i=0; i<ID.size(); i++){
+	for(unsigned int i=0; i<ID.size(); i++){
 	    if(ID.at(i)==id){
 	    	return i;
 	    }

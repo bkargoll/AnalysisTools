@@ -21,9 +21,10 @@ protected:
 private:
 	// tree to save synch nTuple
 	TFile* syncFile;
-	TTree* syncTree;
+	TTree* syncTree_VBFHiggs;
+	TTree* syncTree_TauPlusXA;
 
-	void defineBranches();
+	void defineBranches(TTree* tree);
 
 	// member variables to hold synch nTuple values
 	// see here for definition: https://github.com/ajgilbert/ICHiggsTauTau/blob/master/Analysis/HiggsTauTau/src/HTTSync.cc#L48-L201

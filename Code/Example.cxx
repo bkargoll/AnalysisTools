@@ -10,7 +10,7 @@ Example::Example(TString Name_, TString id_):
 }
 
 Example::~Example(){
-  for(int j=0; j<Npassed.size(); j++){
+  for(unsigned int j=0; j<Npassed.size(); j++){
     std::cout << "Example::~Example Selection Summary before: " 
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
@@ -30,7 +30,7 @@ void  Example::Configure(){
 
   TString hlabel;
   TString htitle;
-  for(unsigned int i=0; i<NCuts; i++){
+  for(int i=0; i<NCuts; i++){
     title.push_back("");
     distindx.push_back(false);
     dist.push_back(std::vector<float>());

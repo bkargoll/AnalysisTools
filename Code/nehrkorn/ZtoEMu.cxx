@@ -45,7 +45,6 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 	doHiggsObjects = false;
 	doWWObjects = true;
 	useMadgraphZ = true;
-	doPDFuncertainty = false;
 	if(useMadgraphZ) mmin = 50;
 	if(doHiggsObjects){
 		mu_eta = 2.1;
@@ -56,6 +55,48 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 	mucorr = "roch";
 	ecorr = "";
 	jetcorr = "runJER";
+
+	// decide if and which systematics should be done
+
+	upwardUncertainty = false; // important for some uncertainties
+
+	doPDFuncertainty = false;
+	doTriggerUncertainty = false;
+	doPileupUncertainty = false;
+	doElectronIdUncertainty = false;
+	doElectronScaleUncertainty = false;
+	doElectronResUncertainty = false;
+	doMuonIdUncertainty = false;
+	doMuonScaleUncertainty = false;
+	doMuonResUncertainty = false;
+	doJECUncertainty = false;
+	doJERUncertainty = false;
+	doFakeRateUncertainty = false;
+
+	systValid = true;
+	if((doPDFuncertainty+doTriggerUncertainty+doPileupUncertainty+doElectronIdUncertainty+doElectronScaleUncertainty+doElectronResUncertainty+doMuonIdUncertainty+doMuonScaleUncertainty+doMuonResUncertainty+doJECUncertainty+doJERUncertainty+doFakeRateUncertainty)>1){
+		systValid = false;
+	}
+
+	// set correction strings for systematics
+	if(doElectronResUncertainty) ecorr += "res";
+	else if(doElectronScaleUncertainty){
+		ecorr += "scale";
+		if(!upwardUncertainty) ecorr += "down";
+	}
+	else if(doMuonResUncertainty) mucorr += "res";
+	else if(doMuonScaleUncertainty){
+		mucorr += "scale";
+		if(!upwardUncertainty) mucorr += "down";
+	}
+	else if(doJECUncertainty){
+		jetcorr += "JEC";
+		if(upwardUncertainty) jetcorr += "plus";
+	}
+	else if(doJERUncertainty){
+		if(upwardUncertainty) jetcorr += "up";
+		else jetcorr += "down";
+	}
 
 	// initialize pdf reweighting for systematics
 	if(doPDFuncertainty){
@@ -73,7 +114,7 @@ ZtoEMu::ZtoEMu(TString Name_, TString id_):
 }
 
 ZtoEMu::~ZtoEMu(){
-  for(int j=0; j<Npassed.size(); j++){
+  for(unsigned int j=0; j<Npassed.size(); j++){
     std::cout << "ZtoEMu::~ZtoEMu Selection Summary before: " 
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
@@ -349,9 +390,11 @@ void  ZtoEMu::Configure(){
   NbJetsVtxM=HConfig.GetTH1D(Name+"_NbJetsVtxM","NbJetsVtxM",20,0,20,"number of b jets from vtx medium");
   NbJetsVtxT=HConfig.GetTH1D(Name+"_NbJetsVtxT","NbJetsVtxT",20,0,20,"number of b jets from vtx tight");
   
-  zpt=HConfig.GetTH1D(Name+"_zpt","zpt",12,0.,30.,"p_{t}^{Z}");
+  zpt=HConfig.GetTH1D(Name+"_zpt","zpt",12,0.,30.,"p_{T}^{Z} / GeV");
+  double xbins[19] = {0.,2.5,5.,7.5,10.,12.5,15.,17.5,20.,30.,40.,50.,70.,90.,110.,150.,190.,250.,600.};
+  zpt_weirdbins=HConfig.GetTH1D(Name+"_zpt_weirdbins","zpt_weirdbins",18,xbins,"p_{T}^{Z} / GeV");
   zeta=HConfig.GetTH1D(Name+"_zeta","zeta",40,-5.,5.,"#eta_{Z}");
-  zmass=HConfig.GetTH1D(Name+"_zmass","zmass",20,60.,120.,"m_{Z}");
+  zmass=HConfig.GetTH1D(Name+"_zmass","zmass",20,60.,120.,"m_{Z} / GeV");
 
   eta_mu_e=HConfig.GetTH2D(Name+"_eta_mu_e","eta_mu_e",20,-2.5,2.5,20,-2.5,2.5,"#eta_{#mu}","#eta_{e}");
   pt_vs_eta_mu=HConfig.GetTH2D(Name+"_pt_vs_eta_mu","pt_vs_eta_mu",40,0.,100.,20,-2.5,2.5,"p_{T}^{#mu} / GeV","#eta_{#mu}");
@@ -377,6 +420,7 @@ void  ZtoEMu::Configure(){
   mtmu_onefake=HConfig.GetTH1D(Name+"_mtmu_onefake","mtmu_onefake",40,0.,200.,"m_{T}^{#mu} / GeV");
   mtmu_twofakes=HConfig.GetTH1D(Name+"_mtmu_twofakes","mtmu_twofakes",40,0.,200.,"m_{T}^{#mu} / GeV");
   mtmu_nmu=HConfig.GetTH1D(Name+"_mtmu_nmu","mtmu_nmu",40,0.,200.,"m_{T}^{#mu} / GeV");
+  onejet_jecunc=HConfig.GetTH1D(Name+"_onejet_jecunc","onejet_jecunc",50,0.,1.,"JEC uncertainty");
 
   if(doPDFuncertainty){
 	  pdf_w0=HConfig.GetTH1D(Name+"_pdf_w0","pdf_w0",nPDFmembers,0,nPDFmembers,"pdf member");
@@ -463,6 +507,7 @@ void  ZtoEMu::Store_ExtraDist(){
  Extradist1d.push_back(&NbJetsVtxT);
 
  Extradist1d.push_back(&zpt);
+ Extradist1d.push_back(&zpt_weirdbins);
  Extradist1d.push_back(&zeta);
  Extradist1d.push_back(&zmass);
 
@@ -490,6 +535,7 @@ void  ZtoEMu::Store_ExtraDist(){
  Extradist1d.push_back(&mtmu_onefake);
  Extradist1d.push_back(&mtmu_twofakes);
  Extradist1d.push_back(&mtmu_nmu);
+ Extradist1d.push_back(&onejet_jecunc);
 
  if(doPDFuncertainty){
 	 Extradist1d.push_back(&pdf_w0);
@@ -770,14 +816,26 @@ void  ZtoEMu::doEvent(){
 	  for(unsigned i=0;i<Fakemuons.size();i++){
 		  if(Fakemuons.at(i)==muidx){
 			  fakemu=true;
-			  if(doHiggsObjects || doWWObjects) fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate15);
+			  if(doHiggsObjects || doWWObjects){
+				  fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate15);
+				  if(doFakeRateUncertainty){
+					  if(upwardUncertainty) fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate30);
+					  else fakeRateMu = Fakerate(Ntp->Muon_p4(muidx,mucorr).Pt(),Ntp->Muon_p4(muidx,mucorr).Eta(),MuonFakeRate5);
+				  }
+			  }
 			  break;
 		  }
 	  }
 	  for(unsigned i=0;i<Fakeelectrons.size();i++){
 		  if(Fakeelectrons.at(i)==eidx){
 			  fakee=true;
-			  if(doHiggsObjects || doWWObjects) fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate35);
+			  if(doHiggsObjects || doWWObjects){
+				  fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate35);
+				  if(doFakeRateUncertainty){
+					  if(upwardUncertainty) fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate50);
+					  else fakeRateE = Fakerate(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),ElectronFakeRate20);
+				  }
+			  }
 			  break;
 		  }
 	  }
@@ -920,25 +978,56 @@ void  ZtoEMu::doEvent(){
   if(verbose) std::cout << "do weights" << std::endl;
   double wobs(1),w(1);
   if(!Ntp->isData() && Ntp->GetMCID()!=DataMCType::DY_emu_embedded){
-    w*=Ntp->PUWeight()*fakeRate;
+    if(!doPileupUncertainty) w*=Ntp->PUWeight();
+    else{
+    	if(upwardUncertainty) w*=Ntp->PUWeight_p5();
+    	else w*= Ntp->PUWeight3D_m5();
+    }
+    w*=fakeRate;
     if(pass.at(NE)){
     	if(doHiggsObjects){
     		w*=RSF->HiggsTauTau_EMu_Id_E(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     		w*=RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     		w*=RSF->HiggsTauTau_EMu_Trigger_E(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
     	}else{
-    		w*=RSF->ElectronIdTrig2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
-    		w*=RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
+    		double eidunc(0), erecunc(0);
+    		if(doElectronIdUncertainty){
+    			eidunc = RSF->ElectronIdTrigUnc2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx));
+    			erecunc = RSF->ElectronReconstructionUnc2012(Ntp->Electron_p4(eidx,ecorr).Pt(),Ntp->Electron_supercluster_eta(eidx));
+    			if(!upwardUncertainty){
+    				eidunc *= -1;
+    				erecunc *= -1;
+    			}
+    		}
+    		w*=(RSF->ElectronIdTrig2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx))+eidunc);
+			w*=(RSF->ElectronReconstruction2012(Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx))+erecunc);
     	}
     }
-    if(pass.at(NMu)){ // for systematics: add systematic uncertainty of 1.5%(0.5%) when pt<20(>20) for Id and 0.2% for isolation when pt>20 to statistical in quadrature.
+    if(pass.at(NMu)){
     	if(doHiggsObjects){
     		w*=RSF->HiggsEMuId_Mu(Ntp->Muon_p4(muidx,mucorr));
     		w*=RSF->HiggsTauTau_EMu_Trigger_Mu(Ntp->Muon_p4(muidx,mucorr));
     	}else{
-    		w*=RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr));
-    		w*=RSF->MuonIsoTight2012(Ntp->Muon_p4(muidx,mucorr));
-    		w*=RSF->TrackingEfficiency2012(Ntp->Muon_p4(muidx,mucorr));
+    		// for systematics: add systematic uncertainty of 0.5%(1.5%) when pt>20(<20) for Id and 0.2% for isolation when pt>20 to statistical in quadrature.
+    		double muidunc(0), muisounc(0), mutrkunc(0);
+    		if(doMuonIdUncertainty){
+    			if(Ntp->Muon_p4(muidx,mucorr).Pt()>20){
+    				muidunc = sqrt(pow(RSF->MuonIdUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))*0.005,2));
+    				muisounc = sqrt(pow(RSF->MuonIsoUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(0.002,2));
+    			}else{
+    				muidunc = sqrt(pow(RSF->MuonIdUncTight2012(Ntp->Muon_p4(muidx,mucorr)),2)+pow(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))*0.015,2));
+    				muisounc = RSF->MuonIsoUncTight2012(Ntp->Muon_p4(muidx,mucorr));
+    			}
+    			mutrkunc = RSF->TrackingEfficiencyUnc2012(Ntp->Muon_p4(muidx,mucorr));
+    			if(!upwardUncertainty){
+    				muidunc *= -1;
+    				muisounc *= -1;
+    				mutrkunc *= -1;
+    			}
+    		}
+    		w*=(RSF->MuonIdTight2012(Ntp->Muon_p4(muidx,mucorr))+muidunc);
+    		w*=(RSF->MuonIsoTight2012(Ntp->Muon_p4(muidx,mucorr))+muisounc);
+    		w*=(RSF->TrackingEfficiency2012(Ntp->Muon_p4(muidx,mucorr))+mutrkunc);
     	}
     }
     if(pass.at(TriggerOk)
@@ -946,8 +1035,15 @@ void  ZtoEMu::doEvent(){
     		&& pass.at(NE)
     		&& !doHiggsObjects
     		){
-    	if(leadingmu) w*=RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8");
-    	else w*=RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17");
+    	// for systematics: double mu uncertainty 0.5%, double e uncertainty 0.2%
+    	double trigunc(0);
+    	if(doTriggerUncertainty){
+    		if(leadingmu) trigunc = RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8")*sqrt(pow(0.005,2)+pow(0.002,2));
+    		else trigunc = RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17")*sqrt(pow(0.005,2)+pow(0.002,2));
+    		if(!upwardUncertainty) trigunc *= -1;
+    	}
+    	if(leadingmu) w*=(RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu17_Ele8")+trigunc);
+    	else w*=(RSF->HiggsWW_EMu_Trigger(Ntp->Muon_p4(muidx,mucorr),Ntp->Electron_p4(eidx,ecorr).Et(),Ntp->Electron_supercluster_eta(eidx),"Mu8_Ele17")+trigunc);
     }
     if(pass.at(NMu)
     		&& pass.at(NE)
@@ -1062,6 +1158,7 @@ void  ZtoEMu::doEvent(){
 	  if(jetsfromvtx.size()==1 && firstjet_idx!=-1){
 		  onejet.at(t).Fill(Ntp->PFJet_p4(firstjet_idx,jetcorr).Pt(),w);
 		  onejet_eta.at(t).Fill(Ntp->PFJet_p4(firstjet_idx,jetcorr).Eta(),w);
+		  onejet_jecunc.at(t).Fill(Ntp->PFJet_JECuncertainty(firstjet_idx),w);
 	  }
 	  if(jetsfromvtx.size()>1 && firstjet_idx!=-1 && secondjet_idx!=-1){
 		  jetsum.at(t).Fill(Ntp->PFJet_p4(firstjet_idx,jetcorr).Pt()+Ntp->PFJet_p4(secondjet_idx,jetcorr).Pt(),w);
@@ -1143,8 +1240,10 @@ void  ZtoEMu::doEvent(){
 			  if(Ntp->MCParticle_pdgid(i)==23){
 				  if(!useMadgraphZ && (Ntp->GetMCID()==DataMCType::DY_ee || Ntp->GetMCID()==DataMCType::DY_mumu || Ntp->GetMCID()==DataMCType::DY_tautau)){
 					  zpt.at(t).Fill(Ntp->MCParticle_p4(i).Pt())*PowhegReweight(Ntp->MCParticle_p4(i).Pt());
+					  zpt_weirdbins.at(t).Fill(Ntp->MCParticle_p4(i).Pt())*PowhegReweight(Ntp->MCParticle_p4(i).Pt());
 				  }else{
 					  zpt.at(t).Fill(Ntp->MCParticle_p4(i).Pt());
+					  zpt_weirdbins.at(t).Fill(Ntp->MCParticle_p4(i).Pt());
 				  }
 				  zeta.at(t).Fill(Ntp->MCParticle_p4(i).Eta());
 				  zmass.at(t).Fill(Ntp->MCParticle_p4(i).M());
@@ -1472,7 +1571,7 @@ void ZtoEMu::Finish(){
 	double stddata(87),stdbkg(80.629),stdsignal(74.680);
 	double stdqcd(14.371),stdww(16.689),stdwz2l2q(0.000),stdwz3l1nu(0.299),stdzz4l(0.026),stdzz2l2q(0.000),stdzz2l2nu(0.009),stdtt(1.539),stdtw(0.592),stdtbarw(0.000),stddyll(7.141),stddytt(39.963);
 	double std(0),stdunc(0);
-	double bkgunc(0),individualunc(0);
+	double bkgunc(0),individualunc(0),statunc(0);
 	for(unsigned i=0;i<HConfig.GetNHisto();i++){
 		if(HConfig.GetID(i)==DataMCType::Data) sumdata = Npassed.at(i).GetBinContent(NCuts+1);
 		else if(HConfig.GetID(i)==DataMCType::DY_emu) sumsignal = Npassed.at(i).GetBinContent(NCuts+1);
@@ -1506,11 +1605,15 @@ void ZtoEMu::Finish(){
 		if(HConfig.GetID(i)==DataMCType::DY_ll) std = stddyll;
 		if(HConfig.GetID(i)==DataMCType::DY_tautau) std = stddytt;
 		if(HConfig.GetID(i)==DataMCType::DY_emu) std = stdsignal;
-		if(HConfig.GetID(i)!=DataMCType::Data && HConfig.GetID(i)!=DataMCType::DY_emu) individualunc += pow(abs(std-Npassed.at(i).GetBinContent(NCuts+1)),2);
+		if(HConfig.GetID(i)!=DataMCType::Data && HConfig.GetID(i)!=DataMCType::DY_emu){
+			individualunc += pow(abs(std-Npassed.at(i).GetBinContent(NCuts+1)),2);
+			statunc += pow(Npassed.at(i).GetBinError(NCuts+1),2);
+		}
 		std::cout << "Number of events for sample " << HConfig.GetName(i) << " ";
 		printf("Standard: %.3f, Now: %.3f Resulting uncertainty: %.3f\n",std,Npassed.at(i).GetBinContent(NCuts+1),abs(std-Npassed.at(i).GetBinContent(NCuts+1)));
 
 		if(zpt.at(i).Integral()>0)zpt.at(i).Scale(1./zpt.at(i).Integral());
+		if(zpt_weirdbins.at(i).Integral()>0)zpt_weirdbins.at(i).Scale(1./zpt_weirdbins.at(i).Integral(),"width");
 		if(zeta.at(i).Integral()>0)zeta.at(i).Scale(1./zeta.at(i).Integral());
 		if(zmass.at(i).Integral()>0)zmass.at(i).Scale(1./zmass.at(i).Integral());
 
@@ -1519,10 +1622,12 @@ void ZtoEMu::Finish(){
 	std::cout << "################## Result ##################" << std::endl;
 	printf("Total events in data: %.0f, background: %.3f and signal %.3f\n",sumdata,sumbkg,sumsignal);
 	printf("Total background normalization uncertainty: %.3f%%\n",sqrt(bkgunc)/sumbkg*100);
+	printf("Total statistical background uncertainty: %.3f (abs), %.3f%%\n",sqrt(statunc),sqrt(statunc)/sumbkg*100);
 	printf("Total background uncertainty not from cross section: %.3f%%\n",sqrt(individualunc)/sumbkg*100);
 	printf("Cases with one fake lepton: %f. Cases with two fake leptons: %f.\n",nfakes.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(1),nfakes.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(2));
 
 	printf("Difference in background events: %.3f%% and in signal events: %.3f%%\n",fabs(sumbkg/stdbkg-1)*100,fabs(sumsignal/stdsignal-1)*100);
+	if(!systValid) std::cout << "!!! WARNING: MORE THAN ONE SYSTEMATIC SET TO TRUE !!!" << std::endl;
 
 	if(doPDFuncertainty){
 		TString pdfname1_lower = pdfname1;

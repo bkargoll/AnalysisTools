@@ -38,6 +38,9 @@
 #ifdef USE_pistone
 
 #endif
+#ifdef USE_zotz
+#include "zotz/ZToTaumuTauh.h"
+#endif
 
 Selection_Factory::Selection_Factory(){
 }
@@ -88,6 +91,9 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 #endif
 #ifdef USE_pistone
 
+#endif
+#ifdef USE_zotz
+  else if(Analysis.Contains("ztotaumutauh")) s=new ZToTaumuTauh(Analysis,UncertType);
 #endif
   else{
     std::cout << "WARNING: Selection_Factory::Factory INVALID ANALYSIS TYPE.... USING DEFAULT <Example.h> " << std::endl;

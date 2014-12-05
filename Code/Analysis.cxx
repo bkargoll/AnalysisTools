@@ -123,9 +123,9 @@ int main() {
   // Configure Analysis
   Selection_Factory SF;
   vector<Selection_Base*> selections;
-  for(int i=0;i<UncertType.size();i++){
+  for(unsigned int i=0;i<UncertType.size();i++){
     cout << "Configuring systematic " << UncertType.at(i) << endl;
-    for(int j=0; j<Analysis.size();j++){
+    for(unsigned int j=0; j<Analysis.size();j++){
       cout << "Configuring Selection " << Analysis.at(j) << endl;
       selections.push_back(SF.Factory(Analysis.at(j),UncertType.at(i),mode,runtype,Lumi));
     }
@@ -140,7 +140,7 @@ int main() {
     cout << "Ntuple control Setup" << endl;
     if(thin)Ntp.ThinTree();
     if(skim)Ntp.CloneTree("SKIMMED_NTUP");
-    for(int j=0; j<selections.size();j++){
+    for(unsigned int j=0; j<selections.size();j++){
       selections[j]->Set_Ntuple(&Ntp);
     }
 
@@ -150,14 +150,13 @@ int main() {
     Int_t nentries = Ntp.Get_Entries();
     std::vector<TString> ListOfFilesRead;
     std::vector<int> EventsReadFromFile; 
-    Int_t RunNumber(-999);
+    unsigned int RunNumber(-999);
     int num=10000;
     cout << " Number of events in Ntuples " << nentries << endl;
-    Int_t i=0; 
-    int k=0;
+    int i=0; 
+    unsigned int k=0;
     int p=0;
     DoubleEventRemoval DER;
-    bool isok(false); 
     time (&beforeLoop);
     neventsproc=(float)nentries;
     for(i=0;i<nentries ;i++){
@@ -182,7 +181,7 @@ int main() {
 	}
       }
       bool passed=false;
-      for(int j=0; j<selections.size();j++){
+      for(unsigned int j=0; j<selections.size();j++){
 	selections.at(j)->Event();
 	if(selections.at(j)->Passed()) passed=true;
       }
@@ -211,16 +210,15 @@ int main() {
   // Reconstruct Analysis from Stored Histograms
   else if(mode==Selection_Base::RECONSTRUCT){
     cout << "Reconstructing histograms" << endl;
-    for(int j=0; j<selections.size();j++){
+    for(unsigned int j=0; j<selections.size();j++){
       selections[j]->LoadResults(Files);
     }
     std::cout << "Loading Files Complete" << std::endl;
     if(runtype==Selection_Base::Local){
       Selection_Factory SF;
-      for(int j=0; j<selections.size();j++){
+      for(unsigned int j=0; j<selections.size();j++){
 	if(selections.at(j)->Get_SysType()=="default"){
-	  Selection_Base *selectionsys;
-	  for(int i=0;i<UncertList.size();i++){
+	  for(unsigned int i=0;i<UncertList.size();i++){
 	    TString n=selections.at(j)->Get_Name();
 	    cout << "Adding Systematic Uncertainty " << UncertType.at(i) << endl;
 	    Selection_Base *s=SF.Factory(selections.at(j)->Get_Analysis(),UncertList.at(i),mode,runtype,Lumi);
@@ -233,14 +231,14 @@ int main() {
     }
   }
   cout << "Finishing" << endl;
-  for(int j=0; j<selections.size();j++){
+  for(unsigned int j=0; j<selections.size();j++){
     cout << "Finishing: " << selections[j]->Get_Name() << endl; 
     selections[j]->Finish();
   }
   cout << "Finished" << endl;
 
   cout << "Cleaning up" << endl;
-  for(int j=0; j<selections.size();j++){
+  for(unsigned int j=0; j<selections.size();j++){
     delete selections[j];
     selections[j]=NULL;
   }

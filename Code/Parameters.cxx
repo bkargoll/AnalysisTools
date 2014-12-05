@@ -64,8 +64,7 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
   v.clear();
   // Open File
   ifstream input_file;
-  char *file_=(char*)file.Data();
-  input_file.open(file_, std::ios::in);
+  input_file.open(file, std::ios::in);
   if (!(input_file)){
     std::cout << "\nERROR: Opening xml file "<< file <<" for Parameters has failed.\n" << std::endl;
     return;
@@ -88,8 +87,8 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
     }
   }
   input_file.close();
-  for(int i=0; i<v.size(); i++){
-    for(int j=i+1; j<v.size(); j++){
+  for(unsigned int i=0; i<v.size(); i++){
+    for(unsigned int j=i+1; j<v.size(); j++){
       if(v.at(i)==v.at(j)){
         v.erase(v.begin()+j);
         j--;
@@ -97,7 +96,7 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
     }
   }
   if(dv!="" && v.size()==0) v.push_back(dv);
-  for(int i=0; i<v.size();i++){
+  for(unsigned int i=0; i<v.size();i++){
     std::cout << "Parameters::GetVectorString File=" << file  << " Found: " <<  p << "=" << v.at(i) << std::endl;
   }
   return;
@@ -109,7 +108,6 @@ void Parameters::GetParameter(TString p, T &v,T dv){
 
   // Open File
   ifstream input_file;
-  char *file_=(char*)file.Data();
   input_file.open(file, std::ios::in);
   if (!(input_file)){
     std::cout << "\nERROR: Opening xml file "<< file <<" for Parameters has failed.\n" << std::endl;
@@ -146,8 +144,7 @@ void Parameters::GetVectorStringDouble(TString p, std::vector<TString> &v1, std:
   v2.clear();
   // Open File
   ifstream input_file;
-  char *file_=(char*)file.Data();
-  input_file.open(file_, std::ios::in);
+  input_file.open(file, std::ios::in);
   if (!(input_file)){
     std::cout << "\nERROR: Opening xml file "<< file <<" for Parameters has failed.\n" << std::endl;
     return;
@@ -172,8 +169,8 @@ void Parameters::GetVectorStringDouble(TString p, std::vector<TString> &v1, std:
     }
   }
   input_file.close();
-  for(int i=0; i<v1.size(); i++){
-    for(int j=i+1; j<v1.size(); j++){
+  for(unsigned int i=0; i<v1.size(); i++){
+    for(unsigned int j=i+1; j<v1.size(); j++){
       if(v1.at(i)==v1.at(j)){
         v1.erase(v1.begin()+j);
 	v2.erase(v2.begin()+j);
@@ -181,7 +178,7 @@ void Parameters::GetVectorStringDouble(TString p, std::vector<TString> &v1, std:
       }
     }
   }
-  for(int i=0; i<v1.size();i++){
+  for(unsigned int i=0; i<v1.size();i++){
     std::cout << "Parameters::GetVectorStringDouble File=" << file  << " Found: " <<  p << "=" << v1.at(i) << " " << v2.at(i) << std::endl;
   }
   return;
