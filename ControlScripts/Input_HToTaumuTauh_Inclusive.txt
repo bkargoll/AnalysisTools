@@ -1,0 +1,8 @@
+Thin: False
+Skim: False
+HistoFile: InputData/Histo_HToTaumuTauh.txt
+Analysis: Inclusive
+UncertType: default
+SkimInfo: InputData/SkimSummary_HToTaumuTauh.log
+Lumi: 19712
+PlotStyle: style2
