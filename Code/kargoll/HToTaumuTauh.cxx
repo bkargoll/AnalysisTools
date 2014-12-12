@@ -2,6 +2,7 @@
 #include "TLorentzVector.h"
 #include <cstdlib>
 #include "HistoConfig.h"
+#include "SkimConfig.h"
 #include <iostream>
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 
@@ -53,6 +54,10 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	// For each category, there should be a special class inheriting from HToTaumuTauh
 	categoryFlag = "NoCategory";
 
+	// Do you want to use embedding or MC for DY background?
+	// set to "false" for background estimation, to "true" for categories
+	useEmbedding = false;
+
 	// select which WJets Background source to use
 	// chose between:
 	// * "MC": use MC as given in Histo.txt
@@ -89,10 +94,10 @@ HToTaumuTauh::~HToTaumuTauh(){
 	delete RSF;
 
 	if (verbose) std::cout << "HToTaumuTauh::~HToTaumuTauh()" << std::endl;
-	for(int j=0; j<Npassed.size(); j++){
+	for(unsigned int j=0; j<Npassed.size(); j++){
 	std::cout << "HToTaumuTauh::~HToTaumuTauh Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
-	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
+	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	}
 	std::cout << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
 }
@@ -360,7 +365,7 @@ void  HToTaumuTauh::Setup(){
   MuEta=HConfig.GetTH1D(Name+"_MuEta","MuEta",50,-2.5,2.5,"#eta(#mu)");
   MuPhi=HConfig.GetTH1D(Name+"_MuPhi","MuPhi",50,-3.14159,3.14159,"#phi(#mu)");
 
-  MuSelPt=HConfig.GetTH1D(Name+"_MuSelPt","MuSelPt",50,0.,200.,"p_{T}(#mu_{sel})/GeV");
+  MuSelPt=HConfig.GetTH1D(Name+"_MuSelPt","MuSelPt",50,0.,100.,"p_{T}(#mu_{sel})/GeV");
   MuSelEta=HConfig.GetTH1D(Name+"_MuSelEta","MuSelEta",50,-2.5,2.5,"#eta(#mu_{sel})");
   MuSelPhi=HConfig.GetTH1D(Name+"_MuSelPhi","MuSelPhi",50,-3.14159,3.14159,"#phi(#mu_{sel})");
   MuSelDxy=HConfig.GetTH1D(Name+"_MuSelDxy","MuSelDxy",60,-0.3,0.3,"d_{xy}(#mu_{sel},Vtx)/cm");
@@ -369,13 +374,13 @@ void  HToTaumuTauh::Setup(){
   MuSelFakesTauID=HConfig.GetTH1D(Name+"_MuSelFakesTauID","MuSelFakesTauID",2,-0.5,1.5,"#mu_{sel} fakes #tau_{h}");
   MuSelDrHlt=HConfig.GetTH1D(Name+"_MuSelDrHlt","MuSelDrHLT",50,0.,1.,"#DeltaR(#mu_{sel},#mu_{HLT})");
 
-  TauPt=HConfig.GetTH1D(Name+"_TauPt","TauPt",50,0.,200.,"p_{T}(#tau)/GeV");
+  TauPt=HConfig.GetTH1D(Name+"_TauPt","TauPt",50,0.,100.,"p_{T}(#tau)/GeV");
   TauEta=HConfig.GetTH1D(Name+"_TauEta","TauEta",50,-2.5,2.5,"#eta(#tau)");
   TauPhi=HConfig.GetTH1D(Name+"_TauPhi","TauPhi",50,-3.14159,3.14159,"#phi(#tau)");
   TauDecayMode=HConfig.GetTH1D(Name+"_TauDecayMode","TauDecayMode",16,-0.5,15.5,"#tau decay mode");
   TauIso=HConfig.GetTH1D(Name+"_TauIso","TauIso",50,0.,25.,"Iso(#tau)/GeV");
 
-  TauSelPt=HConfig.GetTH1D(Name+"_TauSelPt","TauSelPt",50,0.,200.,"p_{T}(#tau_{sel})/GeV");
+  TauSelPt=HConfig.GetTH1D(Name+"_TauSelPt","TauSelPt",50,0.,100.,"p_{T}(#tau_{sel})/GeV");
   TauSelEta=HConfig.GetTH1D(Name+"_TauSelEta","TauSelEta",50,-2.5,2.5,"#eta(#tau_{sel})");
   TauSelPhi=HConfig.GetTH1D(Name+"_TauSelPhi","TauSelPhi",50,-3.14159,3.14159,"#phi(#tau_{sel})");
   TauSelDrHlt=HConfig.GetTH1D(Name+"_TauSelDrHlt","TauSelDrHLT",50,0.,1.,"#DeltaR(#tau_{sel},#tau_{HLT})");
@@ -384,8 +389,8 @@ void  HToTaumuTauh::Setup(){
 
   MuVetoDPtSelMuon=HConfig.GetTH1D(Name+"_MuVetoDPtSelMuon","MuVetoDPtSelMuon",100,-100.,100.,"#Deltap_{T}(#mu_{veto},#mu)/GeV");
   MuVetoInvM=HConfig.GetTH1D(Name+"_MuVetoInvM","MuVetoInvM",100,0.,200,"m_{inv}(#mu_{veto}^{1},#mu_{veto}^{2})/GeV");
-  MuVetoPtPositive=HConfig.GetTH1D(Name+"_MuVetoPtPositive","MuVetoPtPositive",50,0.,200.,"p_{T}(#mu_{veto}^{+})/GeV");
-  MuVetoPtNegative=HConfig.GetTH1D(Name+"_MuVetoPtNegative","MuVetoPtNegative",50,0.,200.,"p_{T}(#mu_{veto}^{-})/GeV");
+  MuVetoPtPositive=HConfig.GetTH1D(Name+"_MuVetoPtPositive","MuVetoPtPositive",50,0.,100.,"p_{T}(#mu_{veto}^{+})/GeV");
+  MuVetoPtNegative=HConfig.GetTH1D(Name+"_MuVetoPtNegative","MuVetoPtNegative",50,0.,100.,"p_{T}(#mu_{veto}^{-})/GeV");
   MuVetoDRTau=HConfig.GetTH1D(Name+"_MuVetoDRTau","MuVetoDRTau",50,0.,5.,"#DeltaR(#mu_{veto},#tau_{h})");
   MuVetoDeltaR=HConfig.GetTH1D(Name+"_MuVetoDeltaR","MuVetoDeltaR",50,0.,5.,"#DeltaR(#mu^{+}_{veto},#mu^{-}_{veto})");
 
@@ -400,7 +405,7 @@ void  HToTaumuTauh::Setup(){
   MuTauDEta=HConfig.GetTH1D(Name+"_MuTauDEta","MuTauDEta",100,-6.,6.,"#Delta#eta(#mu,#tau_{h})");
   MuTauDPt=HConfig.GetTH1D(Name+"_MuTauDPt","MuTauDPt",100,-100.,100.,"#Deltap_{T}(#mu,#tau_{h})/GeV");
   MuTauRelDPt=HConfig.GetTH1D(Name+"_MuTauRelDPt","MuTauRelDPt",100,-2.,2.,"#Deltap_{T}(#mu,#tau_{h})/p_{T}(#mu)");
-  MuPtVsTauPt=HConfig.GetTH2D(Name+"_MuPtVsTauPt","MuPtVsTauPt",50,0.,200.,50,0.,200.,"p_{T}(#mu)/GeV","p_{T}(#tau)/GeV");
+  MuPtVsTauPt=HConfig.GetTH2D(Name+"_MuPtVsTauPt","MuPtVsTauPt",50,0.,100.,50,0.,100.,"p_{T}(#mu)/GeV","p_{T}(#tau)/GeV");
 
   MetPt  = HConfig.GetTH1D(Name+"_MetPt","MetPt",50,0.,200.,"E_{T}^{miss}/GeV");
   MetPhi = HConfig.GetTH1D(Name+"_MetPhi","MetPhi",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
@@ -492,6 +497,10 @@ void  HToTaumuTauh::Setup(){
   CatVBFLooseQcdShapeRegion = HConfig.GetTH1D(Name+"_CatVBFLooseQcdShapeRegion","CatVBFLooseQcdShapeRegion",100,0.,200.,"VBFL: m_{inv}^{QCD}/GeV");
   CatVBFTightQcdShapeRegion = HConfig.GetTH1D(Name+"_CatVBFTightQcdShapeRegion","CatVBFTightQcdShapeRegion",100,0.,200.,"VBFT: m_{inv}^{QCD}/GeV");
   CatInclusiveQcdShapeRegion = HConfig.GetTH1D(Name+"_CatInclusiveQcdShapeRegion","CatInclusiveQcdShapeRegion",100,0.,200.,"Incl: m_{inv}^{QCD}/GeV");
+
+  embeddingWeight_TauSpinner = HConfig.GetTH1D(Name+"_embeddingWeight_TauSpinner","embeddingWeight_TauSpinner",50,0.,3.,"emb. TauSpinnerWeight");
+  embeddingWeight_MinVisPtFilter = HConfig.GetTH1D(Name+"_embeddingWeight_MinVisPtFilter","embeddingWeight_MinVisPtFilter",50,0.,3.,"emb. MinVisPtFilter weight");
+  embeddingWeight_SelEffWeight = HConfig.GetTH1D(Name+"_embeddingWeight_SelEffWeight","embeddingWeight_SelEffWeight",50,0.,3.,"emb. SelEffWeight");
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
@@ -669,6 +678,10 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&CatVBFLooseQcdShapeRegion);
  Extradist1d.push_back(&CatVBFTightQcdShapeRegion);
  Extradist1d.push_back(&CatInclusiveQcdShapeRegion);
+
+ Extradist1d.push_back(&embeddingWeight_TauSpinner);
+ Extradist1d.push_back(&embeddingWeight_MinVisPtFilter);
+ Extradist1d.push_back(&embeddingWeight_SelEffWeight);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -692,7 +705,8 @@ void  HToTaumuTauh::doEvent(){
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ std::cout << "failed to find id" <<std::endl; return;}
   
   double wobs=1;
-  if(!Ntp->isData()){w = Ntp->PUWeightFineBins();}
+  if(!Ntp->isData() && Ntp->GetMCID() != DataMCType::DY_mutau_embedded){
+	  w = Ntp->PUWeightFineBins();}
   else{w=1;}
 
   // set object corrections at beginning of each event to avoid segfaults
@@ -731,6 +745,8 @@ void  HToTaumuTauh::doEvent(){
 	  }
   }
   pass.at(TriggerOk) = (value.at(TriggerOk) >= cut.at(TriggerOk));
+  // disable trigger for embedding
+  if (Ntp->GetMCID() == DataMCType::DY_mutau_embedded) pass.at(TriggerOk) = true;
   
   // Muon cuts
   if (verbose) std::cout << "	Cut: Muon ID" << std::endl;
@@ -994,8 +1010,8 @@ void  HToTaumuTauh::doEvent(){
   // correction factors
   if( !Ntp->isData() ){
 	  // apply trigger efficiencies
-	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Trigger_Mu(Ntp->Muon_p4(selMuon));
-	  if (selTau != -1)  w *= RSF->HiggsTauTau_MuTau_Trigger_Tau(Ntp->PFTau_p4(selTau, "")); // no Tau energy scale here
+	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Trigger_Mu_ScaleMCtoData(Ntp->Muon_p4(selMuon));
+	  if (selTau != -1)  w *= RSF->HiggsTauTau_MuTau_Trigger_Tau_ScaleMCtoData(Ntp->PFTau_p4(selTau, "")); // no Tau energy scale here
 	  // apply muon ID & iso scale factors
 	  if (selMuon != -1){
 		  w *= RSF->HiggsTauTau_MuTau_Id_Mu(Ntp->Muon_p4(selMuon));
@@ -1008,6 +1024,15 @@ void  HToTaumuTauh::doEvent(){
 	  }
 	  // todo: b-tag scale factors
 	  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#B_tag_scale_factors
+  }
+  // embedding weights
+  if(Ntp->GetMCID() == DataMCType::DY_mutau_embedded){
+	  w *= Ntp->Embedding_TauSpinnerWeight();
+	  w *= Ntp->Embedding_MinVisPtFilter();
+	  w *= Ntp->Embedding_SelEffWeight(); // todo: clearify if this should be applied
+	  // apply data trigger efficiency to embedding
+	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Trigger_Mu_Eff_Data(Ntp->Muon_p4(selMuon));
+	  if (selTau != -1)  w *= RSF->HiggsTauTau_MuTau_Trigger_Tau_Eff_Data(Ntp->PFTau_p4(selTau));
   }
 
   // define booleans for different stages of selection
@@ -1180,12 +1205,12 @@ void  HToTaumuTauh::doEvent(){
 	  // MET leptons
 	  int metMuon_idx(-1), metTau_idx(-1);
 	  float metMuon_dR(-1), metTau_dR(-1);
-	  bool isMetMuon = Ntp->findCorrMVAMuTauSrcMuon(selMuon, metMuon_idx, metMuon_dR);
-	  bool isMetTau = Ntp->findCorrMVAMuTauSrcTau(selTau,metTau_idx, metTau_dR);
+	  Ntp->findCorrMVAMuTauSrcMuon(selMuon, metMuon_idx, metMuon_dR);
+	  Ntp->findCorrMVAMuTauSrcTau(selTau,metTau_idx, metTau_dR);
 	  MetLepMuDr.at(t).Fill( metMuon_dR, w);
 	  MetLepTauDr.at(t).Fill( metTau_dR, w);
-	  MetLepNMu.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcMuons() );
-	  MetLepNTau.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcTaus() );
+	  MetLepNMu.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcMuons(), w);
+	  MetLepNTau.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcTaus(), w);
 	  MetLepNMuMinusNMu.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcMuons() - selectedMuons.size(), w);
 	  MetLepNTauMinusNTau.at(t).Fill( Ntp->NMET_CorrMVAMuTau_srcTaus() - selectedTaus.size(), w);
 	  if(Ntp->NMET_CorrMVAMuTau_srcMuons() != selectedMuons.size()){
@@ -1295,6 +1320,13 @@ void  HToTaumuTauh::doEvent(){
 			  }
 		  }
 	  }
+
+	  // plot embedding weights (before mT cut)
+	  if (Ntp->GetMCID() == DataMCType::DY_mutau_embedded){
+		  embeddingWeight_TauSpinner.at(t).Fill(Ntp->Embedding_TauSpinnerWeight());
+		  embeddingWeight_SelEffWeight.at(t).Fill(Ntp->Embedding_SelEffWeight());
+		  embeddingWeight_MinVisPtFilter.at(t).Fill(Ntp->Embedding_MinVisPtFilter());
+	  }
   }
 
   /////// plots filled after full muon and tau selection
@@ -1366,7 +1398,7 @@ void HToTaumuTauh::Finish() {
 						std::cout << "WARNING: Could not change cross section for id " << id << std::endl;
 					printf("WJet process %i had xsec = %6.1f. Setting to %6.1f for data-driven WJet yield.\n", id, oldXSec, HConfig.GetCrossSection(id));
 				}
-				sumSelEvts += Npassed.at(type).GetBinContent(NCuts);
+				sumSelEvts += Npassed.at(type).GetBinContent(NCuts+1);
 			}
 
 			// second loop, now the total sum of all Wjets events is known, so we can scale
@@ -1374,11 +1406,11 @@ void HToTaumuTauh::Finish() {
 				if (!HConfig.hasID(id))
 					continue;
 				int type = HConfig.GetType(id);
-				double rawSelEvts = Npassed.at(type).GetBinContent(NCuts);
+				double rawSelEvts = Npassed.at(type).GetBinContent(NCuts+1);
 
 				// scale all WJet histograms to data-driven yield
 				ScaleAllHistOfType(type, wJetsYieldMap[categoryFlag] / sumSelEvts);
-				printf("WJet process %i was scaled from yield %f to yield %f \n", id, rawSelEvts, Npassed.at(type).GetBinContent(NCuts));
+				printf("WJet process %i was scaled from yield %f to yield %f \n", id, rawSelEvts, Npassed.at(type).GetBinContent(NCuts+1));
 			}
 		}
 		else
@@ -1396,10 +1428,10 @@ void HToTaumuTauh::Finish() {
 				std::cout << "QCD BG: Please add QCD to your Histo.txt. Abort." << std::endl;
 			}
 			else{
-				double rawQcdShapeEvents = Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts);
+				double rawQcdShapeEvents = Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1);
 				// scale QCD histograms to data-driven yields
 				ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD), qcdYieldMap[categoryFlag] / rawQcdShapeEvents);
-				printf("QCD histogram was scaled from yield %f to yield %f \n", rawQcdShapeEvents, Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts));
+				printf("QCD histogram was scaled from yield %f to yield %f \n", rawQcdShapeEvents, Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1));
 			}
 		}
 		else
@@ -1407,6 +1439,53 @@ void HToTaumuTauh::Finish() {
 	}
 	else
 		std::cout << "QCD BG: No data driven QCD background available. Histos will be empty." << std::endl;
+
+	if(useEmbedding){
+		if (mode == RECONSTRUCT) { // only apply data-driven numbers on "combine" level
+			std::cout << "Using embedding for DY." << std::endl;
+			if(!HConfig.hasID(DataMCType::DY_mutau_embedded) || !HConfig.hasID(DataMCType::DY_tautau)){
+				std::cout << "Embedding: Please add DY_mutau_embedded and DY_tautau to your Histo.txt. Abort." << std::endl;
+			}
+			else{
+				// read in skimsummary
+				SkimConfig SC;
+				SC.ApplySkimEfficiency(types,Npassed,Npassed_noweight);
+
+				// yield_emb = N_MC(before mT)*eff with eff = N_emb(NCuts)/N_emb(before mT)
+				// scale factor = yield_emb / N_emb(NCuts) = N_MC(before mT)/N_emb(before mT)
+
+				// MC DY: get yield of inclusive selection w/o mT and bJetVeto cut [N_MC(before mT)]
+				double dyMCYield = Npassed.at(HConfig.GetType(DataMCType::DY_tautau)).GetBinContent(MT+1);
+				dyMCYield *= CrossSectionandAcceptance.at(HConfig.GetType(DataMCType::DY_tautau))*Lumi/Npassed.at(HConfig.GetType(DataMCType::DY_tautau)).GetBinContent(0);
+				// Embedding DY: get yield before mT cut [N_emb(before mT)]
+				double dyEmbYield   = Npassed.at(HConfig.GetType(DataMCType::DY_mutau_embedded)).GetBinContent(MT+1);
+
+				double dyEmbScale = dyMCYield / dyEmbYield;
+				// scale embedding sample to estimated yield
+				ScaleAllHistOfType(HConfig.GetType(DataMCType::DY_mutau_embedded), dyEmbScale);
+				// make sure that embedded is not scaled again by framework
+				if (HConfig.GetCrossSection(DataMCType::DY_mutau_embedded) != -1){
+					if (HConfig.SetCrossSection(DataMCType::DY_mutau_embedded, -1))
+						std::cout << "Cross section for DY_mutau_embedded was set to -1" << std::endl;
+					else
+						std::cout << "WARNING: Could not change cross section for DY_mutau_embedded" << std::endl;
+				}
+				// do not draw MC DY sample
+				suppressDrawingHistOfType(HConfig.GetType(DataMCType::DY_tautau));
+
+				printf("Using Embedding for DY background estimation:\n");
+				printf("\tNumber of selected events before mT cut:\n    DY MC: %.1f\n    DY embedding: %.1f\n", dyMCYield, dyEmbYield);
+				printf("\tEmbedding yield was scaled by a factor %.5f to %.1f events\n", dyEmbScale, Npassed.at(HConfig.GetType(DataMCType::DY_mutau_embedded)).GetBinContent(NCuts+1));
+				printf("\tMC DYtautau histograms will be suppressed in plots\n");
+			}
+		}
+	}
+	else{
+		if(HConfig.hasID(DataMCType::DY_mutau_embedded)){
+			ScaleAllHistOfType(HConfig.GetType(DataMCType::DY_mutau_embedded), 0.0);
+			printf("Not using embedding: DY_mutau_embedded sample is scaled to %.1f.", Npassed.at(HConfig.GetType(DataMCType::DY_mutau_embedded)).GetBinContent(NCuts+1));
+		}
+	}
 
 
 	// call GetHistoInfo here (instead of in Configure function), otherwise the SetCrossSection calls are not reflected
@@ -1427,8 +1506,9 @@ void HToTaumuTauh::Finish() {
 bool HToTaumuTauh::selectMuon_Id(unsigned i, unsigned vertex){
 	if(	Ntp->isSelectedMuon(i,vertex,cMu_dxy,cMu_dz) &&
 		Ntp->Muon_RelIso(i) < cMu_relIso &&
-		Ntp->matchTrigger(Ntp->Muon_p4(i),cTriggerNames,"muon") < cMu_dRHltMatch
-			){
+		(Ntp->GetMCID() == DataMCType::DY_mutau_embedded || // no trigger matching for embedding
+				Ntp->matchTrigger(Ntp->Muon_p4(i),cTriggerNames,"muon") < cMu_dRHltMatch)
+		){
 		return true;
 	}
 	return false;
@@ -1468,7 +1548,7 @@ bool HToTaumuTauh::selectMuon_diMuonVeto(unsigned i, unsigned i_vtx){
 	return false;
 }
 
-bool HToTaumuTauh::selectMuon_triLeptonVeto(unsigned i, int selectedMuon, unsigned i_vtx){
+bool HToTaumuTauh::selectMuon_triLeptonVeto(int i, int selectedMuon, unsigned i_vtx){
 	if(	i != selectedMuon &&
 		Ntp->isTightMuon(i,i_vtx) &&
 		Ntp->dxy(Ntp->Muon_p4(i),Ntp->Muon_Poca(i),Ntp->Vtx(i_vtx)) < cMu_dxy &&
@@ -1525,8 +1605,10 @@ bool HToTaumuTauh::selectPFTau_Id(unsigned i, std::vector<int> muonCollection){
 	  }
 	}
 	// trigger matching
-	if (Ntp->matchTrigger(Ntp->PFTau_p4(i),cTriggerNames,"tau") > cMu_dRHltMatch) {
-		return false;
+	if (Ntp->GetMCID() != DataMCType::DY_mutau_embedded){
+		if (Ntp->matchTrigger(Ntp->PFTau_p4(i),cTriggerNames,"tau") > cMu_dRHltMatch) {
+			return false;
+		}
 	}
 
 	if ( 	selectPFTau_Id(i) ){
@@ -2233,7 +2315,7 @@ bool HToTaumuTauh::category_NoCategory(){
 
 // migrate a category into main analysis if this is chosen category
 // return value: if category passed
-bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, int categoryNCuts) {
+bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, unsigned categoryNCuts) {
 	bool catPassed = true;
 	for (unsigned i_cut = CatCut1; i_cut < NCuts; i_cut++) {
 

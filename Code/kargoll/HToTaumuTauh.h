@@ -250,6 +250,10 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> CatVBFTightQcdShapeRegion;
   std::vector<TH1D> CatInclusiveQcdShapeRegion;
 
+  std::vector<TH1D> embeddingWeight_TauSpinner;
+  std::vector<TH1D> embeddingWeight_MinVisPtFilter;
+  std::vector<TH1D> embeddingWeight_SelEffWeight;
+
   unsigned verbose;
 
   // cut values
@@ -265,6 +269,8 @@ class HToTaumuTauh : public Selection {
   TString wJetsBGSource;
   // flag for data-driven QCD shape (set to false for yield estimation!)
   bool qcdShapeFromData;
+  // flag to use embedding
+  bool useEmbedding;
 
   // map to hold WJets yields for each category
   std::map<TString, double> wJetsYieldMap;
@@ -329,7 +335,7 @@ class HToTaumuTauh : public Selection {
   bool selectMuon_antiIso(unsigned i, unsigned vertex);
 
   bool selectMuon_diMuonVeto(unsigned i, unsigned i_vtx);
-  bool selectMuon_triLeptonVeto(unsigned i, int selectedMuon, unsigned i_vtx);
+  bool selectMuon_triLeptonVeto(int i, int selectedMuon, unsigned i_vtx);
 
   bool selectElectron_triLeptonVeto(unsigned i, unsigned i_vtx, std::vector<int>);
 
@@ -353,7 +359,7 @@ class HToTaumuTauh : public Selection {
   // relaxed categories for background methods
   std::vector<float> cut_VBFTightRelaxed, cut_VBFLooseRelaxed;
 
-  bool migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, int categoryNCuts);
+  bool migrateCategoryIntoMain(TString thisCategory, std::vector<float> categoryValueVector, std::vector<float> categoryPassVector, unsigned categoryNCuts);
 
   void configure_VBFTight();
   bool category_VBFTight(unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);

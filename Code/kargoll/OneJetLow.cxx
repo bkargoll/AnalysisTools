@@ -14,6 +14,9 @@ OneJetLow::OneJetLow(TString Name_, TString id_):
 	// run OneJetLow category
 	categoryFlag = "OneJetLow";
 
+	// run Categories using embedding
+	useEmbedding = true;
+
 	// run Categories using data-driven WJets BG
 	wJetsBGSource = "Data";
 
@@ -22,10 +25,10 @@ OneJetLow::OneJetLow(TString Name_, TString id_):
 }
 
 OneJetLow::~OneJetLow() {
-	  for(int j=0; j<Npassed.size(); j++){
+	  for(unsigned int j=0; j<Npassed.size(); j++){
 	    std::cout << "OneJetLow::~OneJetLow Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
-		 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
+		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
 	  std::cout << "OneJetLow::~OneJetLow()" << std::endl;
 }

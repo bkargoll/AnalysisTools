@@ -21,7 +21,7 @@ TauSpinExample::~TauSpinExample(){
   for(unsigned int j=0; j<Npassed.size(); j++){
     std::cout << "TauSpinExample::~TauSpinExample Selection Summary before: " 
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
-	 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
+	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
   }
   std::cout << "TauSpinExample::~TauSpinExample()" << std::endl;
 }

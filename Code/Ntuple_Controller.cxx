@@ -973,15 +973,15 @@ double Ntuple_Controller::PFTau_FlightLenght_significance(TVector3 pv,TMatrixTSy
 
   TMatrixT<double> PVcv;
   PVcv.ResizeTo(3,3);
-  for(unsigned int nr =0; nr<PVcov.GetNrows(); nr++){
-    for(unsigned int nc =0; nc<PVcov.GetNcols(); nc++){
+  for(int nr =0; nr<PVcov.GetNrows(); nr++){
+    for(int nc =0; nc<PVcov.GetNcols(); nc++){
       PVcv(nr,nc) = PVcov(nr,nc);
     }
   }
   TMatrixT<double> SVcv;
   SVcv.ResizeTo(3,3);
-  for(unsigned int nr =0; nr<SVcov.GetNrows(); nr++){
-    for(unsigned int nc =0; nc<SVcov.GetNcols(); nc++){
+  for(int nr =0; nr<SVcov.GetNrows(); nr++){
+    for(int nc =0; nc<SVcov.GetNcols(); nc++){
       SVcv(nr,nc) = SVcov(nr,nc);
     }
   }

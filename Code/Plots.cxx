@@ -72,7 +72,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
     if (verbose)
       std::cout << "Plots::Plot1D " << histo.size() << " j= " << j << " color.size()= " << colour.size() << " " << histo.at(j).size() << std::endl;
     if (histo.at(j).size() > 0 && histo.at(j).size() == colour.size()) {
-      TLegend leg(0.25, 0.75, 0.9, 0.925);
+      TLegend leg(0.25, 0.72, 0.9, 0.925);
       leg.SetBorderSize(0);
       leg.SetFillStyle(4000);
       leg.SetFillColor(0);

@@ -438,11 +438,30 @@ void Selection::ScaleAllHistOfType(unsigned int t,float w){
   }
 }
 
+// avoid drawing of certain sample in histograms\
+// Npassed vector is NOT scaled, so tables should remain intact
+void Selection::suppressDrawingHistOfType(unsigned int t){
+  for(unsigned int i=0; i<Nminus1.size(); i++){
+	if(Nminus1.at(i).size()>t)Nminus1.at(i).at(t).Scale(0);
+	if(Nminus0.at(i).size()>t)Nminus0.at(i).at(t).Scale(0);
+	if(distindx.at(i)){
+	  if(Nminus1dist.at(i).size()>t)Nminus1dist.at(i).at(t).Scale(0);
+	  if(Accumdist.at(i).size()>t)Accumdist.at(i).at(t).Scale(0);
+	}
+  }
+  for(unsigned int k=0; k<Extradist1d.size();k++){
+	if(Extradist1d.at(k)->size()>t)Extradist1d.at(k)->at(t).Scale(0);
+  }
+  for(unsigned int k=0; k<Extradist2d.size();k++){
+	if(Extradist2d.at(k)->size()>t)Extradist2d.at(k)->at(t).Scale(0);
+  }
+}
+
 // Returns true, if all cuts except for those in vector 'indices' passed.
 // Elements of vector 'indices' are the indices i_cut of the vector cut
-bool Selection::passAllBut(std::vector<int> indices){
-	  std::vector<int>::iterator it;
-	  for(int i_cut=0; i_cut<pass.size(); i_cut++){
+bool Selection::passAllBut(std::vector<unsigned int> indices){
+	  std::vector<unsigned int>::iterator it;
+	  for(unsigned int i_cut=0; i_cut<pass.size(); i_cut++){
 		  it = std::find (indices.begin(), indices.end(), i_cut);	// tries to find i_cut in vector 'indices'
 		  if(i_cut!=*it){											// checks if cut at i_cut is not a cut you want to exclude
 			  if(!pass.at(i_cut)) return false;						// checks whether cut passed or not
@@ -451,9 +470,17 @@ bool Selection::passAllBut(std::vector<int> indices){
 	  return true;
 }
 
-bool Selection::passAllBut(int i_cut){
-	  std::vector<int> index;
+bool Selection::passAllBut(unsigned int i_cut){
+	  std::vector<unsigned int> index;
 	  index.push_back(i_cut);
 	  return passAllBut(index);
 }
 
+// Checks if all cuts up to (and including) the given cut have passed
+// Cuts after the given cut index are ignored
+bool Selection::passAllUntil(unsigned int lastCutToApply){
+	for(unsigned int i_cut = 0; i_cut <= lastCutToApply; i_cut++){
+		if( !pass.at(i_cut) ) return false;
+	}
+	return true;
+}

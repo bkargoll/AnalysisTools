@@ -70,8 +70,12 @@ public:
 
 	// Final state: mu+tau
 	double Efficiency(double m, double m0, double sigma, double alpha, double n, double norm);
-	double HiggsTauTau_MuTau_Trigger_Mu(TLorentzVector vect);
-	double HiggsTauTau_MuTau_Trigger_Tau(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Mu_Eff_Data(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Mu_Eff_MC(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Mu_ScaleMCtoData(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Tau_Eff_Data(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Tau_Eff_MC(TLorentzVector vect);
+	double HiggsTauTau_MuTau_Trigger_Tau_ScaleMCtoData(TLorentzVector vect);
 
 private:
 	//

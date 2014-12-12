@@ -14,6 +14,9 @@ VBFLoose::VBFLoose(TString Name_, TString id_):
 	// run VBFLoose category
 	categoryFlag = "VBFLoose";
 
+	// run Categories using embedding
+	useEmbedding = true;
+
 	// run Categories using data-driven WJets BG
 	wJetsBGSource = "Data";
 
@@ -22,10 +25,10 @@ VBFLoose::VBFLoose(TString Name_, TString id_):
 }
 
 VBFLoose::~VBFLoose() {
-	  for(int j=0; j<Npassed.size(); j++){
+	  for(unsigned int j=0; j<Npassed.size(); j++){
 	    std::cout << "VBFLoose::~VBFLoose Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
-		 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
+		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
 	  std::cout << "VBFLoose::~VBFLoose()" << std::endl;
 }

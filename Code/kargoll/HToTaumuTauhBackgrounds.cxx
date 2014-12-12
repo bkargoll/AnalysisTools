@@ -17,6 +17,9 @@ HToTaumuTauhBackgrounds::HToTaumuTauhBackgrounds(TString Name_, TString id_):
 	// the numbers will be produced for all categories individually
 	categoryFlag = "NoCategory";
 
+	// run BG methods using DY-MC (to estimate DY yield)
+	useEmbedding = false;
+
 	// run Skim always using MC for WJets BG
 	wJetsBGSource = "MC";
 
@@ -25,10 +28,10 @@ HToTaumuTauhBackgrounds::HToTaumuTauhBackgrounds(TString Name_, TString id_):
 }
 
 HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds() {
-	  for(int j=0; j<Npassed.size(); j++){
+	  for(unsigned int j=0; j<Npassed.size(); j++){
 	    std::cout << "HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
-		 << Npassed.at(j).GetBinContent(NCuts) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
+		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
 	  std::cout << "HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds()" << std::endl;
 }
