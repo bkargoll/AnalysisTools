@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import ROOT
+execfile('loadPyRoot.py')
 import argparse
 import numpy
 

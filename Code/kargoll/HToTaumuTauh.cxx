@@ -74,20 +74,32 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	wJetsYieldMap.insert(std::pair<TString,double>("VBFTight",       4.89934663) );
 	wJetsYieldMap.insert(std::pair<TString,double>("Inclusive",  13295.55036387) );
 
-	// flat to switch data-driven QCD on/off
+	// flag to switch data-driven QCD on/off
 	// set to "true" if running analyses (i.e. in categories)
 	// set to "false" to estimate QCD yield
 	qcdShapeFromData = false;
 
 	// these are used to set the event yield for QCD
-	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetLow",  16235.46236044) );
-	qcdYieldMap.insert(std::pair<TString,double>("ZeroJetHigh",   465.59995267) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetLow",    4893.21983995) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetHigh",    264.47357676) );
-	qcdYieldMap.insert(std::pair<TString,double>("OneJetBoost",    56.94622289) );
-	qcdYieldMap.insert(std::pair<TString,double>("VBFLoose",       38.40373683) );
-	qcdYieldMap.insert(std::pair<TString,double>("VBFTight",        5.74384738) );
-	qcdYieldMap.insert(std::pair<TString,double>("Inclusive",   22157.13046410) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("ZeroJetLow",  16235.46236044) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("ZeroJetHigh",   465.59995267) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("OneJetLow",    4893.21983995) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("OneJetHigh",    264.47357676) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("OneJetBoost",    56.94622289) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("VBFLoose",       38.40373683) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("VBFTight",        5.74384738) );
+	qcdYieldABCDMap.insert(std::pair<TString,double>("Inclusive",   22157.13046410) );
+
+	// flag to enable efficiency method for data-driven QCD yield
+	// these numbers will only be used in the categories where they are available,
+	// in all other categories the yield from the ABCD method will be used
+	// (thus it is safe to set this flag globally here, no need to set it in individual categories)
+	// Attention: if flag "qcdShapeFromData" is set to "false", this flag has no effect
+	qcdUseEfficiencyMethod = true;
+
+	// these are used to set the event yield for QCD using the efficiency method
+	qcdYieldEffMap.insert(std::pair<TString,double>("OneJetBoost", 32.94421105));
+	qcdYieldEffMap.insert(std::pair<TString,double>("VBFLoose",    57.69432816));
+	qcdYieldEffMap.insert(std::pair<TString,double>("VBFTight",    1.42017411));
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
@@ -450,29 +462,8 @@ void  HToTaumuTauh::Setup(){
   JetsInEtaGap = HConfig.GetTH1D(Name+"_JetsInEtaGap","JetsInEtaGap",6,-0.5,5.5,"N(j in #eta gap)");
   JetsInvM = HConfig.GetTH1D(Name+"_JetsInvM","JetsInvM",100,0.,2000.,"m_{inv}(j^{1},j^{2})");
 
-  MetPhiMet10GeV = HConfig.GetTH1D(Name+"_MetPhiMet10GeV","MetPhiMet10GeV",50,-3.14159,3.14159,"#phi(E_{T}^{miss}) (E_{T}^{miss} > 10GeV)");
-  MtMet10GeV = HConfig.GetTH1D(Name+"_MtMet10GeV","MtMet10GeV",100,0.,200.,"m_{T}/GeV (E_{T}^{miss} > 10GeV)");
-  HiggsPtMet10GeV = HConfig.GetTH1D(Name+"_HiggsPtMet10GeV","HiggsPtMet10GeV",50,0.,200.,"p_{T}(H)/GeV (E_{T}^{miss} > 10GeV)");
-  HiggsPhiMet10GeV = HConfig.GetTH1D(Name+"_HiggsPhiMet10GeV","HiggsPhiMet10GeV",50,-3.14159,3.14159,"#phi(H) (E_{T}^{miss} > 10GeV)");
-  MetPhiMet20GeV = HConfig.GetTH1D(Name+"_MetPhiMet20GeV","MetPhiMet20GeV",50,-3.14159,3.14159,"#phi(E_{T}^{miss}) (E_{T}^{miss} > 20GeV)");
-  MtMet20GeV = HConfig.GetTH1D(Name+"_MtMet20GeV","MtMet20GeV",100,0.,200.,"m_{T}/GeV (E_{T}^{miss} > 20GeV)");
-  HiggsPtMet20GeV = HConfig.GetTH1D(Name+"_HiggsPtMet20GeV","HiggsPtMet20GeV",50,0.,200.,"p_{T}(H)/GeV (E_{T}^{miss} > 20GeV)");
-  HiggsPhiMet20GeV = HConfig.GetTH1D(Name+"_HiggsPhiMet20GeV","HiggsPhiMet20GeV",50,-3.14159,3.14159,"#phi(H) (E_{T}^{miss} > 20GeV)");
-
-  MtAfterMuon = HConfig.GetTH1D(Name+"_MtAfterMuon","MtAfterMuon",100,0.,200.,"m_{T}/GeV");
-  MtAfterDiMuonVeto = HConfig.GetTH1D(Name+"_MtAfterDiMuonVeto","MtAfterDiMuonVeto",100,0.,200.,"m_{T}/GeV");
-  MtAfterTau = HConfig.GetTH1D(Name+"_MtAfterTau","MtAfterTau",100,0.,200.,"m_{T}/GeV");
-  MtAfterTriLepVeto = HConfig.GetTH1D(Name+"_MtAfterTriLepVeto","MtAfterTriLepVeto",100,0.,200.,"m_{T}/GeV");
-  MtAfterOppCharge = HConfig.GetTH1D(Name+"_MtAfterOppCharge","MtAfterOppCharge",100,0.,200.,"m_{T}/GeV");
-  MtAfterBJetVeto = HConfig.GetTH1D(Name+"_MtAfterBJetVeto","MtAfterBJetVeto",100,0.,200.,"m_{T}/GeV");
-  MtOnlyTau = HConfig.GetTH1D(Name+"_MtOnlyTau","MtOnlyTau",100,0.,200.,"m_{T}/GeV");
-  MtOnlyTriLepVeto = HConfig.GetTH1D(Name+"_MtOnlyTriLepVeto","MtOnlyTriLepVeto",100,0.,200.,"m_{T}/GeV");
-  MtOnlyOppCharge = HConfig.GetTH1D(Name+"_MtOnlyOppCharge","MtOnlyOppCharge",100,0.,200.,"m_{T}/GeV");
-  MtOnlyBJet = HConfig.GetTH1D(Name+"_MtOnlyBJet","MtOnlyBJet",100,0.,200.,"m_{T}/GeV");
   MtMuPlusOnly = HConfig.GetTH1D(Name+"_MtMuPlusOnly","MtMuPlusOnly",100,0.,200.,"m_{T}/GeV");
   MtMuMinusOnly = HConfig.GetTH1D(Name+"_MtMuMinusOnly","MtMuMinusOnly",100,0.,200.,"m_{T}/GeV");
-  MtMuPlusOnlyBGSubt = HConfig.GetTH1D(Name+"_MtMuPlusOnlyBGSubt","MtMuPlusOnlyBGSubt",100,0.,200.,"m_{T}/GeV");
-  MtMuMinusOnlyBGSubt = HConfig.GetTH1D(Name+"_MtMuMinusOnlyBGSubt","MtMuMinusOnlyBGSubt",100,0.,200.,"m_{T}/GeV");
   Mt1ProngOnly = HConfig.GetTH1D(Name+"_Mt1ProngOnly","Mt1ProngOnly",100,0.,200.,"m_{T}/GeV");
   Mt3ProngOnly = HConfig.GetTH1D(Name+"_Mt3ProngOnly","Mt3ProngOnly",100,0.,200.,"m_{T}/GeV");
   Mt3ProngSV = HConfig.GetTH1D(Name+"_Mt3ProngSV","Mt3ProngSV",100,0.,200.,"m_{T}/GeV");
@@ -501,6 +492,13 @@ void  HToTaumuTauh::Setup(){
   embeddingWeight_TauSpinner = HConfig.GetTH1D(Name+"_embeddingWeight_TauSpinner","embeddingWeight_TauSpinner",50,0.,3.,"emb. TauSpinnerWeight");
   embeddingWeight_MinVisPtFilter = HConfig.GetTH1D(Name+"_embeddingWeight_MinVisPtFilter","embeddingWeight_MinVisPtFilter",50,0.,3.,"emb. MinVisPtFilter weight");
   embeddingWeight_SelEffWeight = HConfig.GetTH1D(Name+"_embeddingWeight_SelEffWeight","embeddingWeight_SelEffWeight",50,0.,3.,"emb. SelEffWeight");
+  HiggsGenPtWeight = HConfig.GetTH1D(Name+"_higgsPtWeight","higgsPtWeight",50,0.3,1.3,"higgsPtWeight");
+  HiggsGenPt = HConfig.GetTH1D(Name+"_higgsGenPt","higgsGenPt",10,0.,200.,"p_{T}(H_{gen})/GeV");
+
+  visibleMass = HConfig.GetTH1D(Name+"_visibleMass","visibleMass",100,0.,200.,"m_{vis}(#tau_{h},#mu)/GeV");
+
+  shape_VisM = HConfig.GetTH1D(Name+"_shape_VisM","shape_VisM",400,0.,400.,"m_{vis}(#tau_{h},#mu)/GeV");
+  shape_SVfitM = HConfig.GetTH1D(Name+"_shape_SVfitM","shape_SVfitM",400,0.,400.,"m_{SVfit}(#tau_{h},#mu)/GeV");
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
@@ -517,7 +515,7 @@ void  HToTaumuTauh::Setup(){
 	  configure_NoCategory();
   }
 
-  RSF = new ReferenceScaleFactors(runtype);
+  RSF = new ReferenceScaleFactors(runtype, false, false, true);
 }
 
 void HToTaumuTauh::Configure(){
@@ -630,29 +628,8 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&JetsInEtaGap);
  Extradist1d.push_back(&JetsInvM);
 
- Extradist1d.push_back(&MetPhiMet10GeV);
- Extradist1d.push_back(&MtMet10GeV);
- Extradist1d.push_back(&HiggsPtMet10GeV);
- Extradist1d.push_back(&HiggsPhiMet10GeV);
- Extradist1d.push_back(&MetPhiMet20GeV);
- Extradist1d.push_back(&MtMet20GeV);
- Extradist1d.push_back(&HiggsPtMet20GeV);
- Extradist1d.push_back(&HiggsPhiMet20GeV);
-
- Extradist1d.push_back(&MtAfterMuon);
- Extradist1d.push_back(&MtAfterDiMuonVeto);
- Extradist1d.push_back(&MtAfterTau);
- Extradist1d.push_back(&MtAfterTriLepVeto);
- Extradist1d.push_back(&MtAfterOppCharge);
- Extradist1d.push_back(&MtAfterBJetVeto);
- Extradist1d.push_back(&MtOnlyTau);
- Extradist1d.push_back(&MtOnlyTriLepVeto);
- Extradist1d.push_back(&MtOnlyOppCharge);
- Extradist1d.push_back(&MtOnlyBJet);
  Extradist1d.push_back(&MtMuPlusOnly);
  Extradist1d.push_back(&MtMuMinusOnly);
- Extradist1d.push_back(&MtMuPlusOnlyBGSubt);
- Extradist1d.push_back(&MtMuMinusOnlyBGSubt);
  Extradist1d.push_back(&Mt1ProngOnly);
  Extradist1d.push_back(&Mt3ProngOnly);
  Extradist1d.push_back(&Mt3ProngSV);
@@ -682,6 +659,13 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&embeddingWeight_TauSpinner);
  Extradist1d.push_back(&embeddingWeight_MinVisPtFilter);
  Extradist1d.push_back(&embeddingWeight_SelEffWeight);
+ Extradist1d.push_back(&HiggsGenPtWeight);
+ Extradist1d.push_back(&HiggsGenPt);
+
+ Extradist1d.push_back(&visibleMass);
+
+ Extradist1d.push_back(&shape_VisM);
+ Extradist1d.push_back(&shape_SVfitM);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -711,7 +695,7 @@ void  HToTaumuTauh::doEvent(){
 
   // set object corrections at beginning of each event to avoid segfaults
   // and to allow for using different corrections in different analyses
-  bool isSignal = ((id >= 10 && id <= 13) || (id >= 30 && id <= 33)) ? true : false;
+  bool isSignal = ((id >= 10 && id <= 13) || (id >= 30 && id <= 35)) ? true : false;
   if (isSignal) Ntp->SetTauCorrections(correctTaus);
   else			Ntp->SetTauCorrections("");
   Ntp->SetMuonCorrections(correctMuons);
@@ -797,7 +781,7 @@ void  HToTaumuTauh::doEvent(){
   for(unsigned i=0;i<Ntp->NMuons();i++){
 	  if( selectMuon_diMuonVeto(i, selVertex) ) {
 		  if (Ntp->Muon_Charge(i) == 1) {
-			  diMuonVetoMuonsPositive.push_back(i); // todo: be aware that there are -999 cases for charge track matching
+			  diMuonVetoMuonsPositive.push_back(i); // be aware that there are -999 cases for charge track matching
 		  }
 		  else if (Ntp->Muon_Charge(i) == -1) {
 			  diMuonVetoMuonsNegative.push_back(i);
@@ -951,8 +935,44 @@ void  HToTaumuTauh::doEvent(){
 		  selectedBJets.push_back(sortedPFJets.at(i_jet));
 	  }
   }
+  // collections used for synch exercise
   selJets = selectedJetsClean;
   selBJets = selectedBJets;
+  // jet collection used for categorization
+  std::vector<int> jetsForCategorization = selectedJets;
+
+  // looser jet selection (for QCD background method)
+  std::vector<int> selectedLooseJets;
+  for (unsigned i_jet = 0; i_jet < Ntp->NPFJets(); i_jet++){
+    if ( selectPFJet_Relaxed(sortedPFJets.at(i_jet), selMuon, selTau) ){
+  		selectedLooseJets.push_back(sortedPFJets.at(i_jet));
+    }
+  }
+
+  // QCD background method
+  bool isQCDShapeEvent = false;
+  if (qcdShapeFromData && Ntp->isData() && Ntp->GetMCID()!=DataMCType::DY_mutau_embedded){
+	  if (verbose) std::cout << "	QCD shape" << std::endl;
+	  // use anti-iso muons and SS for QCD shape
+	  if( !passedMu && hasAntiIsoMuon && !pass.at(OppCharge)){
+		 // use this data event for QCD shape
+		 isQCDShapeEvent = true;
+		 if (!HConfig.GetHisto(false, DataMCType::QCD, t)) {std::cout << "ERROR: failed to find id " << DataMCType::QCD << std::endl; return;}
+	  	 pass.at(OppCharge) = true;
+	  	 pass.at(NMuId) = true;
+	  	 pass.at(NMuKin) = true;
+
+	     // loosen jet requirement for VBF categories
+	     if (categoryFlag == "VBFLoose" || categoryFlag == "VBFTight"){
+	    	 jetsForCategorization = selectedLooseJets;
+		 }
+	     // loosen tau isolation for one jet boost category
+	     if (categoryFlag == "OneJetBoost"){
+			 pass.at(NTauIso) = hasRelaxedIsoTau;
+			 pass.at(NTauKin) = hasRelaxedIsoTau;
+	     }
+	 }
+  }
 
   // b-Jet veto
   if (verbose) std::cout << "	Cut: b-jet veto" << std::endl;
@@ -980,15 +1000,15 @@ void  HToTaumuTauh::doEvent(){
 
   // calculate jet-related variables used by categories
   if (verbose) std::cout << "	calculate VBF Jet variables" << std::endl;
-  unsigned nJets = selectedJets.size();
+  unsigned nJets = jetsForCategorization.size();
 
   if (nJets >= 2){
-	  double vbfJetEta1 = Ntp->PFJet_p4(selectedJets.at(0)).Eta();
-	  double vbfJetEta2 = Ntp->PFJet_p4(selectedJets.at(1)).Eta();
+	  double vbfJetEta1 = Ntp->PFJet_p4(jetsForCategorization.at(0)).Eta();
+	  double vbfJetEta2 = Ntp->PFJet_p4(jetsForCategorization.at(1)).Eta();
 	  selJetdeta = vbfJetEta1 - vbfJetEta2;
 
 	  int jetsInRapidityGap = 0;
-	  for(std::vector<int>::iterator it_jet = selectedJets.begin()+2; it_jet != selectedJets.end(); ++it_jet){
+	  for(std::vector<int>::iterator it_jet = jetsForCategorization.begin()+2; it_jet != jetsForCategorization.end(); ++it_jet){
 		  double etaPos = ( selJetdeta >= 0) ? vbfJetEta1 : vbfJetEta2;
 		  double etaNeg = ( selJetdeta >= 0) ? vbfJetEta2 : vbfJetEta1;
 		  if (	Ntp->PFJet_p4(*it_jet).Eta() > etaNeg &&
@@ -998,7 +1018,7 @@ void  HToTaumuTauh::doEvent(){
 	  }
 	  selNjetingap = jetsInRapidityGap;
 
-	  double invM = (Ntp->PFJet_p4(selectedJets.at(0)) + Ntp->PFJet_p4(selectedJets.at(1))).M();
+	  double invM = (Ntp->PFJet_p4(jetsForCategorization.at(0)) + Ntp->PFJet_p4(jetsForCategorization.at(1))).M();
 	  selMjj = invM;
   }
   else{
@@ -1025,14 +1045,32 @@ void  HToTaumuTauh::doEvent(){
 	  // todo: b-tag scale factors
 	  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#B_tag_scale_factors
   }
-  // embedding weights
+  // embedding weights (see Tau Meeting 05.01.2015, slide 29)
   if(Ntp->GetMCID() == DataMCType::DY_mutau_embedded){
+	  // embedding weights
 	  w *= Ntp->Embedding_TauSpinnerWeight();
 	  w *= Ntp->Embedding_MinVisPtFilter();
-	  w *= Ntp->Embedding_SelEffWeight(); // todo: clearify if this should be applied
+	  //w *= Ntp->Embedding_SelEffWeight(); // do NOT apply this weight for now, as it might not be modelled well enough
+	  // muon weights (apply muon ID weight, but not muon Iso weight)
+	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Id_Mu(Ntp->Muon_p4(selMuon));
+	  // tau ES
+	  if (selTau != -1 && Ntp->PFTau_hpsDecayMode(selTau) == 0) w *= 0.88;
 	  // apply data trigger efficiency to embedding
 	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Trigger_Mu_Eff_Data(Ntp->Muon_p4(selMuon));
 	  if (selTau != -1)  w *= RSF->HiggsTauTau_MuTau_Trigger_Tau_Eff_Data(Ntp->PFTau_p4(selTau));
+  }
+  // Higgs pT reweighting
+  double higgs_GenPtWeight = -999;
+  double higgs_GenPt = -999;
+  if (id >= DataMCType::H_tautau && id <= DataMCType::H_tautau_WHZHTTH) {
+  	  for (unsigned i_gen = 0; i_gen < Ntp->NMCParticles(); i_gen++) {
+  	  	  if (Ntp->MCParticle_pdgid(i_gen) == PDGInfo::Higgs0) {
+  	  		  TLorentzVector genH_p4 = Ntp->MCParticle_p4(i_gen);
+  	  		  higgs_GenPtWeight = RSF->HiggsPtWeight_M125(genH_p4);
+  	  		  higgs_GenPt = genH_p4.Pt();
+  	  		  w *= higgs_GenPtWeight;
+  	  	  }
+  	  }
   }
 
   // define booleans for different stages of selection
@@ -1041,8 +1079,8 @@ void  HToTaumuTauh::doEvent(){
   // remove some cuts for smoother WJet shape
   if (verbose) std::cout << "	WJet shape" << std::endl;
   isWJetMC = (Ntp->GetMCID() >= DataMCType::W_lnu) && (Ntp->GetMCID() <= DataMCType::W_taunu);
-  bool useRelaxedForPlots =  (wJetsBGSource == "Data") && isWJetMC; // overwrite pass-vector with relaxed categories (for WJets shape) only if wanted
-  if (useRelaxedForPlots) {
+  bool isWJetShapeEvent =  (wJetsBGSource == "Data") && isWJetMC; // overwrite pass-vector with relaxed categories (for WJets shape) only if wanted
+  if (isWJetShapeEvent) {
 	  // disable OS requirement for WJets shape in VBFLoose, VBFTight and 1JetBoost categories
 	  if (categoryFlag == "VBFLoose" || categoryFlag == "VBFTight" || categoryFlag == "OneJetBoost")
 		  pass.at(OppCharge) = true;
@@ -1051,20 +1089,7 @@ void  HToTaumuTauh::doEvent(){
 		  pass.at(NTauIso) = hasRelaxedIsoTau;
 		  pass.at(NTauKin) = hasRelaxedIsoTau;
 	  }
-  }
-
-  // QCD background method
-  if (verbose) std::cout << "	QCD shape" << std::endl;
-  // use anti-iso muons and SS for QCD shape
-  bool isQCDShapeEvent = passedFullInclusiveNoTauNoMuNoCharge && passedTau && !passedMu && hasAntiIsoMuon && !pass.at(OppCharge);
-  if(isQCDShapeEvent && qcdShapeFromData){ // only apply QCD shape method for categories, not for Background class
-	  if(Ntp->isData()){
-		  if(!HConfig.GetHisto(false,DataMCType::QCD,t)){ std::cout << "failed to find id "<< DataMCType::QCD <<std::endl; return;}
-		  pass.at(OppCharge) = true;
-		  pass.at(NMuId) = true;
-		  pass.at(NMuKin) = true;
-	  }
-	  // todo: subtract background or not??
+	  // relaxed category definitions are run further below
   }
 
   // re-define booleans as they might have changed for background methods
@@ -1083,10 +1108,10 @@ void  HToTaumuTauh::doEvent(){
   passed_NoCategory	= category_NoCategory();
 
   // run relaxed categories for background methods
-  // VBFTight: full category selection for shape
-  passed_VBFTightRelaxed = helperCategory_VBFTightRelaxed_WYield(false, nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
-  // VBFLoose: relaxed category selection for shape
-  passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed_WYieldShape(useRelaxedForPlots, nJets, selJetdeta, selNjetingap, selMjj);
+  // VBFTight: full category selection for shape in WJets, relaxed in QCD
+  passed_VBFTightRelaxed = helperCategory_VBFTightRelaxed(isQCDShapeEvent, nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
+  // VBFLoose: relaxed category selection for shape in both WJets and QCD
+  passed_VBFLooseRelaxed = helperCategory_VBFLooseRelaxed(isWJetShapeEvent || isQCDShapeEvent, nJets, selJetdeta, selNjetingap, selMjj);
 
   // fill plot checking if multiple categories have passed
   // this should never happen (except for WJets MC events when running with the "Data" flag)
@@ -1185,6 +1210,7 @@ void  HToTaumuTauh::doEvent(){
 	  MuTauDPt   .at(t).Fill( Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt(), w );
 	  MuTauRelDPt.at(t).Fill( (Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt()) / Ntp->Muon_p4(selMuon).Pt() , w);
 	  MuPtVsTauPt.at(t).Fill( Ntp->Muon_p4(selMuon).Pt(), Ntp->PFTau_p4(selTau).Pt(), w );
+	  visibleMass.at(t).Fill( (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
 
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
@@ -1235,16 +1261,29 @@ void  HToTaumuTauh::doEvent(){
 	  }
 	  NJetsId.at(t).Fill( selectedJets.size(), w);
 	  if (selectedJets.size() > 0){
-		  Jet1Pt.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(0)).Pt(), w);
-		  Jet1Eta.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(0)).Eta(), w);
-		  Jet1Phi.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(0)).Phi(), w);
-	  	  Jet1IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(selectedJets.at(0)) > cCat_btagDisc , w);
+		  Jet1Pt.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(0)).Pt(), w);
+		  Jet1Eta.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(0)).Eta(), w);
+		  Jet1Phi.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(0)).Phi(), w);
+	  	  Jet1IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(jetsForCategorization.at(0)) > cCat_btagDisc , w);
 	  }
 	  if (selectedJets.size() > 1){
-		  Jet2Pt.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(1)).Pt(), w);
-		  Jet2Eta.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(1)).Eta(), w);
-		  Jet2Phi.at(t).Fill( Ntp->PFJet_p4(selectedJets.at(1)).Phi(), w);
-		  Jet2IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(selectedJets.at(1)) > cCat_btagDisc, w);
+		  Jet2Pt.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(1)).Pt(), w);
+		  Jet2Eta.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(1)).Eta(), w);
+		  Jet2Phi.at(t).Fill( Ntp->PFJet_p4(jetsForCategorization.at(1)).Phi(), w);
+		  Jet2IsB.at(t).Fill( Ntp->PFJet_bDiscriminator(jetsForCategorization.at(1)) > cCat_btagDisc, w);
+	  }
+
+	  // plot embedding weights
+	  if (Ntp->GetMCID() == DataMCType::DY_mutau_embedded){
+		  embeddingWeight_TauSpinner.at(t).Fill(Ntp->Embedding_TauSpinnerWeight()); // no weight applied
+		  embeddingWeight_SelEffWeight.at(t).Fill(Ntp->Embedding_SelEffWeight()); // no weight applied
+		  embeddingWeight_MinVisPtFilter.at(t).Fill(Ntp->Embedding_MinVisPtFilter()); // no weight applied
+	  }
+
+	  // plot Higgs pT weight
+	  if (id >= DataMCType::H_tautau && id <= DataMCType::H_tautau_WHZHTTH) {
+		  HiggsGenPtWeight.at(t).Fill(higgs_GenPtWeight); // no weight applied
+		  HiggsGenPt.at(t).Fill(higgs_GenPt, w);
 	  }
 
 	  // variables for categorization
@@ -1254,49 +1293,23 @@ void  HToTaumuTauh::doEvent(){
 	  JetsInEtaGap.at(t).Fill(selNjetingap , w);
 	  JetsInvM.at(t).Fill(selMjj , w);
 
-
-	  // additional MET cut for studies of MET phi variation
-	  if(Ntp->MET_CorrMVAMuTau_et() > 10.){
-		  MetPhiMet10GeV.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		  MtMet10GeV.at(t).Fill(value.at(MT), w);
-		  HiggsPtMet10GeV.at(t).Fill(higgsPt, w);
-		  HiggsPhiMet10GeV.at(t).Fill(higgsPhi, w);
-	  }
-	  if(Ntp->MET_CorrMVAMuTau_et() > 20.){
-		  MetPhiMet20GeV.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		  MtMet20GeV.at(t).Fill(value.at(MT), w);
-		  HiggsPtMet20GeV.at(t).Fill(higgsPt, w);
-		  HiggsPhiMet20GeV.at(t).Fill(higgsPhi, w);
+	  // QCD shape region
+	  if(Ntp->GetMCID() == DataMCType::QCD){
+		  double mvis = (Ntp->Muon_p4(selMuon) + Ntp->PFTau_p4(selTau)).M();
+		  CatInclusiveQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_ZeroJetLow) Cat0JetLowQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_ZeroJetHigh) Cat0JetHighLowQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_OneJetLow) Cat1JetLowQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_OneJetHigh) Cat1JetHighQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_OneJetBoost) Cat1JetBoostQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_VBFLoose) CatVBFLooseQcdShapeRegion.at(t).Fill(mvis, w);
+		  if(passed_VBFTight) CatVBFTightQcdShapeRegion.at(t).Fill(mvis, w);
 	  }
   }
 
-  // mT plots after various selection stages
-  if(passedMu) MtAfterMuon.at(t).Fill(value.at(MT), w);
-  if(passedMu && pass.at(DiMuonVeto)) MtAfterDiMuonVeto.at(t).Fill(value.at(MT), w);
-  if(passedDiMuonVeto) MtAfterTau.at(t).Fill(value.at(MT), w);
-  if(passedDiMuonVeto && pass.at(TriLeptonVeto)) MtAfterTriLepVeto.at(t).Fill(value.at(MT), w);
-  if(passedDiMuonVeto && pass.at(TriLeptonVeto) && pass.at(OppCharge)) MtAfterOppCharge.at(t).Fill(value.at(MT), w);
-  if(passedDiMuonVeto && pass.at(TriLeptonVeto) && pass.at(OppCharge) && pass.at(BJetVeto)) MtAfterBJetVeto.at(t).Fill(value.at(MT), w);
-  if(passedObjects) MtOnlyTau.at(t).Fill(value.at(MT), w);
-  if(passedMu && pass.at(TriLeptonVeto)) MtOnlyTriLepVeto.at(t).Fill(value.at(MT), w);
-  if(passedMu && pass.at(OppCharge)) MtOnlyOppCharge.at(t).Fill(value.at(MT), w);
-  if(passedMu && pass.at(BJetVeto)) MtOnlyBJet.at(t).Fill(value.at(MT), w);
   if(passedFullInclusiveSelNoMt){
 	  if(Ntp->Muon_Charge(selMuon) > 0) MtMuPlusOnly.at(t).Fill(value.at(MT), w);
 	  if(Ntp->Muon_Charge(selMuon) < 0) MtMuMinusOnly.at(t).Fill(value.at(MT), w);
-
-	  if( (id >= DataMCType::W_lnu && id <= DataMCType::W_taunu) || Ntp->isData()){
-		  // fill WJets and data normally
-		  if(Ntp->Muon_Charge(selMuon) > 0) MtMuPlusOnlyBGSubt.at(t).Fill(value.at(MT), w);
-		  if(Ntp->Muon_Charge(selMuon) < 0) MtMuMinusOnlyBGSubt.at(t).Fill(value.at(MT), w);
-	  }
-	  else {
-		  // subtract other backgrounds from data
-		  unsigned dataHist;
-		  if(!HConfig.GetHisto(true,id,dataHist)){ std::cout << "failed to find data histogram" <<std::endl; return;}
-		  if(Ntp->Muon_Charge(selMuon) > 0) MtMuPlusOnlyBGSubt.at(dataHist).Fill(value.at(MT), -1*w);
-		  if(Ntp->Muon_Charge(selMuon) < 0) MtMuMinusOnlyBGSubt.at(dataHist).Fill(value.at(MT), -1*w);
-	  }
 
 	  MetPtNoMtCut.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
 	  MetPhiNoMtCut.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
@@ -1319,13 +1332,6 @@ void  HToTaumuTauh::doEvent(){
 				  Mt3ProngSVFlight.at(t).Fill(value.at(MT), w);
 			  }
 		  }
-	  }
-
-	  // plot embedding weights (before mT cut)
-	  if (Ntp->GetMCID() == DataMCType::DY_mutau_embedded){
-		  embeddingWeight_TauSpinner.at(t).Fill(Ntp->Embedding_TauSpinnerWeight());
-		  embeddingWeight_SelEffWeight.at(t).Fill(Ntp->Embedding_SelEffWeight());
-		  embeddingWeight_MinVisPtFilter.at(t).Fill(Ntp->Embedding_MinVisPtFilter());
 	  }
   }
 
@@ -1361,18 +1367,10 @@ void  HToTaumuTauh::doEvent(){
 	  }
   }
 
-  //////// plots about background methods /////////
-  // QCD shape region
-  if(isQCDShapeEvent){
-	  double mvis = (Ntp->Muon_p4(selMuon) + Ntp->PFTau_p4(selTau)).M();
-	  CatInclusiveQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_ZeroJetLow) Cat0JetLowQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_ZeroJetHigh) Cat0JetHighLowQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_OneJetLow) Cat1JetLowQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_OneJetHigh) Cat1JetHighQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_OneJetBoost) Cat1JetBoostQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_VBFLoose) CatVBFLooseQcdShapeRegion.at(t).Fill(mvis, w);
-	  if(passed_VBFTight) CatVBFTightQcdShapeRegion.at(t).Fill(mvis, w);
+  //////// plots filled after full selection for datacard creation
+  if(status){
+	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
+	  //shape_SVfitM.at(t).Fill(svfitmass, w);
   }
 }
 
@@ -1430,8 +1428,19 @@ void HToTaumuTauh::Finish() {
 			else{
 				double rawQcdShapeEvents = Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1);
 				// scale QCD histograms to data-driven yields
-				ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD), qcdYieldMap[categoryFlag] / rawQcdShapeEvents);
-				printf("QCD histogram was scaled from yield %f to yield %f \n", rawQcdShapeEvents, Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1));
+				TString method;
+				if(qcdUseEfficiencyMethod && (qcdYieldEffMap.find(categoryFlag) != qcdYieldEffMap.end()) ) {
+					// use efficiency method for QCD yield
+					ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD), qcdYieldEffMap[categoryFlag] / rawQcdShapeEvents);
+					method = "efficiency";
+				}
+				else{
+					// use ABCD method for QCD yield
+					ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD), qcdYieldABCDMap[categoryFlag] / rawQcdShapeEvents);
+					method = "ABCD";
+				}
+
+				printf("QCD histogram was scaled from yield %f to yield %f (using %s method)\n", rawQcdShapeEvents, Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1), method.Data());
 			}
 		}
 		else
@@ -1491,8 +1500,6 @@ void HToTaumuTauh::Finish() {
 	// call GetHistoInfo here (instead of in Configure function), otherwise the SetCrossSection calls are not reflected
 	HConfig.GetHistoInfo(types, CrossSectionandAcceptance, legend, colour);
 	Selection::Finish();
-
-	// todo: implement cross check: Integral in WJet plot <-> yield from background method
 
 }
 
@@ -1573,7 +1580,7 @@ bool HToTaumuTauh::selectElectron_triLeptonVeto(unsigned i, unsigned i_vtx, std:
 //	}
 
 	if ( 	Ntp->isSelectedElectron(i,i_vtx,0.045,0.2) &&
-			//TODO: This electron isolation is using rho corrections, but should use deltaBeta corrections
+			//This electron isolation is using rho corrections, but should use deltaBeta corrections
 			//documentation: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaEARhoCorrection
 			Ntp->Electron_RelIso03(i) < 0.3 && // "For electron the default cone size if 0.3" https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaPFBasedIsolation#Alternate_code_to_calculate_PF_I
 			Ntp->Electron_p4(i).Pt() > 10.0 &&
@@ -1606,7 +1613,7 @@ bool HToTaumuTauh::selectPFTau_Id(unsigned i, std::vector<int> muonCollection){
 	}
 	// trigger matching
 	if (Ntp->GetMCID() != DataMCType::DY_mutau_embedded){
-		if (Ntp->matchTrigger(Ntp->PFTau_p4(i),cTriggerNames,"tau") > cMu_dRHltMatch) {
+		if (Ntp->matchTrigger(Ntp->PFTau_p4(i),cTriggerNames,"tau") > cTau_dRHltMatch) {
 			return false;
 		}
 	}
@@ -1663,6 +1670,17 @@ bool HToTaumuTauh::selectPFJet_Kinematics(unsigned i){
 	return false;
 }
 
+bool HToTaumuTauh::selectPFJet_Relaxed(unsigned i, int selectedMuon, int selectedTau){
+	if ( 	selectPFJet_Cleaning(i, selectedMuon, selectedTau) &&
+			fabs(Ntp->PFJet_p4(i).Eta()) < 4.7 &&
+			Ntp->PFJet_p4(i).Pt() > 20.0 &&
+			selectPFJet_Id(i)
+			){
+		return true;
+	}
+	return false;
+}
+
 bool HToTaumuTauh::selectPFJet_Id(unsigned i){
 	if (	Ntp->PFJet_PUJetID_looseWP(i) ){
 		return true;
@@ -1691,7 +1709,6 @@ bool HToTaumuTauh::selectBJet(unsigned i, int selectedMuon, int selectedTau){
 //// *****functions defining the categories*****
 
 void HToTaumuTauh::configure_VBFTight(){
-	//todo: move to category classes
 	// to be called only if VBFTight is chosen category
 
 	// set cut values to be the cut values of this category
@@ -2339,7 +2356,7 @@ bool HToTaumuTauh::migrateCategoryIntoMain(TString thisCategory, std::vector<flo
 }
 
 // helper category definitions for background methods
-bool HToTaumuTauh::helperCategory_VBFLooseRelaxed_WYieldShape(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj){
+bool HToTaumuTauh::helperCategory_VBFLooseRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj){
 	std::vector<float> value_VBFLooseRelaxed;
 	std::vector<float> pass_VBFLooseRelaxed;
 
@@ -2375,7 +2392,7 @@ bool HToTaumuTauh::helperCategory_VBFLooseRelaxed_WYieldShape(bool useRelaxedFor
 	TString cat = useRelaxedForPlots ? "VBFLoose" : "DoNotUseThisCategoryForPlotting";
 	return migrateCategoryIntoMain(cat,value_VBFLooseRelaxed, pass_VBFLooseRelaxed,VbfLoose_NCuts);
 }
-bool HToTaumuTauh::helperCategory_VBFTightRelaxed_WYield(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt){
+bool HToTaumuTauh::helperCategory_VBFTightRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt){
 	std::vector<float> value_VBFTightRelaxed;
 	std::vector<float> pass_VBFTightRelaxed;
 
@@ -2411,6 +2428,7 @@ bool HToTaumuTauh::helperCategory_VBFTightRelaxed_WYield(bool useRelaxedForPlots
 	TString cat = useRelaxedForPlots ? "VBFTight" : "DoNotUseThisCategoryForPlotting";
 	return migrateCategoryIntoMain(cat,value_VBFTightRelaxed, pass_VBFTightRelaxed,VbfTight_NCuts);
 }
+
 
 void HToTaumuTauh::setStatusBooleans(bool resetAll){
 	if(resetAll){

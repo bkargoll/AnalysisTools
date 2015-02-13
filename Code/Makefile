@@ -75,7 +75,7 @@ ifdef USE_inugent
 endif
 
 ifdef USE_kargoll
-	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive
+	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive MCDecayChain
 	DEFS += -DUSE_kargoll=1
 endif 
 
@@ -86,7 +86,7 @@ ifndef USE_TauSpinner
 	SHAREDLIBFLAGS +=	-L./TauSpiner/lhapdf/lib -lLHAPDF
 	SHAREDCXXFLAGS +=	-I./TauSpiner/lhapdf/include/
 endif
-	TARGETS += PDFweights ZtoEMu ZtoEMu_Skim
+	TARGETS += PDFweights ZtoEMu Tvariable_Base Tvariable_EE Tvariable_MuMu Tvariable_EMu
 	DEFS += -DUSE_nehrkorn=1
 endif
 

@@ -16,7 +16,7 @@ class ReferenceScaleFactors {
 
 public:
 
-	ReferenceScaleFactors(int runType);
+	ReferenceScaleFactors(int runType, bool load_ElectronID = true, bool load_EMuTriggerEff = true, bool load_HiggsPtWeights = true);
 	virtual ~ReferenceScaleFactors();
 
 	// Muon Id scale factors
@@ -77,7 +77,15 @@ public:
 	double HiggsTauTau_MuTau_Trigger_Tau_Eff_MC(TLorentzVector vect);
 	double HiggsTauTau_MuTau_Trigger_Tau_ScaleMCtoData(TLorentzVector vect);
 
+	// Higgs pT reweighting
+	double HiggsPtWeight_M125(TLorentzVector vect, TString shift = "nominal");
+
 private:
+	// booleans to switch on/off individual scale factors
+	bool loadElectronID;
+	bool loadEMuTriggerEff;
+	bool loadHiggsPtWeights;
+
 	//
 	// Root files for scale factors
 	//
@@ -88,6 +96,8 @@ private:
 	TFile* ERecoEffFile;
 	// Trigger efficiencies
 	TFile* HWW_TriggerEfficiencies;
+	// Higgs pT reweighting
+	TFile* HiggsPtWeightM125File;
 
 	//
 	// Histograms for scale factors
@@ -114,7 +124,10 @@ private:
 	TH1D* HiggsWW_EMu_DoubleMuTrail12;
 	TH1D* HiggsWW_EMu_DoubleMuTrail21;
 	TH1D* HiggsWW_EMu_DoubleMuTrail25;
-
+	// Higgs pT reweighting
+	TH1D* HiggsPtWeightM125Nominal;
+	TH1D* HiggsPtWeightM125Down;
+	TH1D* HiggsPtWeightM125Up;
 };
 
 

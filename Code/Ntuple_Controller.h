@@ -97,6 +97,9 @@ class Ntuple_Controller{
   void doMET();
   unsigned int ObjEvent;
 
+  // helper function for MC decay tree drawer
+  void printMCDecayChain(unsigned int par, unsigned int level = 0, bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false);
+
   // Object Variables
   std::vector<TLorentzVector> electrons_default;
   std::vector<TLorentzVector> photons_default;
@@ -188,8 +191,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   void SetElecCorrections(TString elecCorr){elecCorrection = elecCorr;}
   void SetJetCorrections(TString jetCorr){jetCorrection = jetCorr;}
 
-  // Physics Varible Get Functions
-  // Event Varibles
+  // Physics Variable Get Functions
+  // Event Variables
   int GetMCID();
   unsigned int RunNumber(){return Ntp->Event_RunNumber;}
   unsigned int EventNumber(){ return Ntp->Event_EventNumber;}
@@ -199,23 +202,23 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   float           PileupInfo_TrueNumInteractions_nm1(){return Ntp->PileupInfo_TrueNumInteractions_nm1;}
   float           PileupInfo_TrueNumInteractions_n0(){return Ntp->PileupInfo_TrueNumInteractions_n0;}
   float           PileupInfo_TrueNumInteractions_np1(){return Ntp->PileupInfo_TrueNumInteractions_np1;}
-  double        PUWeight(){return Ntp->PUWeight;}
-  double        PUWeight_p5(){return Ntp->PUWeight_p5;}
-  double        PUWeight3D_m5(){return Ntp->PUWeight3D_m5;}
-  double        PUWeight3D(){return Ntp->PUWeight3D;}
-  double        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
-  double        PUWeight_m5(){return Ntp->PUWeight_m5;}
-  double		PUWeightFineBins(){return Ntp->PUWeightFineBins;}
+  float        PUWeight(){return Ntp->PUWeight;}
+  float        PUWeight_p5(){return Ntp->PUWeight_p5;}
+  float        PUWeight3D_m5(){return Ntp->PUWeight3D_m5;}
+  float        PUWeight3D(){return Ntp->PUWeight3D;}
+  float        PUWeight3D_p5(){return Ntp->PUWeight3D_p5;}
+  float        PUWeight_m5(){return Ntp->PUWeight_m5;}
+  float		   PUWeightFineBins(){return Ntp->PUWeightFineBins;}
 
   // embedding
-  double	Embedding_TauSpinnerWeight(){return Ntp->TauSpinnerWeight;};
-  double 	Embedding_SelEffWeight(){return Ntp->SelEffWeight;}
-  double 	Embedding_MinVisPtFilter(){return Ntp->MinVisPtFilter;}
-  double 	Embedding_KinWeightPt(){return Ntp->KinWeightPt;}
-  double 	Embedding_KinWeightEta(){return Ntp->KinWeightEta;}
-  double 	Embedding_KinWeightMassPt(){return Ntp->KinWeightMassPt;}
+  float		Embedding_TauSpinnerWeight(){return Ntp->TauSpinnerWeight;};
+  float 	Embedding_SelEffWeight(){return Ntp->SelEffWeight;}
+  float 	Embedding_MinVisPtFilter(){return Ntp->MinVisPtFilter;}
+  float 	Embedding_KinWeightPt(){return Ntp->KinWeightPt;}
+  float 	Embedding_KinWeightEta(){return Ntp->KinWeightEta;}
+  float 	Embedding_KinWeightMassPt(){return Ntp->KinWeightMassPt;}
   // don't use this combined weight blindly. Check which weights you should apply.
-  double	EmbeddedWeight(){
+  float		EmbeddedWeight(){
 	  return Ntp->TauSpinnerWeight * Ntp->SelEffWeight * Ntp->MinVisPtFilter * Ntp->KinWeightPt * Ntp->KinWeightEta * Ntp->KinWeightMassPt;
   }
 
@@ -232,15 +235,15 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
     return BS_cov;
   }
   
-  float  beamspot_emittanceX(){return Ntp->beamspot_emittanceX;}
-  float  beamspot_emittanceY(){return Ntp->beamspot_emittanceY;}
-  float  beamspot_betaStar(){return Ntp->beamspot_betaStar;}
+  double  beamspot_emittanceX(){return Ntp->beamspot_emittanceX;}
+  double  beamspot_emittanceY(){return Ntp->beamspot_emittanceY;}
+  double  beamspot_betaStar(){return Ntp->beamspot_betaStar;}
 
   // Vertex Information
   unsigned int NVtx(){return Ntp->Vtx_ndof->size();}
   TVector3     Vtx(unsigned int i){return TVector3(Ntp->Vtx_x->at(i),Ntp->Vtx_y->at(i),Ntp->Vtx_z->at(i));}
-  float        Vtx_chi2(unsigned int i){return Ntp->Vtx_chi2->at(i);}
-  float        Vtx_nTrk(unsigned int i){return Ntp->Vtx_nTrk->at(i);}
+  double       Vtx_chi2(unsigned int i){return Ntp->Vtx_chi2->at(i);}
+  unsigned     Vtx_nTrk(unsigned int i){return Ntp->Vtx_nTrk->at(i);}
   float        Vtx_ndof(unsigned int i){return Ntp->Vtx_ndof->at(i);}
   TMatrixF     Vtx_Cov(unsigned int i);
   std::vector<int>  Vtx_Track_idx(unsigned int i){return Ntp->Vtx_Track_idx->at(i);}
@@ -265,25 +268,25 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   float          Muon_emVetoEt03(unsigned int i){return Ntp->Muon_emVetoEt03->at(i);}
   float          Muon_hadEt03(unsigned int i){return Ntp->Muon_hadEt03->at(i);}
   float          Muon_hadVetoEt03(unsigned int i){return Ntp->Muon_hadVetoEt03->at(i);}
-  float          Muon_nJets03(unsigned int i){return Ntp->Muon_nJets03->at(i);}
-  float          Muon_nTracks03(unsigned int i){return Ntp->Muon_nTracks03->at(i);}
+  int 	         Muon_nJets03(unsigned int i){return Ntp->Muon_nJets03->at(i);}
+  int            Muon_nTracks03(unsigned int i){return Ntp->Muon_nTracks03->at(i);}
   float          Muon_sumPt03(unsigned int i){return Ntp->Muon_sumPt03->at(i);}
   float          Muon_trackerVetoPt03(unsigned int i){return Ntp->Muon_trackerVetoPt03->at(i);}
   float          Muon_emEt05(unsigned int i){return Ntp->Muon_emEt05->at(i);}
   float          Muon_emVetoEt05(unsigned int i){return Ntp->Muon_emVetoEt05->at(i);}
   float          Muon_hadEt05(unsigned int i){return Ntp->Muon_hadEt05->at(i);}
   float          Muon_hadVetoEt05(unsigned int i){return Ntp->Muon_hadVetoEt05->at(i);}
-  float          Muon_nJets05(unsigned int i){return Ntp->Muon_nJets05->at(i);}
-  float          Muon_nTracks05(unsigned int i){return Ntp->Muon_nTracks05->at(i);}
+  int            Muon_nJets05(unsigned int i){return Ntp->Muon_nJets05->at(i);}
+  int            Muon_nTracks05(unsigned int i){return Ntp->Muon_nTracks05->at(i);}
   float          Muon_sumPt05(unsigned int i){return Ntp->Muon_sumPt05->at(i);}
   float          Muon_trackerVetoPt05(unsigned int i){return Ntp->Muon_trackerVetoPt05->at(i);}
   unsigned int   Muon_Track_idx(unsigned int i){return Ntp->Muon_Track_idx->at(i);}
-  float          Muon_hitPattern_pixelLayerwithMeas(unsigned int i){return Ntp->Muon_hitPattern_pixelLayerwithMeas->at(i);}
-  float          Muon_numberOfMatchedStations(unsigned int i){return Ntp->Muon_numberOfMatchedStations->at(i);}
+  int            Muon_hitPattern_pixelLayerwithMeas(unsigned int i){return Ntp->Muon_hitPattern_pixelLayerwithMeas->at(i);}
+  int            Muon_numberOfMatchedStations(unsigned int i){return Ntp->Muon_numberOfMatchedStations->at(i);}
   float          Muon_normChi2(unsigned int i){return Ntp->Muon_normChi2->at(i);}
-  float          Muon_hitPattern_numberOfValidMuonHits(unsigned int i){return Ntp->Muon_hitPattern_numberOfValidMuonHits->at(i);}
-  float          Muon_innerTrack_numberofValidHits(unsigned int i){return Ntp->Muon_innerTrack_numberofValidHits->at(i);}
-  float          Muon_numberOfMatches(unsigned int i){return Ntp->Muon_numberOfMatches->at(i);}
+  int            Muon_hitPattern_numberOfValidMuonHits(unsigned int i){return Ntp->Muon_hitPattern_numberOfValidMuonHits->at(i);}
+  int            Muon_innerTrack_numberofValidHits(unsigned int i){return Ntp->Muon_innerTrack_numberofValidHits->at(i);}
+  int            Muon_numberOfMatches(unsigned int i){return Ntp->Muon_numberOfMatches->at(i);}
   int            Muon_numberOfChambers(unsigned int i){return Ntp->Muon_numberOfChambers->at(i);}
   int            Muon_Charge(unsigned int i){return Ntp->Muon_charge->at(i);}
   int            Muon_trackCharge(unsigned int i){return Ntp->Muon_trackCharge->at(i);}
@@ -380,8 +383,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool PFTau_TIP_hassecondaryVertex(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_pos->at(i).size()==3)return true; return false;}
    TVector3 PFTau_TIP_secondaryVertex_pos(unsigned int i){return  TVector3(Ntp->PFTau_TIP_secondaryVertex_pos->at(i).at(0),Ntp->PFTau_TIP_secondaryVertex_pos->at(i).at(1),Ntp->PFTau_TIP_secondaryVertex_pos->at(i).at(2));}
    TMatrixTSym<double> PFTau_TIP_secondaryVertex_cov(unsigned int i);
-   float PFTau_TIP_secondaryVertex_vtxchi2(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).at(0); return 0;}
-   float PFTau_TIP_secondaryVertex_vtxndof(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).at(0);  return 0;}
+   double PFTau_TIP_secondaryVertex_vtxchi2(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).at(0); return 0;}
+   double PFTau_TIP_secondaryVertex_vtxndof(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).at(0);  return 0;}
    bool PFTau_TIP_hasA1Momentum(unsigned int i){if(Ntp->PFTau_a1_lvp->at(i).size()==LorentzVectorParticle::NLorentzandVertexPar)return true; return false;}
    LorentzVectorParticle PFTau_a1_lvp(unsigned int i);
    TLorentzVector PFTau_3PS_A1_LV(unsigned int i){return PFTau_a1_lvp(i).LV();}
@@ -486,22 +489,22 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector     PFJet_p4(unsigned int i, TString corr = "default");
    float              PFJet_chargedEmEnergy(unsigned int i){return Ntp->PFJet_chargedEmEnergy->at(i);}
    float              PFJet_chargedHadronEnergy(unsigned int i){return Ntp->PFJet_chargedHadronEnergy->at(i);}
-   float              PFJet_chargedHadronMultiplicity(unsigned int i){return Ntp->PFJet_chargedHadronMultiplicity->at(i);}
+   int	              PFJet_chargedHadronMultiplicity(unsigned int i){return Ntp->PFJet_chargedHadronMultiplicity->at(i);}
    float              PFJet_chargedMuEnergy(unsigned int i){return Ntp->PFJet_chargedMuEnergy->at(i);}
-   float              PFJet_chargedMultiplicity(unsigned int i){return Ntp->PFJet_chargedMultiplicity->at(i);}
+   int	              PFJet_chargedMultiplicity(unsigned int i){return Ntp->PFJet_chargedMultiplicity->at(i);}
    float              PFJet_electronEnergy(unsigned int i){return Ntp->PFJet_electronEnergy->at(i);}
-   float              PFJet_electronMultiplicity(unsigned int i){return Ntp->PFJet_electronMultiplicity->at(i);}
+   int	              PFJet_electronMultiplicity(unsigned int i){return Ntp->PFJet_electronMultiplicity->at(i);}
    float              PFJet_HFEMEnergy(unsigned int i){return Ntp->PFJet_HFEMEnergy->at(i);}
-   float              PFJet_HFEMMultiplicity(unsigned int i){return Ntp->PFJet_HFEMMultiplicity->at(i);}
+   int	              PFJet_HFEMMultiplicity(unsigned int i){return Ntp->PFJet_HFEMMultiplicity->at(i);}
    float              PFJet_HFHadronEnergy(unsigned int i){return Ntp->PFJet_HFHadronEnergy->at(i);}
-   float              PFJet_HFHadronMultiplicity(unsigned int i){return Ntp->PFJet_HFHadronMultiplicity->at(i);}
+   int	              PFJet_HFHadronMultiplicity(unsigned int i){return Ntp->PFJet_HFHadronMultiplicity->at(i);}
    float              PFJet_muonEnergy(unsigned int i){return Ntp->PFJet_muonEnergy->at(i);}
-   float              PFJet_muonMultiplicity(unsigned int i){return Ntp->PFJet_muonMultiplicity->at(i);}
+   int	              PFJet_muonMultiplicity(unsigned int i){return Ntp->PFJet_muonMultiplicity->at(i);}
    float              PFJet_neutralEmEnergy(unsigned int i){return Ntp->PFJet_neutralEmEnergy->at(i);}
    float              PFJet_neutralHadronEnergy(unsigned int i){return Ntp->PFJet_neutralHadronEnergy->at(i);}
-   float              PFJet_neutralHadronMultiplicity(unsigned int i){return Ntp->PFJet_neutralHadronMultiplicity->at(i);}
+   int	              PFJet_neutralHadronMultiplicity(unsigned int i){return Ntp->PFJet_neutralHadronMultiplicity->at(i);}
    float              PFJet_photonEnergy(unsigned int i){return Ntp->PFJet_photonEnergy->at(i);}
-   float              PFJet_photonMultiplicity(unsigned int i){return Ntp->PFJet_photonMultiplicity->at(i);}
+   int	              PFJet_photonMultiplicity(unsigned int i){return Ntp->PFJet_photonMultiplicity->at(i);}
    float              PFJet_jetArea(unsigned int i){return Ntp->PFJet_jetArea->at(i);}
    float              PFJet_maxDistance(unsigned int i){return Ntp->PFJet_maxDistance->at(i);}
    int                PFJet_nConstituents(unsigned int i){return Ntp->PFJet_nConstituents->at(i);}
@@ -518,7 +521,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool               isGoodJet(unsigned int i);
    bool               isGoodJet_nooverlapremoval(unsigned int i);
    bool               isJetID(unsigned int i, TString corr = "default");
-   float              PFJet_nTrk(unsigned int i){return Ntp->PFJet_nTrk->at(i);}
+   int	              PFJet_nTrk(unsigned int i){return Ntp->PFJet_nTrk->at(i);}
    TLorentzVector     PFJet_TracksP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_TracksP4->at(i).at(j).at(1),Ntp->PFJet_TracksP4->at(i).at(j).at(2),Ntp->PFJet_TracksP4->at(i).at(j).at(3),Ntp->PFJet_TracksP4->at(i).at(j).at(0));}
    int                PFJet_nTracks(unsigned int i){return Ntp->PFJet_TracksP4->at(i).size();}
    float			  PFJet_JECuncertainty(unsigned int i){return Ntp->PFJet_JECuncertainty->at(i);}
@@ -530,11 +533,11 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector     PFJet_GenJetNoNu_Constituents_p4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(1),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(2),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(3),Ntp->PFJet_GenJetNoNu_Constituents_p4->at(i).at(j).at(0));}
 
    float              PFJet_PUJetID_discr(unsigned int i){return Ntp->PFJet_PUJetID_discr->at(i);}
-   float              PFJet_PUJetID_looseWP(unsigned int i){return Ntp->PFJet_PUJetID_looseWP->at(i);}
-   float              PFJet_PUJetID_mediumWP(unsigned int i){return Ntp->PFJet_PUJetID_mediumWP->at(i);}
-   float              PFJet_PUJetID_tightWP(unsigned int i){return Ntp->PFJet_PUJetID_tightWP->at(i);}
+   bool	              PFJet_PUJetID_looseWP(unsigned int i){return Ntp->PFJet_PUJetID_looseWP->at(i);}
+   bool	              PFJet_PUJetID_mediumWP(unsigned int i){return Ntp->PFJet_PUJetID_mediumWP->at(i);}
+   bool	              PFJet_PUJetID_tightWP(unsigned int i){return Ntp->PFJet_PUJetID_tightWP->at(i);}
 
-   float              PFJet_partonFlavour(unsigned int i){return Ntp->PFJet_partonFlavour->at(i);}
+   int	              PFJet_partonFlavour(unsigned int i){return Ntp->PFJet_partonFlavour->at(i);}
    float              PFJet_bDiscriminator(unsigned int i){return Ntp->PFJet_bDiscriminator->at(i);}
    //float              PFJet_BTagWeight(unsigned int i){return Ntp->PFJet_BTagWeight->at(i);} // not implemented at the moment
 
@@ -545,72 +548,72 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    double             JetEnergyResolutionCorrErr(double jeteta);
 
    //MET information
-   float              MET_Uncorr_et(){return Ntp->MET_Uncorr_et;}
-   float              MET_Uncorr_phi(){return Ntp->MET_Uncorr_phi;}
-   float              MET_Uncorr_ex(){return Ntp->MET_Uncorr_et*cos(Ntp->MET_Uncorr_phi);}
-   float              MET_Uncorr_ey(){return Ntp->MET_Uncorr_et*sin(Ntp->MET_Uncorr_phi);}
-   float              MET_Uncorr_significance(){return Ntp->MET_Uncorr_significance;}
-   float              MET_Uncorr_significance_xx(){return Ntp->MET_Uncorr_significance_xx;}
-   float              MET_Uncorr_significance_xy(){return Ntp->MET_Uncorr_significance_xy;}
-   float              MET_Uncorr_significance_yy(){return Ntp->MET_Uncorr_significance_yy;}
+   double             MET_Uncorr_et(){return Ntp->MET_Uncorr_et;}
+   double             MET_Uncorr_phi(){return Ntp->MET_Uncorr_phi;}
+   double             MET_Uncorr_ex(){return Ntp->MET_Uncorr_et*cos(Ntp->MET_Uncorr_phi);}
+   double             MET_Uncorr_ey(){return Ntp->MET_Uncorr_et*sin(Ntp->MET_Uncorr_phi);}
+   double             MET_Uncorr_significance(){return Ntp->MET_Uncorr_significance;}
+   double             MET_Uncorr_significance_xx(){return Ntp->MET_Uncorr_significance_xx;}
+   double             MET_Uncorr_significance_xy(){return Ntp->MET_Uncorr_significance_xy;}
+   double             MET_Uncorr_significance_yy(){return Ntp->MET_Uncorr_significance_yy;}
 
-   float              MET_CorrT0rt_et(){return Ntp->MET_CorrT0rt_et;}
-   float              MET_CorrT0rt_phi(){return Ntp->MET_CorrT0rt_phi;}
-   float              MET_CorrT0rt_ex(){return Ntp->MET_CorrT0rt_et*cos(Ntp->MET_CorrT0rt_phi);}
-   float              MET_CorrT0rt_ey(){return Ntp->MET_CorrT0rt_et*sin(Ntp->MET_CorrT0rt_phi);}
-   float              MET_CorrT0rtT1_et(){return Ntp->MET_CorrT0rtT1_et;}
-   float              MET_CorrT0rtT1_phi(){return Ntp->MET_CorrT0rtT1_phi;}
-   float              MET_CorrT0rtT1_ex(){return Ntp->MET_CorrT0rtT1_et*cos(Ntp->MET_CorrT0rtT1_phi);}
-   float              MET_CorrT0rtT1_ey(){return Ntp->MET_CorrT0rtT1_et*sin(Ntp->MET_CorrT0rtT1_phi);}
-   float              MET_CorrT0pc_et(){return Ntp->MET_CorrT0pc_et;}
-   float              MET_CorrT0pc_phi(){return Ntp->MET_CorrT0pc_phi;}
-   float              MET_CorrT0pc_ex(){return Ntp->MET_CorrT0pc_et*cos(Ntp->MET_CorrT0pc_phi);}
-   float              MET_CorrT0pc_ey(){return Ntp->MET_CorrT0pc_et*sin(Ntp->MET_CorrT0pc_phi);}
-   float              MET_CorrT0pcT1_et(){return Ntp->MET_CorrT0pcT1_et;}
-   float              MET_CorrT0pcT1_phi(){return Ntp->MET_CorrT0pcT1_phi;}
-   float              MET_CorrT0pcT1_ex(){return Ntp->MET_CorrT0pcT1_et*cos(Ntp->MET_CorrT0pcT1_phi);}
-   float              MET_CorrT0pcT1_ey(){return Ntp->MET_CorrT0pcT1_et*sin(Ntp->MET_CorrT0pcT1_phi);}
-   float              MET_CorrT0rtTxy_et(){return Ntp->MET_CorrT0rtTxy_et;}
-   float              MET_CorrT0rtTxy_phi(){return Ntp->MET_CorrT0rtTxy_phi;}
-   float              MET_CorrT0rtTxy_ex(){return Ntp->MET_CorrT0rtTxy_et*cos(Ntp->MET_CorrT0rtTxy_phi);}
-   float              MET_CorrT0rtTxy_ey(){return Ntp->MET_CorrT0rtTxy_et*sin(Ntp->MET_CorrT0rtTxy_phi);}
-   float              MET_CorrT0rtT1Txy_et(){return Ntp->MET_CorrT0rtT1Txy_et;}
-   float              MET_CorrT0rtT1Txy_phi(){return Ntp->MET_CorrT0rtT1Txy_phi;}
-   float              MET_CorrT0rtT1Txy_ex(){return Ntp->MET_CorrT0rtT1Txy_et*cos(Ntp->MET_CorrT0rtT1Txy_phi);}
-   float              MET_CorrT0rtT1Txy_ey(){return Ntp->MET_CorrT0rtT1Txy_et*sin(Ntp->MET_CorrT0rtT1Txy_phi);}
-   float              MET_CorrT0pcTxy_et(){return Ntp->MET_CorrT0pcTxy_et;}
-   float              MET_CorrT0pcTxy_phi(){return Ntp->MET_CorrT0pcTxy_phi;}
-   float              MET_CorrT0pcTxy_ex(){return Ntp->MET_CorrT0pcTxy_et*cos(Ntp->MET_CorrT0pcTxy_phi);}
-   float              MET_CorrT0pcTxy_ey(){return Ntp->MET_CorrT0pcTxy_et*sin(Ntp->MET_CorrT0pcTxy_phi);}
-   float              MET_CorrT0pcT1Txy_et(){return Ntp->MET_CorrT0pcT1Txy_et;}
-   float              MET_CorrT0pcT1Txy_phi(){return Ntp->MET_CorrT0pcT1Txy_phi;}
-   float              MET_CorrT0pcT1Txy_ex(){return Ntp->MET_CorrT0pcT1Txy_et*cos(Ntp->MET_CorrT0pcT1Txy_phi);}
-   float              MET_CorrT0pcT1Txy_ey(){return Ntp->MET_CorrT0pcT1Txy_et*sin(Ntp->MET_CorrT0pcT1Txy_phi);}
-   float              MET_CorrT1_et(){return Ntp->MET_CorrT1_et;}
-   float              MET_CorrT1_phi(){return Ntp->MET_CorrT1_phi;}
-   float              MET_CorrT1_ex(){return Ntp->MET_CorrT1_et*cos(Ntp->MET_CorrT1_phi);}
-   float              MET_CorrT1_ey(){return Ntp->MET_CorrT1_et*sin(Ntp->MET_CorrT1_phi);}
-   float              MET_CorrT1Txy_et(){return Ntp->MET_CorrT1Txy_et;}
-   float              MET_CorrT1Txy_phi(){return Ntp->MET_CorrT1Txy_phi;}
-   float              MET_CorrT1Txy_ex(){return Ntp->MET_CorrT1Txy_et*cos(Ntp->MET_CorrT1Txy_phi);}
-   float              MET_CorrT1Txy_ey(){return Ntp->MET_CorrT1Txy_et*sin(Ntp->MET_CorrT1Txy_phi);}
-   float              MET_CorrCaloT1_et(){return Ntp->MET_CorrCaloT1_et;}
-   float              MET_CorrCaloT1_phi(){return Ntp->MET_CorrCaloT1_phi;}
-   float              MET_CorrCaloT1_ex(){return Ntp->MET_CorrCaloT1_et*cos(Ntp->MET_CorrCaloT1_phi);}
-   float              MET_CorrCaloT1_ey(){return Ntp->MET_CorrCaloT1_et*sin(Ntp->MET_CorrCaloT1_phi);}
-   float              MET_CorrCaloT1T2_et(){return Ntp->MET_CorrCaloT1T2_et;}
-   float              MET_CorrCaloT1T2_phi(){return Ntp->MET_CorrCaloT1T2_phi;}
-   float              MET_CorrCaloT1T2_ex(){return Ntp->MET_CorrCaloT1T2_et*cos(Ntp->MET_CorrCaloT1T2_phi);}
-   float              MET_CorrCaloT1T2_ey(){return Ntp->MET_CorrCaloT1T2_et*sin(Ntp->MET_CorrCaloT1T2_phi);}
+   double             MET_CorrT0rt_et(){return Ntp->MET_CorrT0rt_et;}
+   double             MET_CorrT0rt_phi(){return Ntp->MET_CorrT0rt_phi;}
+   double             MET_CorrT0rt_ex(){return Ntp->MET_CorrT0rt_et*cos(Ntp->MET_CorrT0rt_phi);}
+   double             MET_CorrT0rt_ey(){return Ntp->MET_CorrT0rt_et*sin(Ntp->MET_CorrT0rt_phi);}
+   double             MET_CorrT0rtT1_et(){return Ntp->MET_CorrT0rtT1_et;}
+   double             MET_CorrT0rtT1_phi(){return Ntp->MET_CorrT0rtT1_phi;}
+   double             MET_CorrT0rtT1_ex(){return Ntp->MET_CorrT0rtT1_et*cos(Ntp->MET_CorrT0rtT1_phi);}
+   double             MET_CorrT0rtT1_ey(){return Ntp->MET_CorrT0rtT1_et*sin(Ntp->MET_CorrT0rtT1_phi);}
+   double             MET_CorrT0pc_et(){return Ntp->MET_CorrT0pc_et;}
+   double             MET_CorrT0pc_phi(){return Ntp->MET_CorrT0pc_phi;}
+   double             MET_CorrT0pc_ex(){return Ntp->MET_CorrT0pc_et*cos(Ntp->MET_CorrT0pc_phi);}
+   double             MET_CorrT0pc_ey(){return Ntp->MET_CorrT0pc_et*sin(Ntp->MET_CorrT0pc_phi);}
+   double             MET_CorrT0pcT1_et(){return Ntp->MET_CorrT0pcT1_et;}
+   double             MET_CorrT0pcT1_phi(){return Ntp->MET_CorrT0pcT1_phi;}
+   double             MET_CorrT0pcT1_ex(){return Ntp->MET_CorrT0pcT1_et*cos(Ntp->MET_CorrT0pcT1_phi);}
+   double             MET_CorrT0pcT1_ey(){return Ntp->MET_CorrT0pcT1_et*sin(Ntp->MET_CorrT0pcT1_phi);}
+   double             MET_CorrT0rtTxy_et(){return Ntp->MET_CorrT0rtTxy_et;}
+   double             MET_CorrT0rtTxy_phi(){return Ntp->MET_CorrT0rtTxy_phi;}
+   double             MET_CorrT0rtTxy_ex(){return Ntp->MET_CorrT0rtTxy_et*cos(Ntp->MET_CorrT0rtTxy_phi);}
+   double             MET_CorrT0rtTxy_ey(){return Ntp->MET_CorrT0rtTxy_et*sin(Ntp->MET_CorrT0rtTxy_phi);}
+   double             MET_CorrT0rtT1Txy_et(){return Ntp->MET_CorrT0rtT1Txy_et;}
+   double             MET_CorrT0rtT1Txy_phi(){return Ntp->MET_CorrT0rtT1Txy_phi;}
+   double             MET_CorrT0rtT1Txy_ex(){return Ntp->MET_CorrT0rtT1Txy_et*cos(Ntp->MET_CorrT0rtT1Txy_phi);}
+   double             MET_CorrT0rtT1Txy_ey(){return Ntp->MET_CorrT0rtT1Txy_et*sin(Ntp->MET_CorrT0rtT1Txy_phi);}
+   double             MET_CorrT0pcTxy_et(){return Ntp->MET_CorrT0pcTxy_et;}
+   double             MET_CorrT0pcTxy_phi(){return Ntp->MET_CorrT0pcTxy_phi;}
+   double             MET_CorrT0pcTxy_ex(){return Ntp->MET_CorrT0pcTxy_et*cos(Ntp->MET_CorrT0pcTxy_phi);}
+   double             MET_CorrT0pcTxy_ey(){return Ntp->MET_CorrT0pcTxy_et*sin(Ntp->MET_CorrT0pcTxy_phi);}
+   double             MET_CorrT0pcT1Txy_et(){return Ntp->MET_CorrT0pcT1Txy_et;}
+   double             MET_CorrT0pcT1Txy_phi(){return Ntp->MET_CorrT0pcT1Txy_phi;}
+   double             MET_CorrT0pcT1Txy_ex(){return Ntp->MET_CorrT0pcT1Txy_et*cos(Ntp->MET_CorrT0pcT1Txy_phi);}
+   double             MET_CorrT0pcT1Txy_ey(){return Ntp->MET_CorrT0pcT1Txy_et*sin(Ntp->MET_CorrT0pcT1Txy_phi);}
+   double             MET_CorrT1_et(){return Ntp->MET_CorrT1_et;}
+   double             MET_CorrT1_phi(){return Ntp->MET_CorrT1_phi;}
+   double             MET_CorrT1_ex(){return Ntp->MET_CorrT1_et*cos(Ntp->MET_CorrT1_phi);}
+   double             MET_CorrT1_ey(){return Ntp->MET_CorrT1_et*sin(Ntp->MET_CorrT1_phi);}
+   double             MET_CorrT1Txy_et(){return Ntp->MET_CorrT1Txy_et;}
+   double             MET_CorrT1Txy_phi(){return Ntp->MET_CorrT1Txy_phi;}
+   double             MET_CorrT1Txy_ex(){return Ntp->MET_CorrT1Txy_et*cos(Ntp->MET_CorrT1Txy_phi);}
+   double             MET_CorrT1Txy_ey(){return Ntp->MET_CorrT1Txy_et*sin(Ntp->MET_CorrT1Txy_phi);}
+   double             MET_CorrCaloT1_et(){return Ntp->MET_CorrCaloT1_et;}
+   double             MET_CorrCaloT1_phi(){return Ntp->MET_CorrCaloT1_phi;}
+   double             MET_CorrCaloT1_ex(){return Ntp->MET_CorrCaloT1_et*cos(Ntp->MET_CorrCaloT1_phi);}
+   double             MET_CorrCaloT1_ey(){return Ntp->MET_CorrCaloT1_et*sin(Ntp->MET_CorrCaloT1_phi);}
+   double             MET_CorrCaloT1T2_et(){return Ntp->MET_CorrCaloT1T2_et;}
+   double             MET_CorrCaloT1T2_phi(){return Ntp->MET_CorrCaloT1T2_phi;}
+   double             MET_CorrCaloT1T2_ex(){return Ntp->MET_CorrCaloT1T2_et*cos(Ntp->MET_CorrCaloT1T2_phi);}
+   double             MET_CorrCaloT1T2_ey(){return Ntp->MET_CorrCaloT1T2_et*sin(Ntp->MET_CorrCaloT1T2_phi);}
 
-   float              MET_CorrMVA_et(){return Ntp->MET_CorrMVA_et;}
-   float              MET_CorrMVA_phi(){return Ntp->MET_CorrMVA_phi;}
-   float              MET_CorrMVA_ex(){return Ntp->MET_CorrMVA_et*cos(Ntp->MET_CorrMVA_phi);}
-   float              MET_CorrMVA_ey(){return Ntp->MET_CorrMVA_et*sin(Ntp->MET_CorrMVA_phi);}
-   float              MET_CorrMVA_significance(){return Ntp->MET_CorrMVA_significance;}
-   float              MET_CorrMVA_significance_xx(){return Ntp->MET_CorrMVA_significance_xx;}
-   float              MET_CorrMVA_significance_xy(){return Ntp->MET_CorrMVA_significance_xy;}
-   float              MET_CorrMVA_significance_yy(){return Ntp->MET_CorrMVA_significance_yy;}
+   double             MET_CorrMVA_et(){return Ntp->MET_CorrMVA_et;}
+   double             MET_CorrMVA_phi(){return Ntp->MET_CorrMVA_phi;}
+   double             MET_CorrMVA_ex(){return Ntp->MET_CorrMVA_et*cos(Ntp->MET_CorrMVA_phi);}
+   double             MET_CorrMVA_ey(){return Ntp->MET_CorrMVA_et*sin(Ntp->MET_CorrMVA_phi);}
+   double             MET_CorrMVA_significance(){return Ntp->MET_CorrMVA_significance;}
+   double             MET_CorrMVA_significance_xx(){return Ntp->MET_CorrMVA_significance_xx;}
+   double             MET_CorrMVA_significance_xy(){return Ntp->MET_CorrMVA_significance_xy;}
+   double             MET_CorrMVA_significance_yy(){return Ntp->MET_CorrMVA_significance_yy;}
    unsigned int   	  NMET_CorrMVA_srcMuons(){return Ntp->MET_CorrMVA_srcMuon_p4->size();}
    TLorentzVector     MET_CorrMVA_srcMuon_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(1),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(2),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(3),Ntp->MET_CorrMVA_srcMuon_p4->at(i).at(0));}
    bool				  findCorrMVASrcMuon(unsigned int muon_idx, int &mvaSrcMuon_idx, float &dR );
@@ -621,14 +624,14 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector     MET_CorrMVA_srcTau_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVA_srcTau_p4->at(i).at(1),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(2),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(3),Ntp->MET_CorrMVA_srcTau_p4->at(i).at(0));}
    bool				  findCorrMVASrcTau(unsigned int tau_idx, int &mvaSrcTau_idx, float &dR );
 
-   float              MET_CorrMVAMuTau_et(){return Ntp->MET_CorrMVAMuTau_et;}
-   float              MET_CorrMVAMuTau_phi(){return Ntp->MET_CorrMVAMuTau_phi;}
-   float              MET_CorrMVAMuTau_ex(){return Ntp->MET_CorrMVAMuTau_et*cos(Ntp->MET_CorrMVAMuTau_phi);}
-   float              MET_CorrMVAMuTau_ey(){return Ntp->MET_CorrMVAMuTau_et*sin(Ntp->MET_CorrMVAMuTau_phi);}
-   float              MET_CorrMVAMuTau_significance(){return Ntp->MET_CorrMVAMuTau_significance;}
-   float              MET_CorrMVAMuTau_significance_xx(){return Ntp->MET_CorrMVAMuTau_significance_xx;}
-   float              MET_CorrMVAMuTau_significance_xy(){return Ntp->MET_CorrMVAMuTau_significance_xy;}
-   float              MET_CorrMVAMuTau_significance_yy(){return Ntp->MET_CorrMVAMuTau_significance_yy;}
+   double             MET_CorrMVAMuTau_et(){return Ntp->MET_CorrMVAMuTau_et;}
+   double             MET_CorrMVAMuTau_phi(){return Ntp->MET_CorrMVAMuTau_phi;}
+   double             MET_CorrMVAMuTau_ex(){return Ntp->MET_CorrMVAMuTau_et*cos(Ntp->MET_CorrMVAMuTau_phi);}
+   double             MET_CorrMVAMuTau_ey(){return Ntp->MET_CorrMVAMuTau_et*sin(Ntp->MET_CorrMVAMuTau_phi);}
+   double             MET_CorrMVAMuTau_significance(){return Ntp->MET_CorrMVAMuTau_significance;}
+   double             MET_CorrMVAMuTau_significance_xx(){return Ntp->MET_CorrMVAMuTau_significance_xx;}
+   double             MET_CorrMVAMuTau_significance_xy(){return Ntp->MET_CorrMVAMuTau_significance_xy;}
+   double             MET_CorrMVAMuTau_significance_yy(){return Ntp->MET_CorrMVAMuTau_significance_yy;}
    unsigned int   	  NMET_CorrMVAMuTau_srcMuons(){return Ntp->MET_CorrMVAMuTau_srcMuon_p4->size();}
    TLorentzVector     MET_CorrMVAMuTau_srcMuon_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(1),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(2),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(3),Ntp->MET_CorrMVAMuTau_srcMuon_p4->at(i).at(0));}
    bool				  findCorrMVAMuTauSrcMuon(unsigned int muon_idx, int &mvaMuTauSrcMuon_idx, float &dR );
@@ -636,13 +639,45 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector     MET_CorrMVAMuTau_srcTau_p4(unsigned int i){return TLorentzVector(Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(1),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(2),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(3),Ntp->MET_CorrMVAMuTau_srcTau_p4->at(i).at(0));}
    bool				  findCorrMVAMuTauSrcTau(unsigned int tau_idx, int &mvaMuTauSrcTau_idx, float &dR );
 
+   ///////////////////////////////
+   //
+   // MET uncertainties
+   //
+   // Type1      = T0 + T1 + Txy (recommendation by JetMET POG and Christian Veelken)
+   // Type1Type2 = T0 + T1 + Txy + calibration for unclustered energy (better MET response, worse MET resolution)
+   //
+   double             MET_Type1CorrElectronUp_et(){ return Ntp->MET_Type1CorrElectronUp_et; }
+   double             MET_Type1CorrElectronDown_et(){ return Ntp->MET_Type1CorrElectronDown_et; }
+   double             MET_Type1CorrMuonUp_et(){ return Ntp->MET_Type1CorrMuonUp_et; }
+   double             MET_Type1CorrMuonDown_et(){ return Ntp->MET_Type1CorrMuonDown_et; }
+   double             MET_Type1CorrTauUp_et(){ return Ntp->MET_Type1CorrTauUp_et; }
+   double             MET_Type1CorrTauDown_et(){ return Ntp->MET_Type1CorrTauDown_et; }
+   double             MET_Type1CorrJetResUp_et(){ return Ntp->MET_Type1CorrJetResUp_et; }
+   double             MET_Type1CorrJetResDown_et(){ return Ntp->MET_Type1CorrJetResDown_et; }
+   double             MET_Type1CorrJetEnUp_et(){ return Ntp->MET_Type1CorrJetEnUp_et; }
+   double             MET_Type1CorrJetEnDown_et(){ return Ntp->MET_Type1CorrJetEnDown_et; }
+   double             MET_Type1CorrUnClusteredUp_et(){ return Ntp->MET_Type1CorrUnclusteredUp_et; }
+   double             MET_Type1CorrUnClusteredDown_et(){ return Ntp->MET_Type1CorrUnclusteredDown_et; }
+   double             MET_Type1p2CorrElectronUp_et(){ return Ntp->MET_Type1p2CorrElectronUp_et; }
+   double             MET_Type1p2CorrElectronDown_et(){ return Ntp->MET_Type1p2CorrElectronDown_et; }
+   double             MET_Type1p2CorrMuonUp_et(){ return Ntp->MET_Type1p2CorrMuonUp_et; }
+   double             MET_Type1p2CorrMuonDown_et(){ return Ntp->MET_Type1p2CorrMuonDown_et; }
+   double             MET_Type1p2CorrTauUp_et(){ return Ntp->MET_Type1p2CorrTauUp_et; }
+   double             MET_Type1p2CorrTauDown_et(){ return Ntp->MET_Type1p2CorrTauDown_et; }
+   double             MET_Type1p2CorrJetResUp_et(){ return Ntp->MET_Type1p2CorrJetResUp_et; }
+   double             MET_Type1p2CorrJetResDown_et(){ return Ntp->MET_Type1p2CorrJetResDown_et; }
+   double             MET_Type1p2CorrJetEnUp_et(){ return Ntp->MET_Type1p2CorrJetEnUp_et; }
+   double             MET_Type1p2CorrJetEnDown_et(){ return Ntp->MET_Type1p2CorrJetEnDown_et; }
+   double             MET_Type1p2CorrUnclusteredUp_et(){ return Ntp->MET_Type1p2CorrUnclusteredUp_et; }
+   double             MET_Type1p2CorrUnclusteredDown_et(){ return Ntp->MET_Type1p2CorrUnclusteredDown_et; }
+
    //Track Information
    unsigned int      NTracks(){return Ntp->Track_p4->size();}
    TLorentzVector    Track_p4(unsigned int i){return TLorentzVector(Ntp->Track_p4->at(i).at(1),Ntp->Track_p4->at(i).at(2),Ntp->Track_p4->at(i).at(3),Ntp->Track_p4->at(i).at(0));}
    TVector3          Track_Poca(unsigned int i){return TVector3(Ntp->Track_Poca->at(i).at(0),Ntp->Track_Poca->at(i).at(1),Ntp->Track_Poca->at(i).at(2));}
    int               Track_charge(unsigned int i){return Ntp->Track_charge->at(i);}
-   float             Track_chi2(unsigned int i){return Ntp->Track_chi2->at(i);}
-   float             Track_ndof(unsigned int i){return Ntp->Track_ndof->at(i);}
+   double            Track_chi2(unsigned int i){return Ntp->Track_chi2->at(i);}
+   double            Track_ndof(unsigned int i){return Ntp->Track_ndof->at(i);}
    unsigned short    Track_numberOfLostHits(unsigned int i){return Ntp->Track_numberOfLostHits->at(i);}
    unsigned short    Track_numberOfValidHits(unsigned int i){return Ntp->Track_numberOfValidHits->at(i);}
    unsigned int      Track_qualityMask(unsigned int i){return Ntp->Track_qualityMask->at(i);}
@@ -661,22 +696,31 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
      return TrackParticle(track_par,track_cov,Ntp->Track_pdgid->at(i),Ntp->Track_M->at(i),Ntp->Track_charge->at(i),Ntp->Track_B->at(i));
    }
 
-   // MC Informaation
-   // Singal particles (Z0,W+/-,H0,H+/-)
+   // MC Information
+   // Signal particles (Z0,W+/-,H0,H+/-)
    unsigned int               NMCSignalParticles(){return Ntp->MCSignalParticle_p4->size();}
    TLorentzVector             MCSignalParticle_p4(unsigned int i){return TLorentzVector(Ntp->MCSignalParticle_p4->at(i).at(1),Ntp->MCSignalParticle_p4->at(i).at(2),Ntp->MCSignalParticle_p4->at(i).at(3),Ntp->MCSignalParticle_p4->at(i).at(0));}
    int                        MCSignalParticle_pdgid(unsigned int i){return Ntp->MCSignalParticle_pdgid->at(i);}
    int                        MCSignalParticle_charge(unsigned int i){return Ntp->MCSignalParticle_charge->at(i);}
    TVector3                   MCSignalParticle_Poca(unsigned int i){return TVector3(Ntp->MCSignalParticle_Poca->at(i).at(0),Ntp->MCSignalParticle_Poca->at(i).at(1),Ntp->MCSignalParticle_Poca->at(i).at(2));}
    std::vector<unsigned int>  MCSignalParticle_Tauidx(unsigned int i){return Ntp->MCSignalParticle_Tauidx->at(i);}
+   // full MC chain
    unsigned int               NMCParticles(){return Ntp->MC_p4->size();}
    TLorentzVector             MCParticle_p4(unsigned int i){return TLorentzVector(Ntp->MC_p4->at(i).at(1),Ntp->MC_p4->at(i).at(2),Ntp->MC_p4->at(i).at(3),Ntp->MC_p4->at(i).at(0));}
    int                        MCParticle_pdgid(unsigned int i){return Ntp->MC_pdgid->at(i);}
    int                        MCParticle_charge(unsigned int i){return Ntp->MC_charge->at(i);}
-   int                        MCParticle_midx(unsigned int i){return Ntp->MC_midx->at(i);}
+   int              		  MCParticle_midx(unsigned int i){return Ntp->MC_midx->at(i);}
    std::vector<int>           MCParticle_childpdgid(unsigned int i){return Ntp->MC_childpdgid->at(i);}
+   std::vector<int>           MCParticle_childidx(unsigned int i){return Ntp->MC_childidx->at(i);}
+   int						  MCParticle_status(unsigned int i){return Ntp->MC_status->at(i);}
    int						  matchTruth(TLorentzVector tvector);
    bool						  matchTruth(TLorentzVector tvector, int pid, double dr);
+   // decay tree functionality
+   bool						  MCParticle_hasMother(unsigned int i){return Ntp->MC_midx->at(i) >= 0;}
+   void						  printMCDecayChainOfMother(unsigned int i, bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false); // decay chain of object i
+   void						  printMCDecayChainOfEvent(bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false); // full event decay chain
+   std::string				  MCParticleToString(unsigned int par, bool printStatus = false, bool printPt = false, bool printEtaPhi = false);
+
 
    // Tau decays (Tau is first element of vector)
    int NMCTaus(){return Ntp->MCTauandProd_p4->size();}
@@ -724,9 +768,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool    Electron_Gsf_passingCutBasedPreselection(unsigned int i){return Ntp->Electron_Gsf_passingCutBasedPreselection->at(i);}
    bool    Electron_Gsf_passingMvaPreselection(unsigned int i){return Ntp->Electron_Gsf_passingMvaPreselection->at(i);}
    int     Electron_gsftrack_trackerExpectedHitsInner_numberOfLostHits(unsigned int i){return Ntp->Electron_gsftrack_trackerExpectedHitsInner_numberOfLostHits->at(i);}
-   float   Electron_supercluster_e(unsigned int i){return Ntp->Electron_supercluster_e->at(i);}
-   float   Electron_supercluster_phi(unsigned int i){return Ntp->Electron_supercluster_phi->at(i);}
-   float   Electron_supercluster_eta(unsigned int i){return Ntp->Electron_supercluster_eta->at(i);}
+   double  Electron_supercluster_e(unsigned int i){return Ntp->Electron_supercluster_e->at(i);}
+   double  Electron_supercluster_phi(unsigned int i){return Ntp->Electron_supercluster_phi->at(i);}
+   double  Electron_supercluster_eta(unsigned int i){return Ntp->Electron_supercluster_eta->at(i);}
    float   Electron_supercluster_centroid_x(unsigned int i){return Ntp->Electron_supercluster_centroid_x->at(i);}
    float   Electron_supercluster_centroid_y(unsigned int i){return Ntp->Electron_supercluster_centroid_y->at(i);}
    float   Electron_supercluster_centroid_z(unsigned int i){return Ntp->Electron_supercluster_centroid_z->at(i);}
@@ -749,22 +793,29 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float    Electron_neutralHadronIso(unsigned int i){return Ntp->Electron_neutralHadronIso->at(i);}
    float    Electron_photonIso(unsigned int i){return Ntp->Electron_photonIso->at(i);}
    
+   double   Electron_isoDeposits_chargedHadronIso04(unsigned int i){return Ntp->Electron_isoDeposits_chargedHadronIso04->at(i);}
+   double   Electron_isoDeposits_neutralHadronIso04(unsigned int i){return Ntp->Electron_isoDeposits_neutralHadronIso04->at(i);}
+   double   Electron_isoDeposits_photonIso04(unsigned int i){return Ntp->Electron_isoDeposits_photonIso04->at(i);}
+   double   Electron_isoDeposits_chargedHadronIso03(unsigned int i){return Ntp->Electron_isoDeposits_chargedHadronIso03->at(i);}
+   double   Electron_isoDeposits_neutralHadronIso03(unsigned int i){return Ntp->Electron_isoDeposits_neutralHadronIso03->at(i);}
+   double   Electron_isoDeposits_photonIso03(unsigned int i){return Ntp->Electron_isoDeposits_photonIso03->at(i);}
+
    float    Electron_sigmaIetaIeta(unsigned int i){return Ntp->Electron_sigmaIetaIeta->at(i);}
    float    Electron_hadronicOverEm(unsigned int i){return Ntp->Electron_hadronicOverEm->at(i);}
    float    Electron_fbrem(unsigned int i){return Ntp->Electron_fbrem->at(i);}
    float    Electron_eSuperClusterOverP(unsigned int i){return Ntp->Electron_eSuperClusterOverP->at(i);}
    float    Electron_ecalEnergy(unsigned int i){return Ntp->Electron_ecalEnergy->at(i);}
    float    Electron_trackMomentumAtVtx(unsigned int i){return Ntp->Electron_trackMomentumAtVtx->at(i);}
-   float    Electron_numberOfMissedHits(unsigned int i){return Ntp->Electron_numberOfMissedHits->at(i);}
+   int      Electron_numberOfMissedHits(unsigned int i){return Ntp->Electron_numberOfMissedHits->at(i);}
    bool     Electron_HasMatchedConversions(unsigned int i){return Ntp->Electron_HasMatchedConversions->at(i);}
 
-   float    Electron_MVA_Trig_discriminator(unsigned int i){return Ntp->Electron_MVA_Trig_discriminator->at(i);}
-   float    Electron_MVA_TrigNoIP_discriminator(unsigned int i){return Ntp->Electron_MVA_TrigNoIP_discriminator->at(i);}
-   float    Electron_MVA_NonTrig_discriminator(unsigned int i){return Ntp->Electron_MVA_NonTrig_discriminator->at(i);}
-   float    RhoIsolationAllInputTags(){return Ntp->RhoIsolationAllInputTags;}
+   double   Electron_MVA_Trig_discriminator(unsigned int i){return Ntp->Electron_MVA_Trig_discriminator->at(i);}
+   double   Electron_MVA_TrigNoIP_discriminator(unsigned int i){return Ntp->Electron_MVA_TrigNoIP_discriminator->at(i);}
+   double   Electron_MVA_NonTrig_discriminator(unsigned int i){return Ntp->Electron_MVA_NonTrig_discriminator->at(i);}
+   double   RhoIsolationAllInputTags(){return Ntp->RhoIsolationAllInputTags;}
 
-   float	Electron_RegEnergy(unsigned int i){return Ntp->Electron_RegEnergy->at(i);}
-   float	Electron_RegEnergyError(unsigned int i){return Ntp->Electron_RegEnergyError->at(i);}
+   double   Electron_RegEnergy(unsigned int i){return Ntp->Electron_RegEnergy->at(i);}
+   double   Electron_RegEnergyError(unsigned int i){return Ntp->Electron_RegEnergyError->at(i);}
 
    TrackParticle Electron_TrackParticle(unsigned int i){
      TMatrixT<double>    e_par(TrackParticle::NHelixPar,1);
@@ -788,9 +839,11 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool isTightElectron(unsigned int i, TString corr = "default");
    bool isTightElectron(unsigned int i, unsigned int j, TString corr = "default");
    float Electron_RelIso03(unsigned int i, TString corr = "default");
+   double Electron_RelIsoDep03(unsigned int i, TString corr = "default");//todo: better name
    float Electron_RelIso04(unsigned int i, TString corr = "default");
-   float Electron_Aeff_R04(double Eta);
-   float Electron_Aeff_R03(double Eta);
+   double Electron_RelIsoDep04(unsigned int i, TString corr = "default");//todo: better name
+   double Electron_Aeff_R04(double Eta);
+   double Electron_Aeff_R03(double Eta);
    bool isSelectedElectron(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr = "default");
 
    // Trigger
@@ -826,11 +879,11 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::string  HLTTrigger_objs_trigger(unsigned int i){return Ntp->HLTTrigger_objs_trigger->at(i);}
 
    // helper functions
-   float        dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-   float		dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-   float        dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-   float        dzSigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
-   float        vertexSignificance(TVector3 vec, unsigned int vertex);
+   double       dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   double		dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   double       dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   double       dzSigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
+   double       vertexSignificance(TVector3 vec, unsigned int vertex);
    double		transverseMass(double pt1, double phi1, double pt2, double phi2){return sqrt(2 * pt1 * pt2 * (1 - cos(phi1 - phi2)));}
    std::vector<int> sortObjects(std::vector<int> indices, std::vector<double> values);
    std::vector<int> sortPFJetsByPt();
@@ -838,10 +891,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
    int          GenEventInfoProduct_id1(){return Ntp->GenEventInfoProduct_id1;}
    int          GenEventInfoProduct_id2(){return Ntp->GenEventInfoProduct_id2;}
-   float        GenEventInfoProduct_x1(){return Ntp->GenEventInfoProduct_x1;}
-   float        GenEventInfoProduct_x2(){return Ntp->GenEventInfoProduct_x2;}
-   float        GenEventInfoProduct_scalePDF(){return Ntp->GenEventInfoProduct_scalePDF;}
-   double       PdfWeight(unsigned int i, unsigned j){return Ntp->PdfWeights->at(i).at(j);}
+   double       GenEventInfoProduct_x1(){return Ntp->GenEventInfoProduct_x1;}
+   double       GenEventInfoProduct_x2(){return Ntp->GenEventInfoProduct_x2;}
+   double       GenEventInfoProduct_scalePDF(){return Ntp->GenEventInfoProduct_scalePDF;}
 
 };
 

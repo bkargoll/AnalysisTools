@@ -150,6 +150,10 @@ void HToTaumuTauhBackgrounds::Setup(){
 
 	CatInclusiveMtOSChargeSum = HConfig.GetTH1D(Name + "_CatInclusiveMtOSChargeSum", "CatInclusiveMtOSChargeSum", 5,-2.5,2.5, "q(#mu)+q(#tau)");
 	CatInclusiveMtSSChargeSum = HConfig.GetTH1D(Name + "_CatInclusiveMtSSChargeSum", "CatInclusiveMtSSChargeSum", 5,-2.5,2.5, "q(#mu)+q(#tau)");
+
+	CatVBFLooseQcdEff  = HConfig.GetTH1D(Name + "_CatVBFLooseQcdEff",  "CatVBFLooseQcdEff",  2,-0.5,1.5, "passed VBFL selection");
+	CatVBFTightQcdEff  = HConfig.GetTH1D(Name + "_CatVBFTightQcdEff",  "CatVBFTightQcdEff",  2,-0.5,1.5, "passed VBFT selection");
+	Cat1JetBoostQcdEff = HConfig.GetTH1D(Name + "_Cat1JetBoostQcdEff", "Cat1JetBoostQcdEff", 2,-0.5,1.5, "passed 1JB selection");
 }
 
 void HToTaumuTauhBackgrounds::Configure(){
@@ -274,6 +278,10 @@ void HToTaumuTauhBackgrounds::Store_ExtraDist(){
 	Extradist1d.push_back(&CatInclusiveQcdSSTauIso);
 	Extradist1d.push_back(&CatInclusiveMtOSChargeSum);
 	Extradist1d.push_back(&CatInclusiveMtSSChargeSum);
+
+	Extradist1d.push_back(&CatVBFLooseQcdEff);
+	Extradist1d.push_back(&CatVBFTightQcdEff);
+	Extradist1d.push_back(&Cat1JetBoostQcdEff);
 }
 
 void HToTaumuTauhBackgrounds::doEvent() {
@@ -570,6 +578,23 @@ void HToTaumuTauhBackgrounds::doEvent() {
 				}
 			}
 		}
+
+		// === QCD efficiency method for VBF loose, VBF tight and 1Jet Boost categories ===
+		// VBF loose: efficiency from sideband with same sign and anti-iso muon
+		if (pass.at(NTauKin) && !pass.at(OppCharge) && !passedMu && hasAntiIsoMuon) {
+			CatVBFLooseQcdEff.at(t).Fill(0., w);
+			if (passed_VBFLoose) CatVBFLooseQcdEff.at(t).Fill(1., w);
+		}
+		// VBF tight: efficiency from sideband with same sign and anti-iso muon and relaxed tau iso
+		if (!pass.at(OppCharge) && !passedMu && hasRelaxedIsoTau && hasAntiIsoMuon) {
+			CatVBFTightQcdEff.at(t).Fill(0., w);
+			if (passed_VBFTight) CatVBFTightQcdEff.at(t).Fill(1., w);
+		}
+		// 1Jet boost: efficiency from sideband with anti-iso muon and relaxed tau iso
+		if (pass.at(OppCharge) && !passedMu && hasRelaxedIsoTau && hasAntiIsoMuon) {
+			Cat1JetBoostQcdEff.at(t).Fill(0., w);
+			if (passed_OneJetBoost) Cat1JetBoostQcdEff.at(t).Fill(1., w);
+		}
 	}
 
 	if (verbose)
@@ -596,6 +621,7 @@ void HToTaumuTauhBackgrounds::doEvent() {
 			if (passed_VBFTight) CatVBFTightMtAntiIsoSS.at(t).Fill(value.at(MT), w);
 		}
 	}
+
 }
 
 void HToTaumuTauhBackgrounds::Finish() {
@@ -605,6 +631,9 @@ void HToTaumuTauhBackgrounds::Finish() {
 		std::cout << "Please set wJetsBGSource = \"MC\" to obtain background yields. Abort...";
 		return;
 	}
+
+	// suppress embedding completely, if available
+	if(HConfig.hasID(DataMCType::DY_mutau_embedded)) ScaleAllHistOfType(HConfig.GetType(DataMCType::DY_mutau_embedded), 0.0);
 
 	//////////// WJets ////////////
 	// calculate W+Jet yield for categories
@@ -744,7 +773,7 @@ void HToTaumuTauhBackgrounds::Finish() {
 		catSBDataSS.at(7) = CatInclusiveMtSidebandSS.at(histo).Integral();
 	}
 	for (unsigned id = 30; id < 80; id++){ //remove DY, diboson, top from MC
-		if (id == 60) continue; // 60 = QCD
+		if (id == DataMCType::QCD || id == DataMCType::DY_mutau_embedded ) continue;
 		if (HConfig.GetHisto(false,id,histo)){
 			catSBBackgrounds.at(0) += Cat0JetLowMtSideband.at(histo).Integral();
 			catSBBackgrounds.at(1) += Cat0JetHighMtSideband.at(histo).Integral();
@@ -865,6 +894,35 @@ void HToTaumuTauhBackgrounds::Finish() {
 		catQcdOSYield.at(icat) = catQcdSSYieldBGCleaned.at(icat) * catOsSsRatio.at(icat);
 	}
 
+	// QCD efficiency method
+	std::vector<double> catQCDEffNum(nCat, 0.0);
+	std::vector<double> catQCDEffDenom(nCat, 0.0);
+	std::vector<double> catQCDEfficiency(nCat, 0.0);
+	std::vector<double> catQCDEffYield(nCat, 0.0);
+	if (HConfig.GetHisto(true,1,histo)){
+		// 1 jet boost
+		unsigned int i_cat = 4;
+		catQCDEffNum.at(i_cat)   = Cat1JetBoostQcdEff.at(histo).GetBinContent(2);
+		catQCDEffDenom.at(i_cat) = Cat1JetBoostQcdEff.at(histo).GetBinContent(1);
+		if (catQCDEffDenom.at(i_cat) != 0) catQCDEfficiency.at(i_cat) = catQCDEffNum.at(i_cat) / catQCDEffDenom.at(i_cat);
+		else catQCDEfficiency.at(4) = -999;
+		catQCDEffYield.at(i_cat) = catQCDEfficiency.at(i_cat) * catQcdOSYield.at(7); // efficiency * ABCD yield inclusive category
+		// VBF loose
+		i_cat = 5;
+		catQCDEffNum.at(i_cat)   = CatVBFLooseQcdEff.at(histo).GetBinContent(2);
+		catQCDEffDenom.at(i_cat) = CatVBFLooseQcdEff.at(histo).GetBinContent(1);
+		if (catQCDEffDenom.at(i_cat) != 0) catQCDEfficiency.at(i_cat) = catQCDEffNum.at(i_cat) / catQCDEffDenom.at(i_cat);
+		else catQCDEfficiency.at(4) = -999;
+		catQCDEffYield.at(i_cat) = catQCDEfficiency.at(i_cat) * catQcdOSYield.at(7); // efficiency * ABCD yield inclusive category
+		// VBF tight
+		i_cat = 6;
+		catQCDEffNum.at(i_cat)   = CatVBFTightQcdEff.at(histo).GetBinContent(2);
+		catQCDEffDenom.at(i_cat) = CatVBFTightQcdEff.at(histo).GetBinContent(1);
+		if (catQCDEffDenom.at(i_cat) != 0) catQCDEfficiency.at(i_cat) = catQCDEffNum.at(i_cat) / catQCDEffDenom.at(i_cat);
+		else catQCDEfficiency.at(4) = -999;
+		catQCDEffYield.at(i_cat) = catQCDEfficiency.at(i_cat) * catQcdOSYield.at(7); // efficiency * ABCD yield inclusive category
+	}
+
 	std::cout << "  ############# QCD: OS/SS ratio #######################" << std::endl;
 	printf("%12s  %12s / %12s = %12s\n", "Category", "N(OS)", "N(SS)", "OS/SS ratio");
 	format = "%12s  %12.1f / %12.1f = %12f\n";
@@ -888,13 +946,27 @@ void HToTaumuTauhBackgrounds::Finish() {
 		printf(format, catNames.at(icat).Data(), catQcdSSYieldBGCleaned.at(icat), catOsSsRatio.at(icat), catQcdOSYield.at(icat));
 	}
 
+	std::cout << "  ############# QCD: Efficiency Method #######################" << std::endl;
+	printf("%12s  %12s / %12s = %12s => %12s\n", "Category", "N(category)", "N(inclusive)", "efficiency", "yield");
+	format = "%12s  %12.1f / %12.1f = %12f => %12f\n";
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		if (catQCDEfficiency.at(icat) != 0.0)
+			printf(format, catNames.at(icat).Data(), catQCDEffNum.at(icat), catQCDEffDenom.at(icat), catQCDEfficiency.at(icat), catQCDEffYield.at(icat));
+	}
+
 	std::cout << "  ##########################################################\n" << std::endl;
 	printf("Please copy the following numbers in order to use the data driven WJets yield:\n");
 	for (unsigned int icat = 0; icat < nCat; icat++){
 		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catWJetsYield.at(icat));
 	}
-	printf("Please copy the following numbers in order to use the data driven QCD yield:\n");
+	printf("Please copy the following numbers in order to use the data driven QCD yield (ABCD method):\n");
 	for (unsigned int icat = 0; icat < nCat; icat++){
 		printf("%12s : %14.8f\n", catNames.at(icat).Data(), catQcdOSYield.at(icat));
 	}
+	printf("Please copy the following numbers in order to use the data driven QCD yield (efficiency method):\n");
+	for (unsigned int icat = 0; icat < nCat; icat++){
+		if (catQCDEfficiency.at(icat) != 0.0)
+			printf("%12s : %14.8f\n", catNames.at(icat).Data(), catQCDEffYield.at(icat));
+	}
+
 }

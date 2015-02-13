@@ -134,6 +134,10 @@ protected:
 
 	std::vector<TH1D> CatInclusiveMtOSChargeSum;
 	std::vector<TH1D> CatInclusiveMtSSChargeSum;
+
+	std::vector<TH1D> CatVBFLooseQcdEff;
+	std::vector<TH1D> CatVBFTightQcdEff;
+	std::vector<TH1D> Cat1JetBoostQcdEff;
 };
 
 #endif /* HTOTAUMUTAUHBACKGROUNDS_H_ */

@@ -438,7 +438,7 @@ void Selection::ScaleAllHistOfType(unsigned int t,float w){
   }
 }
 
-// avoid drawing of certain sample in histograms\
+// avoid drawing of certain sample in histograms
 // Npassed vector is NOT scaled, so tables should remain intact
 void Selection::suppressDrawingHistOfType(unsigned int t){
   for(unsigned int i=0; i<Nminus1.size(); i++){

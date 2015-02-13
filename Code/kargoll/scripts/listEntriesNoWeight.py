@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import ROOT
+execfile('loadPyRoot.py')
 
 files = []
 files.append(ROOT.TFile("/net/scratch_cms/institut_3b/kargoll/SyncExercise/VBFHToTauTauM125/workdirAnalysis_Apr_02_2014/LOCAL_COMBINED_mutausync_default.root","READ"))

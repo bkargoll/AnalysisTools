@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-import ROOT
+execfile('loadPyRoot.py')
 
 parser = argparse.ArgumentParser(description='Test if all the Sets have a valid root file containing the skimming tree.')
 parser.add_argument('firstSet', help="Offset value, first set to start looking.", type=int)

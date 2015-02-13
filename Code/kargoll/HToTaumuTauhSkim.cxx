@@ -48,13 +48,10 @@ void  HToTaumuTauhSkim::Configure(){
 	cut.at(MT) = 999; // set to 999 to disable mt cut
 	title.at(MT) += " DISABLED";
 
-	//todo: book histograms to HConfig
 }
 
 void HToTaumuTauhSkim::doEvent() {
-	//todo: add plots for background methods
 }
 
 void HToTaumuTauhSkim::Store_ExtraDist() {
-	//todo: store these extra dists!
 }

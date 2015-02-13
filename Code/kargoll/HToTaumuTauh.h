@@ -201,29 +201,8 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> JetsInEtaGap;
   std::vector<TH1D> JetsInvM;
 
-  std::vector<TH1D> MetPhiMet10GeV;
-  std::vector<TH1D> MtMet10GeV;
-  std::vector<TH1D> HiggsPtMet10GeV;
-  std::vector<TH1D> HiggsPhiMet10GeV;
-  std::vector<TH1D> MetPhiMet20GeV;
-  std::vector<TH1D> MtMet20GeV;
-  std::vector<TH1D> HiggsPtMet20GeV;
-  std::vector<TH1D> HiggsPhiMet20GeV;
-
-  std::vector<TH1D> MtAfterMuon;
-  std::vector<TH1D> MtAfterDiMuonVeto;
-  std::vector<TH1D> MtAfterTau;
-  std::vector<TH1D> MtAfterTriLepVeto;
-  std::vector<TH1D> MtAfterOppCharge;
-  std::vector<TH1D> MtAfterBJetVeto;
-  std::vector<TH1D> MtOnlyTau;
-  std::vector<TH1D> MtOnlyTriLepVeto;
-  std::vector<TH1D> MtOnlyOppCharge;
-  std::vector<TH1D> MtOnlyBJet;
   std::vector<TH1D> MtMuPlusOnly;
   std::vector<TH1D> MtMuMinusOnly;
-  std::vector<TH1D> MtMuPlusOnlyBGSubt;
-  std::vector<TH1D> MtMuMinusOnlyBGSubt;
   std::vector<TH1D> Mt1ProngOnly;
   std::vector<TH1D> Mt3ProngOnly;
   std::vector<TH1D> Mt3ProngSV;
@@ -253,6 +232,13 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> embeddingWeight_TauSpinner;
   std::vector<TH1D> embeddingWeight_MinVisPtFilter;
   std::vector<TH1D> embeddingWeight_SelEffWeight;
+  std::vector<TH1D> HiggsGenPtWeight;
+  std::vector<TH1D> HiggsGenPt;
+
+  std::vector<TH1D> visibleMass;
+
+  std::vector<TH1D> shape_VisM;
+  std::vector<TH1D> shape_SVfitM;
 
   unsigned verbose;
 
@@ -269,6 +255,8 @@ class HToTaumuTauh : public Selection {
   TString wJetsBGSource;
   // flag for data-driven QCD shape (set to false for yield estimation!)
   bool qcdShapeFromData;
+  // flag for data-driven QCD yield via efficiency method (only for categories where appropriate, for others ABCD method is used)
+  bool qcdUseEfficiencyMethod;
   // flag to use embedding
   bool useEmbedding;
 
@@ -277,7 +265,8 @@ class HToTaumuTauh : public Selection {
   //std::map<TString, double> wJetsYieldScaleMap;
 
   // map to hold QCD yields for each category
-  std::map<TString, double> qcdYieldMap;
+  std::map<TString, double> qcdYieldABCDMap; // ABCD method
+  std::map<TString, double> qcdYieldEffMap; // efficiency method
 
   // object corrections to use
   TString correctTaus;
@@ -351,6 +340,8 @@ class HToTaumuTauh : public Selection {
   bool selectPFJet_Id(unsigned i);
   bool selectBJet(unsigned i, int selectedMuon, int selectedTau);
 
+  bool selectPFJet_Relaxed(unsigned i, int selectedMuon, int selectedTau);
+
   // categories
   std::vector<float> cut_VBFTight, cut_VBFLoose;
   std::vector<float> cut_OneJetHigh, cut_OneJetLow, cut_OneJetBoost;
@@ -385,8 +376,8 @@ class HToTaumuTauh : public Selection {
   void configure_NoCategory();
   bool category_NoCategory();
 
-  bool helperCategory_VBFLooseRelaxed_WYieldShape(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj);
-  bool helperCategory_VBFTightRelaxed_WYield(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
+  bool helperCategory_VBFLooseRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj);
+  bool helperCategory_VBFTightRelaxed(bool useRelaxedForPlots, unsigned NJets, double DEta, int NJetsInGap, double Mjj, double higgsPt);
 
  private:
   // everything is in protected to be accessible by derived classes

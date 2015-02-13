@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jun  4 11:59:46 2014 by ROOT version 5.34/17
+// Fri Jan 30 10:49:51 2015 by ROOT version 5.32/00
 // from TChain t/
 //////////////////////////////////////////////////////////
 
@@ -16,7 +16,6 @@
 
 using namespace std;
 
-
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
 class NtupleReader {
@@ -26,25 +25,25 @@ public :
 
    // Declaration of leaf types
    UInt_t          DataMC_Type;
-   vector<float>   *beamspot_par;
-   vector<float>   *beamspot_cov;
-   Float_t         beamspot_emittanceX;
-   Float_t         beamspot_emittanceY;
-   Float_t         beamspot_betaStar;
-   vector<float>   *Vtx_chi2;
-   vector<float>   *Vtx_nTrk;
+   vector<double>  *beamspot_par;
+   vector<double>  *beamspot_cov;
+   Double_t        beamspot_emittanceX;
+   Double_t        beamspot_emittanceY;
+   Double_t        beamspot_betaStar;
+   vector<double>  *Vtx_chi2;
+   vector<unsigned int> *Vtx_nTrk;
    vector<float>   *Vtx_ndof;
-   vector<float>   *Vtx_x;
-   vector<float>   *Vtx_y;
-   vector<float>   *Vtx_z;
-   vector<vector<vector<float> > > *Vtx_Cov;
+   vector<double>  *Vtx_x;
+   vector<double>  *Vtx_y;
+   vector<double>  *Vtx_z;
+   vector<vector<vector<double> > > *Vtx_Cov;
    vector<vector<int> > *Vtx_Track_idx;
    vector<vector<float> > *Vtx_Track_Weights;
-   vector<bool>   *Vtx_isFake;
-   vector<vector<vector<float> > > *Vtx_TracksP4;
+   vector<bool>    *Vtx_isFake;
+   vector<vector<vector<double> > > *Vtx_TracksP4;
    Bool_t          isPatMuon;
-   vector<vector<float> > *Muon_p4;
-   vector<vector<float> > *Muon_Poca;
+   vector<vector<double> > *Muon_p4;
+   vector<vector<double> > *Muon_Poca;
    vector<bool>    *Muon_isGlobalMuon;
    vector<bool>    *Muon_isStandAloneMuon;
    vector<bool>    *Muon_isTrackerMuon;
@@ -56,16 +55,16 @@ public :
    vector<float>   *Muon_emVetoEt03;
    vector<float>   *Muon_hadEt03;
    vector<float>   *Muon_hadVetoEt03;
-   vector<float>   *Muon_nJets03;
-   vector<float>   *Muon_nTracks03;
+   vector<int>     *Muon_nJets03;
+   vector<int>     *Muon_nTracks03;
    vector<float>   *Muon_sumPt03;
    vector<float>   *Muon_trackerVetoPt03;
    vector<float>   *Muon_emEt05;
    vector<float>   *Muon_emVetoEt05;
    vector<float>   *Muon_hadEt05;
    vector<float>   *Muon_hadVetoEt05;
-   vector<float>   *Muon_nJets05;
-   vector<float>   *Muon_nTracks05;
+   vector<int>     *Muon_nJets05;
+   vector<int>     *Muon_nTracks05;
    vector<float>   *Muon_sumPt05;
    vector<float>   *Muon_trackerVetoPt05;
    vector<float>   *Muon_sumChargedHadronPt03;
@@ -83,12 +82,12 @@ public :
    vector<float>   *Muon_sumPhotonEtHighThreshold04;
    vector<float>   *Muon_sumPUPt04;
    vector<unsigned int> *Muon_Track_idx;
-   vector<float>   *Muon_hitPattern_pixelLayerwithMeas;
-   vector<float>   *Muon_numberOfMatchedStations;
+   vector<int>     *Muon_hitPattern_pixelLayerwithMeas;
+   vector<int>     *Muon_numberOfMatchedStations;
    vector<float>   *Muon_normChi2;
-   vector<float>   *Muon_hitPattern_numberOfValidMuonHits;
-   vector<float>   *Muon_innerTrack_numberofValidHits;
-   vector<float>   *Muon_numberOfMatches;
+   vector<int>     *Muon_hitPattern_numberOfValidMuonHits;
+   vector<int>     *Muon_innerTrack_numberofValidHits;
+   vector<int>     *Muon_numberOfMatches;
    vector<int>     *Muon_numberOfChambers;
    vector<bool>    *Muon_isPFMuon;
    vector<int>     *Muon_numberofValidPixelHits;
@@ -96,13 +95,13 @@ public :
    vector<int>     *Muon_charge;
    vector<int>     *Muon_trackCharge;
    vector<int>     *Muon_pdgid;
-   vector<float>   *Muon_B;
-   vector<float>   *Muon_M;
-   vector<vector<float> > *Muon_par;
-   vector<vector<float> > *Muon_cov;
+   vector<double>  *Muon_B;
+   vector<double>  *Muon_M;
+   vector<vector<double> > *Muon_par;
+   vector<vector<double> > *Muon_cov;
    Bool_t          isPatElectron;
-   vector<vector<float> > *Electron_p4;
-   vector<vector<float> > *Electron_Poca;
+   vector<vector<double> > *Electron_p4;
+   vector<vector<double> > *Electron_Poca;
    vector<float>   *Electron_Gsf_deltaEtaEleClusterTrackAtCalo;
    vector<float>   *Electron_Gsf_deltaEtaSeedClusterTrackAtCalo;
    vector<float>   *Electron_Gsf_deltaEtaSuperClusterTrackAtVtx;
@@ -120,9 +119,9 @@ public :
    vector<bool>    *Electron_Gsf_passingCutBasedPreselection;
    vector<bool>    *Electron_Gsf_passingMvaPreselection;
    vector<int>     *Electron_gsftrack_trackerExpectedHitsInner_numberOfLostHits;
-   vector<float>   *Electron_supercluster_e;
-   vector<float>   *Electron_supercluster_phi;
-   vector<float>   *Electron_supercluster_eta;
+   vector<double>  *Electron_supercluster_e;
+   vector<double>  *Electron_supercluster_phi;
+   vector<double>  *Electron_supercluster_eta;
    vector<float>   *Electron_supercluster_centroid_x;
    vector<float>   *Electron_supercluster_centroid_y;
    vector<float>   *Electron_supercluster_centroid_z;
@@ -142,30 +141,36 @@ public :
    vector<float>   *Electron_chargedHadronIso;
    vector<float>   *Electron_neutralHadronIso;
    vector<float>   *Electron_photonIso;
+   vector<double>  *Electron_isoDeposits_chargedHadronIso04;
+   vector<double>  *Electron_isoDeposits_neutralHadronIso04;
+   vector<double>  *Electron_isoDeposits_photonIso04;
+   vector<double>  *Electron_isoDeposits_chargedHadronIso03;
+   vector<double>  *Electron_isoDeposits_neutralHadronIso03;
+   vector<double>  *Electron_isoDeposits_photonIso03;
    vector<float>   *Electron_sigmaIetaIeta;
    vector<float>   *Electron_hadronicOverEm;
    vector<float>   *Electron_fbrem;
    vector<float>   *Electron_eSuperClusterOverP;
    vector<float>   *Electron_ecalEnergy;
    vector<float>   *Electron_trackMomentumAtVtx;
-   vector<float>   *Electron_numberOfMissedHits;
+   vector<int>     *Electron_numberOfMissedHits;
    vector<bool>    *Electron_HasMatchedConversions;
-   Float_t         RhoIsolationAllInputTags;
+   Double_t        RhoIsolationAllInputTags;
    vector<int>     *Electron_charge;
    vector<int>     *Electron_trackCharge;
    vector<int>     *Electron_pdgid;
-   vector<float>   *Electron_B;
-   vector<float>   *Electron_M;
-   vector<vector<float> > *Electron_par;
-   vector<vector<float> > *Electron_cov;
-   vector<float>   *Electron_RegEnergy;
-   vector<float>   *Electron_RegEnergyError;
-   vector<float>   *Electron_Rho_kt6PFJets;
-   vector<float>   *Electron_MVA_TrigNoIP_discriminator;
-   vector<float>   *Electron_MVA_NonTrig_discriminator;
-   vector<float>   *Electron_MVA_Trig_discriminator;
-   vector<vector<float> > *PFTau_p4;
-   vector<vector<float> > *PFTau_Poca;
+   vector<double>  *Electron_B;
+   vector<double>  *Electron_M;
+   vector<vector<double> > *Electron_par;
+   vector<vector<double> > *Electron_cov;
+   vector<double>  *Electron_RegEnergy;
+   vector<double>  *Electron_RegEnergyError;
+   vector<double>  *Electron_Rho_kt6PFJets;
+   vector<double>  *Electron_MVA_TrigNoIP_discriminator;
+   vector<double>  *Electron_MVA_NonTrig_discriminator;
+   vector<double>  *Electron_MVA_Trig_discriminator;
+   vector<vector<double> > *PFTau_p4;
+   vector<vector<double> > *PFTau_Poca;
    vector<bool>    *PFTau_isTightIsolation;
    vector<bool>    *PFTau_isMediumIsolation;
    vector<bool>    *PFTau_isLooseIsolation;
@@ -200,52 +205,52 @@ public :
    vector<int>     *PFTau_hpsDecayMode;
    vector<int>     *PFTau_Charge;
    vector<vector<int> > *PFTau_Track_idx;
-   vector<vector<float> > *PFTau_TIP_primaryVertex_pos;
-   vector<vector<float> > *PFTau_TIP_primaryVertex_cov;
-   vector<vector<float> > *PFTau_TIP_secondaryVertex_pos;
-   vector<vector<float> > *PFTau_TIP_secondaryVertex_cov;
-   vector<vector<float> > *PFTau_TIP_secondaryVertex_vtxchi2;
-   vector<vector<float> > *PFTau_TIP_secondaryVertex_vtxndof;
-   vector<vector<float> > *PFTau_TIP_primaryVertex_vtxchi2;
-   vector<vector<float> > *PFTau_TIP_primaryVertex_vtxndof;
-   vector<vector<float> > *PFTau_TIP_flightLength;
-   vector<vector<float> > *PFTau_TIP_flightLengthSig;
-   vector<vector<float> > *PFTau_a1_lvp;
-   vector<vector<float> > *PFTau_a1_cov;
+   vector<vector<double> > *PFTau_TIP_primaryVertex_pos;
+   vector<vector<double> > *PFTau_TIP_primaryVertex_cov;
+   vector<vector<double> > *PFTau_TIP_secondaryVertex_pos;
+   vector<vector<double> > *PFTau_TIP_secondaryVertex_cov;
+   vector<vector<double> > *PFTau_TIP_secondaryVertex_vtxchi2;
+   vector<vector<double> > *PFTau_TIP_secondaryVertex_vtxndof;
+   vector<vector<double> > *PFTau_TIP_primaryVertex_vtxchi2;
+   vector<vector<double> > *PFTau_TIP_primaryVertex_vtxndof;
+   vector<vector<double> > *PFTau_TIP_flightLength;
+   vector<vector<double> > *PFTau_TIP_flightLengthSig;
+   vector<vector<double> > *PFTau_a1_lvp;
+   vector<vector<double> > *PFTau_a1_cov;
    vector<vector<int> > *PFTau_a1_charge;
    vector<vector<int> > *PFTau_a1_pdgid;
-   vector<vector<float> > *PFTau_a1_B;
-   vector<vector<float> > *PFTau_a1_M;
-   vector<vector<vector<float> > > *PFTau_daughterTracks;
-   vector<vector<vector<float> > > *PFTau_daughterTracks_cov;
+   vector<vector<double> > *PFTau_a1_B;
+   vector<vector<double> > *PFTau_a1_M;
+   vector<vector<vector<double> > > *PFTau_daughterTracks;
+   vector<vector<vector<double> > > *PFTau_daughterTracks_cov;
    vector<vector<int> > *PFTau_daughterTracks_charge;
    vector<vector<int> > *PFTau_daughterTracks_pdgid;
-   vector<vector<float> > *PFTau_daughterTracks_B;
-   vector<vector<float> > *PFTau_daughterTracks_M;
-   vector<vector<vector<float> > > *PFTau_daughterTracks_poca;
-   vector<vector<float> > *PFTau_3PS_A1_LV;
-   vector<vector<float> > *PFTau_3PS_M_A1;
-   vector<vector<float> > *PFTau_3PS_M_12;
-   vector<vector<float> > *PFTau_3PS_M_13;
-   vector<vector<float> > *PFTau_3PS_M_23;
+   vector<vector<double> > *PFTau_daughterTracks_B;
+   vector<vector<double> > *PFTau_daughterTracks_M;
+   vector<vector<vector<double> > > *PFTau_daughterTracks_poca;
+   vector<vector<double> > *PFTau_3PS_A1_LV;
+   vector<vector<double> > *PFTau_3PS_M_A1;
+   vector<vector<double> > *PFTau_3PS_M_12;
+   vector<vector<double> > *PFTau_3PS_M_13;
+   vector<vector<double> > *PFTau_3PS_M_23;
    vector<vector<int> > *PFTau_3PS_Tau_Charge;
    vector<vector<float> > *PFTau_3PS_LCchi2;
    vector<vector<int> > *PFTau_3PS_has3ProngSolution;
-   vector<vector<vector<float> > > *PFTau_3PS_Tau_LV;
-   vector<vector<vector<float> > > *PFTau_PionsP4;
-   vector<vector<double> > *PFTau_PionsCharge;
-   vector<vector<vector<float> > > *PFTau_PiZeroP4;
+   vector<vector<vector<double> > > *PFTau_3PS_Tau_LV;
+   vector<vector<vector<double> > > *PFTau_PionsP4;
+   vector<vector<int> > *PFTau_PionsCharge;
+   vector<vector<vector<double> > > *PFTau_PiZeroP4;
    vector<vector<int> > *PFTau_PiZeroNumOfPhotons;
    vector<vector<int> > *PFTau_PiZeroNumOfElectrons;
-   vector<vector<vector<float> > > *PFTau_ChargedHadronsP4;
+   vector<vector<vector<double> > > *PFTau_ChargedHadronsP4;
    vector<vector<vector<int> > > *PFTau_ChargedHadronsCharge;
-   vector<vector<vector<float> > > *PFTau_GammaP4;
-   vector<vector<vector<float> > > *PFTau_Photons_p4_inDR05;
-   vector<vector<float> > *PFTau_MatchedPFJetP4;
-   vector<vector<vector<float> > > *PFTau_MatchedPFJetGammasP4;
-   vector<vector<vector<float> > > *PFTau_MatchedPFJetSCVariables;
-   vector<vector<vector<float> > > *PFTau_MatchedPFJetPhotonVariables;
-   vector<float>   *PFTau_PhotonEnergyFraction;
+   vector<vector<vector<double> > > *PFTau_GammaP4;
+   vector<vector<vector<double> > > *PFTau_Photons_p4_inDR05;
+   vector<vector<double> > *PFTau_MatchedPFJetP4;
+   vector<vector<vector<double> > > *PFTau_MatchedPFJetGammasP4;
+   vector<vector<vector<double> > > *PFTau_MatchedPFJetSCVariables;
+   vector<vector<vector<double> > > *PFTau_MatchedPFJetPhotonVariables;
+   vector<double>  *PFTau_PhotonEnergyFraction;
    vector<vector<int> > *PFTau_photon_hasPixelSeed;
    vector<vector<float> > *PFTau_photon_hadronicOverEm;
    vector<vector<float> > *PFTau_photon_sigmaIetaIeta;
@@ -254,25 +259,25 @@ public :
    vector<vector<float> > *PFTau_photon_hcalTowerSumEtConeDR04;
    vector<float>   *PFTau_photon_rho;
    Bool_t          isPatJet;
-   vector<vector<float> > *PFJet_p4;
+   vector<vector<double> > *PFJet_p4;
    vector<float>   *PFJet_chargedEmEnergy;
    vector<float>   *PFJet_chargedHadronEnergy;
-   vector<float>   *PFJet_chargedHadronMultiplicity;
+   vector<int>     *PFJet_chargedHadronMultiplicity;
    vector<float>   *PFJet_chargedMuEnergy;
-   vector<float>   *PFJet_chargedMultiplicity;
+   vector<int>     *PFJet_chargedMultiplicity;
    vector<float>   *PFJet_electronEnergy;
-   vector<float>   *PFJet_electronMultiplicity;
+   vector<int>     *PFJet_electronMultiplicity;
    vector<float>   *PFJet_HFEMEnergy;
-   vector<float>   *PFJet_HFEMMultiplicity;
+   vector<int>     *PFJet_HFEMMultiplicity;
    vector<float>   *PFJet_HFHadronEnergy;
-   vector<float>   *PFJet_HFHadronMultiplicity;
+   vector<int>     *PFJet_HFHadronMultiplicity;
    vector<float>   *PFJet_muonEnergy;
-   vector<float>   *PFJet_muonMultiplicity;
+   vector<int>     *PFJet_muonMultiplicity;
    vector<float>   *PFJet_neutralEmEnergy;
    vector<float>   *PFJet_neutralHadronEnergy;
-   vector<float>   *PFJet_neutralHadronMultiplicity;
+   vector<int>     *PFJet_neutralHadronMultiplicity;
    vector<float>   *PFJet_photonEnergy;
-   vector<float>   *PFJet_photonMultiplicity;
+   vector<int>     *PFJet_photonMultiplicity;
    vector<float>   *PFJet_jetArea;
    vector<float>   *PFJet_maxDistance;
    vector<int>     *PFJet_nConstituents;
@@ -287,209 +292,203 @@ public :
    vector<float>   *PFJet_neutralHadronEnergyFraction;
    vector<float>   *PFJet_neutralEmEnergyFraction;
    vector<float>   *PFJet_PUJetID_discr;
-   vector<float>   *PFJet_PUJetID_looseWP;
-   vector<float>   *PFJet_PUJetID_mediumWP;
-   vector<float>   *PFJet_PUJetID_tightWP;
-   vector<float>   *PFJet_partonFlavour;
+   vector<bool>    *PFJet_PUJetID_looseWP;
+   vector<bool>    *PFJet_PUJetID_mediumWP;
+   vector<bool>    *PFJet_PUJetID_tightWP;
+   vector<int>     *PFJet_partonFlavour;
    vector<float>   *PFJet_bDiscriminator;
-   vector<vector<vector<float> > > *PFJet_TracksP4;
-   vector<float>   *PFJet_nTrk;
+   vector<vector<vector<double> > > *PFJet_TracksP4;
+   vector<int>     *PFJet_nTrk;
    vector<float>   *PFJet_JECuncertainty;
-   vector<vector<float> > *PFJet_GenJet_p4;
-   vector<vector<vector<float> > > *PFJet_GenJet_Constituents_p4;
-   vector<vector<float> > *PFJet_GenJetNoNu_p4;
-   vector<vector<vector<float> > > *PFJet_GenJetNoNu_Constituents_p4;
+   vector<vector<double> > *PFJet_GenJet_p4;
+   vector<vector<vector<double> > > *PFJet_GenJet_Constituents_p4;
+   vector<vector<double> > *PFJet_GenJetNoNu_p4;
+   vector<vector<vector<double> > > *PFJet_GenJetNoNu_Constituents_p4;
    Bool_t          isPatMET;
-   Float_t         MET_Uncorr_et;
+   Double_t        MET_Uncorr_et;
    Float_t         MET_Uncorr_pt;
-   Float_t         MET_Uncorr_phi;
+   Double_t        MET_Uncorr_phi;
    Float_t         MET_Uncorr_sumET;
-   Float_t         MET_Uncorr_significance;
-   Float_t         MET_Uncorr_significance_xx;
-   Float_t         MET_Uncorr_significance_xy;
-   Float_t         MET_Uncorr_significance_yy;
+   Double_t        MET_Uncorr_significance;
+   Double_t        MET_Uncorr_significance_xx;
+   Double_t        MET_Uncorr_significance_xy;
+   Double_t        MET_Uncorr_significance_yy;
    Float_t         MET_Uncorr_MuonEtFraction;
    Float_t         MET_Uncorr_NeutralEMFraction;
    Float_t         MET_Uncorr_NeutralHadEtFraction;
    Float_t         MET_Uncorr_Type6EtFraction;
    Float_t         MET_Uncorr_Type7EtFraction;
-   Float_t         MET_CorrT0rt_et;
+   Double_t        MET_CorrT0rt_et;
    Float_t         MET_CorrT0rt_pt;
-   Float_t         MET_CorrT0rt_phi;
+   Double_t        MET_CorrT0rt_phi;
    Float_t         MET_CorrT0rt_sumET;
-   Float_t         MET_CorrT0rt_significance;
-   Float_t         MET_CorrT0rt_significance_xx;
-   Float_t         MET_CorrT0rt_significance_xy;
-   Float_t         MET_CorrT0rt_significance_yy;
    Float_t         MET_CorrT0rt_MuonEtFraction;
    Float_t         MET_CorrT0rt_NeutralEMFraction;
    Float_t         MET_CorrT0rt_NeutralHadEtFraction;
    Float_t         MET_CorrT0rt_Type6EtFraction;
    Float_t         MET_CorrT0rt_Type7EtFraction;
-   Float_t         MET_CorrT0rtT1_et;
+   Double_t        MET_CorrT0rtT1_et;
    Float_t         MET_CorrT0rtT1_pt;
-   Float_t         MET_CorrT0rtT1_phi;
+   Double_t        MET_CorrT0rtT1_phi;
    Float_t         MET_CorrT0rtT1_sumET;
-   Float_t         MET_CorrT0rtT1_significance;
-   Float_t         MET_CorrT0rtT1_significance_xx;
-   Float_t         MET_CorrT0rtT1_significance_xy;
-   Float_t         MET_CorrT0rtT1_significance_yy;
    Float_t         MET_CorrT0rtT1_MuonEtFraction;
    Float_t         MET_CorrT0rtT1_NeutralEMFraction;
    Float_t         MET_CorrT0rtT1_NeutralHadEtFraction;
    Float_t         MET_CorrT0rtT1_Type6EtFraction;
    Float_t         MET_CorrT0rtT1_Type7EtFraction;
-   Float_t         MET_CorrT0pc_et;
+   Double_t        MET_CorrT0pc_et;
    Float_t         MET_CorrT0pc_pt;
-   Float_t         MET_CorrT0pc_phi;
+   Double_t        MET_CorrT0pc_phi;
    Float_t         MET_CorrT0pc_sumET;
-   Float_t         MET_CorrT0pc_significance;
-   Float_t         MET_CorrT0pc_significance_xx;
-   Float_t         MET_CorrT0pc_significance_xy;
-   Float_t         MET_CorrT0pc_significance_yy;
    Float_t         MET_CorrT0pc_MuonEtFraction;
    Float_t         MET_CorrT0pc_NeutralEMFraction;
    Float_t         MET_CorrT0pc_NeutralHadEtFraction;
    Float_t         MET_CorrT0pc_Type6EtFraction;
    Float_t         MET_CorrT0pc_Type7EtFraction;
-   Float_t         MET_CorrT0pcT1_et;
+   Double_t        MET_CorrT0pcT1_et;
    Float_t         MET_CorrT0pcT1_pt;
-   Float_t         MET_CorrT0pcT1_phi;
+   Double_t        MET_CorrT0pcT1_phi;
    Float_t         MET_CorrT0pcT1_sumET;
-   Float_t         MET_CorrT0pcT1_significance;
-   Float_t         MET_CorrT0pcT1_significance_xx;
-   Float_t         MET_CorrT0pcT1_significance_xy;
-   Float_t         MET_CorrT0pcT1_significance_yy;
    Float_t         MET_CorrT0pcT1_MuonEtFraction;
    Float_t         MET_CorrT0pcT1_NeutralEMFraction;
    Float_t         MET_CorrT0pcT1_NeutralHadEtFraction;
    Float_t         MET_CorrT0pcT1_Type6EtFraction;
    Float_t         MET_CorrT0pcT1_Type7EtFraction;
-   Float_t         MET_CorrT0rtTxy_et;
+   Double_t        MET_CorrT0rtTxy_et;
    Float_t         MET_CorrT0rtTxy_pt;
-   Float_t         MET_CorrT0rtTxy_phi;
+   Double_t        MET_CorrT0rtTxy_phi;
    Float_t         MET_CorrT0rtTxy_sumET;
-   Float_t         MET_CorrT0rtTxy_significance;
-   Float_t         MET_CorrT0rtTxy_significance_xx;
-   Float_t         MET_CorrT0rtTxy_significance_xy;
-   Float_t         MET_CorrT0rtTxy_significance_yy;
    Float_t         MET_CorrT0rtTxy_MuonEtFraction;
    Float_t         MET_CorrT0rtTxy_NeutralEMFraction;
    Float_t         MET_CorrT0rtTxy_NeutralHadEtFraction;
    Float_t         MET_CorrT0rtTxy_Type6EtFraction;
    Float_t         MET_CorrT0rtTxy_Type7EtFraction;
-   Float_t         MET_CorrT0rtT1Txy_et;
+   Double_t        MET_CorrT0rtT1Txy_et;
    Float_t         MET_CorrT0rtT1Txy_pt;
-   Float_t         MET_CorrT0rtT1Txy_phi;
+   Double_t        MET_CorrT0rtT1Txy_phi;
    Float_t         MET_CorrT0rtT1Txy_sumET;
-   Float_t         MET_CorrT0rtT1Txy_significance;
-   Float_t         MET_CorrT0rtT1Txy_significance_xx;
-   Float_t         MET_CorrT0rtT1Txy_significance_xy;
-   Float_t         MET_CorrT0rtT1Txy_significance_yy;
    Float_t         MET_CorrT0rtT1Txy_MuonEtFraction;
    Float_t         MET_CorrT0rtT1Txy_NeutralEMFraction;
    Float_t         MET_CorrT0rtT1Txy_NeutralHadEtFraction;
    Float_t         MET_CorrT0rtT1Txy_Type6EtFraction;
    Float_t         MET_CorrT0rtT1Txy_Type7EtFraction;
-   Float_t         MET_CorrT0pcTxy_et;
+   Double_t        MET_CorrT0pcTxy_et;
    Float_t         MET_CorrT0pcTxy_pt;
-   Float_t         MET_CorrT0pcTxy_phi;
+   Double_t        MET_CorrT0pcTxy_phi;
    Float_t         MET_CorrT0pcTxy_sumET;
-   Float_t         MET_CorrT0pcTxy_significance;
-   Float_t         MET_CorrT0pcTxy_significance_xx;
-   Float_t         MET_CorrT0pcTxy_significance_xy;
-   Float_t         MET_CorrT0pcTxy_significance_yy;
    Float_t         MET_CorrT0pcTxy_MuonEtFraction;
    Float_t         MET_CorrT0pcTxy_NeutralEMFraction;
    Float_t         MET_CorrT0pcTxy_NeutralHadEtFraction;
    Float_t         MET_CorrT0pcTxy_Type6EtFraction;
    Float_t         MET_CorrT0pcTxy_Type7EtFraction;
-   Float_t         MET_CorrT0pcT1Txy_et;
+   Double_t        MET_CorrT0pcT1Txy_et;
    Float_t         MET_CorrT0pcT1Txy_pt;
-   Float_t         MET_CorrT0pcT1Txy_phi;
+   Double_t        MET_CorrT0pcT1Txy_phi;
    Float_t         MET_CorrT0pcT1Txy_sumET;
-   Float_t         MET_CorrT0pcT1Txy_significance;
-   Float_t         MET_CorrT0pcT1Txy_significance_xx;
-   Float_t         MET_CorrT0pcT1Txy_significance_xy;
-   Float_t         MET_CorrT0pcT1Txy_significance_yy;
    Float_t         MET_CorrT0pcT1Txy_MuonEtFraction;
    Float_t         MET_CorrT0pcT1Txy_NeutralEMFraction;
    Float_t         MET_CorrT0pcT1Txy_NeutralHadEtFraction;
    Float_t         MET_CorrT0pcT1Txy_Type6EtFraction;
    Float_t         MET_CorrT0pcT1Txy_Type7EtFraction;
-   Float_t         MET_CorrT1_et;
+   Double_t        MET_CorrT1_et;
    Float_t         MET_CorrT1_pt;
-   Float_t         MET_CorrT1_phi;
+   Double_t        MET_CorrT1_phi;
    Float_t         MET_CorrT1_sumET;
-   Float_t         MET_CorrT1_significance;
-   Float_t         MET_CorrT1_significance_xx;
-   Float_t         MET_CorrT1_significance_xy;
-   Float_t         MET_CorrT1_significance_yy;
    Float_t         MET_CorrT1_MuonEtFraction;
    Float_t         MET_CorrT1_NeutralEMFraction;
    Float_t         MET_CorrT1_NeutralHadEtFraction;
    Float_t         MET_CorrT1_Type6EtFraction;
    Float_t         MET_CorrT1_Type7EtFraction;
-   Float_t         MET_CorrT1Txy_et;
+   Double_t        MET_CorrT1Txy_et;
    Float_t         MET_CorrT1Txy_pt;
-   Float_t         MET_CorrT1Txy_phi;
+   Double_t        MET_CorrT1Txy_phi;
    Float_t         MET_CorrT1Txy_sumET;
-   Float_t         MET_CorrT1Txy_significance;
-   Float_t         MET_CorrT1Txy_significance_xx;
-   Float_t         MET_CorrT1Txy_significance_xy;
-   Float_t         MET_CorrT1Txy_significance_yy;
    Float_t         MET_CorrT1Txy_MuonEtFraction;
    Float_t         MET_CorrT1Txy_NeutralEMFraction;
    Float_t         MET_CorrT1Txy_NeutralHadEtFraction;
    Float_t         MET_CorrT1Txy_Type6EtFraction;
    Float_t         MET_CorrT1Txy_Type7EtFraction;
-   Float_t         MET_CorrCaloT1_et;
+   Double_t        MET_CorrCaloT1_et;
    Float_t         MET_CorrCaloT1_pt;
-   Float_t         MET_CorrCaloT1_phi;
+   Double_t        MET_CorrCaloT1_phi;
    Float_t         MET_CorrCaloT1_sumET;
-   Float_t         MET_CorrCaloT1_significance;
-   Float_t         MET_CorrCaloT1_significance_xx;
-   Float_t         MET_CorrCaloT1_significance_xy;
-   Float_t         MET_CorrCaloT1_significance_yy;
-   Float_t         MET_CorrCaloT1T2_et;
+   Double_t        MET_CorrCaloT1T2_et;
    Float_t         MET_CorrCaloT1T2_pt;
-   Float_t         MET_CorrCaloT1T2_phi;
+   Double_t        MET_CorrCaloT1T2_phi;
    Float_t         MET_CorrCaloT1T2_sumET;
-   Float_t         MET_CorrCaloT1T2_significance;
-   Float_t         MET_CorrCaloT1T2_significance_xx;
-   Float_t         MET_CorrCaloT1T2_significance_xy;
-   Float_t         MET_CorrCaloT1T2_significance_yy;
-   Float_t         MET_CorrMVA_et;
+   Double_t        MET_CorrMVA_et;
    Float_t         MET_CorrMVA_pt;
-   Float_t         MET_CorrMVA_phi;
+   Double_t        MET_CorrMVA_phi;
    Float_t         MET_CorrMVA_sumET;
-   Float_t         MET_CorrMVA_significance;
-   Float_t         MET_CorrMVA_significance_xx;
-   Float_t         MET_CorrMVA_significance_xy;
-   Float_t         MET_CorrMVA_significance_yy;
+   Double_t        MET_CorrMVA_significance;
+   Double_t        MET_CorrMVA_significance_xx;
+   Double_t        MET_CorrMVA_significance_xy;
+   Double_t        MET_CorrMVA_significance_yy;
    Float_t         MET_CorrMVA_MuonEtFraction;
    Float_t         MET_CorrMVA_NeutralEMFraction;
    Float_t         MET_CorrMVA_NeutralHadEtFraction;
    Float_t         MET_CorrMVA_Type6EtFraction;
    Float_t         MET_CorrMVA_Type7EtFraction;
-   vector<vector<float> > *MET_CorrMVA_srcMuon_p4;
-   vector<vector<float> > *MET_CorrMVA_srcElectron_p4;
-   vector<vector<float> > *MET_CorrMVA_srcTau_p4;
-   Float_t         MET_CorrMVAMuTau_et;
+   vector<vector<double> > *MET_CorrMVA_srcMuon_p4;
+   vector<vector<double> > *MET_CorrMVA_srcElectron_p4;
+   vector<vector<double> > *MET_CorrMVA_srcTau_p4;
+   Double_t        MET_CorrMVAMuTau_et;
    Float_t         MET_CorrMVAMuTau_pt;
-   Float_t         MET_CorrMVAMuTau_phi;
+   Double_t        MET_CorrMVAMuTau_phi;
    Float_t         MET_CorrMVAMuTau_sumET;
-   Float_t         MET_CorrMVAMuTau_significance;
-   Float_t         MET_CorrMVAMuTau_significance_xx;
-   Float_t         MET_CorrMVAMuTau_significance_xy;
-   Float_t         MET_CorrMVAMuTau_significance_yy;
+   Double_t        MET_CorrMVAMuTau_significance;
+   Double_t        MET_CorrMVAMuTau_significance_xx;
+   Double_t        MET_CorrMVAMuTau_significance_xy;
+   Double_t        MET_CorrMVAMuTau_significance_yy;
    Float_t         MET_CorrMVAMuTau_MuonEtFraction;
    Float_t         MET_CorrMVAMuTau_NeutralEMFraction;
    Float_t         MET_CorrMVAMuTau_NeutralHadEtFraction;
    Float_t         MET_CorrMVAMuTau_Type6EtFraction;
    Float_t         MET_CorrMVAMuTau_Type7EtFraction;
-   vector<vector<float> > *MET_CorrMVAMuTau_srcMuon_p4;
-   vector<vector<float> > *MET_CorrMVAMuTau_srcTau_p4;
+   vector<vector<double> > *MET_CorrMVAMuTau_srcMuon_p4;
+   vector<vector<double> > *MET_CorrMVAMuTau_srcTau_p4;
+   Double_t        MET_Type1Corr_et;
+   Float_t         MET_Type1Corr_pt;
+   Double_t        MET_Type1Corr_phi;
+   Float_t         MET_Type1Corr_sumET;
+   Float_t         MET_Type1Corr_MuonEtFraction;
+   Float_t         MET_Type1Corr_NeutralEMFraction;
+   Float_t         MET_Type1Corr_NeutralHadEtFraction;
+   Float_t         MET_Type1Corr_Type6EtFraction;
+   Float_t         MET_Type1Corr_Type7EtFraction;
+   Double_t        MET_Type1p2Corr_et;
+   Float_t         MET_Type1p2Corr_pt;
+   Double_t        MET_Type1p2Corr_phi;
+   Float_t         MET_Type1p2Corr_sumET;
+   Float_t         MET_Type1p2Corr_MuonEtFraction;
+   Float_t         MET_Type1p2Corr_NeutralEMFraction;
+   Float_t         MET_Type1p2Corr_NeutralHadEtFraction;
+   Float_t         MET_Type1p2Corr_Type6EtFraction;
+   Float_t         MET_Type1p2Corr_Type7EtFraction;
+   Double_t        MET_Type1CorrElectronUp_et;
+   Double_t        MET_Type1CorrElectronDown_et;
+   Double_t        MET_Type1CorrMuonUp_et;
+   Double_t        MET_Type1CorrMuonDown_et;
+   Double_t        MET_Type1CorrTauUp_et;
+   Double_t        MET_Type1CorrTauDown_et;
+   Double_t        MET_Type1CorrJetResUp_et;
+   Double_t        MET_Type1CorrJetResDown_et;
+   Double_t        MET_Type1CorrJetEnUp_et;
+   Double_t        MET_Type1CorrJetEnDown_et;
+   Double_t        MET_Type1CorrUnclusteredUp_et;
+   Double_t        MET_Type1CorrUnclusteredDown_et;
+   Double_t        MET_Type1p2CorrElectronUp_et;
+   Double_t        MET_Type1p2CorrElectronDown_et;
+   Double_t        MET_Type1p2CorrMuonUp_et;
+   Double_t        MET_Type1p2CorrMuonDown_et;
+   Double_t        MET_Type1p2CorrTauUp_et;
+   Double_t        MET_Type1p2CorrTauDown_et;
+   Double_t        MET_Type1p2CorrJetResUp_et;
+   Double_t        MET_Type1p2CorrJetResDown_et;
+   Double_t        MET_Type1p2CorrJetEnUp_et;
+   Double_t        MET_Type1p2CorrJetEnDown_et;
+   Double_t        MET_Type1p2CorrUnclusteredUp_et;
+   Double_t        MET_Type1p2CorrUnclusteredDown_et;
    UInt_t          Event_EventNumber;
    UInt_t          Event_RunNumber;
    Int_t           Event_bunchCrossing;
@@ -513,45 +512,45 @@ public :
    Float_t         KinWeightEta;
    Float_t         KinWeightMassPt;
    Float_t         EmbeddedWeight;
-   vector<vector<float> > *Track_p4;
-   vector<vector<float> > *Track_Poca;
-   vector<float>   *Track_chi2;
-   vector<float>   *Track_ndof;
+   vector<vector<double> > *Track_p4;
+   vector<vector<double> > *Track_Poca;
+   vector<double>  *Track_chi2;
+   vector<double>  *Track_ndof;
    vector<unsigned short> *Track_numberOfLostHits;
    vector<unsigned short> *Track_numberOfValidHits;
    vector<unsigned int> *Track_qualityMask;
    vector<int>     *Track_charge;
    vector<int>     *Track_pdgid;
-   vector<float>   *Track_B;
-   vector<float>   *Track_M;
-   vector<vector<float> > *Track_par;
-   vector<vector<float> > *Track_cov;
-   Float_t         GenEventInfoProduct_signalProcessID;
+   vector<double>  *Track_B;
+   vector<double>  *Track_M;
+   vector<vector<double> > *Track_par;
+   vector<vector<double> > *Track_cov;
+   UInt_t          GenEventInfoProduct_signalProcessID;
    Float_t         GenEventInfoProduct_weight;
    vector<double>  *GenEventInfoProduct_weights;
    Float_t         GenEventInfoProduct_qScale;
    Float_t         GenEventInfoProduct_alphaQED;
    Float_t         GenEventInfoProduct_alphaQCD;
-   int             GenEventInfoProduct_id1;
-   int             GenEventInfoProduct_id2;
-   float           GenEventInfoProduct_x1;
-   float           GenEventInfoProduct_x2;
-   float           GenEventInfoProduct_scalePDF;
-   vector<vector<double> > *PdfWeights;
+   Int_t           GenEventInfoProduct_id1;
+   Int_t           GenEventInfoProduct_id2;
+   Double_t        GenEventInfoProduct_x1;
+   Double_t        GenEventInfoProduct_x2;
+   Double_t        GenEventInfoProduct_scalePDF;
    vector<vector<float> > *MC_p4;
    vector<int>     *MC_pdgid;
    vector<int>     *MC_charge;
-   vector<unsigned int> *MC_midx;
+   vector<int> *MC_midx;
    vector<vector<int> > *MC_childpdgid;
+   vector<vector<int> > *MC_childidx;
    vector<int>     *MC_status;
-   vector<vector<float> > *MCSignalParticle_p4;
+   vector<vector<double> > *MCSignalParticle_p4;
    vector<int>     *MCSignalParticle_pdgid;
    vector<vector<int> > *MCSignalParticle_childpdgid;
    vector<int>     *MCSignalParticle_charge;
-   vector<vector<float> > *MCSignalParticle_Poca;
+   vector<vector<double> > *MCSignalParticle_Poca;
    vector<vector<unsigned int> > *MCSignalParticle_Tauidx;
-   vector<vector<vector<float> > > *MCTauandProd_p4;
-   vector<vector<vector<float> > > *MCTauandProd_Vertex;
+   vector<vector<vector<double> > > *MCTauandProd_p4;
+   vector<vector<vector<double> > > *MCTauandProd_Vertex;
    vector<vector<int> > *MCTauandProd_pdgid;
    vector<vector<unsigned int> > *MCTauandProd_midx;
    vector<vector<int> > *MCTauandProd_charge;
@@ -565,7 +564,7 @@ public :
    vector<unsigned int> *NHLTL1GTSeeds;
    vector<unsigned int> *L1SEEDPrescale;
    vector<bool>    *L1SEEDInvalidPrescale;
-   vector<unsigned int> *L1SEEDisTechBit;
+   vector<bool>    *L1SEEDisTechBit;
    vector<vector<float> > *TriggerMatchMuon;
    vector<vector<float> > *TriggerMatchJet;
    vector<vector<float> > *TriggerMatchTau;
@@ -698,6 +697,12 @@ public :
    TBranch        *b_Electron_chargedHadronIso;   //!
    TBranch        *b_Electron_neutralHadronIso;   //!
    TBranch        *b_Electron_photonIso;   //!
+   TBranch        *b_Electron_isoDeposits_chargedHadronIso04;   //!
+   TBranch        *b_Electron_isoDeposits_neutralHadronIso04;   //!
+   TBranch        *b_Electron_isoDeposits_photonIso04;   //!
+   TBranch        *b_Electron_isoDeposits_chargedHadronIso03;   //!
+   TBranch        *b_Electron_isoDeposits_neutralHadronIso03;   //!
+   TBranch        *b_Electron_isoDeposits_photonIso03;   //!
    TBranch        *b_Electron_sigmaIetaIeta;   //!
    TBranch        *b_Electron_hadronicOverEm;   //!
    TBranch        *b_Electron_fbrem;   //!
@@ -873,10 +878,6 @@ public :
    TBranch        *b_MET_CorrT0rt_pt;   //!
    TBranch        *b_MET_CorrT0rt_phi;   //!
    TBranch        *b_MET_CorrT0rt_sumET;   //!
-   TBranch        *b_MET_CorrT0rt_significance;   //!
-   TBranch        *b_MET_CorrT0rt_significance_xx;   //!
-   TBranch        *b_MET_CorrT0rt_significance_xy;   //!
-   TBranch        *b_MET_CorrT0rt_significance_yy;   //!
    TBranch        *b_MET_CorrT0rt_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0rt_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0rt_NeutralHadEtFraction;   //!
@@ -886,10 +887,6 @@ public :
    TBranch        *b_MET_CorrT0rtT1_pt;   //!
    TBranch        *b_MET_CorrT0rtT1_phi;   //!
    TBranch        *b_MET_CorrT0rtT1_sumET;   //!
-   TBranch        *b_MET_CorrT0rtT1_significance;   //!
-   TBranch        *b_MET_CorrT0rtT1_significance_xx;   //!
-   TBranch        *b_MET_CorrT0rtT1_significance_xy;   //!
-   TBranch        *b_MET_CorrT0rtT1_significance_yy;   //!
    TBranch        *b_MET_CorrT0rtT1_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0rtT1_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0rtT1_NeutralHadEtFraction;   //!
@@ -899,10 +896,6 @@ public :
    TBranch        *b_MET_CorrT0pc_pt;   //!
    TBranch        *b_MET_CorrT0pc_phi;   //!
    TBranch        *b_MET_CorrT0pc_sumET;   //!
-   TBranch        *b_MET_CorrT0pc_significance;   //!
-   TBranch        *b_MET_CorrT0pc_significance_xx;   //!
-   TBranch        *b_MET_CorrT0pc_significance_xy;   //!
-   TBranch        *b_MET_CorrT0pc_significance_yy;   //!
    TBranch        *b_MET_CorrT0pc_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0pc_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0pc_NeutralHadEtFraction;   //!
@@ -912,10 +905,6 @@ public :
    TBranch        *b_MET_CorrT0pcT1_pt;   //!
    TBranch        *b_MET_CorrT0pcT1_phi;   //!
    TBranch        *b_MET_CorrT0pcT1_sumET;   //!
-   TBranch        *b_MET_CorrT0pcT1_significance;   //!
-   TBranch        *b_MET_CorrT0pcT1_significance_xx;   //!
-   TBranch        *b_MET_CorrT0pcT1_significance_xy;   //!
-   TBranch        *b_MET_CorrT0pcT1_significance_yy;   //!
    TBranch        *b_MET_CorrT0pcT1_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0pcT1_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0pcT1_NeutralHadEtFraction;   //!
@@ -925,10 +914,6 @@ public :
    TBranch        *b_MET_CorrT0rtTxy_pt;   //!
    TBranch        *b_MET_CorrT0rtTxy_phi;   //!
    TBranch        *b_MET_CorrT0rtTxy_sumET;   //!
-   TBranch        *b_MET_CorrT0rtTxy_significance;   //!
-   TBranch        *b_MET_CorrT0rtTxy_significance_xx;   //!
-   TBranch        *b_MET_CorrT0rtTxy_significance_xy;   //!
-   TBranch        *b_MET_CorrT0rtTxy_significance_yy;   //!
    TBranch        *b_MET_CorrT0rtTxy_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0rtTxy_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0rtTxy_NeutralHadEtFraction;   //!
@@ -938,10 +923,6 @@ public :
    TBranch        *b_MET_CorrT0rtT1Txy_pt;   //!
    TBranch        *b_MET_CorrT0rtT1Txy_phi;   //!
    TBranch        *b_MET_CorrT0rtT1Txy_sumET;   //!
-   TBranch        *b_MET_CorrT0rtT1Txy_significance;   //!
-   TBranch        *b_MET_CorrT0rtT1Txy_significance_xx;   //!
-   TBranch        *b_MET_CorrT0rtT1Txy_significance_xy;   //!
-   TBranch        *b_MET_CorrT0rtT1Txy_significance_yy;   //!
    TBranch        *b_MET_CorrT0rtT1Txy_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0rtT1Txy_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0rtT1Txy_NeutralHadEtFraction;   //!
@@ -951,10 +932,6 @@ public :
    TBranch        *b_MET_CorrT0pcTxy_pt;   //!
    TBranch        *b_MET_CorrT0pcTxy_phi;   //!
    TBranch        *b_MET_CorrT0pcTxy_sumET;   //!
-   TBranch        *b_MET_CorrT0pcTxy_significance;   //!
-   TBranch        *b_MET_CorrT0pcTxy_significance_xx;   //!
-   TBranch        *b_MET_CorrT0pcTxy_significance_xy;   //!
-   TBranch        *b_MET_CorrT0pcTxy_significance_yy;   //!
    TBranch        *b_MET_CorrT0pcTxy_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0pcTxy_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0pcTxy_NeutralHadEtFraction;   //!
@@ -964,10 +941,6 @@ public :
    TBranch        *b_MET_CorrT0pcT1Txy_pt;   //!
    TBranch        *b_MET_CorrT0pcT1Txy_phi;   //!
    TBranch        *b_MET_CorrT0pcT1Txy_sumET;   //!
-   TBranch        *b_MET_CorrT0pcT1Txy_significance;   //!
-   TBranch        *b_MET_CorrT0pcT1Txy_significance_xx;   //!
-   TBranch        *b_MET_CorrT0pcT1Txy_significance_xy;   //!
-   TBranch        *b_MET_CorrT0pcT1Txy_significance_yy;   //!
    TBranch        *b_MET_CorrT0pcT1Txy_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT0pcT1Txy_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT0pcT1Txy_NeutralHadEtFraction;   //!
@@ -977,10 +950,6 @@ public :
    TBranch        *b_MET_CorrT1_pt;   //!
    TBranch        *b_MET_CorrT1_phi;   //!
    TBranch        *b_MET_CorrT1_sumET;   //!
-   TBranch        *b_MET_CorrT1_significance;   //!
-   TBranch        *b_MET_CorrT1_significance_xx;   //!
-   TBranch        *b_MET_CorrT1_significance_xy;   //!
-   TBranch        *b_MET_CorrT1_significance_yy;   //!
    TBranch        *b_MET_CorrT1_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT1_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT1_NeutralHadEtFraction;   //!
@@ -990,10 +959,6 @@ public :
    TBranch        *b_MET_CorrT1Txy_pt;   //!
    TBranch        *b_MET_CorrT1Txy_phi;   //!
    TBranch        *b_MET_CorrT1Txy_sumET;   //!
-   TBranch        *b_MET_CorrT1Txy_significance;   //!
-   TBranch        *b_MET_CorrT1Txy_significance_xx;   //!
-   TBranch        *b_MET_CorrT1Txy_significance_xy;   //!
-   TBranch        *b_MET_CorrT1Txy_significance_yy;   //!
    TBranch        *b_MET_CorrT1Txy_MuonEtFraction;   //!
    TBranch        *b_MET_CorrT1Txy_NeutralEMFraction;   //!
    TBranch        *b_MET_CorrT1Txy_NeutralHadEtFraction;   //!
@@ -1003,18 +968,10 @@ public :
    TBranch        *b_MET_CorrCaloT1_pt;   //!
    TBranch        *b_MET_CorrCaloT1_phi;   //!
    TBranch        *b_MET_CorrCaloT1_sumET;   //!
-   TBranch        *b_MET_CorrCaloT1_significance;   //!
-   TBranch        *b_MET_CorrCaloT1_significance_xx;   //!
-   TBranch        *b_MET_CorrCaloT1_significance_xy;   //!
-   TBranch        *b_MET_CorrCaloT1_significance_yy;   //!
    TBranch        *b_MET_CorrCaloT1T2_et;   //!
    TBranch        *b_MET_CorrCaloT1T2_pt;   //!
    TBranch        *b_MET_CorrCaloT1T2_phi;   //!
    TBranch        *b_MET_CorrCaloT1T2_sumET;   //!
-   TBranch        *b_MET_CorrCaloT1T2_significance;   //!
-   TBranch        *b_MET_CorrCaloT1T2_significance_xx;   //!
-   TBranch        *b_MET_CorrCaloT1T2_significance_xy;   //!
-   TBranch        *b_MET_CorrCaloT1T2_significance_yy;   //!
    TBranch        *b_MET_CorrMVA_et;   //!
    TBranch        *b_MET_CorrMVA_pt;   //!
    TBranch        *b_MET_CorrMVA_phi;   //!
@@ -1046,6 +1003,48 @@ public :
    TBranch        *b_MET_CorrMVAMuTau_Type7EtFraction;   //!
    TBranch        *b_MET_CorrMVAMuTau_srcMuon_p4;   //!
    TBranch        *b_MET_CorrMVAMuTau_srcTau_p4;   //!
+   TBranch        *b_MET_Type1Corr_et;   //!
+   TBranch        *b_MET_Type1Corr_pt;   //!
+   TBranch        *b_MET_Type1Corr_phi;   //!
+   TBranch        *b_MET_Type1Corr_sumET;   //!
+   TBranch        *b_MET_Type1Corr_MuonEtFraction;   //!
+   TBranch        *b_MET_Type1Corr_NeutralEMFraction;   //!
+   TBranch        *b_MET_Type1Corr_NeutralHadEtFraction;   //!
+   TBranch        *b_MET_Type1Corr_Type6EtFraction;   //!
+   TBranch        *b_MET_Type1Corr_Type7EtFraction;   //!
+   TBranch        *b_MET_Type1p2Corr_et;   //!
+   TBranch        *b_MET_Type1p2Corr_pt;   //!
+   TBranch        *b_MET_Type1p2Corr_phi;   //!
+   TBranch        *b_MET_Type1p2Corr_sumET;   //!
+   TBranch        *b_MET_Type1p2Corr_MuonEtFraction;   //!
+   TBranch        *b_MET_Type1p2Corr_NeutralEMFraction;   //!
+   TBranch        *b_MET_Type1p2Corr_NeutralHadEtFraction;   //!
+   TBranch        *b_MET_Type1p2Corr_Type6EtFraction;   //!
+   TBranch        *b_MET_Type1p2Corr_Type7EtFraction;   //!
+   TBranch        *b_MET_Type1CorrElectronUp_et;   //!
+   TBranch        *b_MET_Type1CorrElectronDown_et;   //!
+   TBranch        *b_MET_Type1CorrMuonUp_et;   //!
+   TBranch        *b_MET_Type1CorrMuonDown_et;   //!
+   TBranch        *b_MET_Type1CorrTauUp_et;   //!
+   TBranch        *b_MET_Type1CorrTauDown_et;   //!
+   TBranch        *b_MET_Type1CorrJetResUp_et;   //!
+   TBranch        *b_MET_Type1CorrJetResDown_et;   //!
+   TBranch        *b_MET_Type1CorrJetEnUp_et;   //!
+   TBranch        *b_MET_Type1CorrJetEnDown_et;   //!
+   TBranch        *b_MET_Type1CorrUnclusteredUp_et;   //!
+   TBranch        *b_MET_Type1CorrUnclusteredDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrElectronUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrElectronDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrMuonUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrMuonDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrTauUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrTauDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrJetResUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrJetResDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrJetEnUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrJetEnDown_et;   //!
+   TBranch        *b_MET_Type1p2CorrUnclusteredUp_et;   //!
+   TBranch        *b_MET_Type1p2CorrUnclusteredDown_et;   //!
    TBranch        *b_Event_EventNumber;   //!
    TBranch        *b_Event_RunNumber;   //!
    TBranch        *b_Event_bunchCrossing;   //!
@@ -1093,12 +1092,12 @@ public :
    TBranch        *b_GenEventInfoProduct_x1;   //!
    TBranch        *b_GenEventInfoProduct_x2;   //!
    TBranch        *b_GenEventInfoProduct_scalePDF;   //!
-   TBranch        *b_PdfWeights;   //!
    TBranch        *b_MC_p4;   //!
    TBranch        *b_MC_pdgid;   //!
    TBranch        *b_MC_charge;   //!
    TBranch        *b_MC_midx;   //!
    TBranch        *b_MC_childpdgid;   //!
+   TBranch        *b_MC_childidx;   //!
    TBranch        *b_MC_status;   //!
    TBranch        *b_MCSignalParticle_p4;   //!
    TBranch        *b_MCSignalParticle_pdgid;   //!
@@ -1170,7 +1169,7 @@ NtupleReader::NtupleReader(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("t","");
-      chain->Add("/net/scratch_cms/institut_3b/kargoll/Test/TauNtuple_5_3_14_patch2-Jun_04_2014/CMSSW_5_3_14_patch2/src/SkimProduction/CRAB/Data0/TauNtuple.root/t");
+      chain->Add("/net/scratch_cms/institut_3b/kargoll/TestPrecision/TauNtuple_5_3_22_patch1-Jan_28_2015/CMSSW_5_3_22_patch1/src/SkimProduction/CRAB/dy_tautau0/TauNtuple.root/t");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -1325,6 +1324,12 @@ void NtupleReader::Init(TTree *tree)
    Electron_chargedHadronIso = 0;
    Electron_neutralHadronIso = 0;
    Electron_photonIso = 0;
+   Electron_isoDeposits_chargedHadronIso04 = 0;
+   Electron_isoDeposits_neutralHadronIso04 = 0;
+   Electron_isoDeposits_photonIso04 = 0;
+   Electron_isoDeposits_chargedHadronIso03 = 0;
+   Electron_isoDeposits_neutralHadronIso03 = 0;
+   Electron_isoDeposits_photonIso03 = 0;
    Electron_sigmaIetaIeta = 0;
    Electron_hadronicOverEm = 0;
    Electron_fbrem = 0;
@@ -1499,12 +1504,12 @@ void NtupleReader::Init(TTree *tree)
    Track_par = 0;
    Track_cov = 0;
    GenEventInfoProduct_weights = 0;
-   PdfWeights = 0;
    MC_p4 = 0;
    MC_pdgid = 0;
    MC_charge = 0;
    MC_midx = 0;
    MC_childpdgid = 0;
+   MC_childidx = 0;
    MC_status = 0;
    MCSignalParticle_p4 = 0;
    MCSignalParticle_pdgid = 0;
@@ -1664,6 +1669,12 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("Electron_chargedHadronIso", &Electron_chargedHadronIso, &b_Electron_chargedHadronIso);
    fChain->SetBranchAddress("Electron_neutralHadronIso", &Electron_neutralHadronIso, &b_Electron_neutralHadronIso);
    fChain->SetBranchAddress("Electron_photonIso", &Electron_photonIso, &b_Electron_photonIso);
+   fChain->SetBranchAddress("Electron_isoDeposits_chargedHadronIso04", &Electron_isoDeposits_chargedHadronIso04, &b_Electron_isoDeposits_chargedHadronIso04);
+   fChain->SetBranchAddress("Electron_isoDeposits_neutralHadronIso04", &Electron_isoDeposits_neutralHadronIso04, &b_Electron_isoDeposits_neutralHadronIso04);
+   fChain->SetBranchAddress("Electron_isoDeposits_photonIso04", &Electron_isoDeposits_photonIso04, &b_Electron_isoDeposits_photonIso04);
+   fChain->SetBranchAddress("Electron_isoDeposits_chargedHadronIso03", &Electron_isoDeposits_chargedHadronIso03, &b_Electron_isoDeposits_chargedHadronIso03);
+   fChain->SetBranchAddress("Electron_isoDeposits_neutralHadronIso03", &Electron_isoDeposits_neutralHadronIso03, &b_Electron_isoDeposits_neutralHadronIso03);
+   fChain->SetBranchAddress("Electron_isoDeposits_photonIso03", &Electron_isoDeposits_photonIso03, &b_Electron_isoDeposits_photonIso03);
    fChain->SetBranchAddress("Electron_sigmaIetaIeta", &Electron_sigmaIetaIeta, &b_Electron_sigmaIetaIeta);
    fChain->SetBranchAddress("Electron_hadronicOverEm", &Electron_hadronicOverEm, &b_Electron_hadronicOverEm);
    fChain->SetBranchAddress("Electron_fbrem", &Electron_fbrem, &b_Electron_fbrem);
@@ -1839,10 +1850,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0rt_pt", &MET_CorrT0rt_pt, &b_MET_CorrT0rt_pt);
    fChain->SetBranchAddress("MET_CorrT0rt_phi", &MET_CorrT0rt_phi, &b_MET_CorrT0rt_phi);
    fChain->SetBranchAddress("MET_CorrT0rt_sumET", &MET_CorrT0rt_sumET, &b_MET_CorrT0rt_sumET);
-   fChain->SetBranchAddress("MET_CorrT0rt_significance", &MET_CorrT0rt_significance, &b_MET_CorrT0rt_significance);
-   fChain->SetBranchAddress("MET_CorrT0rt_significance_xx", &MET_CorrT0rt_significance_xx, &b_MET_CorrT0rt_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0rt_significance_xy", &MET_CorrT0rt_significance_xy, &b_MET_CorrT0rt_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0rt_significance_yy", &MET_CorrT0rt_significance_yy, &b_MET_CorrT0rt_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0rt_MuonEtFraction", &MET_CorrT0rt_MuonEtFraction, &b_MET_CorrT0rt_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0rt_NeutralEMFraction", &MET_CorrT0rt_NeutralEMFraction, &b_MET_CorrT0rt_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0rt_NeutralHadEtFraction", &MET_CorrT0rt_NeutralHadEtFraction, &b_MET_CorrT0rt_NeutralHadEtFraction);
@@ -1852,10 +1859,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0rtT1_pt", &MET_CorrT0rtT1_pt, &b_MET_CorrT0rtT1_pt);
    fChain->SetBranchAddress("MET_CorrT0rtT1_phi", &MET_CorrT0rtT1_phi, &b_MET_CorrT0rtT1_phi);
    fChain->SetBranchAddress("MET_CorrT0rtT1_sumET", &MET_CorrT0rtT1_sumET, &b_MET_CorrT0rtT1_sumET);
-   fChain->SetBranchAddress("MET_CorrT0rtT1_significance", &MET_CorrT0rtT1_significance, &b_MET_CorrT0rtT1_significance);
-   fChain->SetBranchAddress("MET_CorrT0rtT1_significance_xx", &MET_CorrT0rtT1_significance_xx, &b_MET_CorrT0rtT1_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0rtT1_significance_xy", &MET_CorrT0rtT1_significance_xy, &b_MET_CorrT0rtT1_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0rtT1_significance_yy", &MET_CorrT0rtT1_significance_yy, &b_MET_CorrT0rtT1_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0rtT1_MuonEtFraction", &MET_CorrT0rtT1_MuonEtFraction, &b_MET_CorrT0rtT1_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0rtT1_NeutralEMFraction", &MET_CorrT0rtT1_NeutralEMFraction, &b_MET_CorrT0rtT1_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0rtT1_NeutralHadEtFraction", &MET_CorrT0rtT1_NeutralHadEtFraction, &b_MET_CorrT0rtT1_NeutralHadEtFraction);
@@ -1865,10 +1868,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0pc_pt", &MET_CorrT0pc_pt, &b_MET_CorrT0pc_pt);
    fChain->SetBranchAddress("MET_CorrT0pc_phi", &MET_CorrT0pc_phi, &b_MET_CorrT0pc_phi);
    fChain->SetBranchAddress("MET_CorrT0pc_sumET", &MET_CorrT0pc_sumET, &b_MET_CorrT0pc_sumET);
-   fChain->SetBranchAddress("MET_CorrT0pc_significance", &MET_CorrT0pc_significance, &b_MET_CorrT0pc_significance);
-   fChain->SetBranchAddress("MET_CorrT0pc_significance_xx", &MET_CorrT0pc_significance_xx, &b_MET_CorrT0pc_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0pc_significance_xy", &MET_CorrT0pc_significance_xy, &b_MET_CorrT0pc_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0pc_significance_yy", &MET_CorrT0pc_significance_yy, &b_MET_CorrT0pc_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0pc_MuonEtFraction", &MET_CorrT0pc_MuonEtFraction, &b_MET_CorrT0pc_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0pc_NeutralEMFraction", &MET_CorrT0pc_NeutralEMFraction, &b_MET_CorrT0pc_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0pc_NeutralHadEtFraction", &MET_CorrT0pc_NeutralHadEtFraction, &b_MET_CorrT0pc_NeutralHadEtFraction);
@@ -1878,10 +1877,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0pcT1_pt", &MET_CorrT0pcT1_pt, &b_MET_CorrT0pcT1_pt);
    fChain->SetBranchAddress("MET_CorrT0pcT1_phi", &MET_CorrT0pcT1_phi, &b_MET_CorrT0pcT1_phi);
    fChain->SetBranchAddress("MET_CorrT0pcT1_sumET", &MET_CorrT0pcT1_sumET, &b_MET_CorrT0pcT1_sumET);
-   fChain->SetBranchAddress("MET_CorrT0pcT1_significance", &MET_CorrT0pcT1_significance, &b_MET_CorrT0pcT1_significance);
-   fChain->SetBranchAddress("MET_CorrT0pcT1_significance_xx", &MET_CorrT0pcT1_significance_xx, &b_MET_CorrT0pcT1_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0pcT1_significance_xy", &MET_CorrT0pcT1_significance_xy, &b_MET_CorrT0pcT1_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0pcT1_significance_yy", &MET_CorrT0pcT1_significance_yy, &b_MET_CorrT0pcT1_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0pcT1_MuonEtFraction", &MET_CorrT0pcT1_MuonEtFraction, &b_MET_CorrT0pcT1_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0pcT1_NeutralEMFraction", &MET_CorrT0pcT1_NeutralEMFraction, &b_MET_CorrT0pcT1_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0pcT1_NeutralHadEtFraction", &MET_CorrT0pcT1_NeutralHadEtFraction, &b_MET_CorrT0pcT1_NeutralHadEtFraction);
@@ -1891,10 +1886,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0rtTxy_pt", &MET_CorrT0rtTxy_pt, &b_MET_CorrT0rtTxy_pt);
    fChain->SetBranchAddress("MET_CorrT0rtTxy_phi", &MET_CorrT0rtTxy_phi, &b_MET_CorrT0rtTxy_phi);
    fChain->SetBranchAddress("MET_CorrT0rtTxy_sumET", &MET_CorrT0rtTxy_sumET, &b_MET_CorrT0rtTxy_sumET);
-   fChain->SetBranchAddress("MET_CorrT0rtTxy_significance", &MET_CorrT0rtTxy_significance, &b_MET_CorrT0rtTxy_significance);
-   fChain->SetBranchAddress("MET_CorrT0rtTxy_significance_xx", &MET_CorrT0rtTxy_significance_xx, &b_MET_CorrT0rtTxy_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0rtTxy_significance_xy", &MET_CorrT0rtTxy_significance_xy, &b_MET_CorrT0rtTxy_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0rtTxy_significance_yy", &MET_CorrT0rtTxy_significance_yy, &b_MET_CorrT0rtTxy_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0rtTxy_MuonEtFraction", &MET_CorrT0rtTxy_MuonEtFraction, &b_MET_CorrT0rtTxy_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0rtTxy_NeutralEMFraction", &MET_CorrT0rtTxy_NeutralEMFraction, &b_MET_CorrT0rtTxy_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0rtTxy_NeutralHadEtFraction", &MET_CorrT0rtTxy_NeutralHadEtFraction, &b_MET_CorrT0rtTxy_NeutralHadEtFraction);
@@ -1904,10 +1895,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_pt", &MET_CorrT0rtT1Txy_pt, &b_MET_CorrT0rtT1Txy_pt);
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_phi", &MET_CorrT0rtT1Txy_phi, &b_MET_CorrT0rtT1Txy_phi);
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_sumET", &MET_CorrT0rtT1Txy_sumET, &b_MET_CorrT0rtT1Txy_sumET);
-   fChain->SetBranchAddress("MET_CorrT0rtT1Txy_significance", &MET_CorrT0rtT1Txy_significance, &b_MET_CorrT0rtT1Txy_significance);
-   fChain->SetBranchAddress("MET_CorrT0rtT1Txy_significance_xx", &MET_CorrT0rtT1Txy_significance_xx, &b_MET_CorrT0rtT1Txy_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0rtT1Txy_significance_xy", &MET_CorrT0rtT1Txy_significance_xy, &b_MET_CorrT0rtT1Txy_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0rtT1Txy_significance_yy", &MET_CorrT0rtT1Txy_significance_yy, &b_MET_CorrT0rtT1Txy_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_MuonEtFraction", &MET_CorrT0rtT1Txy_MuonEtFraction, &b_MET_CorrT0rtT1Txy_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_NeutralEMFraction", &MET_CorrT0rtT1Txy_NeutralEMFraction, &b_MET_CorrT0rtT1Txy_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0rtT1Txy_NeutralHadEtFraction", &MET_CorrT0rtT1Txy_NeutralHadEtFraction, &b_MET_CorrT0rtT1Txy_NeutralHadEtFraction);
@@ -1917,10 +1904,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0pcTxy_pt", &MET_CorrT0pcTxy_pt, &b_MET_CorrT0pcTxy_pt);
    fChain->SetBranchAddress("MET_CorrT0pcTxy_phi", &MET_CorrT0pcTxy_phi, &b_MET_CorrT0pcTxy_phi);
    fChain->SetBranchAddress("MET_CorrT0pcTxy_sumET", &MET_CorrT0pcTxy_sumET, &b_MET_CorrT0pcTxy_sumET);
-   fChain->SetBranchAddress("MET_CorrT0pcTxy_significance", &MET_CorrT0pcTxy_significance, &b_MET_CorrT0pcTxy_significance);
-   fChain->SetBranchAddress("MET_CorrT0pcTxy_significance_xx", &MET_CorrT0pcTxy_significance_xx, &b_MET_CorrT0pcTxy_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0pcTxy_significance_xy", &MET_CorrT0pcTxy_significance_xy, &b_MET_CorrT0pcTxy_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0pcTxy_significance_yy", &MET_CorrT0pcTxy_significance_yy, &b_MET_CorrT0pcTxy_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0pcTxy_MuonEtFraction", &MET_CorrT0pcTxy_MuonEtFraction, &b_MET_CorrT0pcTxy_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0pcTxy_NeutralEMFraction", &MET_CorrT0pcTxy_NeutralEMFraction, &b_MET_CorrT0pcTxy_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0pcTxy_NeutralHadEtFraction", &MET_CorrT0pcTxy_NeutralHadEtFraction, &b_MET_CorrT0pcTxy_NeutralHadEtFraction);
@@ -1930,10 +1913,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_pt", &MET_CorrT0pcT1Txy_pt, &b_MET_CorrT0pcT1Txy_pt);
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_phi", &MET_CorrT0pcT1Txy_phi, &b_MET_CorrT0pcT1Txy_phi);
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_sumET", &MET_CorrT0pcT1Txy_sumET, &b_MET_CorrT0pcT1Txy_sumET);
-   fChain->SetBranchAddress("MET_CorrT0pcT1Txy_significance", &MET_CorrT0pcT1Txy_significance, &b_MET_CorrT0pcT1Txy_significance);
-   fChain->SetBranchAddress("MET_CorrT0pcT1Txy_significance_xx", &MET_CorrT0pcT1Txy_significance_xx, &b_MET_CorrT0pcT1Txy_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT0pcT1Txy_significance_xy", &MET_CorrT0pcT1Txy_significance_xy, &b_MET_CorrT0pcT1Txy_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT0pcT1Txy_significance_yy", &MET_CorrT0pcT1Txy_significance_yy, &b_MET_CorrT0pcT1Txy_significance_yy);
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_MuonEtFraction", &MET_CorrT0pcT1Txy_MuonEtFraction, &b_MET_CorrT0pcT1Txy_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_NeutralEMFraction", &MET_CorrT0pcT1Txy_NeutralEMFraction, &b_MET_CorrT0pcT1Txy_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT0pcT1Txy_NeutralHadEtFraction", &MET_CorrT0pcT1Txy_NeutralHadEtFraction, &b_MET_CorrT0pcT1Txy_NeutralHadEtFraction);
@@ -1943,10 +1922,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT1_pt", &MET_CorrT1_pt, &b_MET_CorrT1_pt);
    fChain->SetBranchAddress("MET_CorrT1_phi", &MET_CorrT1_phi, &b_MET_CorrT1_phi);
    fChain->SetBranchAddress("MET_CorrT1_sumET", &MET_CorrT1_sumET, &b_MET_CorrT1_sumET);
-   fChain->SetBranchAddress("MET_CorrT1_significance", &MET_CorrT1_significance, &b_MET_CorrT1_significance);
-   fChain->SetBranchAddress("MET_CorrT1_significance_xx", &MET_CorrT1_significance_xx, &b_MET_CorrT1_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT1_significance_xy", &MET_CorrT1_significance_xy, &b_MET_CorrT1_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT1_significance_yy", &MET_CorrT1_significance_yy, &b_MET_CorrT1_significance_yy);
    fChain->SetBranchAddress("MET_CorrT1_MuonEtFraction", &MET_CorrT1_MuonEtFraction, &b_MET_CorrT1_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT1_NeutralEMFraction", &MET_CorrT1_NeutralEMFraction, &b_MET_CorrT1_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT1_NeutralHadEtFraction", &MET_CorrT1_NeutralHadEtFraction, &b_MET_CorrT1_NeutralHadEtFraction);
@@ -1956,10 +1931,6 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrT1Txy_pt", &MET_CorrT1Txy_pt, &b_MET_CorrT1Txy_pt);
    fChain->SetBranchAddress("MET_CorrT1Txy_phi", &MET_CorrT1Txy_phi, &b_MET_CorrT1Txy_phi);
    fChain->SetBranchAddress("MET_CorrT1Txy_sumET", &MET_CorrT1Txy_sumET, &b_MET_CorrT1Txy_sumET);
-   fChain->SetBranchAddress("MET_CorrT1Txy_significance", &MET_CorrT1Txy_significance, &b_MET_CorrT1Txy_significance);
-   fChain->SetBranchAddress("MET_CorrT1Txy_significance_xx", &MET_CorrT1Txy_significance_xx, &b_MET_CorrT1Txy_significance_xx);
-   fChain->SetBranchAddress("MET_CorrT1Txy_significance_xy", &MET_CorrT1Txy_significance_xy, &b_MET_CorrT1Txy_significance_xy);
-   fChain->SetBranchAddress("MET_CorrT1Txy_significance_yy", &MET_CorrT1Txy_significance_yy, &b_MET_CorrT1Txy_significance_yy);
    fChain->SetBranchAddress("MET_CorrT1Txy_MuonEtFraction", &MET_CorrT1Txy_MuonEtFraction, &b_MET_CorrT1Txy_MuonEtFraction);
    fChain->SetBranchAddress("MET_CorrT1Txy_NeutralEMFraction", &MET_CorrT1Txy_NeutralEMFraction, &b_MET_CorrT1Txy_NeutralEMFraction);
    fChain->SetBranchAddress("MET_CorrT1Txy_NeutralHadEtFraction", &MET_CorrT1Txy_NeutralHadEtFraction, &b_MET_CorrT1Txy_NeutralHadEtFraction);
@@ -1969,18 +1940,10 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrCaloT1_pt", &MET_CorrCaloT1_pt, &b_MET_CorrCaloT1_pt);
    fChain->SetBranchAddress("MET_CorrCaloT1_phi", &MET_CorrCaloT1_phi, &b_MET_CorrCaloT1_phi);
    fChain->SetBranchAddress("MET_CorrCaloT1_sumET", &MET_CorrCaloT1_sumET, &b_MET_CorrCaloT1_sumET);
-   fChain->SetBranchAddress("MET_CorrCaloT1_significance", &MET_CorrCaloT1_significance, &b_MET_CorrCaloT1_significance);
-   fChain->SetBranchAddress("MET_CorrCaloT1_significance_xx", &MET_CorrCaloT1_significance_xx, &b_MET_CorrCaloT1_significance_xx);
-   fChain->SetBranchAddress("MET_CorrCaloT1_significance_xy", &MET_CorrCaloT1_significance_xy, &b_MET_CorrCaloT1_significance_xy);
-   fChain->SetBranchAddress("MET_CorrCaloT1_significance_yy", &MET_CorrCaloT1_significance_yy, &b_MET_CorrCaloT1_significance_yy);
    fChain->SetBranchAddress("MET_CorrCaloT1T2_et", &MET_CorrCaloT1T2_et, &b_MET_CorrCaloT1T2_et);
    fChain->SetBranchAddress("MET_CorrCaloT1T2_pt", &MET_CorrCaloT1T2_pt, &b_MET_CorrCaloT1T2_pt);
    fChain->SetBranchAddress("MET_CorrCaloT1T2_phi", &MET_CorrCaloT1T2_phi, &b_MET_CorrCaloT1T2_phi);
    fChain->SetBranchAddress("MET_CorrCaloT1T2_sumET", &MET_CorrCaloT1T2_sumET, &b_MET_CorrCaloT1T2_sumET);
-   fChain->SetBranchAddress("MET_CorrCaloT1T2_significance", &MET_CorrCaloT1T2_significance, &b_MET_CorrCaloT1T2_significance);
-   fChain->SetBranchAddress("MET_CorrCaloT1T2_significance_xx", &MET_CorrCaloT1T2_significance_xx, &b_MET_CorrCaloT1T2_significance_xx);
-   fChain->SetBranchAddress("MET_CorrCaloT1T2_significance_xy", &MET_CorrCaloT1T2_significance_xy, &b_MET_CorrCaloT1T2_significance_xy);
-   fChain->SetBranchAddress("MET_CorrCaloT1T2_significance_yy", &MET_CorrCaloT1T2_significance_yy, &b_MET_CorrCaloT1T2_significance_yy);
    fChain->SetBranchAddress("MET_CorrMVA_et", &MET_CorrMVA_et, &b_MET_CorrMVA_et);
    fChain->SetBranchAddress("MET_CorrMVA_pt", &MET_CorrMVA_pt, &b_MET_CorrMVA_pt);
    fChain->SetBranchAddress("MET_CorrMVA_phi", &MET_CorrMVA_phi, &b_MET_CorrMVA_phi);
@@ -2012,6 +1975,48 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("MET_CorrMVAMuTau_Type7EtFraction", &MET_CorrMVAMuTau_Type7EtFraction, &b_MET_CorrMVAMuTau_Type7EtFraction);
    fChain->SetBranchAddress("MET_CorrMVAMuTau_srcMuon_p4", &MET_CorrMVAMuTau_srcMuon_p4, &b_MET_CorrMVAMuTau_srcMuon_p4);
    fChain->SetBranchAddress("MET_CorrMVAMuTau_srcTau_p4", &MET_CorrMVAMuTau_srcTau_p4, &b_MET_CorrMVAMuTau_srcTau_p4);
+   fChain->SetBranchAddress("MET_Type1Corr_et", &MET_Type1Corr_et, &b_MET_Type1Corr_et);
+   fChain->SetBranchAddress("MET_Type1Corr_pt", &MET_Type1Corr_pt, &b_MET_Type1Corr_pt);
+   fChain->SetBranchAddress("MET_Type1Corr_phi", &MET_Type1Corr_phi, &b_MET_Type1Corr_phi);
+   fChain->SetBranchAddress("MET_Type1Corr_sumET", &MET_Type1Corr_sumET, &b_MET_Type1Corr_sumET);
+   fChain->SetBranchAddress("MET_Type1Corr_MuonEtFraction", &MET_Type1Corr_MuonEtFraction, &b_MET_Type1Corr_MuonEtFraction);
+   fChain->SetBranchAddress("MET_Type1Corr_NeutralEMFraction", &MET_Type1Corr_NeutralEMFraction, &b_MET_Type1Corr_NeutralEMFraction);
+   fChain->SetBranchAddress("MET_Type1Corr_NeutralHadEtFraction", &MET_Type1Corr_NeutralHadEtFraction, &b_MET_Type1Corr_NeutralHadEtFraction);
+   fChain->SetBranchAddress("MET_Type1Corr_Type6EtFraction", &MET_Type1Corr_Type6EtFraction, &b_MET_Type1Corr_Type6EtFraction);
+   fChain->SetBranchAddress("MET_Type1Corr_Type7EtFraction", &MET_Type1Corr_Type7EtFraction, &b_MET_Type1Corr_Type7EtFraction);
+   fChain->SetBranchAddress("MET_Type1p2Corr_et", &MET_Type1p2Corr_et, &b_MET_Type1p2Corr_et);
+   fChain->SetBranchAddress("MET_Type1p2Corr_pt", &MET_Type1p2Corr_pt, &b_MET_Type1p2Corr_pt);
+   fChain->SetBranchAddress("MET_Type1p2Corr_phi", &MET_Type1p2Corr_phi, &b_MET_Type1p2Corr_phi);
+   fChain->SetBranchAddress("MET_Type1p2Corr_sumET", &MET_Type1p2Corr_sumET, &b_MET_Type1p2Corr_sumET);
+   fChain->SetBranchAddress("MET_Type1p2Corr_MuonEtFraction", &MET_Type1p2Corr_MuonEtFraction, &b_MET_Type1p2Corr_MuonEtFraction);
+   fChain->SetBranchAddress("MET_Type1p2Corr_NeutralEMFraction", &MET_Type1p2Corr_NeutralEMFraction, &b_MET_Type1p2Corr_NeutralEMFraction);
+   fChain->SetBranchAddress("MET_Type1p2Corr_NeutralHadEtFraction", &MET_Type1p2Corr_NeutralHadEtFraction, &b_MET_Type1p2Corr_NeutralHadEtFraction);
+   fChain->SetBranchAddress("MET_Type1p2Corr_Type6EtFraction", &MET_Type1p2Corr_Type6EtFraction, &b_MET_Type1p2Corr_Type6EtFraction);
+   fChain->SetBranchAddress("MET_Type1p2Corr_Type7EtFraction", &MET_Type1p2Corr_Type7EtFraction, &b_MET_Type1p2Corr_Type7EtFraction);
+   fChain->SetBranchAddress("MET_Type1CorrElectronUp_et", &MET_Type1CorrElectronUp_et, &b_MET_Type1CorrElectronUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrElectronDown_et", &MET_Type1CorrElectronDown_et, &b_MET_Type1CorrElectronDown_et);
+   fChain->SetBranchAddress("MET_Type1CorrMuonUp_et", &MET_Type1CorrMuonUp_et, &b_MET_Type1CorrMuonUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrMuonDown_et", &MET_Type1CorrMuonDown_et, &b_MET_Type1CorrMuonDown_et);
+   fChain->SetBranchAddress("MET_Type1CorrTauUp_et", &MET_Type1CorrTauUp_et, &b_MET_Type1CorrTauUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrTauDown_et", &MET_Type1CorrTauDown_et, &b_MET_Type1CorrTauDown_et);
+   fChain->SetBranchAddress("MET_Type1CorrJetResUp_et", &MET_Type1CorrJetResUp_et, &b_MET_Type1CorrJetResUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrJetResDown_et", &MET_Type1CorrJetResDown_et, &b_MET_Type1CorrJetResDown_et);
+   fChain->SetBranchAddress("MET_Type1CorrJetEnUp_et", &MET_Type1CorrJetEnUp_et, &b_MET_Type1CorrJetEnUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrJetEnDown_et", &MET_Type1CorrJetEnDown_et, &b_MET_Type1CorrJetEnDown_et);
+   fChain->SetBranchAddress("MET_Type1CorrUnclusteredUp_et", &MET_Type1CorrUnclusteredUp_et, &b_MET_Type1CorrUnclusteredUp_et);
+   fChain->SetBranchAddress("MET_Type1CorrUnclusteredDown_et", &MET_Type1CorrUnclusteredDown_et, &b_MET_Type1CorrUnclusteredDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrElectronUp_et", &MET_Type1p2CorrElectronUp_et, &b_MET_Type1p2CorrElectronUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrElectronDown_et", &MET_Type1p2CorrElectronDown_et, &b_MET_Type1p2CorrElectronDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrMuonUp_et", &MET_Type1p2CorrMuonUp_et, &b_MET_Type1p2CorrMuonUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrMuonDown_et", &MET_Type1p2CorrMuonDown_et, &b_MET_Type1p2CorrMuonDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrTauUp_et", &MET_Type1p2CorrTauUp_et, &b_MET_Type1p2CorrTauUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrTauDown_et", &MET_Type1p2CorrTauDown_et, &b_MET_Type1p2CorrTauDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrJetResUp_et", &MET_Type1p2CorrJetResUp_et, &b_MET_Type1p2CorrJetResUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrJetResDown_et", &MET_Type1p2CorrJetResDown_et, &b_MET_Type1p2CorrJetResDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrJetEnUp_et", &MET_Type1p2CorrJetEnUp_et, &b_MET_Type1p2CorrJetEnUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrJetEnDown_et", &MET_Type1p2CorrJetEnDown_et, &b_MET_Type1p2CorrJetEnDown_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrUnclusteredUp_et", &MET_Type1p2CorrUnclusteredUp_et, &b_MET_Type1p2CorrUnclusteredUp_et);
+   fChain->SetBranchAddress("MET_Type1p2CorrUnclusteredDown_et", &MET_Type1p2CorrUnclusteredDown_et, &b_MET_Type1p2CorrUnclusteredDown_et);
    fChain->SetBranchAddress("Event_EventNumber", &Event_EventNumber, &b_Event_EventNumber);
    fChain->SetBranchAddress("Event_RunNumber", &Event_RunNumber, &b_Event_RunNumber);
    fChain->SetBranchAddress("Event_bunchCrossing", &Event_bunchCrossing, &b_Event_bunchCrossing);
@@ -2059,12 +2064,12 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("GenEventInfoProduct_x1", &GenEventInfoProduct_x1, &b_GenEventInfoProduct_x1);
    fChain->SetBranchAddress("GenEventInfoProduct_x2", &GenEventInfoProduct_x2, &b_GenEventInfoProduct_x2);
    fChain->SetBranchAddress("GenEventInfoProduct_scalePDF", &GenEventInfoProduct_scalePDF, &b_GenEventInfoProduct_scalePDF);
-   fChain->SetBranchAddress("PdfWeights", &PdfWeights, &b_PdfWeights);
    fChain->SetBranchAddress("MC_p4", &MC_p4, &b_MC_p4);
    fChain->SetBranchAddress("MC_pdgid", &MC_pdgid, &b_MC_pdgid);
    fChain->SetBranchAddress("MC_charge", &MC_charge, &b_MC_charge);
    fChain->SetBranchAddress("MC_midx", &MC_midx, &b_MC_midx);
    fChain->SetBranchAddress("MC_childpdgid", &MC_childpdgid, &b_MC_childpdgid);
+   fChain->SetBranchAddress("MC_childidx", &MC_childidx, &b_MC_childidx);
    fChain->SetBranchAddress("MC_status", &MC_status, &b_MC_status);
    fChain->SetBranchAddress("MCSignalParticle_p4", &MCSignalParticle_p4, &b_MCSignalParticle_p4);
    fChain->SetBranchAddress("MCSignalParticle_pdgid", &MCSignalParticle_pdgid, &b_MCSignalParticle_pdgid);
