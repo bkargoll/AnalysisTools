@@ -1,293 +1,6 @@
-ID= 1 AllEvt= 153409868.000000 AllEvtErr= 12385.873903 SelEvt= 45780100.000000  SelEvtErr= 6766.099737 AllEvtnoweight= 153409868.000000 SelEvtnoweight= 45780100.000000 Eff(weight)= 0.298417 Eff(noweight)= 0.298417 Nfile= 3061 
-ID= 60 AllEvt= 153409868.000000 AllEvtErr= 12385.873903 SelEvt= 45780100.000000  SelEvtErr= 6766.099737 AllEvtnoweight= 153409868.000000 SelEvtnoweight= 45780100.000000 Eff(weight)= 0.298417 Eff(noweight)= 0.298417 Nfile= 3061 
-ID= 30 AllEvt= 20307058.000000 AllEvtErr= 4506.335455 SelEvt= 6389300.000000  SelEvtErr= 2527.706417 AllEvtnoweight= 20307058.000000 SelEvtnoweight= 6389300.000000 Eff(weight)= 0.314634 Eff(noweight)= 0.314634 Nfile= 803 
-ID= 33 AllEvt= 3340369.000000 AllEvtErr= 1827.667643 SelEvt= 215863.000000  SelEvtErr= 464.610483 AllEvtnoweight= 3340369.000000 SelEvtnoweight= 215863.000000 Eff(weight)= 0.064623 Eff(noweight)= 0.064623 Nfile= 803 
-ID= 10110333 AllEvt= 411301.000000 AllEvtErr= 641.327434 SelEvt= 789.000000  SelEvtErr= 28.089115 AllEvtnoweight= 411301.000000 SelEvtnoweight= 789.000000 Eff(weight)= 0.001918 Eff(noweight)= 0.001918 Nfile= 803 
-ID= 10110433 AllEvt= 930933.000000 AllEvtErr= 964.848780 SelEvt= 1514.000000  SelEvtErr= 38.910123 AllEvtnoweight= 930933.000000 SelEvtnoweight= 1514.000000 Eff(weight)= 0.001626 Eff(noweight)= 0.001626 Nfile= 803 
-ID= 10130533 AllEvt= 327525.000000 AllEvtErr= 572.297883 SelEvt= 688.000000  SelEvtErr= 26.229730 AllEvtnoweight= 327525.000000 SelEvtnoweight= 688.000000 Eff(weight)= 0.002101 Eff(noweight)= 0.002101 Nfile= 803 
-ID= 10210333 AllEvt= 399888.000000 AllEvtErr= 632.366940 SelEvt= 40840.000000  SelEvtErr= 202.089067 AllEvtnoweight= 399888.000000 SelEvtnoweight= 40840.000000 Eff(weight)= 0.102129 Eff(noweight)= 0.102129 Nfile= 803 
-ID= 10210433 AllEvt= 906253.000000 AllEvtErr= 951.973282 SelEvt= 98413.000000  SelEvtErr= 313.708474 AllEvtnoweight= 906253.000000 SelEvtnoweight= 98413.000000 Eff(weight)= 0.108593 Eff(noweight)= 0.108593 Nfile= 803 
-ID= 10230533 AllEvt= 317233.000000 AllEvtErr= 563.234302 SelEvt= 36391.000000  SelEvtErr= 190.764229 AllEvtnoweight= 317233.000000 SelEvtnoweight= 36391.000000 Eff(weight)= 0.114714 Eff(noweight)= 0.114714 Nfile= 803 
-ID= 10230833 AllEvt= 161449.000000 AllEvtErr= 401.806911 SelEvt= 19488.000000  SelEvtErr= 139.599430 AllEvtnoweight= 161449.000000 SelEvtnoweight= 19488.000000 Eff(weight)= 0.120707 Eff(noweight)= 0.120707 Nfile= 803 
-ID= 10231433 AllEvt= 5372.000000 AllEvtErr= 73.293937 SelEvt= 663.000000  SelEvtErr= 25.748760 AllEvtnoweight= 5372.000000 SelEvtnoweight= 663.000000 Eff(weight)= 0.123418 Eff(noweight)= 0.123418 Nfile= 801 
-ID= 10231833 AllEvt= 17844.000000 AllEvtErr= 133.581453 SelEvt= 2146.000000  SelEvtErr= 46.324915 AllEvtnoweight= 17844.000000 SelEvtnoweight= 2146.000000 Eff(weight)= 0.120265 Eff(noweight)= 0.120265 Nfile= 803 
-ID= 10310333 AllEvt= 126719.000000 AllEvtErr= 355.975991 SelEvt= 56.000000  SelEvtErr= 7.483314 AllEvtnoweight= 126719.000000 SelEvtnoweight= 56.000000 Eff(weight)= 0.000442 Eff(noweight)= 0.000442 Nfile= 803 
-ID= 10330533 AllEvt= 201173.000000 AllEvtErr= 448.523077 SelEvt= 66.000000  SelEvtErr= 8.124037 AllEvtnoweight= 201173.000000 SelEvtnoweight= 66.000000 Eff(weight)= 0.000328 Eff(noweight)= 0.000328 Nfile= 803 
-ID= 10410333 AllEvt= 575242.000000 AllEvtErr= 758.447218 SelEvt= 243.000000  SelEvtErr= 15.588449 AllEvtnoweight= 575242.000000 SelEvtnoweight= 243.000000 Eff(weight)= 0.000422 Eff(noweight)= 0.000422 Nfile= 803 
-ID= 10410433 AllEvt= 649719.000000 AllEvtErr= 806.051505 SelEvt= 242.000000  SelEvtErr= 15.556339 AllEvtnoweight= 649719.000000 SelEvtnoweight= 242.000000 Eff(weight)= 0.000372 Eff(noweight)= 0.000372 Nfile= 803 
-ID= 10430533 AllEvt= 457384.000000 AllEvtErr= 676.301661 SelEvt= 120.000000  SelEvtErr= 10.954449 AllEvtnoweight= 457384.000000 SelEvtnoweight= 120.000000 Eff(weight)= 0.000262 Eff(noweight)= 0.000262 Nfile= 803 
-ID= 10510333 AllEvt= 206547.000000 AllEvtErr= 454.474347 SelEvt= 71.000000  SelEvtErr= 8.426148 AllEvtnoweight= 206547.000000 SelEvtnoweight= 71.000000 Eff(weight)= 0.000344 Eff(noweight)= 0.000344 Nfile= 803 
-ID= 10510433 AllEvt= 468834.000000 AllEvtErr= 684.714509 SelEvt= 162.000000  SelEvtErr= 12.727919 AllEvtnoweight= 468834.000000 SelEvtnoweight= 162.000000 Eff(weight)= 0.000346 Eff(noweight)= 0.000346 Nfile= 803 
-ID= 10530533 AllEvt= 165137.000000 AllEvtErr= 406.370271 SelEvt= 25.000000  SelEvtErr= 4.999999 AllEvtnoweight= 165137.000000 SelEvtnoweight= 25.000000 Eff(weight)= 0.000151 Eff(noweight)= 0.000151 Nfile= 803 
-ID= 10610333 AllEvt= 16334.000000 AllEvtErr= 127.804568 SelEvt= 12.000000  SelEvtErr= 3.464102 AllEvtnoweight= 16334.000000 SelEvtnoweight= 12.000000 Eff(weight)= 0.000735 Eff(noweight)= 0.000735 Nfile= 803 
-ID= 10610433 AllEvt= 36753.000000 AllEvtErr= 191.710696 SelEvt= 30.000000  SelEvtErr= 5.477225 AllEvtnoweight= 36753.000000 SelEvtnoweight= 30.000000 Eff(weight)= 0.000816 Eff(noweight)= 0.000816 Nfile= 803 
-ID= 10630533 AllEvt= 12788.000000 AllEvtErr= 113.084055 SelEvt= 6.000000  SelEvtErr= 2.449490 AllEvtnoweight= 12788.000000 SelEvtnoweight= 6.000000 Eff(weight)= 0.000469 Eff(noweight)= 0.000469 Nfile= 803 
-ID= 10710333 AllEvt= 30559.000000 AllEvtErr= 174.811294 SelEvt= 12.000000  SelEvtErr= 3.464102 AllEvtnoweight= 30559.000000 SelEvtnoweight= 12.000000 Eff(weight)= 0.000393 Eff(noweight)= 0.000393 Nfile= 803 
-ID= 10710433 AllEvt= 69008.000000 AllEvtErr= 262.693713 SelEvt= 18.000000  SelEvtErr= 4.242641 AllEvtnoweight= 69008.000000 SelEvtnoweight= 18.000000 Eff(weight)= 0.000261 Eff(noweight)= 0.000261 Nfile= 803 
-ID= 10730533 AllEvt= 24562.000000 AllEvtErr= 156.722651 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 24562.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.000163 Eff(noweight)= 0.000163 Nfile= 803 
-ID= 10910333 AllEvt= 22886.000000 AllEvtErr= 151.281176 SelEvt= 13.000000  SelEvtErr= 3.605551 AllEvtnoweight= 22886.000000 SelEvtnoweight= 13.000000 Eff(weight)= 0.000568 Eff(noweight)= 0.000568 Nfile= 803 
-ID= 10910433 AllEvt= 51678.000000 AllEvtErr= 227.327942 SelEvt= 17.000000  SelEvtErr= 4.123106 AllEvtnoweight= 51678.000000 SelEvtnoweight= 17.000000 Eff(weight)= 0.000329 Eff(noweight)= 0.000329 Nfile= 803 
-ID= 10930533 AllEvt= 18373.000000 AllEvtErr= 135.547049 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 18373.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.000163 Eff(noweight)= 0.000163 Nfile= 803 
-ID= 11510333 AllEvt= 3527.000000 AllEvtErr= 59.388553 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 3527.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000567 Eff(noweight)= 0.000567 Nfile= 793 
-ID= 11510433 AllEvt= 7721.000000 AllEvtErr= 87.869218 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 7721.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000130 Eff(noweight)= 0.000130 Nfile= 803 
-ID= 11530533 AllEvt= 2731.000000 AllEvtErr= 52.258961 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2731.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 780 
-ID= 11610333 AllEvt= 3437.000000 AllEvtErr= 58.625931 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3437.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 789 
-ID= 11610433 AllEvt= 7829.000000 AllEvtErr= 88.481630 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 7829.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.000383 Eff(noweight)= 0.000383 Nfile= 803 
-ID= 11630533 AllEvt= 2783.000000 AllEvtErr= 52.754136 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2783.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 772 
-ID= 11710333 AllEvt= 1146.000000 AllEvtErr= 33.852592 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1146.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 594 
-ID= 11710433 AllEvt= 2583.000000 AllEvtErr= 50.823209 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 2583.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000774 Eff(noweight)= 0.000774 Nfile= 775 
-ID= 11730533 AllEvt= 879.000000 AllEvtErr= 29.647906 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 879.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 536 
-ID= 11910333 AllEvt= 12474.000000 AllEvtErr= 111.687077 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 12474.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000080 Eff(noweight)= 0.000080 Nfile= 803 
-ID= 11910433 AllEvt= 28300.000000 AllEvtErr= 168.226006 SelEvt= 8.000000  SelEvtErr= 2.828427 AllEvtnoweight= 28300.000000 SelEvtnoweight= 8.000000 Eff(weight)= 0.000283 Eff(noweight)= 0.000283 Nfile= 803 
-ID= 11930533 AllEvt= 10043.000000 AllEvtErr= 100.214771 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 10043.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000100 Eff(noweight)= 0.000100 Nfile= 803 
-ID= 12010333 AllEvt= 3981.000000 AllEvtErr= 63.095171 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 3981.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000502 Eff(noweight)= 0.000502 Nfile= 796 
-ID= 12010433 AllEvt= 8763.000000 AllEvtErr= 93.610893 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 8763.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000114 Eff(noweight)= 0.000114 Nfile= 803 
-ID= 12030533 AllEvt= 3052.000000 AllEvtErr= 55.244905 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3052.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 782 
-ID= 12110333 AllEvt= 2923.000000 AllEvtErr= 54.064770 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 2923.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000684 Eff(noweight)= 0.000684 Nfile= 776 
-ID= 12110433 AllEvt= 6685.000000 AllEvtErr= 81.761850 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 6685.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.000449 Eff(noweight)= 0.000449 Nfile= 802 
-ID= 12130533 AllEvt= 2362.000000 AllEvtErr= 48.600396 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2362.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 760 
-ID= 12210333 AllEvt= 2279.000000 AllEvtErr= 47.738855 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 2279.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000878 Eff(noweight)= 0.000878 Nfile= 757 
-ID= 12210433 AllEvt= 5192.000000 AllEvtErr= 72.055543 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5192.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 803 
-ID= 12230533 AllEvt= 1777.000000 AllEvtErr= 42.154451 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1777.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 709 
-ID= 30530533 AllEvt= 80115.000000 AllEvtErr= 283.045974 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 80115.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.000025 Eff(noweight)= 0.000025 Nfile= 803 
-ID= 56 AllEvt= 1933235.000000 AllEvtErr= 1390.408669 SelEvt= 762714.000000  SelEvtErr= 873.335048 AllEvtnoweight= 1933235.000000 SelEvtnoweight= 762714.000000 Eff(weight)= 0.394527 Eff(noweight)= 0.394527 Nfile= 451 
-ID= 58 AllEvt= 2017258.000000 AllEvtErr= 1420.302264 SelEvt= 866267.000000  SelEvtErr= 930.734656 AllEvtnoweight= 2017258.000000 SelEvtnoweight= 866267.000000 Eff(weight)= 0.429428 Eff(noweight)= 0.429428 Nfile= 452 
-ID= 10110458 AllEvt= 97.000000 AllEvtErr= 9.848851 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 97.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.030928 Eff(noweight)= 0.030928 Nfile= 76 
-ID= 10210358 AllEvt= 49.000000 AllEvtErr= 6.999996 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 49.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.081633 Eff(noweight)= 0.081633 Nfile= 44 
-ID= 10410458 AllEvt= 57.000000 AllEvtErr= 7.549830 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 57.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.017544 Eff(noweight)= 0.017544 Nfile= 48 
-ID= 10430558 AllEvt= 50.000000 AllEvtErr= 7.071064 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 50.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.060000 Eff(noweight)= 0.060000 Nfile= 45 
-ID= 10610458 AllEvt= 10.000000 AllEvtErr= 3.162278 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 10.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 10 
-ID= 10730558 AllEvt= 5.000000 AllEvtErr= 2.236066 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 10210458 AllEvt= 96.000000 AllEvtErr= 9.797953 SelEvt= 5.000000  SelEvtErr= 2.236066 AllEvtnoweight= 96.000000 SelEvtnoweight= 5.000000 Eff(weight)= 0.052083 Eff(noweight)= 0.052083 Nfile= 71 
-ID= 10410358 AllEvt= 63.000000 AllEvtErr= 7.937250 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 63.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.031746 Eff(noweight)= 0.031746 Nfile= 50 
-ID= 10510458 AllEvt= 51.000000 AllEvtErr= 7.141427 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 51.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 49 
-ID= 30530558 AllEvt= 12.000000 AllEvtErr= 3.464102 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 12.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 12 
-ID= 10110358 AllEvt= 38.000000 AllEvtErr= 6.164412 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 38.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.026316 Eff(noweight)= 0.026316 Nfile= 34 
-ID= 10710458 AllEvt= 9.000000 AllEvtErr= 3.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 9.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 9 
-ID= 10710358 AllEvt= 5.000000 AllEvtErr= 2.236068 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 5 
-ID= 10230858 AllEvt= 25.000000 AllEvtErr= 5.000000 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 25.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.040000 Eff(noweight)= 0.040000 Nfile= 25 
-ID= 10330558 AllEvt= 21.000000 AllEvtErr= 4.582576 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 21.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 21 
-ID= 10130558 AllEvt= 28.000000 AllEvtErr= 5.291501 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 28.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.107143 Eff(noweight)= 0.107143 Nfile= 26 
-ID= 10230558 AllEvt= 26.000000 AllEvtErr= 5.099017 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 26.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.076923 Eff(noweight)= 0.076923 Nfile= 22 
-ID= 10910458 AllEvt= 4.000000 AllEvtErr= 2.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 10310358 AllEvt= 12.000000 AllEvtErr= 3.464102 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 12.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.166667 Eff(noweight)= 0.166667 Nfile= 12 
-ID= 10510358 AllEvt= 16.000000 AllEvtErr= 4.000000 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 16.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.062500 Eff(noweight)= 0.062500 Nfile= 16 
-ID= 10610358 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 10530558 AllEvt= 24.000000 AllEvtErr= 4.898975 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 24.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.041667 Eff(noweight)= 0.041667 Nfile= 20 
-ID= 12110458 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 10630558 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 10231458 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 11530558 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 10930558 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 10231858 AllEvt= 4.000000 AllEvtErr= 2.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 11910458 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 12030558 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 1.000000 Eff(weight)= 1.000000 Eff(noweight)= 1.000000 Nfile= 1 
-ID= 11930558 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 10910358 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 57 AllEvt= 3212371.000000 AllEvtErr= 1792.308841 SelEvt= 819894.000000  SelEvtErr= 905.479878 AllEvtnoweight= 3212371.000000 SelEvtnoweight= 819894.000000 Eff(weight)= 0.255230 Eff(noweight)= 0.255230 Nfile= 451 
-ID= 10410457 AllEvt= 396.000000 AllEvtErr= 19.899731 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 396.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 235 
-ID= 10110357 AllEvt= 227.000000 AllEvtErr= 15.066508 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 227.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.004405 Eff(noweight)= 0.004405 Nfile= 159 
-ID= 10210357 AllEvt= 214.000000 AllEvtErr= 14.628726 SelEvt= 26.000000  SelEvtErr= 5.099017 AllEvtnoweight= 214.000000 SelEvtnoweight= 26.000000 Eff(weight)= 0.121495 Eff(noweight)= 0.121495 Nfile= 154 
-ID= 10210457 AllEvt= 455.000000 AllEvtErr= 21.330716 SelEvt= 38.000000  SelEvtErr= 6.164413 AllEvtnoweight= 455.000000 SelEvtnoweight= 38.000000 Eff(weight)= 0.083516 Eff(noweight)= 0.083516 Nfile= 237 
-ID= 10330557 AllEvt= 103.000000 AllEvtErr= 10.148885 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 103.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 89 
-ID= 10410357 AllEvt= 323.000000 AllEvtErr= 17.972187 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 323.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 195 
-ID= 10530557 AllEvt= 98.000000 AllEvtErr= 9.899489 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 98.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.010204 Eff(noweight)= 0.010204 Nfile= 87 
-ID= 10110457 AllEvt= 484.000000 AllEvtErr= 21.999982 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 484.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.006198 Eff(noweight)= 0.006198 Nfile= 254 
-ID= 10510357 AllEvt= 117.000000 AllEvtErr= 10.816649 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 117.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 98 
-ID= 10130557 AllEvt= 159.000000 AllEvtErr= 12.609510 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 159.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.006289 Eff(noweight)= 0.006289 Nfile= 126 
-ID= 10430557 AllEvt= 238.000000 AllEvtErr= 15.427237 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 238.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 165 
-ID= 10230857 AllEvt= 87.000000 AllEvtErr= 9.327377 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 87.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.045977 Eff(noweight)= 0.045977 Nfile= 80 
-ID= 10510457 AllEvt= 230.000000 AllEvtErr= 15.165738 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 230.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 161 
-ID= 10610357 AllEvt= 5.000000 AllEvtErr= 2.236068 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 5 
-ID= 10710357 AllEvt= 18.000000 AllEvtErr= 4.242639 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 18.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 17 
-ID= 10230557 AllEvt= 160.000000 AllEvtErr= 12.649100 SelEvt= 13.000000  SelEvtErr= 3.605551 AllEvtnoweight= 160.000000 SelEvtnoweight= 13.000000 Eff(weight)= 0.081250 Eff(noweight)= 0.081250 Nfile= 119 
-ID= 10710457 AllEvt= 40.000000 AllEvtErr= 6.324554 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 40.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 38 
-ID= 10730557 AllEvt= 9.000000 AllEvtErr= 3.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 9.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 9 
-ID= 30530557 AllEvt= 44.000000 AllEvtErr= 6.633248 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 44.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 42 
-ID= 11910457 AllEvt= 16.000000 AllEvtErr= 4.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 16.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 16 
-ID= 10930557 AllEvt= 13.000000 AllEvtErr= 3.605550 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 13.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 12 
-ID= 10910457 AllEvt= 24.000000 AllEvtErr= 4.898978 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 24.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 23 
-ID= 12210457 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 10231457 AllEvt= 5.000000 AllEvtErr= 2.236068 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 5 
-ID= 10310357 AllEvt= 70.000000 AllEvtErr= 8.366597 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 70.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 65 
-ID= 10910357 AllEvt= 10.000000 AllEvtErr= 3.162278 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 10.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 10 
-ID= 11510357 AllEvt= 4.000000 AllEvtErr= 2.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 11910357 AllEvt= 5.000000 AllEvtErr= 2.236068 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 5.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 5 
-ID= 10630557 AllEvt= 6.000000 AllEvtErr= 2.449490 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 6.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 6 
-ID= 11510457 AllEvt= 4.000000 AllEvtErr= 2.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 10610457 AllEvt= 15.000000 AllEvtErr= 3.872983 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 15.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 15 
-ID= 12010357 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 10231857 AllEvt= 13.000000 AllEvtErr= 3.605551 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 13.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.076923 Eff(noweight)= 0.076923 Nfile= 13 
-ID= 11930557 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 11610357 AllEvt= 4.000000 AllEvtErr= 2.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 4 
-ID= 11710357 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 12210357 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 11730557 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 12110457 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 2 
-ID= 11610457 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 12130557 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 11530557 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 11710457 AllEvt= 1.000000 AllEvtErr= 1.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 1 
-ID= 12010457 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
-ID= 53 AllEvt= 3860838.000000 AllEvtErr= 1964.901548 SelEvt= 1896398.000000  SelEvtErr= 1377.097621 AllEvtnoweight= 3860838.000000 SelEvtnoweight= 1896398.000000 Eff(weight)= 0.491188 Eff(noweight)= 0.491188 Nfile= 453 
-ID= 10110353 AllEvt= 56826.000000 AllEvtErr= 238.382047 SelEvt= 8732.000000  SelEvtErr= 93.445191 AllEvtnoweight= 56826.000000 SelEvtnoweight= 8732.000000 Eff(weight)= 0.153662 Eff(noweight)= 0.153662 Nfile= 453 
-ID= 10110453 AllEvt= 129408.000000 AllEvtErr= 359.733161 SelEvt= 19828.000000  SelEvtErr= 140.811915 AllEvtnoweight= 129408.000000 SelEvtnoweight= 19828.000000 Eff(weight)= 0.153221 Eff(noweight)= 0.153221 Nfile= 453 
-ID= 10130553 AllEvt= 45459.000000 AllEvtErr= 213.211186 SelEvt= 6920.000000  SelEvtErr= 83.186546 AllEvtnoweight= 45459.000000 SelEvtnoweight= 6920.000000 Eff(weight)= 0.152225 Eff(noweight)= 0.152225 Nfile= 453 
-ID= 10210353 AllEvt= 55420.000000 AllEvtErr= 235.414490 SelEvt= 14213.000000  SelEvtErr= 119.218259 AllEvtnoweight= 55420.000000 SelEvtnoweight= 14213.000000 Eff(weight)= 0.256460 Eff(noweight)= 0.256460 Nfile= 453 
-ID= 10210453 AllEvt= 126012.000000 AllEvtErr= 354.981643 SelEvt= 32811.000000  SelEvtErr= 181.138051 AllEvtnoweight= 126012.000000 SelEvtnoweight= 32811.000000 Eff(weight)= 0.260380 Eff(noweight)= 0.260380 Nfile= 453 
-ID= 10230553 AllEvt= 44361.000000 AllEvtErr= 210.620514 SelEvt= 11336.000000  SelEvtErr= 106.470649 AllEvtnoweight= 44361.000000 SelEvtnoweight= 11336.000000 Eff(weight)= 0.255540 Eff(noweight)= 0.255540 Nfile= 453 
-ID= 10230853 AllEvt= 22550.000000 AllEvtErr= 150.166554 SelEvt= 5801.000000  SelEvtErr= 76.164292 AllEvtnoweight= 22550.000000 SelEvtnoweight= 5801.000000 Eff(weight)= 0.257251 Eff(noweight)= 0.257251 Nfile= 453 
-ID= 10231453 AllEvt= 737.000000 AllEvtErr= 27.147719 SelEvt= 193.000000  SelEvtErr= 13.892432 AllEvtnoweight= 737.000000 SelEvtnoweight= 193.000000 Eff(weight)= 0.261872 Eff(noweight)= 0.261872 Nfile= 363 
-ID= 10231853 AllEvt= 2428.000000 AllEvtErr= 49.274742 SelEvt= 630.000000  SelEvtErr= 25.099778 AllEvtnoweight= 2428.000000 SelEvtnoweight= 630.000000 Eff(weight)= 0.259473 Eff(noweight)= 0.259473 Nfile= 451 
-ID= 10310353 AllEvt= 17626.000000 AllEvtErr= 132.762925 SelEvt= 2408.000000  SelEvtErr= 49.071381 AllEvtnoweight= 17626.000000 SelEvtnoweight= 2408.000000 Eff(weight)= 0.136616 Eff(noweight)= 0.136616 Nfile= 453 
-ID= 10330553 AllEvt= 27731.000000 AllEvtErr= 166.526265 SelEvt= 3768.000000  SelEvtErr= 61.384039 AllEvtnoweight= 27731.000000 SelEvtnoweight= 3768.000000 Eff(weight)= 0.135877 Eff(noweight)= 0.135877 Nfile= 453 
-ID= 10410353 AllEvt= 79682.000000 AllEvtErr= 282.279873 SelEvt= 11048.000000  SelEvtErr= 105.109468 AllEvtnoweight= 79682.000000 SelEvtnoweight= 11048.000000 Eff(weight)= 0.138651 Eff(noweight)= 0.138651 Nfile= 453 
-ID= 10410453 AllEvt= 90194.000000 AllEvtErr= 300.322982 SelEvt= 12424.000000  SelEvtErr= 111.462983 AllEvtnoweight= 90194.000000 SelEvtnoweight= 12424.000000 Eff(weight)= 0.137748 Eff(noweight)= 0.137748 Nfile= 453 
-ID= 10430553 AllEvt= 63684.000000 AllEvtErr= 252.356794 SelEvt= 8961.000000  SelEvtErr= 94.662577 AllEvtnoweight= 63684.000000 SelEvtnoweight= 8961.000000 Eff(weight)= 0.140710 Eff(noweight)= 0.140710 Nfile= 453 
-ID= 10510353 AllEvt= 28685.000000 AllEvtErr= 169.366454 SelEvt= 3974.000000  SelEvtErr= 63.039666 AllEvtnoweight= 28685.000000 SelEvtnoweight= 3974.000000 Eff(weight)= 0.138539 Eff(noweight)= 0.138539 Nfile= 453 
-ID= 10510453 AllEvt= 65862.000000 AllEvtErr= 256.635899 SelEvt= 9132.000000  SelEvtErr= 95.561516 AllEvtnoweight= 65862.000000 SelEvtnoweight= 9132.000000 Eff(weight)= 0.138654 Eff(noweight)= 0.138654 Nfile= 453 
-ID= 10530553 AllEvt= 22927.000000 AllEvtErr= 151.416630 SelEvt= 3256.000000  SelEvtErr= 57.061369 AllEvtnoweight= 22927.000000 SelEvtnoweight= 3256.000000 Eff(weight)= 0.142016 Eff(noweight)= 0.142016 Nfile= 453 
-ID= 10610353 AllEvt= 2226.000000 AllEvtErr= 47.180508 SelEvt= 314.000000  SelEvtErr= 17.720029 AllEvtnoweight= 2226.000000 SelEvtnoweight= 314.000000 Eff(weight)= 0.141060 Eff(noweight)= 0.141060 Nfile= 447 
-ID= 10610453 AllEvt= 5157.000000 AllEvtErr= 71.812251 SelEvt= 694.000000  SelEvtErr= 26.343856 AllEvtnoweight= 5157.000000 SelEvtnoweight= 694.000000 Eff(weight)= 0.134574 Eff(noweight)= 0.134574 Nfile= 452 
-ID= 10630553 AllEvt= 1768.000000 AllEvtErr= 42.047591 SelEvt= 238.000000  SelEvtErr= 15.427236 AllEvtnoweight= 1768.000000 SelEvtnoweight= 238.000000 Eff(weight)= 0.134615 Eff(noweight)= 0.134615 Nfile= 443 
-ID= 10710353 AllEvt= 4227.000000 AllEvtErr= 65.015382 SelEvt= 562.000000  SelEvtErr= 23.706518 AllEvtnoweight= 4227.000000 SelEvtnoweight= 562.000000 Eff(weight)= 0.132955 Eff(noweight)= 0.132955 Nfile= 451 
-ID= 10710453 AllEvt= 9706.000000 AllEvtErr= 98.519054 SelEvt= 1272.000000  SelEvtErr= 35.665095 AllEvtnoweight= 9706.000000 SelEvtnoweight= 1272.000000 Eff(weight)= 0.131053 Eff(noweight)= 0.131053 Nfile= 452 
-ID= 10730553 AllEvt= 3437.000000 AllEvtErr= 58.625936 SelEvt= 451.000000  SelEvtErr= 21.236740 AllEvtnoweight= 3437.000000 SelEvtnoweight= 451.000000 Eff(weight)= 0.131219 Eff(noweight)= 0.131219 Nfile= 452 
-ID= 10910353 AllEvt= 3188.000000 AllEvtErr= 56.462380 SelEvt= 426.000000  SelEvtErr= 20.639747 AllEvtnoweight= 3188.000000 SelEvtnoweight= 426.000000 Eff(weight)= 0.133626 Eff(noweight)= 0.133626 Nfile= 452 
-ID= 10910453 AllEvt= 7248.000000 AllEvtErr= 85.135199 SelEvt= 1001.000000  SelEvtErr= 31.638563 AllEvtnoweight= 7248.000000 SelEvtnoweight= 1001.000000 Eff(weight)= 0.138107 Eff(noweight)= 0.138107 Nfile= 452 
-ID= 10930553 AllEvt= 2577.000000 AllEvtErr= 50.764166 SelEvt= 402.000000  SelEvtErr= 20.049917 AllEvtnoweight= 2577.000000 SelEvtnoweight= 402.000000 Eff(weight)= 0.155995 Eff(noweight)= 0.155995 Nfile= 449 
-ID= 11510453 AllEvt= 1134.000000 AllEvtErr= 33.674898 SelEvt= 134.000000  SelEvtErr= 11.575832 AllEvtnoweight= 1134.000000 SelEvtnoweight= 134.000000 Eff(weight)= 0.118166 Eff(noweight)= 0.118166 Nfile= 423 
-ID= 11630553 AllEvt= 380.000000 AllEvtErr= 19.493570 SelEvt= 54.000000  SelEvtErr= 7.348468 AllEvtnoweight= 380.000000 SelEvtnoweight= 54.000000 Eff(weight)= 0.142105 Eff(noweight)= 0.142105 Nfile= 255 
-ID= 11710453 AllEvt= 343.000000 AllEvtErr= 18.520241 SelEvt= 46.000000  SelEvtErr= 6.782327 AllEvtnoweight= 343.000000 SelEvtnoweight= 46.000000 Eff(weight)= 0.134111 Eff(noweight)= 0.134111 Nfile= 235 
-ID= 11910353 AllEvt= 1781.000000 AllEvtErr= 42.201894 SelEvt= 239.000000  SelEvtErr= 15.459611 AllEvtnoweight= 1781.000000 SelEvtnoweight= 239.000000 Eff(weight)= 0.134194 Eff(noweight)= 0.134194 Nfile= 441 
-ID= 11910453 AllEvt= 3991.000000 AllEvtErr= 63.174364 SelEvt= 528.000000  SelEvtErr= 22.978227 AllEvtnoweight= 3991.000000 SelEvtnoweight= 528.000000 Eff(weight)= 0.132298 Eff(noweight)= 0.132298 Nfile= 451 
-ID= 11930553 AllEvt= 1387.000000 AllEvtErr= 37.242436 SelEvt= 185.000000  SelEvtErr= 13.601461 AllEvtnoweight= 1387.000000 SelEvtnoweight= 185.000000 Eff(weight)= 0.133381 Eff(noweight)= 0.133381 Nfile= 432 
-ID= 12010453 AllEvt= 1086.000000 AllEvtErr= 32.954493 SelEvt= 134.000000  SelEvtErr= 11.575832 AllEvtnoweight= 1086.000000 SelEvtnoweight= 134.000000 Eff(weight)= 0.123389 Eff(noweight)= 0.123389 Nfile= 418 
-ID= 12110453 AllEvt= 966.000000 AllEvtErr= 31.080522 SelEvt= 148.000000  SelEvtErr= 12.165519 AllEvtnoweight= 966.000000 SelEvtnoweight= 148.000000 Eff(weight)= 0.153209 Eff(noweight)= 0.153209 Nfile= 396 
-ID= 12130553 AllEvt= 332.000000 AllEvtErr= 18.220852 SelEvt= 44.000000  SelEvtErr= 6.633248 AllEvtnoweight= 332.000000 SelEvtnoweight= 44.000000 Eff(weight)= 0.132530 Eff(noweight)= 0.132530 Nfile= 231 
-ID= 12210353 AllEvt= 348.000000 AllEvtErr= 18.654741 SelEvt= 41.000000  SelEvtErr= 6.403122 AllEvtnoweight= 348.000000 SelEvtnoweight= 41.000000 Eff(weight)= 0.117816 Eff(noweight)= 0.117816 Nfile= 240 
-ID= 12210453 AllEvt= 721.000000 AllEvtErr= 26.851417 SelEvt= 92.000000  SelEvtErr= 9.591659 AllEvtnoweight= 721.000000 SelEvtnoweight= 92.000000 Eff(weight)= 0.127601 Eff(noweight)= 0.127601 Nfile= 356 
-ID= 30530553 AllEvt= 11166.000000 AllEvtErr= 105.669293 SelEvt= 1556.000000  SelEvtErr= 39.446158 AllEvtnoweight= 11166.000000 SelEvtnoweight= 1556.000000 Eff(weight)= 0.139352 Eff(noweight)= 0.139352 Nfile= 453 
-ID= 11530553 AllEvt= 366.000000 AllEvtErr= 19.131108 SelEvt= 48.000000  SelEvtErr= 6.928200 AllEvtnoweight= 366.000000 SelEvtnoweight= 48.000000 Eff(weight)= 0.131148 Eff(noweight)= 0.131148 Nfile= 252 
-ID= 11610353 AllEvt= 456.000000 AllEvtErr= 21.354137 SelEvt= 55.000000  SelEvtErr= 7.416198 AllEvtnoweight= 456.000000 SelEvtnoweight= 55.000000 Eff(weight)= 0.120614 Eff(noweight)= 0.120614 Nfile= 273 
-ID= 11610453 AllEvt= 1100.000000 AllEvtErr= 33.166226 SelEvt= 148.000000  SelEvtErr= 12.165516 AllEvtnoweight= 1100.000000 SelEvtnoweight= 148.000000 Eff(weight)= 0.134545 Eff(noweight)= 0.134545 Nfile= 409 
-ID= 12010353 AllEvt= 512.000000 AllEvtErr= 22.627396 SelEvt= 64.000000  SelEvtErr= 7.999994 AllEvtnoweight= 512.000000 SelEvtnoweight= 64.000000 Eff(weight)= 0.125000 Eff(noweight)= 0.125000 Nfile= 292 
-ID= 12030553 AllEvt= 403.000000 AllEvtErr= 20.074840 SelEvt= 58.000000  SelEvtErr= 7.615770 AllEvtnoweight= 403.000000 SelEvtnoweight= 58.000000 Eff(weight)= 0.143921 Eff(noweight)= 0.143921 Nfile= 272 
-ID= 12110353 AllEvt= 412.000000 AllEvtErr= 20.297762 SelEvt= 56.000000  SelEvtErr= 7.483313 AllEvtnoweight= 412.000000 SelEvtnoweight= 56.000000 Eff(weight)= 0.135922 Eff(noweight)= 0.135922 Nfile= 272 
-ID= 11510353 AllEvt= 507.000000 AllEvtErr= 22.516636 SelEvt= 71.000000  SelEvtErr= 8.426147 AllEvtnoweight= 507.000000 SelEvtnoweight= 71.000000 Eff(weight)= 0.140039 Eff(noweight)= 0.140039 Nfile= 306 
-ID= 11710353 AllEvt= 169.000000 AllEvtErr= 12.999992 SelEvt= 29.000000  SelEvtErr= 5.385165 AllEvtnoweight= 169.000000 SelEvtnoweight= 29.000000 Eff(weight)= 0.171598 Eff(noweight)= 0.171598 Nfile= 147 
-ID= 11730553 AllEvt= 111.000000 AllEvtErr= 10.535650 SelEvt= 14.000000  SelEvtErr= 3.741657 AllEvtnoweight= 111.000000 SelEvtnoweight= 14.000000 Eff(weight)= 0.126126 Eff(noweight)= 0.126126 Nfile= 101 
-ID= 12230553 AllEvt= 258.000000 AllEvtErr= 16.062365 SelEvt= 35.000000  SelEvtErr= 5.916079 AllEvtnoweight= 258.000000 SelEvtnoweight= 35.000000 Eff(weight)= 0.135659 Eff(noweight)= 0.135659 Nfile= 200 
-ID= 55 AllEvt= 1579580.000000 AllEvtErr= 1256.813386 SelEvt= 540736.000000  SelEvtErr= 735.347619 AllEvtnoweight= 1579580.000000 SelEvtnoweight= 540736.000000 Eff(weight)= 0.342329 Eff(noweight)= 0.342329 Nfile= 451 
-ID= 10110355 AllEvt= 21477.000000 AllEvtErr= 146.550314 SelEvt= 386.000000  SelEvtErr= 19.646862 AllEvtnoweight= 21477.000000 SelEvtnoweight= 386.000000 Eff(weight)= 0.017973 Eff(noweight)= 0.017973 Nfile= 451 
-ID= 10110455 AllEvt= 48771.000000 AllEvtErr= 220.841574 SelEvt= 918.000000  SelEvtErr= 30.298495 AllEvtnoweight= 48771.000000 SelEvtnoweight= 918.000000 Eff(weight)= 0.018823 Eff(noweight)= 0.018823 Nfile= 451 
-ID= 10130555 AllEvt= 17116.000000 AllEvtErr= 130.828110 SelEvt= 342.000000  SelEvtErr= 18.493224 AllEvtnoweight= 17116.000000 SelEvtnoweight= 342.000000 Eff(weight)= 0.019981 Eff(noweight)= 0.019981 Nfile= 451 
-ID= 10210355 AllEvt= 20964.000000 AllEvtErr= 144.789486 SelEvt= 4758.000000  SelEvtErr= 68.978251 AllEvtnoweight= 20964.000000 SelEvtnoweight= 4758.000000 Eff(weight)= 0.226961 Eff(noweight)= 0.226961 Nfile= 451 
-ID= 10210455 AllEvt= 47437.000000 AllEvtErr= 217.800420 SelEvt= 11441.000000  SelEvtErr= 106.962608 AllEvtnoweight= 47437.000000 SelEvtnoweight= 11441.000000 Eff(weight)= 0.241183 Eff(noweight)= 0.241183 Nfile= 451 
-ID= 10230555 AllEvt= 16604.000000 AllEvtErr= 128.856487 SelEvt= 3893.000000  SelEvtErr= 62.393907 AllEvtnoweight= 16604.000000 SelEvtnoweight= 3893.000000 Eff(weight)= 0.234462 Eff(noweight)= 0.234462 Nfile= 451 
-ID= 10230855 AllEvt= 8470.000000 AllEvtErr= 92.032628 SelEvt= 2102.000000  SelEvtErr= 45.847578 AllEvtnoweight= 8470.000000 SelEvtnoweight= 2102.000000 Eff(weight)= 0.248170 Eff(noweight)= 0.248170 Nfile= 451 
-ID= 10231855 AllEvt= 908.000000 AllEvtErr= 30.133014 SelEvt= 243.000000  SelEvtErr= 15.588442 AllEvtnoweight= 908.000000 SelEvtnoweight= 243.000000 Eff(weight)= 0.267621 Eff(noweight)= 0.267621 Nfile= 393 
-ID= 10310355 AllEvt= 6617.000000 AllEvtErr= 81.344950 SelEvt= 23.000000  SelEvtErr= 4.795832 AllEvtnoweight= 6617.000000 SelEvtnoweight= 23.000000 Eff(weight)= 0.003476 Eff(noweight)= 0.003476 Nfile= 451 
-ID= 10330555 AllEvt= 10615.000000 AllEvtErr= 103.029129 SelEvt= 23.000000  SelEvtErr= 4.795832 AllEvtnoweight= 10615.000000 SelEvtnoweight= 23.000000 Eff(weight)= 0.002167 Eff(noweight)= 0.002167 Nfile= 451 
-ID= 10410355 AllEvt= 30282.000000 AllEvtErr= 174.017226 SelEvt= 117.000000  SelEvtErr= 10.816650 AllEvtnoweight= 30282.000000 SelEvtnoweight= 117.000000 Eff(weight)= 0.003864 Eff(noweight)= 0.003864 Nfile= 451 
-ID= 10410455 AllEvt= 34632.000000 AllEvtErr= 186.096729 SelEvt= 161.000000  SelEvtErr= 12.688570 AllEvtnoweight= 34632.000000 SelEvtnoweight= 161.000000 Eff(weight)= 0.004649 Eff(noweight)= 0.004649 Nfile= 451 
-ID= 10430555 AllEvt= 23721.000000 AllEvtErr= 154.016221 SelEvt= 84.000000  SelEvtErr= 9.165147 AllEvtnoweight= 23721.000000 SelEvtnoweight= 84.000000 Eff(weight)= 0.003541 Eff(noweight)= 0.003541 Nfile= 451 
-ID= 10510355 AllEvt= 10591.000000 AllEvtErr= 102.912592 SelEvt= 44.000000  SelEvtErr= 6.633250 AllEvtnoweight= 10591.000000 SelEvtnoweight= 44.000000 Eff(weight)= 0.004154 Eff(noweight)= 0.004154 Nfile= 451 
-ID= 10510455 AllEvt= 24682.000000 AllEvtErr= 157.105051 SelEvt= 107.000000  SelEvtErr= 10.344076 AllEvtnoweight= 24682.000000 SelEvtnoweight= 107.000000 Eff(weight)= 0.004335 Eff(noweight)= 0.004335 Nfile= 451 
-ID= 10530555 AllEvt= 8694.000000 AllEvtErr= 93.241643 SelEvt= 31.000000  SelEvtErr= 5.567764 AllEvtnoweight= 8694.000000 SelEvtnoweight= 31.000000 Eff(weight)= 0.003566 Eff(noweight)= 0.003566 Nfile= 451 
-ID= 10610355 AllEvt= 806.000000 AllEvtErr= 28.390119 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 806.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.004963 Eff(noweight)= 0.004963 Nfile= 372 
-ID= 10610455 AllEvt= 2025.000000 AllEvtErr= 45.000001 SelEvt= 5.000000  SelEvtErr= 2.236066 AllEvtnoweight= 2025.000000 SelEvtnoweight= 5.000000 Eff(weight)= 0.002469 Eff(noweight)= 0.002469 Nfile= 444 
-ID= 10710355 AllEvt= 1687.000000 AllEvtErr= 41.073099 SelEvt= 8.000000  SelEvtErr= 2.828427 AllEvtnoweight= 1687.000000 SelEvtnoweight= 8.000000 Eff(weight)= 0.004742 Eff(noweight)= 0.004742 Nfile= 441 
-ID= 10710455 AllEvt= 3541.000000 AllEvtErr= 59.506306 SelEvt= 5.000000  SelEvtErr= 2.236068 AllEvtnoweight= 3541.000000 SelEvtnoweight= 5.000000 Eff(weight)= 0.001412 Eff(noweight)= 0.001412 Nfile= 451 
-ID= 10730555 AllEvt= 1285.000000 AllEvtErr= 35.846882 SelEvt= 8.000000  SelEvtErr= 2.828427 AllEvtnoweight= 1285.000000 SelEvtnoweight= 8.000000 Eff(weight)= 0.006226 Eff(noweight)= 0.006226 Nfile= 425 
-ID= 10910355 AllEvt= 1142.000000 AllEvtErr= 33.793474 SelEvt= 5.000000  SelEvtErr= 2.236068 AllEvtnoweight= 1142.000000 SelEvtnoweight= 5.000000 Eff(weight)= 0.004378 Eff(noweight)= 0.004378 Nfile= 414 
-ID= 10910455 AllEvt= 2704.000000 AllEvtErr= 52.000007 SelEvt= 21.000000  SelEvtErr= 4.582576 AllEvtnoweight= 2704.000000 SelEvtnoweight= 21.000000 Eff(weight)= 0.007766 Eff(noweight)= 0.007766 Nfile= 450 
-ID= 10930555 AllEvt= 933.000000 AllEvtErr= 30.545027 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 933.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.004287 Eff(noweight)= 0.004287 Nfile= 395 
-ID= 11610355 AllEvt= 170.000000 AllEvtErr= 13.038396 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 170.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.005882 Eff(noweight)= 0.005882 Nfile= 145 
-ID= 11910455 AllEvt= 1512.000000 AllEvtErr= 38.884437 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 1512.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.002646 Eff(noweight)= 0.002646 Nfile= 430 
-ID= 12010455 AllEvt= 452.000000 AllEvtErr= 21.260271 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 452.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.004425 Eff(noweight)= 0.004425 Nfile= 282 
-ID= 12110455 AllEvt= 373.000000 AllEvtErr= 19.313188 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 373.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.005362 Eff(noweight)= 0.005362 Nfile= 256 
-ID= 12210455 AllEvt= 266.000000 AllEvtErr= 16.309492 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 266.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 196 
-ID= 30530555 AllEvt= 4168.000000 AllEvtErr= 64.560048 SelEvt= 7.000000  SelEvtErr= 2.645749 AllEvtnoweight= 4168.000000 SelEvtnoweight= 7.000000 Eff(weight)= 0.001679 Eff(noweight)= 0.001679 Nfile= 451 
-ID= 10630555 AllEvt= 659.000000 AllEvtErr= 25.670969 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 659.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 357 
-ID= 11610455 AllEvt= 417.000000 AllEvtErr= 20.420557 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 417.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.007194 Eff(noweight)= 0.007194 Nfile= 275 
-ID= 11930555 AllEvt= 487.000000 AllEvtErr= 22.068055 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 487.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.004107 Eff(noweight)= 0.004107 Nfile= 305 
-ID= 12010355 AllEvt= 199.000000 AllEvtErr= 14.106727 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 199.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.010050 Eff(noweight)= 0.010050 Nfile= 165 
-ID= 12030555 AllEvt= 149.000000 AllEvtErr= 12.206547 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 149.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 125 
-ID= 10231455 AllEvt= 277.000000 AllEvtErr= 16.643301 SelEvt= 58.000000  SelEvtErr= 7.615770 AllEvtnoweight= 277.000000 SelEvtnoweight= 58.000000 Eff(weight)= 0.209386 Eff(noweight)= 0.209386 Nfile= 205 
-ID= 11510455 AllEvt= 426.000000 AllEvtErr= 20.639747 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 426.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.002347 Eff(noweight)= 0.002347 Nfile= 276 
-ID= 11630555 AllEvt= 137.000000 AllEvtErr= 11.704694 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 137.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 118 
-ID= 11710455 AllEvt= 136.000000 AllEvtErr= 11.661897 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 136.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 115 
-ID= 11910355 AllEvt= 697.000000 AllEvtErr= 26.400732 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 697.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.005739 Eff(noweight)= 0.005739 Nfile= 368 
-ID= 12110355 AllEvt= 162.000000 AllEvtErr= 12.727915 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 162.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 136 
-ID= 11710355 AllEvt= 50.000000 AllEvtErr= 7.071067 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 50.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 49 
-ID= 11510355 AllEvt= 194.000000 AllEvtErr= 13.928375 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 194.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.005155 Eff(noweight)= 0.005155 Nfile= 147 
-ID= 12130555 AllEvt= 110.000000 AllEvtErr= 10.488083 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 110.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 98 
-ID= 12210355 AllEvt= 134.000000 AllEvtErr= 11.575830 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 134.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 115 
-ID= 12230555 AllEvt= 87.000000 AllEvtErr= 9.327374 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 87.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 75 
-ID= 11530555 AllEvt= 134.000000 AllEvtErr= 11.575832 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 134.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 119 
-ID= 11730555 AllEvt= 47.000000 AllEvtErr= 6.855654 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 47.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 44 
-ID= 54 AllEvt= 779154.000000 AllEvtErr= 882.696929 SelEvt= 248808.000000  SelEvtErr= 498.806561 AllEvtnoweight= 779154.000000 SelEvtnoweight= 248808.000000 Eff(weight)= 0.319331 Eff(noweight)= 0.319331 Nfile= 451 
-ID= 10110354 AllEvt= 10614.000000 AllEvtErr= 103.024276 SelEvt= 42.000000  SelEvtErr= 6.480740 AllEvtnoweight= 10614.000000 SelEvtnoweight= 42.000000 Eff(weight)= 0.003957 Eff(noweight)= 0.003957 Nfile= 451 
-ID= 10110454 AllEvt= 24058.000000 AllEvtErr= 155.106399 SelEvt= 127.000000  SelEvtErr= 11.269422 AllEvtnoweight= 24058.000000 SelEvtnoweight= 127.000000 Eff(weight)= 0.005279 Eff(noweight)= 0.005279 Nfile= 451 
-ID= 10130554 AllEvt= 8426.000000 AllEvtErr= 91.793271 SelEvt= 48.000000  SelEvtErr= 6.928203 AllEvtnoweight= 8426.000000 SelEvtnoweight= 48.000000 Eff(weight)= 0.005697 Eff(noweight)= 0.005697 Nfile= 451 
-ID= 10210354 AllEvt= 10244.000000 AllEvtErr= 101.212659 SelEvt= 2098.000000  SelEvtErr= 45.803933 AllEvtnoweight= 10244.000000 SelEvtnoweight= 2098.000000 Eff(weight)= 0.204803 Eff(noweight)= 0.204803 Nfile= 451 
-ID= 10210454 AllEvt= 23573.000000 AllEvtErr= 153.535000 SelEvt= 4998.000000  SelEvtErr= 70.696527 AllEvtnoweight= 23573.000000 SelEvtnoweight= 4998.000000 Eff(weight)= 0.212022 Eff(noweight)= 0.212022 Nfile= 451 
-ID= 10230554 AllEvt= 8153.000000 AllEvtErr= 90.293987 SelEvt= 1857.000000  SelEvtErr= 43.092922 AllEvtnoweight= 8153.000000 SelEvtnoweight= 1857.000000 Eff(weight)= 0.227769 Eff(noweight)= 0.227769 Nfile= 451 
-ID= 10230854 AllEvt= 4085.000000 AllEvtErr= 63.914001 SelEvt= 935.000000  SelEvtErr= 30.577750 AllEvtnoweight= 4085.000000 SelEvtnoweight= 935.000000 Eff(weight)= 0.228886 Eff(noweight)= 0.228886 Nfile= 451 
-ID= 10310354 AllEvt= 3302.000000 AllEvtErr= 57.463035 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 3302.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.001211 Eff(noweight)= 0.001211 Nfile= 451 
-ID= 10330554 AllEvt= 5233.000000 AllEvtErr= 72.339472 SelEvt= 7.000000  SelEvtErr= 2.645751 AllEvtnoweight= 5233.000000 SelEvtnoweight= 7.000000 Eff(weight)= 0.001338 Eff(noweight)= 0.001338 Nfile= 451 
-ID= 10410354 AllEvt= 14694.000000 AllEvtErr= 121.218782 SelEvt= 16.000000  SelEvtErr= 3.999999 AllEvtnoweight= 14694.000000 SelEvtnoweight= 16.000000 Eff(weight)= 0.001089 Eff(noweight)= 0.001089 Nfile= 451 
-ID= 10410454 AllEvt= 16895.000000 AllEvtErr= 129.980742 SelEvt= 22.000000  SelEvtErr= 4.690416 AllEvtnoweight= 16895.000000 SelEvtnoweight= 22.000000 Eff(weight)= 0.001302 Eff(noweight)= 0.001302 Nfile= 451 
-ID= 10430554 AllEvt= 11785.000000 AllEvtErr= 108.558734 SelEvt= 13.000000  SelEvtErr= 3.605551 AllEvtnoweight= 11785.000000 SelEvtnoweight= 13.000000 Eff(weight)= 0.001103 Eff(noweight)= 0.001103 Nfile= 451 
-ID= 10510354 AllEvt= 5361.000000 AllEvtErr= 73.218844 SelEvt= 8.000000  SelEvtErr= 2.828427 AllEvtnoweight= 5361.000000 SelEvtnoweight= 8.000000 Eff(weight)= 0.001492 Eff(noweight)= 0.001492 Nfile= 451 
-ID= 10510454 AllEvt= 11982.000000 AllEvtErr= 109.462310 SelEvt= 7.000000  SelEvtErr= 2.645751 AllEvtnoweight= 11982.000000 SelEvtnoweight= 7.000000 Eff(weight)= 0.000584 Eff(noweight)= 0.000584 Nfile= 451 
-ID= 10530554 AllEvt= 4347.000000 AllEvtErr= 65.931781 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 4347.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 451 
-ID= 10610454 AllEvt= 990.000000 AllEvtErr= 31.464245 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 990.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 388 
-ID= 10630554 AllEvt= 323.000000 AllEvtErr= 17.972185 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 323.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003096 Eff(noweight)= 0.003096 Nfile= 233 
-ID= 10710354 AllEvt= 752.000000 AllEvtErr= 27.422596 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 752.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.002660 Eff(noweight)= 0.002660 Nfile= 366 
-ID= 10710454 AllEvt= 1758.000000 AllEvtErr= 41.928505 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 1758.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000569 Eff(noweight)= 0.000569 Nfile= 442 
-ID= 10730554 AllEvt= 612.000000 AllEvtErr= 24.738611 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 612.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 329 
-ID= 10910354 AllEvt= 598.000000 AllEvtErr= 24.454017 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 598.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 335 
-ID= 10910454 AllEvt= 1290.000000 AllEvtErr= 35.916557 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 1290.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 429 
-ID= 11630554 AllEvt= 68.000000 AllEvtErr= 8.246209 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 68.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 64 
-ID= 11710354 AllEvt= 35.000000 AllEvtErr= 5.916078 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 35.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 33 
-ID= 11910454 AllEvt= 696.000000 AllEvtErr= 26.381789 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 696.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 360 
-ID= 11930554 AllEvt= 243.000000 AllEvtErr= 15.588442 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 243.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 190 
-ID= 12010354 AllEvt= 84.000000 AllEvtErr= 9.165148 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 84.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 77 
-ID= 30530554 AllEvt= 2104.000000 AllEvtErr= 45.869383 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 2104.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000475 Eff(noweight)= 0.000475 Nfile= 449 
-ID= 10231854 AllEvt= 450.000000 AllEvtErr= 21.213184 SelEvt= 102.000000  SelEvtErr= 10.099502 AllEvtnoweight= 450.000000 SelEvtnoweight= 102.000000 Eff(weight)= 0.226667 Eff(noweight)= 0.226667 Nfile= 285 
-ID= 10610354 AllEvt= 450.000000 AllEvtErr= 21.213182 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 450.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 270 
-ID= 11510354 AllEvt= 87.000000 AllEvtErr= 9.327373 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 87.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 74 
-ID= 11530554 AllEvt= 74.000000 AllEvtErr= 8.602323 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 74.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 69 
-ID= 11610354 AllEvt= 93.000000 AllEvtErr= 9.643646 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 93.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 81 
-ID= 11910354 AllEvt= 331.000000 AllEvtErr= 18.193387 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 331.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 222 
-ID= 12110454 AllEvt= 182.000000 AllEvtErr= 13.490728 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 182.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 147 
-ID= 12210354 AllEvt= 61.000000 AllEvtErr= 7.810248 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 61.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 59 
-ID= 10231454 AllEvt= 138.000000 AllEvtErr= 11.747335 SelEvt= 36.000000  SelEvtErr= 5.999999 AllEvtnoweight= 138.000000 SelEvtnoweight= 36.000000 Eff(weight)= 0.260870 Eff(noweight)= 0.260870 Nfile= 120 
-ID= 10930554 AllEvt= 419.000000 AllEvtErr= 20.469470 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 419.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 269 
-ID= 11610454 AllEvt= 214.000000 AllEvtErr= 14.628727 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 214.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 170 
-ID= 12230554 AllEvt= 59.000000 AllEvtErr= 7.681143 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 59.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 53 
-ID= 11510454 AllEvt= 180.000000 AllEvtErr= 13.416400 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 180.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 149 
-ID= 12130554 AllEvt= 72.000000 AllEvtErr= 8.485278 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 72.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 63 
-ID= 12210454 AllEvt= 143.000000 AllEvtErr= 11.958251 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 143.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 118 
-ID= 11710454 AllEvt= 67.000000 AllEvtErr= 8.185351 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 67.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 64 
-ID= 12010454 AllEvt= 230.000000 AllEvtErr= 15.165740 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 230.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 173 
-ID= 12030554 AllEvt= 89.000000 AllEvtErr= 9.433979 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 89.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 85 
-ID= 11730554 AllEvt= 19.000000 AllEvtErr= 4.358899 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 19.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 19 
-ID= 12110354 AllEvt= 94.000000 AllEvtErr= 9.695357 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 94.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.010638 Eff(noweight)= 0.010638 Nfile= 89
-ID= 70 AllEvt= 21675970.000000 AllEvtErr= 4655.743907 SelEvt= 4174699.000000  SelEvtErr= 2043.207988 AllEvtnoweight= 21675970.000000 SelEvtnoweight= 4174699.000000 Eff(weight)= 0.192596 Eff(noweight)= 0.192596 Nfile= 453 
-ID= 71 AllEvt= 497658.000000 AllEvtErr= 705.449420 SelEvt= 90403.000000  SelEvtErr= 300.670941 AllEvtnoweight= 497658.000000 SelEvtnoweight= 90403.000000 Eff(weight)= 0.181657 Eff(noweight)= 0.181657 Nfile= 201 
-ID= 72 AllEvt= 493460.000000 AllEvtErr= 702.467026 SelEvt= 89600.000000  SelEvtErr= 299.332598 AllEvtnoweight= 493460.000000 SelEvtnoweight= 89600.000000 Eff(weight)= 0.181575 Eff(noweight)= 0.181575 Nfile= 201 
-ID= 20 AllEvt= 50689224.000000 AllEvtErr= 7119.636445 SelEvt= 9311851.000000  SelEvtErr= 3051.533111 AllEvtnoweight= 50689224.000000 SelEvtnoweight= 9311851.000000 Eff(weight)= 0.183705 Eff(noweight)= 0.183705 Nfile= 910 
-ID= 23 AllEvt= 25347273.000000 AllEvtErr= 5034.607867 SelEvt= 336352.000000  SelEvtErr= 579.958491 AllEvtnoweight= 25347273.000000 SelEvtnoweight= 336352.000000 Eff(weight)= 0.013270 Eff(noweight)= 0.013270 Nfile= 910 
-ID= 35 AllEvt= 2241130.000000 AllEvtErr= 1497.040483 SelEvt= 1865175.000000  SelEvtErr= 1365.714153 AllEvtnoweight= 2241130.000000 SelEvtnoweight= 1865175.000000 Eff(weight)= 0.832248 Eff(noweight)= 0.832248 Nfile= 1673 
-ID= 10210335 AllEvt= 1115587.000000 AllEvtErr= 1056.213514 SelEvt= 1024944.000000  SelEvtErr= 1012.395188 AllEvtnoweight= 1115587.000000 SelEvtnoweight= 1024944.000000 Eff(weight)= 0.918749 Eff(noweight)= 0.918749 Nfile= 1673 
-ID= 10210435 AllEvt= 3150521.000000 AllEvtErr= 1774.970796 SelEvt= 2749450.000000  SelEvtErr= 1658.146549 AllEvtnoweight= 3150521.000000 SelEvtnoweight= 2749450.000000 Eff(weight)= 0.872697 Eff(noweight)= 0.872697 Nfile= 1673 
-ID= 10230535 AllEvt= 1458743.000000 AllEvtErr= 1207.784411 SelEvt= 1264477.000000  SelEvtErr= 1124.489708 AllEvtnoweight= 1458743.000000 SelEvtnoweight= 1264477.000000 Eff(weight)= 0.866826 Eff(noweight)= 0.866826 Nfile= 1673 
-ID= 10230835 AllEvt= 861350.000000 AllEvtErr= 928.089450 SelEvt= 716007.000000  SelEvtErr= 846.172023 AllEvtnoweight= 861350.000000 SelEvtnoweight= 716007.000000 Eff(weight)= 0.831261 Eff(noweight)= 0.831261 Nfile= 1673 
-ID= 10231435 AllEvt= 31044.000000 AllEvtErr= 176.193082 SelEvt= 26673.000000  SelEvtErr= 163.318711 AllEvtnoweight= 31044.000000 SelEvtnoweight= 26673.000000 Eff(weight)= 0.859200 Eff(noweight)= 0.859200 Nfile= 1673 
-ID= 10231835 AllEvt= 93108.000000 AllEvtErr= 305.136002 SelEvt= 81148.000000  SelEvtErr= 284.864842 AllEvtnoweight= 93108.000000 SelEvtnoweight= 81148.000000 Eff(weight)= 0.871547 Eff(noweight)= 0.871547 Nfile= 1673
+ggF Higgs
+---------
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-110_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM110_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11011 AllEvt= 329955.000000 AllEvtErr= 574.417174 SelEvt= 46439.000000  SelEvtErr= 215.497105 AllEvtnoweight= 329955.000000 SelEvtnoweight= 46439.000000 Eff(weight)= 0.140743 Eff(noweight)= 0.140743 Nfile= 402 
 ID= 10110311011 AllEvt= 40727.000000 AllEvtErr= 201.809326 SelEvt= 254.000000  SelEvtErr= 15.937363 AllEvtnoweight= 40727.000000 SelEvtnoweight= 254.000000 Eff(weight)= 0.006237 Eff(noweight)= 0.006237 Nfile= 402 
 ID= 10110411011 AllEvt= 91839.000000 AllEvtErr= 303.049394 SelEvt= 469.000000  SelEvtErr= 21.656385 AllEvtnoweight= 91839.000000 SelEvtnoweight= 469.000000 Eff(weight)= 0.005107 Eff(noweight)= 0.005107 Nfile= 402 
@@ -337,6 +50,8 @@ ID= 11530511011 AllEvt= 260.000000 AllEvtErr= 16.124500 SelEvt= 0.000000  SelEvt
 ID= 12010311011 AllEvt= 409.000000 AllEvtErr= 20.223727 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 409.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 260 
 ID= 11730511011 AllEvt= 87.000000 AllEvtErr= 9.327376 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 87.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 81 
 ID= 12110311011 AllEvt= 312.000000 AllEvtErr= 17.663504 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 312.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003205 Eff(noweight)= 0.003205 Nfile= 209
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-115_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM115_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11511 AllEvt= 302708.000000 AllEvtErr= 550.189090 SelEvt= 44971.000000  SelEvtErr= 212.063703 AllEvtnoweight= 302708.000000 SelEvtnoweight= 44971.000000 Eff(weight)= 0.148562 Eff(noweight)= 0.148562 Nfile= 401 
 ID= 10110311511 AllEvt= 37414.000000 AllEvtErr= 193.426998 SelEvt= 239.000000  SelEvtErr= 15.459610 AllEvtnoweight= 37414.000000 SelEvtnoweight= 239.000000 Eff(weight)= 0.006388 Eff(noweight)= 0.006388 Nfile= 401 
 ID= 10110411511 AllEvt= 83834.000000 AllEvtErr= 289.540814 SelEvt= 462.000000  SelEvtErr= 21.494165 AllEvtnoweight= 83834.000000 SelEvtnoweight= 462.000000 Eff(weight)= 0.005511 Eff(noweight)= 0.005511 Nfile= 401 
@@ -386,6 +101,8 @@ ID= 11530511511 AllEvt= 257.000000 AllEvtErr= 16.031205 SelEvt= 0.000000  SelEvt
 ID= 11610411511 AllEvt= 722.000000 AllEvtErr= 26.870036 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 722.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 336 
 ID= 11710311511 AllEvt= 86.000000 AllEvtErr= 9.273613 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 86.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 75 
 ID= 11730511511 AllEvt= 89.000000 AllEvtErr= 9.433975 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 89.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 76
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-120_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM120_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12011 AllEvt= 1649227.000000 AllEvtErr= 1284.222406 SelEvt= 259121.000000  SelEvtErr= 509.039319 AllEvtnoweight= 1649227.000000 SelEvtnoweight= 259121.000000 Eff(weight)= 0.157117 Eff(noweight)= 0.157117 Nfile= 402 
 ID= 10110312011 AllEvt= 202527.000000 AllEvtErr= 450.030000 SelEvt= 1462.000000  SelEvtErr= 38.236104 AllEvtnoweight= 202527.000000 SelEvtnoweight= 1462.000000 Eff(weight)= 0.007219 Eff(noweight)= 0.007219 Nfile= 402 
 ID= 10110412011 AllEvt= 458390.000000 AllEvtErr= 677.045060 SelEvt= 2650.000000  SelEvtErr= 51.478159 AllEvtnoweight= 458390.000000 SelEvtnoweight= 2650.000000 Eff(weight)= 0.005781 Eff(noweight)= 0.005781 Nfile= 402 
@@ -435,6 +152,8 @@ ID= 12210312011 AllEvt= 1128.000000 AllEvtErr= 33.585699 SelEvt= 1.000000  SelEv
 ID= 12210412011 AllEvt= 2463.000000 AllEvtErr= 49.628629 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 2463.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000406 Eff(noweight)= 0.000406 Nfile= 400 
 ID= 12230512011 AllEvt= 873.000000 AllEvtErr= 29.546554 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 873.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.001145 Eff(noweight)= 0.001145 Nfile= 361 
 ID= 30530512011 AllEvt= 38755.000000 AllEvtErr= 196.862924 SelEvt= 8.000000  SelEvtErr= 2.828425 AllEvtnoweight= 38755.000000 SelEvtnoweight= 8.000000 Eff(weight)= 0.000206 Eff(noweight)= 0.000206 Nfile= 402
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM125_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12511 AllEvt= 320033.000000 AllEvtErr= 565.714618 SelEvt= 52788.000000  SelEvtErr= 229.756426 AllEvtnoweight= 320033.000000 SelEvtnoweight= 52788.000000 Eff(weight)= 0.164945 Eff(noweight)= 0.164945 Nfile= 401 
 ID= 10110312511 AllEvt= 39164.000000 AllEvtErr= 197.898975 SelEvt= 296.000000  SelEvtErr= 17.204633 AllEvtnoweight= 39164.000000 SelEvtnoweight= 296.000000 Eff(weight)= 0.007558 Eff(noweight)= 0.007558 Nfile= 401 
 ID= 10110412511 AllEvt= 88285.000000 AllEvtErr= 297.127778 SelEvt= 618.000000  SelEvtErr= 24.859582 AllEvtnoweight= 88285.000000 SelEvtnoweight= 618.000000 Eff(weight)= 0.007000 Eff(noweight)= 0.007000 Nfile= 401 
@@ -484,6 +203,8 @@ ID= 12030512511 AllEvt= 288.000000 AllEvtErr= 16.970545 SelEvt= 0.000000  SelEvt
 ID= 11730512511 AllEvt= 67.000000 AllEvtErr= 8.185350 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 67.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 61 
 ID= 12130512511 AllEvt= 199.000000 AllEvtErr= 14.106723 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 199.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 151 
 ID= 12230512511 AllEvt= 171.000000 AllEvtErr= 13.076686 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 171.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 140
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-130_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM130_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13011 AllEvt= 330131.000000 AllEvtErr= 574.570312 SelEvt= 56458.000000  SelEvtErr= 237.608888 AllEvtnoweight= 330131.000000 SelEvtnoweight= 56458.000000 Eff(weight)= 0.171017 Eff(noweight)= 0.171017 Nfile= 402 
 ID= 10110313011 AllEvt= 40591.000000 AllEvtErr= 201.472107 SelEvt= 329.000000  SelEvtErr= 18.138343 AllEvtnoweight= 40591.000000 SelEvtnoweight= 329.000000 Eff(weight)= 0.008105 Eff(noweight)= 0.008105 Nfile= 402 
 ID= 10110413011 AllEvt= 91607.000000 AllEvtErr= 302.666382 SelEvt= 678.000000  SelEvtErr= 26.038410 AllEvtnoweight= 91607.000000 SelEvtnoweight= 678.000000 Eff(weight)= 0.007401 Eff(noweight)= 0.007401 Nfile= 402 
@@ -533,6 +254,8 @@ ID= 12130513011 AllEvt= 211.000000 AllEvtErr= 14.525828 SelEvt= 0.000000  SelEvt
 ID= 12210413011 AllEvt= 532.000000 AllEvtErr= 23.065103 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 532.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.001880 Eff(noweight)= 0.001880 Nfile= 294 
 ID= 12230513011 AllEvt= 182.000000 AllEvtErr= 13.490724 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 182.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 136 
 ID= 12110313011 AllEvt= 278.000000 AllEvtErr= 16.673314 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 278.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 201
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-135_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM135_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13511 AllEvt= 284220.000000 AllEvtErr= 533.122947 SelEvt= 50421.000000  SelEvtErr= 224.546216 AllEvtnoweight= 284220.000000 SelEvtnoweight= 50421.000000 Eff(weight)= 0.177401 Eff(noweight)= 0.177401 Nfile= 401 
 ID= 10110313511 AllEvt= 35013.000000 AllEvtErr= 187.117602 SelEvt= 324.000000  SelEvtErr= 17.999982 AllEvtnoweight= 35013.000000 SelEvtnoweight= 324.000000 Eff(weight)= 0.009254 Eff(noweight)= 0.009254 Nfile= 401 
 ID= 10110413511 AllEvt= 78998.000000 AllEvtErr= 281.065648 SelEvt= 563.000000  SelEvtErr= 23.727596 AllEvtnoweight= 78998.000000 SelEvtnoweight= 563.000000 Eff(weight)= 0.007127 Eff(noweight)= 0.007127 Nfile= 401 
@@ -582,6 +305,8 @@ ID= 11510313511 AllEvt= 295.000000 AllEvtErr= 17.175548 SelEvt= 0.000000  SelEvt
 ID= 11610313511 AllEvt= 296.000000 AllEvtErr= 17.204635 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 296.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003378 Eff(noweight)= 0.003378 Nfile= 216 
 ID= 12030513511 AllEvt= 268.000000 AllEvtErr= 16.370693 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 268.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 203 
 ID= 11730513511 AllEvt= 57.000000 AllEvtErr= 7.549832 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 57.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 53 
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-140_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM140_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14011 AllEvt= 330161.000000 AllEvtErr= 574.596403 SelEvt= 60893.000000  SelEvtErr= 246.765018 AllEvtnoweight= 330161.000000 SelEvtnoweight= 60893.000000 Eff(weight)= 0.184434 Eff(noweight)= 0.184434 Nfile= 401 
 ID= 10110314011 AllEvt= 40254.000000 AllEvtErr= 200.634027 SelEvt= 391.000000  SelEvtErr= 19.773698 AllEvtnoweight= 40254.000000 SelEvtnoweight= 391.000000 Eff(weight)= 0.009713 Eff(noweight)= 0.009713 Nfile= 401 
 ID= 10110414011 AllEvt= 92063.000000 AllEvtErr= 303.418785 SelEvt= 735.000000  SelEvtErr= 27.110864 AllEvtnoweight= 92063.000000 SelEvtnoweight= 735.000000 Eff(weight)= 0.007984 Eff(noweight)= 0.007984 Nfile= 401 
@@ -631,6 +356,8 @@ ID= 12230514011 AllEvt= 167.000000 AllEvtErr= 12.922837 SelEvt= 0.000000  SelEvt
 ID= 12110414011 AllEvt= 658.000000 AllEvtErr= 25.651487 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 658.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.003040 Eff(noweight)= 0.003040 Nfile= 315 
 ID= 11710314011 AllEvt= 119.000000 AllEvtErr= 10.908710 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 119.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 112 
 ID= 12210314011 AllEvt= 208.000000 AllEvtErr= 14.422194 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 208.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 163
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-145_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM145_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14511 AllEvt= 318284.000000 AllEvtErr= 564.166658 SelEvt= 60886.000000  SelEvtErr= 246.750828 AllEvtnoweight= 318284.000000 SelEvtnoweight= 60886.000000 Eff(weight)= 0.191295 Eff(noweight)= 0.191295 Nfile= 401 
 ID= 10110314511 AllEvt= 38822.000000 AllEvtErr= 197.033027 SelEvt= 401.000000  SelEvtErr= 20.024966 AllEvtnoweight= 38822.000000 SelEvtnoweight= 401.000000 Eff(weight)= 0.010329 Eff(noweight)= 0.010329 Nfile= 401 
 ID= 10110414511 AllEvt= 88349.000000 AllEvtErr= 297.235466 SelEvt= 728.000000  SelEvtErr= 26.981452 AllEvtnoweight= 88349.000000 SelEvtnoweight= 728.000000 Eff(weight)= 0.008240 Eff(noweight)= 0.008240 Nfile= 401 
@@ -680,6 +407,8 @@ ID= 12210314511 AllEvt= 201.000000 AllEvtErr= 14.177434 SelEvt= 1.000000  SelEvt
 ID= 11510314511 AllEvt= 323.000000 AllEvtErr= 17.972184 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 323.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 218 
 ID= 11530514511 AllEvt= 241.000000 AllEvtErr= 15.524161 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 241.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 176 
 ID= 11730514511 AllEvt= 90.000000 AllEvtErr= 9.486830 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 90.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 82
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-150_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM150_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15011 AllEvt= 329802.000000 AllEvtErr= 574.283946 SelEvt= 64728.000000  SelEvtErr= 254.416871 AllEvtnoweight= 329802.000000 SelEvtnoweight= 64728.000000 Eff(weight)= 0.196263 Eff(noweight)= 0.196263 Nfile= 401 
 ID= 10110315011 AllEvt= 39913.000000 AllEvtErr= 199.782387 SelEvt= 453.000000  SelEvtErr= 21.283775 AllEvtnoweight= 39913.000000 SelEvtnoweight= 453.000000 Eff(weight)= 0.011350 Eff(noweight)= 0.011350 Nfile= 401 
 ID= 10110415011 AllEvt= 91668.000000 AllEvtErr= 302.767120 SelEvt= 821.000000  SelEvtErr= 28.653075 AllEvtnoweight= 91668.000000 SelEvtnoweight= 821.000000 Eff(weight)= 0.008956 Eff(noweight)= 0.008956 Nfile= 401 
@@ -729,6 +458,8 @@ ID= 11710315011 AllEvt= 137.000000 AllEvtErr= 11.704690 SelEvt= 0.000000  SelEvt
 ID= 12110315011 AllEvt= 313.000000 AllEvtErr= 17.691790 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 313.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003195 Eff(noweight)= 0.003195 Nfile= 222 
 ID= 12130515011 AllEvt= 240.000000 AllEvtErr= 15.491921 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 240.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.004167 Eff(noweight)= 0.004167 Nfile= 185 
 ID= 12210315011 AllEvt= 204.000000 AllEvtErr= 14.282843 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 204.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 156
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-155_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM155_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15511 AllEvt= 300053.000000 AllEvtErr= 547.770971 SelEvt= 60906.000000  SelEvtErr= 246.791303 AllEvtnoweight= 300053.000000 SelEvtnoweight= 60906.000000 Eff(weight)= 0.202984 Eff(noweight)= 0.202984 Nfile= 402 
 ID= 10110315511 AllEvt= 36865.000000 AllEvtErr= 192.002599 SelEvt= 440.000000  SelEvtErr= 20.976156 AllEvtnoweight= 36865.000000 SelEvtnoweight= 440.000000 Eff(weight)= 0.011935 Eff(noweight)= 0.011935 Nfile= 402 
 ID= 10110415511 AllEvt= 82869.000000 AllEvtErr= 287.869548 SelEvt= 812.000000  SelEvtErr= 28.495594 AllEvtnoweight= 82869.000000 SelEvtnoweight= 812.000000 Eff(weight)= 0.009799 Eff(noweight)= 0.009799 Nfile= 402 
@@ -778,6 +509,8 @@ ID= 12230515511 AllEvt= 153.000000 AllEvtErr= 12.369306 SelEvt= 0.000000  SelEvt
 ID= 12010315511 AllEvt= 360.000000 AllEvtErr= 18.973648 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 360.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.002778 Eff(noweight)= 0.002778 Nfile= 247 
 ID= 11510315511 AllEvt= 267.000000 AllEvtErr= 16.340120 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 267.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003745 Eff(noweight)= 0.003745 Nfile= 198 
 ID= 11710315511 AllEvt= 90.000000 AllEvtErr= 9.486827 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 90.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 78
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/GluGluToHToTauTau_M-160_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauggfM160_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 16011 AllEvt= 329984.000000 AllEvtErr= 574.442376 SelEvt= 68929.000000  SelEvtErr= 262.543203 AllEvtnoweight= 329984.000000 SelEvtnoweight= 68929.000000 Eff(weight)= 0.208886 Eff(noweight)= 0.208886 Nfile= 401 
 ID= 10110316011 AllEvt= 40754.000000 AllEvtErr= 201.876209 SelEvt= 523.000000  SelEvtErr= 22.869171 AllEvtnoweight= 40754.000000 SelEvtnoweight= 523.000000 Eff(weight)= 0.012833 Eff(noweight)= 0.012833 Nfile= 401 
 ID= 10110416011 AllEvt= 91594.000000 AllEvtErr= 302.644866 SelEvt= 882.000000  SelEvtErr= 29.698468 AllEvtnoweight= 91594.000000 SelEvtnoweight= 882.000000 Eff(weight)= 0.009629 Eff(noweight)= 0.009629 Nfile= 401 
@@ -827,6 +560,10 @@ ID= 11630516011 AllEvt= 261.000000 AllEvtErr= 16.155481 SelEvt= 1.000000  SelEvt
 ID= 11710416011 AllEvt= 259.000000 AllEvtErr= 16.093463 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 259.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.003861 Eff(noweight)= 0.003861 Nfile= 192 
 ID= 11730516011 AllEvt= 88.000000 AllEvtErr= 9.380828 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 88.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 81 
 ID= 11710316011 AllEvt= 111.000000 AllEvtErr= 10.535649 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 111.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.009009 Eff(noweight)= 0.009009 Nfile= 99
+
+VBF Higgs
+---------
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-110_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM110_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11012 AllEvt= 164557.000000 AllEvtErr= 405.656202 SelEvt= 32007.000000  SelEvtErr= 178.904976 AllEvtnoweight= 164557.000000 SelEvtnoweight= 32007.000000 Eff(weight)= 0.194504 Eff(noweight)= 0.194504 Nfile= 401 
 ID= 10110311012 AllEvt= 20370.000000 AllEvtErr= 142.723490 SelEvt= 350.000000  SelEvtErr= 18.708267 AllEvtnoweight= 20370.000000 SelEvtnoweight= 350.000000 Eff(weight)= 0.017182 Eff(noweight)= 0.017182 Nfile= 401 
 ID= 10110411012 AllEvt= 46035.000000 AllEvtErr= 214.557708 SelEvt= 707.000000  SelEvtErr= 26.589449 AllEvtnoweight= 46035.000000 SelEvtnoweight= 707.000000 Eff(weight)= 0.015358 Eff(noweight)= 0.015358 Nfile= 401 
@@ -876,6 +613,8 @@ ID= 12010311012 AllEvt= 179.000000 AllEvtErr= 13.379078 SelEvt= 0.000000  SelEvt
 ID= 12210311012 AllEvt= 105.000000 AllEvtErr= 10.246945 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 105.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 93 
 ID= 11530511012 AllEvt= 117.000000 AllEvtErr= 10.816649 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 117.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 106 
 ID= 11710311012 AllEvt= 47.000000 AllEvtErr= 6.855652 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 47.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 44
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-115_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM115_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11512 AllEvt= 329676.000000 AllEvtErr= 574.174289 SelEvt= 65477.000000  SelEvtErr= 255.884601 AllEvtnoweight= 329676.000000 SelEvtnoweight= 65477.000000 Eff(weight)= 0.198610 Eff(noweight)= 0.198610 Nfile= 401 
 ID= 10110311512 AllEvt= 40118.000000 AllEvtErr= 200.294808 SelEvt= 708.000000  SelEvtErr= 26.608244 AllEvtnoweight= 40118.000000 SelEvtnoweight= 708.000000 Eff(weight)= 0.017648 Eff(noweight)= 0.017648 Nfile= 401 
 ID= 10110411512 AllEvt= 91833.000000 AllEvtErr= 303.039475 SelEvt= 1508.000000  SelEvtErr= 38.832970 AllEvtnoweight= 91833.000000 SelEvtnoweight= 1508.000000 Eff(weight)= 0.016421 Eff(noweight)= 0.016421 Nfile= 401 
@@ -925,6 +664,8 @@ ID= 12030511512 AllEvt= 283.000000 AllEvtErr= 16.822589 SelEvt= 0.000000  SelEvt
 ID= 12230511512 AllEvt= 199.000000 AllEvtErr= 14.106725 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 199.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.005025 Eff(noweight)= 0.005025 Nfile= 161 
 ID= 11710311512 AllEvt= 121.000000 AllEvtErr= 10.999992 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 121.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 99 
 ID= 11730511512 AllEvt= 90.000000 AllEvtErr= 9.486829 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 90.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.011111 Eff(noweight)= 0.011111 Nfile= 83
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-120_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM120_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12012 AllEvt= 1582559.000000 AllEvtErr= 1257.997998 SelEvt= 324641.000000  SelEvtErr= 569.772799 AllEvtnoweight= 1582559.000000 SelEvtnoweight= 324641.000000 Eff(weight)= 0.205137 Eff(noweight)= 0.205137 Nfile= 402 
 ID= 10110312012 AllEvt= 194267.000000 AllEvtErr= 440.757298 SelEvt= 3609.000000  SelEvtErr= 60.074951 AllEvtnoweight= 194267.000000 SelEvtnoweight= 3609.000000 Eff(weight)= 0.018578 Eff(noweight)= 0.018578 Nfile= 402 
 ID= 10110412012 AllEvt= 441192.000000 AllEvtErr= 664.222869 SelEvt= 7679.000000  SelEvtErr= 87.629920 AllEvtnoweight= 441192.000000 SelEvtnoweight= 7679.000000 Eff(weight)= 0.017405 Eff(noweight)= 0.017405 Nfile= 402 
@@ -974,6 +715,8 @@ ID= 12210412012 AllEvt= 2494.000000 AllEvtErr= 49.939973 SelEvt= 7.000000  SelEv
 ID= 12230512012 AllEvt= 831.000000 AllEvtErr= 28.827051 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 831.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.001203 Eff(noweight)= 0.001203 Nfile= 349 
 ID= 30530512012 AllEvt= 37033.000000 AllEvtErr= 192.439603 SelEvt= 22.000000  SelEvtErr= 4.690415 AllEvtnoweight= 37033.000000 SelEvtnoweight= 22.000000 Eff(weight)= 0.000594 Eff(noweight)= 0.000594 Nfile= 402 
 ID= 12210312012 AllEvt= 1007.000000 AllEvtErr= 31.733245 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 1007.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.000993 Eff(noweight)= 0.000993 Nfile= 374
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM125_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12512 AllEvt= 329841.000000 AllEvtErr= 574.317889 SelEvt= 69500.000000  SelEvtErr= 263.628397 AllEvtnoweight= 329841.000000 SelEvtnoweight= 69500.000000 Eff(weight)= 0.210708 Eff(noweight)= 0.210708 Nfile= 401 
 ID= 10110312512 AllEvt= 40034.000000 AllEvtErr= 200.085019 SelEvt= 765.000000  SelEvtErr= 27.658615 AllEvtnoweight= 40034.000000 SelEvtnoweight= 765.000000 Eff(weight)= 0.019109 Eff(noweight)= 0.019109 Nfile= 401 
 ID= 10110412512 AllEvt= 91472.000000 AllEvtErr= 302.443246 SelEvt= 1647.000000  SelEvtErr= 40.583249 AllEvtnoweight= 91472.000000 SelEvtnoweight= 1647.000000 Eff(weight)= 0.018006 Eff(noweight)= 0.018006 Nfile= 401 
@@ -1023,6 +766,8 @@ ID= 11630512512 AllEvt= 260.000000 AllEvtErr= 16.124499 SelEvt= 1.000000  SelEvt
 ID= 11710312512 AllEvt= 105.000000 AllEvtErr= 10.246944 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 105.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 92 
 ID= 12110412512 AllEvt= 657.000000 AllEvtErr= 25.631985 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 657.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.001522 Eff(noweight)= 0.001522 Nfile= 320 
 ID= 12230512512 AllEvt= 188.000000 AllEvtErr= 13.711299 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 188.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.005319 Eff(noweight)= 0.005319 Nfile= 155
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-130_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM130_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13012 AllEvt= 329155.000000 AllEvtErr= 573.720341 SelEvt= 71124.000000  SelEvtErr= 266.690723 AllEvtnoweight= 329155.000000 SelEvtnoweight= 71124.000000 Eff(weight)= 0.216081 Eff(noweight)= 0.216081 Nfile= 401 
 ID= 10110313012 AllEvt= 40358.000000 AllEvtErr= 200.892992 SelEvt= 768.000000  SelEvtErr= 27.712793 AllEvtnoweight= 40358.000000 SelEvtnoweight= 768.000000 Eff(weight)= 0.019030 Eff(noweight)= 0.019030 Nfile= 401 
 ID= 10110413012 AllEvt= 91604.000000 AllEvtErr= 302.661418 SelEvt= 1813.000000  SelEvtErr= 42.579339 AllEvtnoweight= 91604.000000 SelEvtnoweight= 1813.000000 Eff(weight)= 0.019792 Eff(noweight)= 0.019792 Nfile= 401 
@@ -1072,6 +817,8 @@ ID= 12110313012 AllEvt= 304.000000 AllEvtErr= 17.435579 SelEvt= 0.000000  SelEvt
 ID= 12130513012 AllEvt= 230.000000 AllEvtErr= 15.165735 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 230.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.004348 Eff(noweight)= 0.004348 Nfile= 162 
 ID= 12210313012 AllEvt= 222.000000 AllEvtErr= 14.899654 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 222.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 158 
 ID= 11710313012 AllEvt= 120.000000 AllEvtErr= 10.954444 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 120.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.008333 Eff(noweight)= 0.008333 Nfile= 100
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-135_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM135_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13512 AllEvt= 329462.000000 AllEvtErr= 573.987819 SelEvt= 72579.000000  SelEvtErr= 269.404779 AllEvtnoweight= 329462.000000 SelEvtnoweight= 72579.000000 Eff(weight)= 0.220296 Eff(noweight)= 0.220296 Nfile= 401 
 ID= 10110313512 AllEvt= 40391.000000 AllEvtErr= 200.975149 SelEvt= 804.000000  SelEvtErr= 28.354876 AllEvtnoweight= 40391.000000 SelEvtnoweight= 804.000000 Eff(weight)= 0.019905 Eff(noweight)= 0.019905 Nfile= 401 
 ID= 10110413512 AllEvt= 91481.000000 AllEvtErr= 302.458127 SelEvt= 1786.000000  SelEvtErr= 42.261094 AllEvtnoweight= 91481.000000 SelEvtnoweight= 1786.000000 Eff(weight)= 0.019523 Eff(noweight)= 0.019523 Nfile= 401 
@@ -1121,6 +868,8 @@ ID= 10610313512 AllEvt= 1580.000000 AllEvtErr= 39.749209 SelEvt= 4.000000  SelEv
 ID= 11530513512 AllEvt= 262.000000 AllEvtErr= 16.186398 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 262.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 190 
 ID= 12210313512 AllEvt= 237.000000 AllEvtErr= 15.394789 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 237.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.004219 Eff(noweight)= 0.004219 Nfile= 170 
 ID= 11710313512 AllEvt= 109.000000 AllEvtErr= 10.440302 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 109.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 95
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-140_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM140_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14012 AllEvt= 329473.000000 AllEvtErr= 573.997480 SelEvt= 74531.000000  SelEvtErr= 273.003476 AllEvtnoweight= 329473.000000 SelEvtnoweight= 74531.000000 Eff(weight)= 0.226213 Eff(noweight)= 0.226213 Nfile= 401 
 ID= 10110314012 AllEvt= 40152.000000 AllEvtErr= 200.379646 SelEvt= 866.000000  SelEvtErr= 29.427859 AllEvtnoweight= 40152.000000 SelEvtnoweight= 866.000000 Eff(weight)= 0.021568 Eff(noweight)= 0.021568 Nfile= 401 
 ID= 10110414012 AllEvt= 91892.000000 AllEvtErr= 303.136846 SelEvt= 1812.000000  SelEvtErr= 42.567595 AllEvtnoweight= 91892.000000 SelEvtnoweight= 1812.000000 Eff(weight)= 0.019719 Eff(noweight)= 0.019719 Nfile= 401 
@@ -1170,6 +919,8 @@ ID= 12230514012 AllEvt= 185.000000 AllEvtErr= 13.601457 SelEvt= 0.000000  SelEvt
 ID= 11510314012 AllEvt= 349.000000 AllEvtErr= 18.681520 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 349.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 228 
 ID= 11710414012 AllEvt= 248.000000 AllEvtErr= 15.748000 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 248.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.008065 Eff(noweight)= 0.008065 Nfile= 194 
 ID= 12010314012 AllEvt= 360.000000 AllEvtErr= 18.973644 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 360.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.005556 Eff(noweight)= 0.005556 Nfile= 225
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-145_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM145_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14512 AllEvt= 329723.000000 AllEvtErr= 574.215172 SelEvt= 76490.000000  SelEvtErr= 276.568075 AllEvtnoweight= 329723.000000 SelEvtnoweight= 76490.000000 Eff(weight)= 0.231983 Eff(noweight)= 0.231983 Nfile= 401 
 ID= 10110314512 AllEvt= 40543.000000 AllEvtErr= 201.352931 SelEvt= 865.000000  SelEvtErr= 29.410863 AllEvtnoweight= 40543.000000 SelEvtnoweight= 865.000000 Eff(weight)= 0.021335 Eff(noweight)= 0.021335 Nfile= 401 
 ID= 10110414512 AllEvt= 91541.000000 AllEvtErr= 302.557351 SelEvt= 1922.000000  SelEvtErr= 43.840625 AllEvtnoweight= 91541.000000 SelEvtnoweight= 1922.000000 Eff(weight)= 0.020996 Eff(noweight)= 0.020996 Nfile= 401 
@@ -1219,6 +970,8 @@ ID= 12130514512 AllEvt= 235.000000 AllEvtErr= 15.329698 SelEvt= 1.000000  SelEvt
 ID= 12210314512 AllEvt= 192.000000 AllEvtErr= 13.856395 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 192.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.005208 Eff(noweight)= 0.005208 Nfile= 149 
 ID= 12230514512 AllEvt= 213.000000 AllEvtErr= 14.594510 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 213.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 174 
 ID= 12110314512 AllEvt= 313.000000 AllEvtErr= 17.691789 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 313.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 228
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-150_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM150_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15012 AllEvt= 329659.000000 AllEvtErr= 574.159455 SelEvt= 77768.000000  SelEvtErr= 278.868943 AllEvtnoweight= 329659.000000 SelEvtnoweight= 77768.000000 Eff(weight)= 0.235904 Eff(noweight)= 0.235904 Nfile= 401 
 ID= 10110315012 AllEvt= 40743.000000 AllEvtErr= 201.848970 SelEvt= 905.000000  SelEvtErr= 30.083201 AllEvtnoweight= 40743.000000 SelEvtnoweight= 905.000000 Eff(weight)= 0.022212 Eff(noweight)= 0.022212 Nfile= 401 
 ID= 10110415012 AllEvt= 91673.000000 AllEvtErr= 302.775405 SelEvt= 1982.000000  SelEvtErr= 44.519662 AllEvtnoweight= 91673.000000 SelEvtnoweight= 1982.000000 Eff(weight)= 0.021620 Eff(noweight)= 0.021620 Nfile= 401 
@@ -1268,6 +1021,8 @@ ID= 12110315012 AllEvt= 281.000000 AllEvtErr= 16.763040 SelEvt= 2.000000  SelEvt
 ID= 11510315012 AllEvt= 308.000000 AllEvtErr= 17.549910 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 308.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 211 
 ID= 11730515012 AllEvt= 76.000000 AllEvtErr= 8.717793 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 76.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 66 
 ID= 12210315012 AllEvt= 228.000000 AllEvtErr= 15.099657 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 228.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.004386 Eff(noweight)= 0.004386 Nfile= 183
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-155_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM155_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15512 AllEvt= 164753.000000 AllEvtErr= 405.897657 SelEvt= 39470.000000  SelEvtErr= 198.670603 AllEvtnoweight= 164753.000000 SelEvtnoweight= 39470.000000 Eff(weight)= 0.239571 Eff(noweight)= 0.239571 Nfile= 402 
 ID= 10110315512 AllEvt= 20375.000000 AllEvtErr= 142.741011 SelEvt= 475.000000  SelEvtErr= 21.794474 AllEvtnoweight= 20375.000000 SelEvtnoweight= 475.000000 Eff(weight)= 0.023313 Eff(noweight)= 0.023313 Nfile= 402 
 ID= 10110415512 AllEvt= 45924.000000 AllEvtErr= 214.298839 SelEvt= 1047.000000  SelEvtErr= 32.357362 AllEvtnoweight= 45924.000000 SelEvtnoweight= 1047.000000 Eff(weight)= 0.022799 Eff(noweight)= 0.022799 Nfile= 401 
@@ -1317,6 +1072,8 @@ ID= 12230515512 AllEvt= 89.000000 AllEvtErr= 9.433978 SelEvt= 0.000000  SelEvtEr
 ID= 12010315512 AllEvt= 199.000000 AllEvtErr= 14.106724 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 199.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 155 
 ID= 11710315512 AllEvt= 59.000000 AllEvtErr= 7.681142 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 59.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.016949 Eff(noweight)= 0.016949 Nfile= 51 
 ID= 11730515512 AllEvt= 36.000000 AllEvtErr= 5.999999 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 36.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 35
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/VBF_HToTauTau_M-160_8TeV-powheg-pythia6/Production_2015_Feb_04_htautauvbfM160_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 16012 AllEvt= 164545.000000 AllEvtErr= 405.641399 SelEvt= 40194.000000  SelEvtErr= 200.484447 AllEvtnoweight= 164545.000000 SelEvtnoweight= 40194.000000 Eff(weight)= 0.244274 Eff(noweight)= 0.244274 Nfile= 401 
 ID= 10110316012 AllEvt= 20270.000000 AllEvtErr= 142.372737 SelEvt= 506.000000  SelEvtErr= 22.494423 AllEvtnoweight= 20270.000000 SelEvtnoweight= 506.000000 Eff(weight)= 0.024963 Eff(noweight)= 0.024963 Nfile= 401 
 ID= 10110416012 AllEvt= 45752.000000 AllEvtErr= 213.897172 SelEvt= 990.000000  SelEvtErr= 31.464251 AllEvtnoweight= 45752.000000 SelEvtnoweight= 990.000000 Eff(weight)= 0.021638 Eff(noweight)= 0.021638 Nfile= 401 
@@ -1366,6 +1123,10 @@ ID= 11610416012 AllEvt= 367.000000 AllEvtErr= 19.157225 SelEvt= 1.000000  SelEvt
 ID= 12110316012 AllEvt= 130.000000 AllEvtErr= 11.401748 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 130.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 115 
 ID= 12210316012 AllEvt= 111.000000 AllEvtErr= 10.535647 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 111.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 96 
 ID= 11730516012 AllEvt= 44.000000 AllEvtErr= 6.633248 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 44.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 40
+
+W/Z/tt Higgs
+---------
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-110_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM110_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11013 AllEvt= 124842.000000 AllEvtErr= 353.329862 SelEvt= 25216.000000  SelEvtErr= 158.795456 AllEvtnoweight= 124842.000000 SelEvtnoweight= 25216.000000 Eff(weight)= 0.201983 Eff(noweight)= 0.201983 Nfile= 401 
 ID= 10110311013 AllEvt= 4659.000000 AllEvtErr= 68.256862 SelEvt= 560.000000  SelEvtErr= 23.664294 AllEvtnoweight= 4659.000000 SelEvtnoweight= 560.000000 Eff(weight)= 0.120197 Eff(noweight)= 0.120197 Nfile= 400 
 ID= 10110411013 AllEvt= 10309.000000 AllEvtErr= 101.533239 SelEvt= 1285.000000  SelEvtErr= 35.846887 AllEvtnoweight= 10309.000000 SelEvtnoweight= 1285.000000 Eff(weight)= 0.124648 Eff(noweight)= 0.124648 Nfile= 400 
@@ -1415,6 +1176,8 @@ ID= 11710411013 AllEvt= 20.000000 AllEvtErr= 4.472136 SelEvt= 1.000000  SelEvtEr
 ID= 12230511013 AllEvt= 16.000000 AllEvtErr= 4.000000 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 16.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 16 
 ID= 11730511013 AllEvt= 10.000000 AllEvtErr= 3.162278 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 10.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.300000 Eff(noweight)= 0.300000 Nfile= 10 
 ID= 12030511013 AllEvt= 30.000000 AllEvtErr= 5.477224 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 30.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.066667 Eff(noweight)= 0.066667 Nfile= 28
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM115_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 11513 AllEvt= 125234.000000 AllEvtErr= 353.884179 SelEvt= 26102.000000  SelEvtErr= 161.561124 AllEvtnoweight= 125234.000000 SelEvtnoweight= 26102.000000 Eff(weight)= 0.208426 Eff(noweight)= 0.208426 Nfile= 401 
 ID= 10110311513 AllEvt= 4492.000000 AllEvtErr= 67.022381 SelEvt= 564.000000  SelEvtErr= 23.748662 AllEvtnoweight= 4492.000000 SelEvtnoweight= 564.000000 Eff(weight)= 0.125557 Eff(noweight)= 0.125557 Nfile= 400 
 ID= 10110411513 AllEvt= 10389.000000 AllEvtErr= 101.926441 SelEvt= 1242.000000  SelEvtErr= 35.242011 AllEvtnoweight= 10389.000000 SelEvtnoweight= 1242.000000 Eff(weight)= 0.119550 Eff(noweight)= 0.119550 Nfile= 401 
@@ -1464,6 +1227,8 @@ ID= 12110311513 AllEvt= 28.000000 AllEvtErr= 5.291502 SelEvt= 3.000000  SelEvtEr
 ID= 11530511513 AllEvt= 33.000000 AllEvtErr= 5.744562 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 33.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.030303 Eff(noweight)= 0.030303 Nfile= 32 
 ID= 12230511513 AllEvt= 26.000000 AllEvtErr= 5.099020 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 26.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.076923 Eff(noweight)= 0.076923 Nfile= 26 
 ID= 11710311513 AllEvt= 15.000000 AllEvtErr= 3.872983 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 15.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.066667 Eff(noweight)= 0.066667 Nfile= 15
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-120_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM120_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12013 AllEvt= 124460.000000 AllEvtErr= 352.788902 SelEvt= 26698.000000  SelEvtErr= 163.395218 AllEvtnoweight= 124460.000000 SelEvtnoweight= 26698.000000 Eff(weight)= 0.214511 Eff(noweight)= 0.214511 Nfile= 403 
 ID= 10110312013 AllEvt= 4459.000000 AllEvtErr= 66.775735 SelEvt= 577.000000  SelEvtErr= 24.020802 AllEvtnoweight= 4459.000000 SelEvtnoweight= 577.000000 Eff(weight)= 0.129401 Eff(noweight)= 0.129401 Nfile= 402 
 ID= 10110412013 AllEvt= 10275.000000 AllEvtErr= 101.365666 SelEvt= 1332.000000  SelEvtErr= 36.496569 AllEvtnoweight= 10275.000000 SelEvtnoweight= 1332.000000 Eff(weight)= 0.129635 Eff(noweight)= 0.129635 Nfile= 403 
@@ -1513,6 +1278,8 @@ ID= 12130512013 AllEvt= 19.000000 AllEvtErr= 4.358899 SelEvt= 3.000000  SelEvtEr
 ID= 12110312013 AllEvt= 41.000000 AllEvtErr= 6.403123 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 41.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.097561 Eff(noweight)= 0.097561 Nfile= 39 
 ID= 12230512013 AllEvt= 18.000000 AllEvtErr= 4.242641 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 18.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.166667 Eff(noweight)= 0.166667 Nfile= 18 
 ID= 11710312013 AllEvt= 12.000000 AllEvtErr= 3.464102 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 12.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.083333 Eff(noweight)= 0.083333 Nfile= 12
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM125_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 12513 AllEvt= 125265.000000 AllEvtErr= 353.928000 SelEvt= 27676.000000  SelEvtErr= 166.361037 AllEvtnoweight= 125265.000000 SelEvtnoweight= 27676.000000 Eff(weight)= 0.220940 Eff(noweight)= 0.220940 Nfile= 401 
 ID= 10110312513 AllEvt= 4671.000000 AllEvtErr= 68.344706 SelEvt= 609.000000  SelEvtErr= 24.677901 AllEvtnoweight= 4671.000000 SelEvtnoweight= 609.000000 Eff(weight)= 0.130379 Eff(noweight)= 0.130379 Nfile= 401 
 ID= 10110412513 AllEvt= 10265.000000 AllEvtErr= 101.316334 SelEvt= 1321.000000  SelEvtErr= 36.345551 AllEvtnoweight= 10265.000000 SelEvtnoweight= 1321.000000 Eff(weight)= 0.128690 Eff(noweight)= 0.128690 Nfile= 401 
@@ -1562,6 +1329,8 @@ ID= 11730512513 AllEvt= 15.000000 AllEvtErr= 3.872983 SelEvt= 3.000000  SelEvtEr
 ID= 12030512513 AllEvt= 33.000000 AllEvtErr= 5.744562 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 33.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.060606 Eff(noweight)= 0.060606 Nfile= 32 
 ID= 12230512513 AllEvt= 21.000000 AllEvtErr= 4.582575 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 21.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.095238 Eff(noweight)= 0.095238 Nfile= 20 
 ID= 11710312513 AllEvt= 22.000000 AllEvtErr= 4.690415 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 22.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.136364 Eff(noweight)= 0.136364 Nfile= 21
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM130_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13013 AllEvt= 125116.000000 AllEvtErr= 353.717409 SelEvt= 28190.000000  SelEvtErr= 167.898764 AllEvtnoweight= 125116.000000 SelEvtnoweight= 28190.000000 Eff(weight)= 0.225311 Eff(noweight)= 0.225311 Nfile= 401 
 ID= 10110313013 AllEvt= 4478.000000 AllEvtErr= 66.917849 SelEvt= 580.000000  SelEvtErr= 24.083169 AllEvtnoweight= 4478.000000 SelEvtnoweight= 580.000000 Eff(weight)= 0.129522 Eff(noweight)= 0.129522 Nfile= 401 
 ID= 10110413013 AllEvt= 10160.000000 AllEvtErr= 100.796818 SelEvt= 1309.000000  SelEvtErr= 36.180096 AllEvtnoweight= 10160.000000 SelEvtnoweight= 1309.000000 Eff(weight)= 0.128839 Eff(noweight)= 0.128839 Nfile= 401 
@@ -1611,6 +1380,8 @@ ID= 12110313013 AllEvt= 34.000000 AllEvtErr= 5.830950 SelEvt= 6.000000  SelEvtEr
 ID= 11510313013 AllEvt= 35.000000 AllEvtErr= 5.916079 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 35.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.114286 Eff(noweight)= 0.114286 Nfile= 34 
 ID= 12230513013 AllEvt= 23.000000 AllEvtErr= 4.795829 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 23.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.130435 Eff(noweight)= 0.130435 Nfile= 21 
 ID= 11730513013 AllEvt= 8.000000 AllEvtErr= 2.828427 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 8.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.125000 Eff(noweight)= 0.125000 Nfile= 8 
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-135_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM135_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 13513 AllEvt= 43382.000000 AllEvtErr= 208.283475 SelEvt= 9987.000000  SelEvtErr= 99.934979 AllEvtnoweight= 43382.000000 SelEvtnoweight= 9987.000000 Eff(weight)= 0.230211 Eff(noweight)= 0.230211 Nfile= 403 
 ID= 10110313513 AllEvt= 1608.000000 AllEvtErr= 40.099873 SelEvt= 213.000000  SelEvtErr= 14.594508 AllEvtnoweight= 1608.000000 SelEvtnoweight= 213.000000 Eff(weight)= 0.132463 Eff(noweight)= 0.132463 Nfile= 396 
 ID= 10110413513 AllEvt= 3659.000000 AllEvtErr= 60.489666 SelEvt= 507.000000  SelEvtErr= 22.516638 AllEvtnoweight= 3659.000000 SelEvtnoweight= 507.000000 Eff(weight)= 0.138562 Eff(noweight)= 0.138562 Nfile= 403 
@@ -1660,6 +1431,8 @@ ID= 12130513513 AllEvt= 10.000000 AllEvtErr= 3.162278 SelEvt= 2.000000  SelEvtEr
 ID= 12110313513 AllEvt= 11.000000 AllEvtErr= 3.316625 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 11.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.090909 Eff(noweight)= 0.090909 Nfile= 11 
 ID= 11730513513 AllEvt= 3.000000 AllEvtErr= 1.732051 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 3.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 3 
 ID= 12230513513 AllEvt= 2.000000 AllEvtErr= 1.414214 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 2.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.500000 Eff(noweight)= 0.500000 Nfile= 2
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-140_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM140_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14013 AllEvt= 125045.000000 AllEvtErr= 353.616990 SelEvt= 29516.000000  SelEvtErr= 171.802199 AllEvtnoweight= 125045.000000 SelEvtnoweight= 29516.000000 Eff(weight)= 0.236043 Eff(noweight)= 0.236043 Nfile= 401 
 ID= 10110314013 AllEvt= 4531.000000 AllEvtErr= 67.312699 SelEvt= 609.000000  SelEvtErr= 24.677905 AllEvtnoweight= 4531.000000 SelEvtnoweight= 609.000000 Eff(weight)= 0.134407 Eff(noweight)= 0.134407 Nfile= 401 
 ID= 10110414013 AllEvt= 10282.000000 AllEvtErr= 101.400189 SelEvt= 1431.000000  SelEvtErr= 37.828555 AllEvtnoweight= 10282.000000 SelEvtnoweight= 1431.000000 Eff(weight)= 0.139175 Eff(noweight)= 0.139175 Nfile= 401 
@@ -1709,6 +1482,8 @@ ID= 12230514013 AllEvt= 18.000000 AllEvtErr= 4.242641 SelEvt= 2.000000  SelEvtEr
 ID= 11710414013 AllEvt= 34.000000 AllEvtErr= 5.830951 SelEvt= 5.000000  SelEvtErr= 2.236068 AllEvtnoweight= 34.000000 SelEvtnoweight= 5.000000 Eff(weight)= 0.147059 Eff(noweight)= 0.147059 Nfile= 33 
 ID= 11730514013 AllEvt= 9.000000 AllEvtErr= 3.000000 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 9.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.111111 Eff(noweight)= 0.111111 Nfile= 9 
 ID= 11710314013 AllEvt= 13.000000 AllEvtErr= 3.605551 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 13.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 13
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM145_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 14513 AllEvt= 125326.000000 AllEvtErr= 354.014156 SelEvt= 29978.000000  SelEvtErr= 173.141543 AllEvtnoweight= 125326.000000 SelEvtnoweight= 29978.000000 Eff(weight)= 0.239200 Eff(noweight)= 0.239200 Nfile= 401 
 ID= 10110314513 AllEvt= 4457.000000 AllEvtErr= 66.760761 SelEvt= 632.000000  SelEvtErr= 25.139591 AllEvtnoweight= 4457.000000 SelEvtnoweight= 632.000000 Eff(weight)= 0.141799 Eff(noweight)= 0.141799 Nfile= 401 
 ID= 10110414513 AllEvt= 10354.000000 AllEvtErr= 101.754599 SelEvt= 1407.000000  SelEvtErr= 37.509992 AllEvtnoweight= 10354.000000 SelEvtnoweight= 1407.000000 Eff(weight)= 0.135890 Eff(noweight)= 0.135890 Nfile= 401 
@@ -1758,6 +1533,8 @@ ID= 12030514513 AllEvt= 29.000000 AllEvtErr= 5.385165 SelEvt= 2.000000  SelEvtEr
 ID= 11710414513 AllEvt= 34.000000 AllEvtErr= 5.830949 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 34.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.058824 Eff(noweight)= 0.058824 Nfile= 31 
 ID= 11730514513 AllEvt= 8.000000 AllEvtErr= 2.828427 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 8.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 8 
 ID= 12230514513 AllEvt= 16.000000 AllEvtErr= 3.999999 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 16.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.062500 Eff(noweight)= 0.062500 Nfile= 15
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-150_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM150_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15013 AllEvt= 125334.000000 AllEvtErr= 354.025429 SelEvt= 30696.000000  SelEvtErr= 175.202722 AllEvtnoweight= 125334.000000 SelEvtnoweight= 30696.000000 Eff(weight)= 0.244914 Eff(noweight)= 0.244914 Nfile= 401 
 ID= 10110315013 AllEvt= 4440.000000 AllEvtErr= 66.633316 SelEvt= 664.000000  SelEvtErr= 25.768171 AllEvtnoweight= 4440.000000 SelEvtnoweight= 664.000000 Eff(weight)= 0.149550 Eff(noweight)= 0.149550 Nfile= 401 
 ID= 10110415013 AllEvt= 10385.000000 AllEvtErr= 101.906815 SelEvt= 1513.000000  SelEvtErr= 38.897296 AllEvtnoweight= 10385.000000 SelEvtnoweight= 1513.000000 Eff(weight)= 0.145691 Eff(noweight)= 0.145691 Nfile= 401 
@@ -1807,6 +1584,8 @@ ID= 12110315013 AllEvt= 32.000000 AllEvtErr= 5.656853 SelEvt= 2.000000  SelEvtEr
 ID= 11510315013 AllEvt= 39.000000 AllEvtErr= 6.244997 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 39.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 38 
 ID= 11710315013 AllEvt= 11.000000 AllEvtErr= 3.316625 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 11.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 11 
 ID= 12230515013 AllEvt= 18.000000 AllEvtErr= 4.242641 SelEvt= 2.000000  SelEvtErr= 1.414214 AllEvtnoweight= 18.000000 SelEvtnoweight= 2.000000 Eff(weight)= 0.111111 Eff(noweight)= 0.111111 Nfile= 18
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-155_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM155_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 15513 AllEvt= 125671.000000 AllEvtErr= 354.501044 SelEvt= 31328.000000  SelEvtErr= 176.997161 AllEvtnoweight= 125671.000000 SelEvtnoweight= 31328.000000 Eff(weight)= 0.249286 Eff(noweight)= 0.249286 Nfile= 401 
 ID= 10110315513 AllEvt= 4334.000000 AllEvtErr= 65.833116 SelEvt= 642.000000  SelEvtErr= 25.337694 AllEvtnoweight= 4334.000000 SelEvtnoweight= 642.000000 Eff(weight)= 0.148131 Eff(noweight)= 0.148131 Nfile= 401 
 ID= 10110415513 AllEvt= 10203.000000 AllEvtErr= 101.009894 SelEvt= 1492.000000  SelEvtErr= 38.626410 AllEvtnoweight= 10203.000000 SelEvtnoweight= 1492.000000 Eff(weight)= 0.146232 Eff(noweight)= 0.146232 Nfile= 401 
@@ -1856,6 +1635,8 @@ ID= 11910315513 AllEvt= 124.000000 AllEvtErr= 11.135522 SelEvt= 12.000000  SelEv
 ID= 11710415513 AllEvt= 29.000000 AllEvtErr= 5.385163 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 29.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 27 
 ID= 12230515513 AllEvt= 26.000000 AllEvtErr= 5.099020 SelEvt= 3.000000  SelEvtErr= 1.732051 AllEvtnoweight= 26.000000 SelEvtnoweight= 3.000000 Eff(weight)= 0.115385 Eff(noweight)= 0.115385 Nfile= 26 
 ID= 11730515513 AllEvt= 7.000000 AllEvtErr= 2.645751 SelEvt= 1.000000  SelEvtErr= 1.000000 AllEvtnoweight= 7.000000 SelEvtnoweight= 1.000000 Eff(weight)= 0.142857 Eff(noweight)= 0.142857 Nfile= 7
+
+/pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/WH_ZH_TTH_HToTauTau_M-160_8TeV-pythia6-tauola/Production_2015_Feb_04_htautauwhzhtthM160_Feb_12_2015_hr14_min10/4c872de38a314fbb18af839ac4582e2c
 ID= 16013 AllEvt= 125600.000000 AllEvtErr= 354.400925 SelEvt= 31753.000000  SelEvtErr= 178.193694 AllEvtnoweight= 125600.000000 SelEvtnoweight= 31753.000000 Eff(weight)= 0.252811 Eff(noweight)= 0.252811 Nfile= 401 
 ID= 10110316013 AllEvt= 4556.000000 AllEvtErr= 67.498143 SelEvt= 652.000000  SelEvtErr= 25.534270 AllEvtnoweight= 4556.000000 SelEvtnoweight= 652.000000 Eff(weight)= 0.143108 Eff(noweight)= 0.143108 Nfile= 401 
 ID= 10110416013 AllEvt= 10260.000000 AllEvtErr= 101.291653 SelEvt= 1480.000000  SelEvtErr= 38.470762 AllEvtnoweight= 10260.000000 SelEvtnoweight= 1480.000000 Eff(weight)= 0.144250 Eff(noweight)= 0.144250 Nfile= 401 
@@ -1905,3 +1686,5 @@ ID= 11610316013 AllEvt= 49.000000 AllEvtErr= 6.999999 SelEvt= 4.000000  SelEvtEr
 ID= 11710316013 AllEvt= 14.000000 AllEvtErr= 3.741655 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 14.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 12 
 ID= 11730516013 AllEvt= 8.000000 AllEvtErr= 2.828427 SelEvt= 0.000000  SelEvtErr= 0.000000 AllEvtnoweight= 8.000000 SelEvtnoweight= 0.000000 Eff(weight)= 0.000000 Eff(noweight)= 0.000000 Nfile= 8 
 ID= 11710416013 AllEvt= 23.000000 AllEvtErr= 4.795832 SelEvt= 4.000000  SelEvtErr= 2.000000 AllEvtnoweight= 23.000000 SelEvtnoweight= 4.000000 Eff(weight)= 0.173913 Eff(noweight)= 0.173913 Nfile= 23 
+
+

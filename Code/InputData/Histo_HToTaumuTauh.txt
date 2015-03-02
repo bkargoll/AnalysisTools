@@ -1,19 +1,66 @@
-Histo: 1   -1 Data Data 1
-Histo: 11  1.233664 MC_ggFHTauTauM125 H_{ggF}#rightarrow{}^{}#tau#tau 632
-Histo: 12  0.0997296 MC_VBFHTauTauM125 H_{VBF}#rightarrow{}^{}#tau#tau 633
-Histo: 13  0.0771792 MC_WHZHTTHTauTauM125 H_{AP}#rightarrow{}^{}#tau#tau 634
-Histo: 60  -1 QCD QCD 606
-Histo: 56  5.824 MC_WW_2l2nu WW#rightarrow{}^{}2l2#nu 417
-Histo: 57  2.207 MC_WZ_2l2q WZ#rightarrow{}^{}2l2q 418
-Histo: 58  1.058 MC_WZ_3l1nu WZ#rightarrow{}^{}3l1#nu 419
-Histo: 53  0.181 MC_ZZ_4l ZZ#rightarrow{}^{}4l 420
-Histo: 54  0.716 MC_ZZ_2l2nu ZZ#rightarrow{}^{}2l2#nu 416
-Histo: 55  2.502 MC_ZZ_2l2q ZZ#rightarrow{}^{}2l2q 415
-Histo: 70  245.8 MC_ttbar t#bar{t} 600
-Histo: 71  11.1 MC_tw tW 603
-Histo: 72  11.1 MC_tbarw #bar{t}w 591
-Histo: 20  24171.3 MC_W_lnu W#rightarrow{}^{}l#nu 876
-Histo: 23  12085.7 MC_W_taunu W#rightarrow{}^{}#tau#nu 874
-Histo: 30  2336.0 MC_DY_ll Z/#gamma#rightarrow{}^{}ll 800
-Histo: 33  1168.0 MC_DY_tautau Z/#gamma#rightarrow{}^{}#tau#tau 394
-Histo: 35  -1 MC_DY_embedded Z/#gamma#rightarrow{}^{}#tau#tau{}^{}emb. 400
+# Put data in first line
+Histo:	1   	-1 			Data 					Data 									1
+
+# Higgs signal sample for drawing in plots (m = 125 GeV)
+Histo:	12511  	1.217744 	MC_ggFHTauTauM125 		H^{125}_{ggF}#rightarrow{}^{}#tau#tau 	632
+Histo:	12512  	0.099730 	MC_VBFHTauTauM125 		H^{125}_{VBF}#rightarrow{}^{}#tau#tau 	633
+Histo:	12513  	0.078949 	MC_WHZHTTHTauTauM125	H^{125}_{AP}#rightarrow{}^{}#tau#tau 	634
+
+# Background samples (in order from bottom to top)
+Histo:	60  	-1 			QCD 					QCD 									606
+Histo:	56  	5.824 		MC_WW_2l2nu 			WW#rightarrow{}^{}2l2#nu 				417
+Histo:	57  	2.207 		MC_WZ_2l2q 				WZ#rightarrow{}^{}2l2q 					418
+Histo:	58  	1.058 		MC_WZ_3l1nu 			WZ#rightarrow{}^{}3l1#nu 				419
+Histo:	53  	0.181 		MC_ZZ_4l 				ZZ#rightarrow{}^{}4l 					420
+Histo:	54  	0.716 		MC_ZZ_2l2nu 			ZZ#rightarrow{}^{}2l2#nu 				416
+Histo:	55  	2.502 		MC_ZZ_2l2q 				ZZ#rightarrow{}^{}2l2q 					415
+Histo:	70  	245.8 		MC_ttbar 				t#bar{t} 								600
+Histo:	71  	11.1 		MC_tw 					tW 										603
+Histo:	72  	11.1 		MC_tbarw 				#bar{t}w 								591
+Histo:	20  	24171.3 	MC_W_lnu 				W#rightarrow{}^{}l#nu 					876
+Histo:	23  	12085.7 	MC_W_taunu 				W#rightarrow{}^{}#tau#nu 				874
+Histo:	30  	2336.0 		MC_DY_ll 				Z/#gamma#rightarrow{}^{}ll 				800
+Histo:	33  	1168.0 		MC_DY_tautau 			Z/#gamma#rightarrow{}^{}#tau#tau 		394
+Histo:	35  	-1 			MC_DY_embedded 			Z/#gamma#rightarrow{}^{}#tau#tau{}^{}emb. 400
+
+# Higgs signal samples with different Higgs masses
+# color is set to -999, thus they are not drawn in plots
+Histo:	11011  	1.963539	MC_ggFHTauTauM110 		H^{110}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	11012  	0.143816 	MC_VBFHTauTauM110 		H^{110}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	11013  	0.148713 	MC_WHZHTTHTauTauM110 	H^{110}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	11511  	1.717537	MC_ggFHTauTauM115 		H^{115}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	11512  	0.131058 	MC_VBFHTauTauM115 		H^{115}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	11513  	0.123365 	MC_WHZHTTHTauTauM115 	H^{115}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	12011  	1.468699	MC_ggFHTauTauM120 		H^{120}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	12012  	0.116090 	MC_VBFHTauTauM120 		H^{120}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	12013  	0.100116 	MC_WHZHTTHTauTauM120 	H^{120}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	13011  	0.972585	MC_ggFHTauTauM130 		H^{130}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	13012  	0.082350 	MC_VBFHTauTauM130 		H^{130}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	13013  	0.059890 	MC_WHZHTTHTauTauM130 	H^{130}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	13511  	0.744074	MC_ggFHTauTauM135 		H^{135}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	13512  	0.065015 	MC_VBFHTauTauM135 		H^{135}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	13513  	0.043549 	MC_WHZHTTHTauTauM135 	H^{135}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	14011  	0.542907	MC_ggFHTauTauM140 		H^{140}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	14012  	0.048893 	MC_VBFHTauTauM140 		H^{140}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	14013  	0.030205 	MC_WHZHTTHTauTauM140 	H^{140}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	14511  	0.377497	MC_ggFHTauTauM145 		H^{145}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	14512  	0.034791 	MC_VBFHTauTauM145 		H^{145}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	14513  	0.019885 	MC_WHZHTTHTauTauM145 	H^{145}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	15011  	0.241195	MC_ggFHTauTauM150 		H^{150}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	15012  	0.022784 	MC_VBFHTauTauM150 		H^{150}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	15013  	0.012054 	MC_WHZHTTHTauTauM150 	H^{150}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	15511  	0.134042	MC_ggFHTauTauM155 		H^{155}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	15512  	0.012956 	MC_VBFHTauTauM155 		H^{155}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	15513  	0.006326 	MC_WHZHTTHTauTauM155 	H^{155}_{AP}#rightarrow{}^{}#tau#tau 	-999
+                                                                                   
+Histo:	16011  	0.047361	MC_ggFHTauTauM160 		H^{160}_{ggF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	16012  	0.004693 	MC_VBFHTauTauM160 		H^{160}_{VBF}#rightarrow{}^{}#tau#tau 	-999
+Histo:	16013  	0.002086 	MC_WHZHTTHTauTauM160 	H^{160}_{AP}#rightarrow{}^{}#tau#tau 	-999
