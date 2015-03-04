@@ -16,10 +16,7 @@ TString Plots::File_;
 std::vector<TString> Plots::HistogramNames_;
 
 Plots::Plots() :
-  doscale(false),
-  verbose(false),
-  dooneprofile(false) 
-{
+		doscale(false), verbose(false), dooneprofile(false) {
 
 }
 
@@ -58,183 +55,243 @@ void Plots::SaveHistograms(TString File, std::vector<TString> HistogramNames) {
 }
 
 void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colour, std::vector<TString> legend) {
-  
-  std::cout << "Plots::Plot1D" << std::endl;
-  TCanvas c("c", "c", 200, 10, 750, 750);
-  c.Update();
-  c.Clear();
-  c.Update();
-  TLatex latex;
-  latex.SetTextSize(0.03);
-  latex.SetNDC();
-  
-  for (unsigned int j = 0; j < histo.size(); j++) {
-    if (verbose)
-      std::cout << "Plots::Plot1D " << histo.size() << " j= " << j << " color.size()= " << colour.size() << " " << histo.at(j).size() << std::endl;
-    if (histo.at(j).size() > 0 && histo.at(j).size() == colour.size()) {
-      TLegend leg(0.25, 0.72, 0.9, 0.925);
-      leg.SetBorderSize(0);
-      leg.SetFillStyle(4000);
-      leg.SetFillColor(0);
-      leg.SetTextSize(0.03);
-      leg.SetMargin(0.15);
-      leg.SetNColumns(3);
-      leg.SetColumnSeparation(0.05);
-      TH1D Total("Total", "Total", histo.at(j).at(0).GetNbinsX(), histo.at(j).at(0).GetXaxis()->GetXmin(), histo.at(j).at(0).GetXaxis()->GetXmax());
-      Total.SetFillStyle(3005);
-      Total.SetFillColor(1);
-      Total.SetLineColor(18);
-      Total.SetMarkerColor(1);
-      Total.SetMarkerSize(0.001);
-      Total.Sumw2();
-      TString N = "MCStack";
-      N += j;
-      N += histo.at(j).at(0).GetName();
-      THStack MCHistoStack(N, histo.at(j).at(0).GetName());
-      double MC_Integral(0);
-      double Data_Integral(0);
-      bool cflag = true;
-      TString l = "";
-      histo.at(j).at(0).SetLineColor(colour.at(0));
-      histo.at(j).at(0).SetMarkerColor(colour.at(0));
-      if (verbose) std::cout << histo.at(j).at(0).GetTitle() << std::endl;
-      for (int i = histo.at(j).size() - 1; i >= 0; i--) {
-	histo.at(j).at(i).SetLineColor(colour.at(i));
-	histo.at(j).at(i).SetFillColor(colour.at(i));
-	if (i + 1 < histo.at(j).size()) {
-	  if (legend.at(i) != l) {
-	    l = legend.at(i);
-	    cflag = true;
-	  }
+
+	std::cout << "Plots::Plot1D" << std::endl;
+	TCanvas canv("canv", "canv", 200, 10, 750, 750);
+	canv.Update();
+	canv.Clear();
+	canv.Update();
+	TLatex latex;
+	latex.SetTextSize(0.03);
+	latex.SetNDC();
+
+	// loop over all plots
+	for (unsigned int i_plot = 0; i_plot < histo.size(); i_plot++) {
+		if (verbose)
+			std::cout << "Plots::Plot1D -> N(plots)= " << histo.size() << ", i_plot= " << i_plot << ", color.size()= " << colour.size() << ", N(histos)=  " << histo.at(i_plot).size() << std::endl;
+
+		// check that histos and colors exist
+		if (histo.at(i_plot).size() > 0 && histo.at(i_plot).size() == colour.size()) {
+
+			// === basic settings ===
+			// legend
+			TLegend leg(0.25, 0.72, 0.9, 0.925);
+			leg.SetBorderSize(0);
+			leg.SetFillStyle(4000);
+			leg.SetFillColor(0);
+			leg.SetTextSize(0.03);
+			leg.SetMargin(0.15);
+			leg.SetNColumns(3);
+			leg.SetColumnSeparation(0.05);
+			// create the histogram containing sum of all other histograms
+			TH1D Total("Total", "Total", histo.at(i_plot).at(0).GetNbinsX(), histo.at(i_plot).at(0).GetXaxis()->GetXmin(), histo.at(i_plot).at(0).GetXaxis()->GetXmax());
+			Total.SetFillStyle(3005);
+			Total.SetFillColor(1);
+			Total.SetLineColor(18);
+			Total.SetMarkerColor(1);
+			Total.SetMarkerSize(0.001);
+			Total.Sumw2();
+			// create stack of histograms
+			TString N = "MCStack";
+			N += i_plot;
+			N += histo.at(i_plot).at(0).GetName();
+			THStack MCHistoStack(N, histo.at(i_plot).at(0).GetName());
+			// container for the sum of integrals
+			double MC_Integral(0);
+			double Data_Integral(0);
+			// flags to check if histogram should be combined with previous histgram
+			// histograms are combined if they have the same name (i.e. legend)
+			bool isNewHist = true;
+			TString legOfPreviousHist = "";
+			// first histogram is expected to be data, and drawn as black dots
+			histo.at(i_plot).at(0).SetLineColor(colour.at(0));
+			histo.at(i_plot).at(0).SetMarkerColor(colour.at(0));
+
+			// === settings for individual histograms ===
+			if (verbose)
+				std::cout << "Setup plot " << histo.at(i_plot).at(0).GetTitle() << std::endl;
+
+			// set colours and legends of histograms
+			for (int i_hist = histo.at(i_plot).size() - 1; i_hist >= 0; i_hist--) {
+				// don't draw histogram if colour is set to -999
+				if( colour.at(i_hist) == -999 ) continue;
+
+				// set colors according to values in "colour" vector
+				histo.at(i_plot).at(i_hist).SetLineColor(colour.at(i_hist));
+				histo.at(i_plot).at(i_hist).SetFillColor(colour.at(i_hist));
+
+				// combine histograms if they have the same legend
+				if (i_hist + 1 < histo.at(i_plot).size()) { // first element is always a new histogram
+					if (legend.at(i_hist) != legOfPreviousHist) {
+						legOfPreviousHist = legend.at(i_hist);
+						isNewHist = true;
+					}
+				}
+				// draw black line of histogram only if it should NOT be combined with previous histogram, and if it contains some entries
+				if (isNewHist && histo.at(i_plot).at(i_hist).Integral() > 0) {
+					histo.at(i_plot).at(i_hist).SetLineColor(1);
+					isNewHist = false;
+				}
+			}
+
+			// calculate data and MC integrals and add legends entries
+			double combinedIntegral(0); // sum of integrals of combined histograms
+			for (unsigned int i_hist = 0; i_hist < histo.at(i_plot).size(); i_hist++) {
+				if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+
+				combinedIntegral += histo.at(i_plot).at(i_hist).Integral();
+				// data histogram
+				if (i_hist == 0) {
+					Data_Integral += histo.at(i_plot).at(0).Integral();
+					leg.AddEntry(&histo.at(i_plot).at(i_hist), legend.at(i_hist), "pe");
+					combinedIntegral = 0;
+				}
+				// MC histograms
+				else {
+					if ( ( (colour.size() <= i_hist +1) // this is the last histogram
+							|| (colour.at(i_hist) != colour.at(i_hist + 1)) ) // OR this is an individual histogram
+							&& combinedIntegral >= 0) { // AND this histogram has content
+						histo.at(i_plot).at(i_hist).SetLineColor(1);
+						leg.AddEntry(&histo.at(i_plot).at(i_hist), legend.at(i_hist), "F");
+						combinedIntegral = 0;
+					}
+					if (histo.at(i_plot).at(i_hist).Integral() > 0) {
+						// this histogram has content, and may or may not be combined with the next one
+						MCHistoStack.Add(&histo.at(i_plot).at(i_hist));
+						Total.Add(&histo.at(i_plot).at(i_hist));
+					}
+					MC_Integral += histo.at(i_plot).at(i_hist).Integral();
+					if (verbose)
+						std::cout << histo.at(i_plot).at(i_hist).GetTitle() << " " << histo.at(i_plot).at(i_hist).Integral() << " i_hist= " << i_hist << std::endl;
+				}
+			}
+
+			// scale MC to data for shape comparisons
+			// currently the doscale variable is hardcoded to FALSE in the constructor
+			if (doscale) {
+				for (unsigned int i_hist = 0; i_hist < histo.at(i_plot).size(); i_hist++) {
+					if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+					if (i_hist != 0 && Data_Integral > 0 && MC_Integral > 0)
+						histo.at(i_plot).at(i_hist).Scale(Data_Integral / MC_Integral);
+				}
+				if (Data_Integral > 0 && MC_Integral > 0)
+					Total.Scale(Data_Integral / MC_Integral);
+			}
+
+			// === draw the plot ===
+			if (verbose) std::cout << "Start drawing ... " << std::endl;
+
+			// loop to create linear (linlog = 0) and logarithmic (linlog = 1) plots
+			for (unsigned int linlog = 0; linlog < 2; linlog++) {
+				// linear y-axis for linlog = 0
+				canv.Clear();
+				canv.SetLogy(0);
+				if (linlog == 1) {
+					// logarithmic y-axis for linlog = 1
+					canv.Clear();
+					canv.SetLogy(1);
+				}
+
+				// draw in case there is data
+				if (Data_Integral > 0) {
+					// set y-axis range based on data histogram
+					double max = histo.at(i_plot).at(0).GetBinContent(histo.at(i_plot).at(0).GetMaximumBin());
+					if (linlog == 1) {
+						histo.at(i_plot).at(0).SetMinimum(0.01);
+						histo.at(i_plot).at(0).SetMaximum(100 * max);
+					} else {
+						histo.at(i_plot).at(0).SetMinimum(0);
+						histo.at(i_plot).at(0).SetMaximum(1.7 * max);
+					}
+					// draw data histogram
+					histo.at(i_plot).at(0).Draw("E");
+					// draw MC stack
+					MCHistoStack.Draw("Histsame");
+					// additionally draw sum of all MC samples
+					Total.Draw("E2same");
+					// draw data again (to bring it to the top)
+					histo.at(i_plot).at(0).Draw("Esame");
+					histo.at(i_plot).at(0).Draw("axissame");
+
+					// add Kolmogorov test result to plot
+					TString hTitle = histo.at(i_plot).at(0).GetName();
+					if (hTitle.Contains("KSTest")) {
+						double KS = histo.at(i_plot).at(0).KolmogorovTest(&Total);
+						hTitle = histo.at(i_plot).at(0).GetTitle();
+						hTitle += " KS=";
+						hTitle += KS;
+						latex.DrawLatex(0.225, 0.95, hTitle);
+					}
+
+					if (verbose)
+						std::cout << "Integrals of Data: " << histo.at(i_plot).at(0).Integral() << ", MC: " << Total.Integral() << std::endl;
+				}
+
+				// draw in case this is MC only
+				else {
+					MCHistoStack.Draw("Hist");
+					double max = Total.GetBinContent(Total.GetMaximumBin());
+					if (linlog == 1) {
+						histo.at(i_plot).at(0).SetMinimum(0.01);
+						if (max != 0) histo.at(i_plot).at(0).SetMaximum(100 * max);
+						else histo.at(i_plot).at(0).SetMaximum(100);
+					} else {
+						histo.at(i_plot).at(0).SetMinimum(0);
+						histo.at(i_plot).at(0).SetMaximum(1.7 * max);
+					}
+					histo.at(i_plot).at(0).Draw("E");
+					MCHistoStack.Draw("Histsame");
+					MCHistoStack.Draw("axissame");
+					Total.Draw("E2same");
+				}
+
+				// draw the legend
+				leg.Draw();
+				canv.Update();
+
+				// give plot a proper name
+				TString filename = histo.at(i_plot).at(0).GetName();
+				if (linlog == 1) {
+					filename += "_log";
+				}
+				filename += "_index_";
+				filename += i_plot;
+				// filename including folder structure and type
+				TString EPSName = "EPS/";
+				EPSName += filename;
+				EPSName += ".eps";
+
+				// save plot only if it is linear OR ( logarithmic AND ( Nminus plot OR Accumdist plot) )
+				if (linlog == 0 || !filename.Contains("Nminus") || filename.Contains("Accumdist")) {
+					canv.Print(EPSName);
+				}
+
+				// save some histograms in extra root file
+				// this code does nothing unless method "SaveHistograms" was called before
+				if (linlog == 0) {
+					for (unsigned int a = 0; a < HistogramNames_.size(); a++) {
+						if (histo.at(i_plot).at(0).GetName() == HistogramNames_.at(a)) {
+							TFile f(File_ + "_EXTRA.root", "RECREATE");
+							TString n = HistogramNames_.at(a);
+							n.ReplaceAll("Data", "");
+							unsigned int s = histo.at(i_plot).size() - 1;
+							histo.at(i_plot).at(0).Write((histo.at(i_plot).at(0)).GetName());
+							histo.at(i_plot).at(s).Write(n + "sig");
+							for (unsigned int t = 2; t < s; t++) {
+								histo.at(i_plot).at(2).Add(&histo.at(i_plot).at(t));
+							}
+							histo.at(i_plot).at(2).Write(n + "background");
+							f.Close();
+						}
+					}
+				}
+			}
+		}
+		else{
+			std::cout << "ERROR: List of histograms empty OR the list of colors is not of equal length than the list of histograms" << std::endl;
+		}
 	}
-	if (cflag && histo.at(j).at(i).Integral() > 0) {
-	  histo.at(j).at(i).SetLineColor(1);
-	  cflag = false;
-	}
-      }
-      double theIntegral(0);
-      for (unsigned int i = 0; i < histo.at(j).size(); i++) {
-	theIntegral += histo.at(j).at(i).Integral();
-	if (i == 0) {
-	  Data_Integral += histo.at(j).at(0).Integral();
-	  leg.AddEntry(&histo.at(j).at(i), legend.at(i), "pe");
-	  theIntegral = 0;
-	} else {
-	  if (colour.size() <= i + 1 && theIntegral >= 0) {
-	    histo.at(j).at(i).SetLineColor(1);
-	    leg.AddEntry(&histo.at(j).at(i), legend.at(i), "F");
-	    theIntegral = 0;
-	  } else if (colour.size() > i + 1) {
-	    if (colour.at(i) != colour.at(i + 1) && theIntegral >= 0) {
-	      histo.at(j).at(i).SetLineColor(1);
-	      leg.AddEntry(&histo.at(j).at(i), legend.at(i), "F");
-	      theIntegral = 0;
-	    }
-	  }
-	  if (i != 0) {
-	    if (histo.at(j).at(i).Integral() > 0) {
-	      MCHistoStack.Add(&histo.at(j).at(i));
-	      Total.Add(&histo.at(j).at(i));
-	    }
-	  }
-	  MC_Integral += histo.at(j).at(i).Integral();
-	  if (verbose) std::cout << histo.at(j).at(i).GetTitle() << " " << histo.at(j).at(i).Integral() << " i= " << i << std::endl;
-	}
-      }
-      if (doscale) {
-	for (unsigned int i = 0; i < histo.at(j).size(); i++) {
-	  if (i != 0 && Data_Integral > 0 && MC_Integral > 0)
-	    histo.at(j).at(i).Scale(Data_Integral / MC_Integral);
-	}
-	if (Data_Integral > 0 && MC_Integral > 0)
-	  Total.Scale(Data_Integral / MC_Integral);
-      }
-      if(verbose) std::cout << "A" << std::endl;
-      for (unsigned int l = 0; l < 2; l++) {
-	c.Clear();
-	c.SetLogy(0);
-	if (l == 1) {
-	  c.Clear();
-	  c.SetLogy(1);
-	}
-	if (Data_Integral > 0) {
-	  double max = histo.at(j).at(0).GetBinContent(histo.at(j).at(0).GetMaximumBin());
-	  if (l == 1) {
-	    histo.at(j).at(0).SetMinimum(0.01);
-	    histo.at(j).at(0).SetMaximum(100 * max);
-	  } else {
-	    histo.at(j).at(0).SetMinimum(0);
-	    histo.at(j).at(0).SetMaximum(1.7 * max);
-	  }
-	  histo.at(j).at(0).Draw("E");
-	  MCHistoStack.Draw("Histsame");
-	  Total.Draw("E2same");
-	  histo.at(j).at(0).Draw("Esame");
-	  histo.at(j).at(0).Draw("axissame");
-	  TString hTitle = histo.at(j).at(0).GetName();
-	  if (hTitle.Contains("KSTest")) {
-	    double KS = histo.at(j).at(0).KolmogorovTest(&Total);
-	    hTitle = histo.at(j).at(0).GetTitle();
-	    hTitle += " KS=";
-	    hTitle += KS;
-	    latex.DrawLatex(0.225, 0.95, hTitle);
-	  }
-	  if (verbose)
-	    std::cout << "Data: " << histo.at(j).at(0).Integral() << " MC: " << Total.Integral() << std::endl;
-	} else {
-	  MCHistoStack.Draw("Hist");
-	  double max = Total.GetBinContent(Total.GetMaximumBin());
-	  if (l == 1) {
-	    histo.at(j).at(0).SetMinimum(0.01);
-	    if (max != 0) {
-	      histo.at(j).at(0).SetMaximum(100 * max);
-	    } else {
-	      histo.at(j).at(0).SetMaximum(100);
-	    }
-	  } else {
-	    histo.at(j).at(0).SetMinimum(0);
-	    histo.at(j).at(0).SetMaximum(1.7 * max);
-	  }
-	  histo.at(j).at(0).Draw("E");
-	  MCHistoStack.Draw("Histsame");
-	  MCHistoStack.Draw("axissame");
-	  Total.Draw("E2same");
-	}
-	leg.Draw();
-	c.Update();
-	TString name = histo.at(j).at(0).GetName();
-	if (l == 1) {
-	  name += "_log";
-	}
-	name += "_index_";
-	name += j;
-	TString EPSName = "EPS/";
-	EPSName += name;
-	EPSName += ".eps";
-	if (l == 0 || !name.Contains("Nminus") || name.Contains("Accumdist")) {
-	  c.Print(EPSName);
-	}
-	if (l == 0) {
-	  for (unsigned int a = 0; a < HistogramNames_.size(); a++) {
-	    if (histo.at(j).at(0).GetName() == HistogramNames_.at(a)) {
-	      TFile f(File_ + "_EXTRA.root", "RECREATE");
-	      TString n = HistogramNames_.at(a);
-	      n.ReplaceAll("Data", "");
-	      unsigned int s = histo.at(j).size() - 1;
-	      histo.at(j).at(0).Write((histo.at(j).at(0)).GetName());
-	      histo.at(j).at(s).Write(n + "sig");
-	      for (unsigned int t = 2; t < s; t++) {
-		histo.at(j).at(2).Add(&histo.at(j).at(t));
-	      }
-	      histo.at(j).at(2).Write(n + "background");
-	      f.Close();
-	    }
-	  }
-	}
-      }
-    }
-  }
-  std::cout << "Plot1D done " << std::endl;
+	std::cout << "Plot1D done " << std::endl;
 }
 
 void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt, bool lt, std::vector<int> colour, std::vector<TString> legend) {
@@ -251,29 +308,29 @@ void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt, bool lt, std::v
 
 	histo.at(0).Reset();
 	if (histo.size() > 0) {
-		for (int b = 1; b <= histo.at(0).GetNbinsX(); b++) {
+		for (int i_bin = 1; i_bin <= histo.at(0).GetNbinsX(); i_bin++) {
 			if (gt) {
-				double sig = histo.at(histo.size() - 1).Integral(b, histo.at(0).GetNbinsX() + 1);
+				double sig = histo.at(histo.size() - 1).Integral(i_bin, histo.at(0).GetNbinsX() + 1);
 				double bkg(0);
 				for (unsigned int i = 1; i < histo.size() - 1; i++) {
-					bkg += histo.at(i).Integral(b, histo.at(0).GetNbinsX() + 1);
+					bkg += histo.at(i).Integral(i_bin, histo.at(0).GetNbinsX() + 1);
 				}
 				if (/*1+sig/bkg >0 && */(sig + bkg) != 0) {
-					histo.at(0).SetBinContent(b, sig / sqrt(sig + bkg)); //(b,sqrt(2)*sqrt((sig+bkg)*TMath::Log(1+sig/bkg)-sig));//(b,sig/sqrt(sig+bkg));
+					histo.at(0).SetBinContent(i_bin, sig / sqrt(sig + bkg)); //(b,sqrt(2)*sqrt((sig+bkg)*TMath::Log(1+sig/bkg)-sig));//(b,sig/sqrt(sig+bkg));
 				} else {
-					histo.at(0).SetBinContent(b, 0);
+					histo.at(0).SetBinContent(i_bin, 0);
 				}
 			}
 			if (lt) {
-				double sig = histo.at(histo.size() - 1).Integral(0, b);
+				double sig = histo.at(histo.size() - 1).Integral(0, i_bin);
 				double bkg(0);
 				for (unsigned int i = 1; i < histo.size() - 1; i++) {
-					bkg += histo.at(i).Integral(0, b);
+					bkg += histo.at(i).Integral(0, i_bin);
 				}
 				if (/*1+sig/bkg >0 && */sig + bkg != 0) {
-					histo.at(0).SetBinContent(b, sig / sqrt(sig + bkg)); //(b,sqrt(2)*sqrt((sig+bkg)*TMath::Log(1+sig/bkg)-sig));
+					histo.at(0).SetBinContent(i_bin, sig / sqrt(sig + bkg)); //(b,sqrt(2)*sqrt((sig+bkg)*TMath::Log(1+sig/bkg)-sig));
 				} else {
-					histo.at(0).SetBinContent(b, 0);
+					histo.at(0).SetBinContent(i_bin, 0);
 				}
 			}
 		}
@@ -320,50 +377,52 @@ void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt, bool lt, std::vecto
 	c.Update();
 
 	histo.at(0).Reset();
-	if(histo.size() > 2) {
-		for(int b = 1; b <= histo.at(0).GetNbinsX(); b++) {
-			if(gt) {
-				double sig = histo.at(histo.size() - 1).Integral(b, histo.at(0).GetNbinsX() + 1);
+	if (histo.size() > 2) {
+		for (int i_bin = 1; i_bin <= histo.at(0).GetNbinsX(); i_bin++) {
+			if (gt) {
+				double sig = histo.at(histo.size() - 1).Integral(i_bin, histo.at(0).GetNbinsX() + 1);
 				double bkg(0);
-				for(unsigned int i = 1; i < histo.size() - 1; i++) {
-					bkg += histo.at(i).Integral(b, histo.at(0).GetNbinsX() + 1);
+				for (unsigned int i_hist = 1; i_hist < histo.size() - 1; i_hist++) {
+					if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+					bkg += histo.at(i_hist).Integral(i_bin, histo.at(0).GetNbinsX() + 1);
 				}
-				if((bkg + sig) != 0) {
-					histo.at(0).SetBinContent(b, sig / (sig + bkg));
-				}else{
-					histo.at(0).SetBinContent(b, 0);
+				if ((bkg + sig) != 0) {
+					histo.at(0).SetBinContent(i_bin, sig / (sig + bkg));
+				} else {
+					histo.at(0).SetBinContent(i_bin, 0);
 				}
 			}
-			if(lt){
-				double sig = histo.at(histo.size() - 1).Integral(0, b);
+			if (lt) {
+				double sig = histo.at(histo.size() - 1).Integral(0, i_bin);
 				double bkg(0);
-				for(unsigned int i = 1; i < histo.size() - 1; i++) {
-					bkg += histo.at(i).Integral(0, b);
+				for (unsigned int i_hist = 1; i_hist < histo.size() - 1; i_hist++) {
+					if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+					bkg += histo.at(i_hist).Integral(0, i_bin);
 				}
-				if(sig + bkg != 0) {
-					histo.at(0).SetBinContent(b, sig / (sig + bkg));
-				}else{
-					histo.at(0).SetBinContent(b, 0);
+				if (sig + bkg != 0) {
+					histo.at(0).SetBinContent(i_bin, sig / (sig + bkg));
+				} else {
+					histo.at(0).SetBinContent(i_bin, 0);
 				}
 			}
 		}
 
-		for (int b = 1; b <= histo.at(0).GetNbinsX(); b++) {
+		for (int i_bin = 1; i_bin <= histo.at(0).GetNbinsX(); i_bin++) {
 			double total = histo.at(histo.size() - 1).Integral();
 			if (gt) {
-				double sig = histo.at(histo.size() - 1).Integral(b, histo.at(0).GetNbinsX() + 1);
+				double sig = histo.at(histo.size() - 1).Integral(i_bin, histo.at(0).GetNbinsX() + 1);
 				if (total != 0) {
-					histo.at(1).SetBinContent(b, sig / total);
+					histo.at(1).SetBinContent(i_bin, sig / total);
 				} else {
-					histo.at(1).SetBinContent(b, 0);
+					histo.at(1).SetBinContent(i_bin, 0);
 				}
 			}
 			if (lt) {
-				double sig = histo.at(histo.size() - 1).Integral(0, b);
+				double sig = histo.at(histo.size() - 1).Integral(0, i_bin);
 				if (total != 0) {
-					histo.at(1).SetBinContent(b, sig / total);
+					histo.at(1).SetBinContent(i_bin, sig / total);
 				} else {
-					histo.at(1).SetBinContent(b, 0);
+					histo.at(1).SetBinContent(i_bin, 0);
 				}
 			}
 		}
@@ -404,9 +463,10 @@ void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, std::vector<int> colo
 	c.Clear();
 
 	if (histo.size() > 4) {
-		for (unsigned int i = 0; i < histo.size(); i++) {
-			if (i > 1) {
-				histo.at(1).Add(&histo.at(i), 1);
+		for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
+			if (i_hist > 1) {
+				if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+				histo.at(1).Add(&histo.at(i_hist), 1);
 			}
 		}
 		if (doscale) {
@@ -498,18 +558,21 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 		std::vector<int> types;
 		TString LegType = "";
 		double integral = 0;
-		for (unsigned int i = 0; i < histo.size(); i++) {
-			if (verbose) std::cout << "Legend " << legend.at(i) << " Integal " << histo.at(i).Integral() << std::endl;
-			if (LegType != legend.at(i)) {
-				LegType = legend.at(i);
+		for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
+			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+			if (verbose)
+				std::cout << "Legend " << legend.at(i_hist) << " Integral " << histo.at(i_hist).Integral() << std::endl;
+			if (LegType != legend.at(i_hist)) {
+				LegType = legend.at(i_hist);
 				integral = 0;
-				for (unsigned int j = i; j < histo.size(); j++) {
+				for (unsigned int j = i_hist; j < histo.size(); j++) {
 					if (LegType == legend.at(j))
 						integral += histo.at(j).Integral();
 				}
 				if (integral != 0) {
-					types.push_back((i!=0) ? i+1: i); // +1 as later on the TotalMC histo is added
-					if (verbose) std::cout << "adding one type to types list" << std::endl;
+					types.push_back((i_hist != 0) ? i_hist + 1 : i_hist); // +1 as later on the TotalMC histo is added
+					if (verbose)
+						std::cout << "adding one type to types list" << std::endl;
 				}
 				integral = 0;
 			}
@@ -521,37 +584,41 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 		TString tempname = histo.at(0).GetName();
 		tempname += "TotalMC";
 		histo.insert(it + 1, *((TH2D*) histo.at(0).Clone(tempname.Data())));
-		if (types.size() > 0) types.insert(types.begin()+1, 1);
+		if (types.size() > 0)
+			types.insert(types.begin() + 1, 1);
 		std::vector<TString>::iterator itleg = legend.begin();
 		legend.insert(itleg + 1, "Total MC");
 		std::vector<int>::iterator itcol = colour.begin();
 		colour.insert(itcol + 1, 55);
 		histo.at(1).Reset();
-		for (unsigned int i = 2; i < histo.size(); i++) {
-			histo.at(1).Add(&histo.at(i));
+		for (unsigned int i_hist = 2; i_hist < histo.size(); i_hist++) {
+			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+			histo.at(1).Add(&histo.at(i_hist));
 		}
 		if (verbose)
 			std::cout << "n(types) = " << types.size() << std::endl;
 		LegType = "null";
 
-		for (unsigned int i = 0; i < histo.size(); i++) {
+		for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
+			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
 			if (verbose)
-				std::cout << "histo i" << i << std::endl;
-			if (LegType != legend.at(i)) {
-				LegType = legend.at(i);
-				for (unsigned int j = i + 1; j < histo.size(); j++) {
+				std::cout << "histo i" << i_hist << std::endl;
+			if (LegType != legend.at(i_hist)) {
+				LegType = legend.at(i_hist);
+				for (unsigned int j = i_hist + 1; j < histo.size(); j++) {
 					if (verbose)
 						std::cout << "histo j" << j << std::endl;
-					if (legend.at(j) == legend.at(i)){
-						histo.at(i).Add(&histo.at(j));
-						if (verbose) std::cout << "Added histo " << j << " to histo " << i << std::endl;
+					if (legend.at(j) == legend.at(i_hist)) {
+						histo.at(i_hist).Add(&histo.at(j));
+						if (verbose)
+							std::cout << "Added histo " << j << " to histo " << i_hist << std::endl;
 					}
 				}
 				if (verbose)
-					std::cout << "legend " << i << " " << histo.at(i).Integral() << std::endl;
-				if (histo.at(i).Integral() != 0) {
+					std::cout << "legend " << i_hist << " " << histo.at(i_hist).Integral() << std::endl;
+				if (histo.at(i_hist).Integral() != 0) {
 					if (verbose)
-						std::cout << "legend " << i << histo.at(i).Integral() << std::endl;
+						std::cout << "legend " << i_hist << histo.at(i_hist).Integral() << std::endl;
 				}
 			}
 		}
@@ -559,35 +626,40 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 		// loop to allow splitting of TH2D histograms on multiple canvases
 		unsigned int nPlotted(0);
 		while (nPlotted < types.size()) {
-			if (verbose) std::cout << "nPlotted = " << nPlotted << ", ntypes = " << types.size() << std::endl;
+			if (verbose)
+				std::cout << "nPlotted = " << nPlotted << ", ntypes = " << types.size() << std::endl;
 			// split canvas for TH2D histograms
 			TCanvas c("c", "c", 200, 10, 750, 750);
 			c.Clear();
 
 			if (types.size() - nPlotted == 1) {
-				if (verbose) std::cout << "Canvas: Divide(1,1)"<< std::endl;
+				if (verbose)
+					std::cout << "Canvas: Divide(1,1)" << std::endl;
 				c.Divide(1, 1);
 			} else if (types.size() - nPlotted == 2 || types.size() - nPlotted == 3 || types.size() - nPlotted == 4) {
-				if (verbose) std::cout << "Canvas: Divide(2,2)"<< std::endl;
+				if (verbose)
+					std::cout << "Canvas: Divide(2,2)" << std::endl;
 				c.Divide(2, 2);
 			} else {
-				if (verbose) std::cout << "Canvas: Divide(2,3)"<< std::endl;
+				if (verbose)
+					std::cout << "Canvas: Divide(2,3)" << std::endl;
 				// plot only up to 6 TH2D in one canvas
 				c.Divide(2, 3);
 			}
 
-
-			for (unsigned int i = nPlotted; (i < nPlotted+6) && (i < types.size());i++) {
+			for (unsigned int i = nPlotted; (i < nPlotted + 6) && (i < types.size()); i++) {
 				int type = types.at(i);
-				if (verbose) std::cout << "loop: " << i << ", type = " << types.at(i) << " legend.at(type) = " << legend.at(type) << std::endl;
+				if (verbose)
+					std::cout << "loop: " << i << ", type = " << types.at(i) << " legend.at(type) = " << legend.at(type) << std::endl;
 				c.cd(i - nPlotted + 1);
-				if (verbose) std::cout << "Draw histogram " << type << " into subcanvas " << i - nPlotted +1 << " with Integral = " << histo.at(type).Integral() << std::endl;
+				if (verbose)
+					std::cout << "Draw histogram " << type << " into subcanvas " << i - nPlotted + 1 << " with Integral = " << histo.at(type).Integral() << std::endl;
 				histo.at(type).Draw("colz");
 				c.Update();
 				TLatex l;
 				l.SetNDC();
 				l.DrawLatex(0.25, 0.90, legend.at(type));
-				}
+			}
 
 			TString name = histo.at(0).GetName();
 			TString EPSName = "EPS/";
@@ -630,32 +702,33 @@ void Plots::Plot3D(std::vector<TH3F> histo, std::vector<int> colour, std::vector
 		leg.SetNColumns(1);
 		leg.SetColumnSeparation(0.05);
 		for (unsigned int p = 0; p < 4; p++) {
-			for (unsigned int i = 0; i < histo.size(); i++) {
-				histo.at(i).SetMarkerSize(0.25);
-				histo.at(i).SetMarkerColor(colour.at(i));
-				histo.at(i).GetXaxis()->SetTitleOffset(2.0);
-				histo.at(i).GetYaxis()->SetTitleOffset(2.0);
-				histo.at(i).GetZaxis()->SetTitleOffset(2.0);
+			for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
+				if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
+				histo.at(i_hist).SetMarkerSize(0.25);
+				histo.at(i_hist).SetMarkerColor(colour.at(i_hist));
+				histo.at(i_hist).GetXaxis()->SetTitleOffset(2.0);
+				histo.at(i_hist).GetYaxis()->SetTitleOffset(2.0);
+				histo.at(i_hist).GetZaxis()->SetTitleOffset(2.0);
 				if (p == 0)
 					gPad->SetPhi(30);
 				if (p == 1)
 					gPad->SetPhi(150);
 				if (p == 2)
 					gPad->SetPhi(240);
-				if (colour.at(i) == 10)
-					histo.at(i).SetMarkerColor(16);
-				if (colour.at(i) == 414)
-					histo.at(i).SetMarkerColor(3);
+				if (colour.at(i_hist) == 10)
+					histo.at(i_hist).SetMarkerColor(16);
+				if (colour.at(i_hist) == 414)
+					histo.at(i_hist).SetMarkerColor(3);
 				if (p != 3) {
 					c.cd(p + 1);
 
-					if (i == 0) {
-						histo.at(i).Draw();
+					if (i_hist == 0) {
+						histo.at(i_hist).Draw();
 					} else {
-						histo.at(i).Draw("same");
+						histo.at(i_hist).Draw("same");
 					}
 				} else {
-					leg.AddEntry(&histo.at(i), legend.at(i), "pe");
+					leg.AddEntry(&histo.at(i_hist), legend.at(i_hist), "pe");
 				}
 			}
 		}

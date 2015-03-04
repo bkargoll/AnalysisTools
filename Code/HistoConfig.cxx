@@ -16,7 +16,7 @@
 #include <math.h>
 
 // Static var
-std::vector<int>          HistoConfig::ID;
+std::vector<int64_t>      HistoConfig::ID;
 std::vector<double>       HistoConfig::CS;
 std::vector<TString>      HistoConfig::HistoName;
 std::vector<TString>      HistoConfig::HistoLegend;
@@ -57,7 +57,7 @@ bool HistoConfig::Load(TString Name_)
     if(a>250) break;
     std::stringstream line(s); 
     TString type;
-    int id;
+    int64_t id;
     double cs;
     TString name;
     TString leg;
@@ -92,7 +92,7 @@ HistoConfig::~HistoConfig(){
 }
 
 //utility Functions
-bool HistoConfig::GetHisto(bool isdata,int id,unsigned int &histo){
+bool HistoConfig::GetHisto(bool isdata,int64_t id,unsigned int &histo){
   if(isdata){
     id=1;
   }
@@ -105,7 +105,7 @@ bool HistoConfig::GetHisto(bool isdata,int id,unsigned int &histo){
   return false;
 }
 
-double HistoConfig::GetCrossSection(int id){
+double HistoConfig::GetCrossSection(int64_t id){
   for(unsigned int i=0; i<ID.size(); i++){
     if(ID.at(i)==id){
       return CS.at(i);
@@ -114,7 +114,7 @@ double HistoConfig::GetCrossSection(int id){
   return 0;
 }
 
-bool HistoConfig::SetCrossSection(int id, double xsec){
+bool HistoConfig::SetCrossSection(int64_t id, double xsec){
 	for(unsigned int i=0; i<ID.size(); i++){
 		if(ID.at(i)==id){
 			CS.at(i) = xsec;
@@ -124,7 +124,7 @@ bool HistoConfig::SetCrossSection(int id, double xsec){
 	return false;
 }
 
-void HistoConfig::GetHistoInfo(std::vector<int> &types,std::vector<float> &CrossSectionandAcceptance,std::vector<TString> &legend,std::vector<int> &colour){
+void HistoConfig::GetHistoInfo(std::vector<int64_t> &types,std::vector<float> &CrossSectionandAcceptance,std::vector<TString> &legend,std::vector<int> &colour){
   types=ID;
   legend=HistoLegend;
   colour=HistoColour;
@@ -203,7 +203,7 @@ std::vector<TH3F> HistoConfig::GetTH3F(TString name,TString title, int nbinsx, d
 
 
 
-bool HistoConfig::hasID(int id_){
+bool HistoConfig::hasID(int64_t id_){
   for(unsigned int i=0; i<ID.size();i++){
     if(ID.at(i)==id_) return true;
   }
@@ -216,7 +216,7 @@ int HistoConfig::GetID(unsigned int i){
   return -999;
 }
 
-int HistoConfig::GetType(int id){
+int HistoConfig::GetType(int64_t id){
 	for(unsigned int i=0; i<ID.size(); i++){
 	    if(ID.at(i)==id){
 	    	return i;

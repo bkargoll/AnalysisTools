@@ -8,7 +8,9 @@
 #ifndef REFERENCESCALEFACTORS_H_
 #define REFERENCESCALEFACTORS_H_
 
+#include <map>
 #include "TFile.h"
+#include "TH1D.h"
 #include "TH2F.h"
 #include "TLorentzVector.h"
 
@@ -78,7 +80,7 @@ public:
 	double HiggsTauTau_MuTau_Trigger_Tau_ScaleMCtoData(TLorentzVector vect);
 
 	// Higgs pT reweighting
-	double HiggsPtWeight_M125(TLorentzVector vect, TString shift = "nominal");
+	double HiggsPtWeight(TLorentzVector vect, int mass, TString shift = "nominal");
 
 private:
 	// booleans to switch on/off individual scale factors
@@ -97,7 +99,7 @@ private:
 	// Trigger efficiencies
 	TFile* HWW_TriggerEfficiencies;
 	// Higgs pT reweighting
-	TFile* HiggsPtWeightM125File;
+	std::map<unsigned, TFile*> HiggsPtWeightFiles;
 
 	//
 	// Histograms for scale factors
@@ -125,9 +127,9 @@ private:
 	TH1D* HiggsWW_EMu_DoubleMuTrail21;
 	TH1D* HiggsWW_EMu_DoubleMuTrail25;
 	// Higgs pT reweighting
-	TH1D* HiggsPtWeightM125Nominal;
-	TH1D* HiggsPtWeightM125Down;
-	TH1D* HiggsPtWeightM125Up;
+	std::map<unsigned, TH1D*> HiggsPtWeightsNominal;
+	std::map<unsigned, TH1D*> HiggsPtWeightsDown;
+	std::map<unsigned, TH1D*> HiggsPtWeightsUp;
 };
 
 

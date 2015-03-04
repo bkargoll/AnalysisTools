@@ -13,15 +13,15 @@ class SkimConfig {
 
   bool Load();
   bool Load(TString Name_);
-  void CheckNEvents(std::vector<int> ids, std::vector<float> nevts); 
-  void SaveEfficiency(TString Name,std::vector<int> ids,std::vector<TH1D> NPassed, std::vector<TH1D> NPassed_noweight);
-  void ApplySkimEfficiency(std::vector<int> ids,std::vector<TH1D> &NPassed, std::vector<TH1D> &NPassed_noweight);
-  double GetNEvents(int id);
+  void CheckNEvents(std::vector<int64_t> ids, std::vector<float> nevts);
+  void SaveEfficiency(TString Name,std::vector<int64_t> ids,std::vector<TH1D> NPassed, std::vector<TH1D> NPassed_noweight);
+  void ApplySkimEfficiency(std::vector<int64_t> ids,std::vector<TH1D> &NPassed, std::vector<TH1D> &NPassed_noweight);
+  double GetNEvents(int64_t id);
 
  private:
   bool CovertToHistoFormat();
 
-  static std::vector<int> SkimIDs;
+  static std::vector<int64_t>	   SkimIDs;
   static std::vector<float>        NEvents;
   static std::vector<float>        NEventsErr;
   static std::vector<float>        NEvents_sel;

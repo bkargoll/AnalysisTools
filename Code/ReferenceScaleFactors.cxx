@@ -33,9 +33,9 @@ ReferenceScaleFactors::ReferenceScaleFactors(int runType, bool load_ElectronID, 
 	// Electron Id's
 	if(loadElectronID){
 		// open root files
-		ETrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_Trig.root");
-		ENonTrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root");
-		ERecoEffFile = new TFile(basedir+"Electrons_ScaleFactors_Reco_8TeV.root");
+		ETrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_Trig.root", "READ");
+		ENonTrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root", "READ");
+		ERecoEffFile = new TFile(basedir+"Electrons_ScaleFactors_Reco_8TeV.root", "READ");
 		// load histograms
 		ElectronTrigEff = (TH2D*)(ETrigIdEffFile->Get("electronsDATAMCratio_FO_ID_ISO"));
 		ElectronNonTrigEff = (TH2D*)(ENonTrigIdEffFile->Get("h_electronScaleFactor_IdIsoSip"));
@@ -45,7 +45,7 @@ ReferenceScaleFactors::ReferenceScaleFactors(int runType, bool load_ElectronID, 
 	// Trigger efficiencies
 	if(loadEMuTriggerEff){
 		// open root files
-		HWW_TriggerEfficiencies = new TFile(basedir+"TriggerEfficienciesWW_TH1D.root");
+		HWW_TriggerEfficiencies = new TFile(basedir+"TriggerEfficienciesWW_TH1D.root", "READ");
 		// load histograms
 		HiggsWW_EMu_SingleEle15 = (TH1D*)(HWW_TriggerEfficiencies->Get("SingleEle15"));
 		HiggsWW_EMu_SingleEle25 = (TH1D*)(HWW_TriggerEfficiencies->Get("SingleEle25"));
@@ -67,12 +67,25 @@ ReferenceScaleFactors::ReferenceScaleFactors(int runType, bool load_ElectronID, 
 
 	// Higgs Pt Weights
 	if(loadHiggsPtWeights){
-		// open root files
-		HiggsPtWeightM125File = new TFile(basedir+"HRes_weight_pTH_mH125_8TeV.root");
-		// load histograms
-		HiggsPtWeightM125Nominal = (TH1D*)(HiggsPtWeightM125File->Get("Nominal"));
-		HiggsPtWeightM125Down = (TH1D*)(HiggsPtWeightM125File->Get("Down"));
-		HiggsPtWeightM125Up= (TH1D*)(HiggsPtWeightM125File->Get("Up"));
+		// loop over masses
+		for (unsigned mass = 100; mass <= 160; mass += 5){
+			// open root files
+			// files are taken from
+			HiggsPtWeightFiles.insert(
+					std::pair<unsigned, TFile*>( mass,
+							new TFile(basedir + "HiggsPtWeights/weight_ptH_"+ TString::UItoa(mass,10) + "_8TeV.root", "READ")));
+
+			// load histograms
+			HiggsPtWeightsNominal.insert(
+					std::pair<unsigned, TH1D*>( mass,
+							(TH1D*)(HiggsPtWeightFiles[mass]->Get("Nominal"))));
+			HiggsPtWeightsDown.insert(
+					std::pair<unsigned, TH1D*>( mass,
+							(TH1D*)(HiggsPtWeightFiles[mass]->Get("Down"))));
+			HiggsPtWeightsUp.insert(
+					std::pair<unsigned, TH1D*>( mass,
+							(TH1D*)(HiggsPtWeightFiles[mass]->Get("Up"))));
+		}
 	}
 }
 
@@ -86,7 +99,9 @@ ReferenceScaleFactors::~ReferenceScaleFactors(){
 		delete HWW_TriggerEfficiencies;
 	}
 	if(loadHiggsPtWeights){
-		delete HiggsPtWeightM125File;
+	    for(std::map<unsigned, TFile*>::iterator itr = HiggsPtWeightFiles.begin(); itr != HiggsPtWeightFiles.end(); itr++){
+	        delete itr->second;
+	    }
 	}
 }
 
@@ -1487,16 +1502,22 @@ double ReferenceScaleFactors::HiggsTauTau_EMu_TriggerUnc_E(double Et, double Eta
 }
 
 // Higgs pT reweighting
-double ReferenceScaleFactors::HiggsPtWeight_M125(TLorentzVector vect, TString shift){
-	// define which scale to use. Default is nominal.
-	TH1D* hist;
-	if (shift == "nominal")		hist = HiggsPtWeightM125Nominal;
-	else if (shift == "down")	hist = HiggsPtWeightM125Down;
-	else if (shift == "up")		hist = HiggsPtWeightM125Up;
+double ReferenceScaleFactors::HiggsPtWeight(TLorentzVector vect, int mass, TString shift){
+	// define which scale to use. Default is "nominal".
+	std::map<unsigned, TH1D*> weightMap;
+	if (shift == "nominal")		weightMap = HiggsPtWeightsNominal;
+	else if (shift == "down")	weightMap = HiggsPtWeightsDown;
+	else if (shift == "up")		weightMap = HiggsPtWeightsUp;
 	else {printf("ERROR: shift of type %s not known for Higgs pT weights.\n", shift.Data()); return -999;}
-	// check Higgs mass
-	if( fabs(vect.M() - 125.0) > 3.0 ) printf("WARNING: Using Higgs pT weights valid vor m(H)=125, but event has m(H)=%f\n", vect.M());
+
+	// do some checks
+	if( weightMap.find(mass) == weightMap.end() ){
+		printf("ERROR: Requested mass %d not available for Higgs pT reweighting.", mass);
+		return -999;
+	}
+	if( fabs(vect.M() - mass) > 1.0 ) printf("WARNING: Using Higgs pT weights valid vor m(H)=%d, but event has m(H)=%f\n", mass, vect.M());
 
 	// read weight from histogram
-	return hist->GetBinContent(hist->FindFixBin(vect.Pt()));
+	return weightMap[mass]->GetBinContent( weightMap[mass]->FindFixBin( vect.Pt() ) );
 }
+

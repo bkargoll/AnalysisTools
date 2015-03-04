@@ -55,7 +55,7 @@ class Selection : public Selection_Base {
   HistoConfig HConfig;
 
 
-  std::vector<int> types;
+  std::vector<int64_t> types;
   std::vector<TString> legend;
   std::vector<TH1D> Npassed; //[type]
   std::vector<TH1D> Npassed_noweight; //[type]

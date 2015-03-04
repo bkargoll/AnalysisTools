@@ -116,7 +116,7 @@ void  MCDecayChain::doEvent(){
   ///////////////////////////////////////////////////////////
   // Draw decay chain
   if(status){
-	  Ntp->printMCDecayChain();
+	  Ntp->printMCDecayChainOfEvent();
   }
 }
 

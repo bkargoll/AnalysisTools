@@ -18,7 +18,7 @@
 #include "HistoConfig.h"
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 
-std::vector<int> SkimConfig::SkimIDs;
+std::vector<int64_t> SkimConfig::SkimIDs;
 std::vector<float>   SkimConfig::NEvents;
 std::vector<float>   SkimConfig::NEventsErr;
 std::vector<float>   SkimConfig::NEvents_sel;
@@ -64,7 +64,7 @@ bool SkimConfig::Load(TString Name_)
     if(a>1000) break;
     std::stringstream line(s);
     TString tmp;
-    int id;
+    int64_t id;
     float nevents;
     float neventserr;
     float nevents_sel;
@@ -72,6 +72,17 @@ bool SkimConfig::Load(TString Name_)
     float noweight;
     float noweight_sel;
     line >> tmp >> id >> tmp >> nevents >> tmp >> neventserr >> tmp >> nevents_sel >> tmp >> neventserr_sel >> tmp >> noweight >> tmp >> noweight_sel;
+
+    // adapt for masses in DataMCType:
+    // in case a DataMCType of length 8 (i.e. without mass digits) is given,
+    // 3 zeroes are added for the mass digits
+    if( id >= 100000 && id < 1000000000){
+		// shift DataMCType 3 digits to the left
+		int64_t jakid = id - (id%100);
+		jakid *= 1000;
+		id = jakid + (id%100);
+    }
+
     SkimIDs.push_back(id);
     NEvents.push_back(nevents);
     NEventsErr.push_back(neventserr);
@@ -92,14 +103,14 @@ SkimConfig::~SkimConfig(){
 }
 
 
-double SkimConfig::GetNEvents(int id){
+double SkimConfig::GetNEvents(int64_t id){
   for(unsigned int i=0; i<SkimIDs.size();i++){
     if(id==SkimIDs.at(i))return NEvents.at(i);
   }
   return 0;
 }
 
-void SkimConfig::SaveEfficiency(TString Name,std::vector<int> ids,std::vector<TH1D> NPassed, std::vector<TH1D> NPassed_noweight){
+void SkimConfig::SaveEfficiency(TString Name,std::vector<int64_t> ids,std::vector<TH1D> NPassed, std::vector<TH1D> NPassed_noweight){
   if(!loaded){
     std::cout << "Error SkimConfig::SaveEfficiency input not loaded -> no skim summary " << std::endl;
     return;
@@ -132,7 +143,7 @@ void SkimConfig::SaveEfficiency(TString Name,std::vector<int> ids,std::vector<TH
   }
 }
 
-void SkimConfig::ApplySkimEfficiency(std::vector<int> ids,std::vector<TH1D> &NPassed, std::vector<TH1D> &NPassed_noweight){
+void SkimConfig::ApplySkimEfficiency(std::vector<int64_t> ids,std::vector<TH1D> &NPassed, std::vector<TH1D> &NPassed_noweight){
   if(!loaded){
     std::cout << "Error SkimConfig::ApplySkimEfficiency input not loaded -> no skim summary " << std::endl;
     return;
@@ -160,7 +171,7 @@ void SkimConfig::ApplySkimEfficiency(std::vector<int> ids,std::vector<TH1D> &NPa
 
 
 
-void SkimConfig::CheckNEvents(std::vector<int> ids, std::vector<float> nevts){
+void SkimConfig::CheckNEvents(std::vector<int64_t> ids, std::vector<float> nevts){
   if(!loaded){
     std::cout << "Error SkimConfig::CheckNEvents input not loaded -> no skim summary " << std::endl;  
     return;
@@ -213,7 +224,7 @@ bool SkimConfig::CovertToHistoFormat(){
   converted=true;
   HistoConfig H;
   std::vector<bool>    IDFlag(SkimIDs.size(),false);
-  std::vector<int>     SkimIDs_new;
+  std::vector<int64_t>     SkimIDs_new;
   std::vector<float>   NEvents_new;
   std::vector<float>   NEventsErr_new;
   std::vector<float>   NEvents_sel_new;
@@ -249,7 +260,7 @@ bool SkimConfig::CovertToHistoFormat(){
   for(unsigned int i=0;i<SkimIDs_new.size();i++){
     for(unsigned int j=0;j<SkimIDs.size();j++){
       if(!IDFlag.at(j)){
-	if(SkimIDs.at(j)%100==SkimIDs_new.at(i)){
+	if(SkimIDs.at(j)%100000==SkimIDs_new.at(i)){
 	  std::cout << "SkimConfig::CovertToHistoFormat() Found Master Decay: " << SkimIDs.at(j) << std::endl;
 	  IDFlag.at(j)=true;
 	  NEvents_new.at(i)+=NEvents.at(j);
