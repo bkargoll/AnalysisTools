@@ -61,7 +61,11 @@ bool SkimConfig::Load(TString Name_)
   int a=0;
   while(getline(input_file, s)){
     a++;
-    if(a>1000) break;
+    if(a>10000){
+    	std::cout << "ERROR: SkimConfig has more than 10000 lines. This seems weird. Breaking..." << std::endl;
+    	break;
+    }
+
     std::stringstream line(s);
     TString tmp;
     int64_t id;
