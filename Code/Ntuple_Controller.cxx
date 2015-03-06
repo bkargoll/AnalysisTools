@@ -246,7 +246,7 @@ int64_t Ntuple_Controller::GetMCID(){
 	if( (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_ggF ||
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_VBF ||
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_WHZHTTH){
-	  int mass = getHiggsMass();
+	  int mass = getHiggsMassFromFileName();
 	  if (mass > 999)	std::cout << "ERROR: Read mass with more than 3 digits from file." << std::endl;
 	  if (mass > 0)		DataMCTypeFromTupel += mass*100;
 	  // strip off JAK-Id from DataMCType
@@ -269,7 +269,7 @@ int Ntuple_Controller::GetStrippedMCID(){
 	return GetMCID() % 100;
 }
 
-int Ntuple_Controller::getMassFromFileName(){
+int Ntuple_Controller::getHiggsMassFromFileName(){
 	TString file = Get_File_Name();
 	std::cout << file << std::endl;
 	// loop over possible masses
@@ -277,14 +277,20 @@ int Ntuple_Controller::getMassFromFileName(){
 		if ( file.Contains("M-" + TString::Itoa(m, 10) + "_") ) return m;
 	}
 	// mass not found in filename
-	return -1;
+	std::cout << "**********************************************************************************************************************" << std::endl;
+	std::cout << "WARNING: It seems you are running locally. Getting Higgs mass from file name doesn't work here (yet)." << std::endl;
+	std::cout << "         You might want to think about implementing it (you could parse the information from the Set_*-get.sh script)." << std::endl;
+	std::cout << "         For now, we will fall back to obtaining the Higgs mass from the generator information." << std::endl;
+	std::cout << "         Be aware that SOME EVENTS WILL END UP IN THE WRONG HISTOGRAM!!!" << std::endl;
+	std::cout << "**********************************************************************************************************************" << std::endl;
+	return getHiggsMass();
 }
 
 int Ntuple_Controller::getHiggsMass(){
 	for (unsigned int i = 0; i < NMCSignalParticles(); i++) {
 		if (abs(MCSignalParticle_pdgid(i)) == PDGInfo::Higgs0) {
 			for (int m = 100; m < 200; m = m+5){
-				if (fabs(MCSignalParticle_p4(i).M() - m) < 1 ) {
+				if (fabs(MCSignalParticle_p4(i).M() - m) < 2.5 ) {
 					return m;
 				}
 			}
