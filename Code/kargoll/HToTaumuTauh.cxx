@@ -5,6 +5,7 @@
 #include "SkimConfig.h"
 #include <iostream>
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
+#include "SVfitProvider.h"
 
 HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   Selection(Name_,id_),
@@ -100,17 +101,23 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	qcdYieldEffMap.insert(std::pair<TString,double>("OneJetBoost", 32.94421105));
 	qcdYieldEffMap.insert(std::pair<TString,double>("VBFLoose",    57.69432816));
 	qcdYieldEffMap.insert(std::pair<TString,double>("VBFTight",    1.42017411));
+
+	clock = new TBenchmark();
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
-	delete RSF;
-
 	if (verbose) std::cout << "HToTaumuTauh::~HToTaumuTauh()" << std::endl;
 	for(unsigned int j=0; j<Npassed.size(); j++){
 	std::cout << "HToTaumuTauh::~HToTaumuTauh Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	}
+
+	if (mode == ANALYSIS) {
+		delete RSF;
+	}
+	delete clock;
+
 	std::cout << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
 }
 
@@ -391,6 +398,7 @@ void  HToTaumuTauh::Setup(){
   TauPhi=HConfig.GetTH1D(Name+"_TauPhi","TauPhi",50,-3.14159,3.14159,"#phi(#tau)");
   TauDecayMode=HConfig.GetTH1D(Name+"_TauDecayMode","TauDecayMode",16,-0.5,15.5,"#tau decay mode");
   TauIso=HConfig.GetTH1D(Name+"_TauIso","TauIso",50,0.,25.,"Iso(#tau)/GeV");
+  TauSelMass=HConfig.GetTH1D(Name+"_TauMass","TauMass",100,-1.0,2.0,"m_{vis}(#tau)/GeV");
 
   TauSelPt=HConfig.GetTH1D(Name+"_TauSelPt","TauSelPt",50,0.,100.,"p_{T}(#tau_{sel})/GeV");
   TauSelEta=HConfig.GetTH1D(Name+"_TauSelEta","TauSelEta",50,-2.5,2.5,"#eta(#tau_{sel})");
@@ -493,13 +501,16 @@ void  HToTaumuTauh::Setup(){
   embeddingWeight_MinVisPtFilter = HConfig.GetTH1D(Name+"_embeddingWeight_MinVisPtFilter","embeddingWeight_MinVisPtFilter",50,0.,3.,"emb. MinVisPtFilter weight");
   embeddingWeight_SelEffWeight = HConfig.GetTH1D(Name+"_embeddingWeight_SelEffWeight","embeddingWeight_SelEffWeight",50,0.,3.,"emb. SelEffWeight");
   HiggsGenPtWeight = HConfig.GetTH1D(Name+"_higgsPtWeight","higgsPtWeight",50,0.3,1.3,"higgsPtWeight");
-  HiggsGenPt = HConfig.GetTH1D(Name+"_higgsGenPt","higgsGenPt",10,0.,200.,"p_{T}(H_{gen})/GeV");
-  HiggsMassFromMCID  = HConfig.GetTH1D(Name+"_HiggsMassFromMCID","HiggsMassFromMCID",40,82.5,182.5,"m_{MCID}(H)/GeV");
+  HiggsGenPt = HConfig.GetTH1D(Name+"_higgsGenPt","higgsGenPt",50,0.,200.,"p_{T}(H_{gen})/GeV");
+  HiggsMassFromSampleName  = HConfig.GetTH1D(Name+"_HiggsMassFromMCID","HiggsMassFromMCID",40,82.5,182.5,"m_{MCID}(H)/GeV");
 
   visibleMass = HConfig.GetTH1D(Name+"_visibleMass","visibleMass",100,0.,200.,"m_{vis}(#tau_{h},#mu)/GeV");
 
   shape_VisM = HConfig.GetTH1D(Name+"_shape_VisM","shape_VisM",400,0.,400.,"m_{vis}(#tau_{h},#mu)/GeV");
   shape_SVfitM = HConfig.GetTH1D(Name+"_shape_SVfitM","shape_SVfitM",400,0.,400.,"m_{SVfit}(#tau_{h},#mu)/GeV");
+
+  SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"");
+  SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"");
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
@@ -561,6 +572,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&TauPhi  );
  Extradist1d.push_back(&TauDecayMode  );
  Extradist1d.push_back(&TauIso );
+ Extradist1d.push_back(&TauSelMass );
 
  Extradist1d.push_back(&TauSelPt  );
  Extradist1d.push_back(&TauSelEta  );
@@ -664,17 +676,22 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&embeddingWeight_SelEffWeight);
  Extradist1d.push_back(&HiggsGenPtWeight);
  Extradist1d.push_back(&HiggsGenPt);
- Extradist1d.push_back(&HiggsMassFromMCID);
+ Extradist1d.push_back(&HiggsMassFromSampleName);
 
  Extradist1d.push_back(&visibleMass);
 
  Extradist1d.push_back(&shape_VisM);
  Extradist1d.push_back(&shape_SVfitM);
+
+ Extradist1d.push_back(&SVFitTimeReal);
+ Extradist1d.push_back(&SVFitTimeCPU);
 }
 
 void  HToTaumuTauh::doEvent(){
   if (verbose) std::cout << "HToTaumuTauh::doEvent() >>>>>>>>>>>>>>>>" << std::endl;
   if (verbose) std::cout << "	Category: " << categoryFlag << std::endl;
+
+  clock->Reset(); // reset all benchmark clocks
 
   // set variables to hold selected objects to default values
   selVertex = -1;
@@ -1071,7 +1088,7 @@ void  HToTaumuTauh::doEvent(){
   	  for (unsigned i_gen = 0; i_gen < Ntp->NMCParticles(); i_gen++) {
   	  	  if (Ntp->MCParticle_pdgid(i_gen) == PDGInfo::Higgs0) {
   	  		  TLorentzVector genH_p4 = Ntp->MCParticle_p4(i_gen);
-  	  		  higgs_GenPtWeight = RSF->HiggsPtWeight(genH_p4, Ntp->getHiggsMass());
+  	  		  higgs_GenPtWeight = RSF->HiggsPtWeight(genH_p4, Ntp->getSampleHiggsMass());
   	  		  higgs_GenPt = genH_p4.Pt();
   	  		  w *= higgs_GenPtWeight;
   	  	  }
@@ -1207,6 +1224,7 @@ void  HToTaumuTauh::doEvent(){
 	  TauSelPhi.at(t).Fill(Ntp->PFTau_p4(selTau).Phi(), w);
 	  TauSelDecayMode.at(t).Fill(Ntp->PFTau_hpsDecayMode(selTau), w);
 	  TauSelIso.at(t).Fill(Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(selTau), w);
+	  TauSelMass.at(t).Fill(Ntp->PFTau_p4(selTau).M(), w);
 
 	  // Mu-Tau correlations
 	  MuTauDR    .at(t).Fill( Ntp->Muon_p4(selMuon).DeltaR(Ntp->PFTau_p4(selTau)), w );
@@ -1215,7 +1233,28 @@ void  HToTaumuTauh::doEvent(){
 	  MuTauDPt   .at(t).Fill( Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt(), w );
 	  MuTauRelDPt.at(t).Fill( (Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt()) / Ntp->Muon_p4(selMuon).Pt() , w);
 	  MuPtVsTauPt.at(t).Fill( Ntp->Muon_p4(selMuon).Pt(), Ntp->PFTau_p4(selTau).Pt(), w );
+
+	  // Mu-Tau Mass
 	  visibleMass.at(t).Fill( (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
+	  // SVFit
+	  std::cout << "        RUN SVFIT" << std::endl;
+	  printf ("input:  pt = %f, eta = %f, phi = %f, mass = %f, decayMode = %d\n", Ntp->PFTau_p4(selTau).Pt(), Ntp->PFTau_p4(selTau).Eta(), Ntp->PFTau_p4(selTau).Phi(), Ntp->PFTau_p4(selTau).M(), Ntp->PFTau_hpsDecayMode(selTau));
+
+	  clock->Start("SVFit");
+	  // get SVFit result from cache
+	  SVFitObject svfObj = getSVFitResult();
+	  clock->Stop("SVFit");
+
+	  std::cout << "   m = " << svfObj.get_mass() << " +/- " << svfObj.get_massUncert() << ", pT = " << svfObj.get_pt() << " +/- " << svfObj.get_ptUncert() << std::endl;
+	  std::cout << "   SVFit calculation took " << clock->GetRealTime("SVFit") <<  " s (real), " << clock->GetCpuTime("SVFit") << " s (CPU)" << std::endl;
+
+	  // shape distributions for final fit
+	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
+	  shape_SVfitM.at(t).Fill(svfObj.get_mass(), w);
+
+	  // additional info on mass reconstruction
+	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFit"), 1); // filled w/o weight
+	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFit"), 1); // filled w/o weight
 
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
@@ -1289,7 +1328,7 @@ void  HToTaumuTauh::doEvent(){
 	  if (idStripped >= DataMCType::H_tautau && idStripped <= DataMCType::H_tautau_WHZHTTH) {
 		  HiggsGenPtWeight.at(t).Fill(higgs_GenPtWeight); // no weight applied
 		  HiggsGenPt.at(t).Fill(higgs_GenPt, w);
-		  HiggsMassFromMCID.at(t).Fill(Ntp->getHiggsMass());
+		  HiggsMassFromSampleName.at(t).Fill(Ntp->getSampleHiggsMass());
 	  }
 
 	  // variables for categorization
@@ -1371,12 +1410,6 @@ void  HToTaumuTauh::doEvent(){
 		  BJet1Eta.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Eta(), w);
 		  BJet1Phi.at(t).Fill( Ntp->PFJet_p4(selectedBJets.at(0)).Phi(), w);
 	  }
-  }
-
-  //////// plots filled after full selection for datacard creation
-  if(status){
-	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
-	  //shape_SVfitM.at(t).Fill(svfitmass, w);
   }
 }
 
@@ -2475,4 +2508,25 @@ void HToTaumuTauh::setStatusBooleans(bool resetAll){
 	passedObjectsFailDiMuonVeto = passedObjects && !pass.at(DiMuonVeto);
 
 	return;
+}
+
+// obtain, or create and store, SVFit results from/on dCache
+SVFitObject HToTaumuTauh::getSVFitResult() {
+	 // configure svfitstorage on first call
+	if ( !svfitstorage.isConfigured() ) svfitstorage.Configure(Ntp->GetInputDatasetName());
+	// get SVFit result from cache
+	SVFitObject svfObj = svfitstorage.GetEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber());
+	// if obtained object is not valid, create and store it
+	if (!svfObj.isValid()) {
+		objects::MET met(Ntp, "CorrMVAMuTau");
+		SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
+		svfObj = svfProv.runAndMakeObject();
+		if (svfObj.isValid()) {
+			// store only if object is valid
+			svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), svfObj);
+		} else {
+			std::cout << "ERROR: Unable to create a valid SVFit object." << std::endl;
+		}
+	}
+	return svfObj;
 }

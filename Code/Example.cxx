@@ -3,9 +3,11 @@
 #include <cstdlib>
 #include "HistoConfig.h"
 #include <iostream>
+#include "SVFitObject.h"
 
 Example::Example(TString Name_, TString id_):
-  Selection(Name_,id_)
+  Selection(Name_,id_),
+  svfitstorage()
 {
 }
 
@@ -89,7 +91,7 @@ void  Example::doEvent(){
   value.at(PrimeVtx)=nGoodVtx;
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
   
-  value.at(TriggerOk)=1;
+  value.at(TriggerOk)=(Ntp->EventNumber()%1000)==1;
   pass.at(TriggerOk)=true;
   
   double wobs=1;
@@ -103,6 +105,9 @@ void  Example::doEvent(){
   ///////////////////////////////////////////////////////////
   // Add plots
   if(status){
+    //SVFitObject mysvfit;
+    //mysvfit.Set_a(Ntp->EventNumber());
+    //svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), mysvfit);
     NVtx.at(t).Fill(Ntp->NVtx(),w);
     unsigned int nGoodVtx=0;
     for(unsigned int i=0;i<Ntp->NVtx();i++){

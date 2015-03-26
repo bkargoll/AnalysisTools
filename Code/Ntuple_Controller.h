@@ -21,6 +21,7 @@
 #include "TMatrixT.h"
 #include "TMatrixTSym.h"
 #include "TVectorT.h"
+#include "TSystem.h"
 
 // Include files (C & C++ libraries)
 #include<iostream>
@@ -83,6 +84,8 @@ class Ntuple_Controller{
 
   int currentEvent;
 
+  bool cannotObtainHiggsMass; // avoid repeated printing of warning when running locally
+
   // Ntuple Access Functions
   virtual void Branch_Setup(TString B_Name, int type);
   virtual void Branch_Setup(){}
@@ -138,6 +141,12 @@ class Ntuple_Controller{
   bool                                fitStatus;
   bool                                isInit;
 
+  // muon correction related objects
+  rochcor2012*   rmcor;
+  std::vector<TLorentzVector> Muon_corrected_p4;
+  void           CorrectMuonP4();
+  bool           Muon_isCorrected;
+
  public:
   // Constructor
   Ntuple_Controller(std::vector<TString> RootFiles);
@@ -190,13 +199,24 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   void SetMuonCorrections(TString muonCorr){muonCorrection = muonCorr;}
   void SetElecCorrections(TString elecCorr){elecCorrection = elecCorr;}
   void SetJetCorrections(TString jetCorr){jetCorrection = jetCorr;}
+  // corresponding getters
+  const TString& GetTauCorrections() const {return tauCorrection;}
+  const TString& GetMuonCorrections() const {return muonCorrection;}
+  const TString& GetElecCorrections() const {return elecCorrection;}
+  const TString& GetJetCorrections() const {return jetCorrection;}
+
+  // Information from input Ntuple path name
+  TString GetInputNtuplePath();
+  TString GetInputDatasetName();
+  TString GetInputPublishDataName();
+  int getSampleHiggsMass();
+  int readHiggsMassFromString(TString input);
+  int getHiggsMassFromGenInfo();
 
   // Physics Variable Get Functions
   // Event Variables
   int64_t GetMCID();
   int GetStrippedMCID();
-  int getHiggsMass();
-  int getHiggsMassFromFileName();
   unsigned int RunNumber(){return Ntp->Event_RunNumber;}
   unsigned int EventNumber(){ return Ntp->Event_EventNumber;}
   int BunchCrossing(){ return Ntp->Event_bunchCrossing;}
@@ -337,11 +357,6 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   bool           isSelectedMuon(unsigned int i, unsigned int j, double impact_xy, double impact_z, TString corr = "default");
   bool			 isLooseMuon(unsigned int i);
   float          Muon_RelIso(unsigned int i, TString corr = "default");
-  rochcor2012*   rmcor;
-  std::vector<TLorentzVector> Muon_corrected_p4;
-  void           CorrectMuonP4();
-  bool           Muon_isCorrected;
-
 
   //Base Tau Information (PF)
    unsigned int      NPFTaus(){return Ntp->PFTau_p4->size();}

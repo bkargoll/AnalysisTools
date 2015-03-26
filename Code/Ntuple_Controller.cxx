@@ -5,6 +5,7 @@
 #include "Tools.h"
 #include "PDG_Var.h"
 #include "TF1.h"
+#include "Parameters.h"
 
 
 // External code
@@ -19,6 +20,7 @@
 Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   copyTree(false)
   ,verbose(false)
+  ,cannotObtainHiggsMass(false)
   ,ObjEvent(-1)
   ,isInit(false)
 {
@@ -246,8 +248,8 @@ int64_t Ntuple_Controller::GetMCID(){
 	if( (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_ggF ||
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_VBF ||
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_WHZHTTH){
-	  int mass = getHiggsMassFromFileName();
-	  if (mass > 999)	std::cout << "ERROR: Read mass with more than 3 digits from file." << std::endl;
+	  int mass = getSampleHiggsMass();
+	  if (mass > 999)	std::cout << "ERROR: Read mass with more than 3 digits from sample." << std::endl;
 	  if (mass > 0)		DataMCTypeFromTupel += mass*100;
 	  // strip off JAK-Id from DataMCType
 	  if (HistoC.hasID(DataMCTypeFromTupel % 100000)) {
@@ -269,24 +271,59 @@ int Ntuple_Controller::GetStrippedMCID(){
 	return GetMCID() % 100;
 }
 
-int Ntuple_Controller::getHiggsMassFromFileName(){
-	TString file = Get_File_Name();
-	std::cout << file << std::endl;
-	// loop over possible masses
-	for (int m = 100; m < 200; m = m+5){
-		if ( file.Contains("M-" + TString::Itoa(m, 10) + "_") ) return m;
-	}
-	// mass not found in filename
+// return path of input dataset (as given in the line InputNtuples in Input.txt)
+TString Ntuple_Controller::GetInputNtuplePath(){
+	Parameters Par; // assumes configured in Analysis.cxx
+	TString dsPath;
+	Par.GetString("InputNtuples:",dsPath);
+	return dsPath;
+}
+
+// return name of input dataset
+TString Ntuple_Controller::GetInputDatasetName(){
+	TString dsPath = GetInputNtuplePath();
+	return gSystem->BaseName( gSystem->DirName( gSystem->DirName(dsPath) ) );
+}
+
+//
+TString Ntuple_Controller::GetInputPublishDataName(){
+	TString dsPath = GetInputNtuplePath();
+	return gSystem->BaseName( gSystem->DirName(dsPath) );
+}
+
+// determine Higgs mass (from Dataset name or fallback options)
+int Ntuple_Controller::getSampleHiggsMass(){
+	int mass = -999;
+
+	// default method: analyze dataset name
+	mass = readHiggsMassFromString( GetInputNtuplePath() );
+	if (mass >= 0) return mass;
+
+	// first fallback: analyze filename (only working when running on GRID)
+	mass = readHiggsMassFromString( Get_File_Name() );
+	if (mass >= 0) return mass;
+
+	// second fallback: get Higgs mass from MC info
 	std::cout << "**********************************************************************************************************************" << std::endl;
-	std::cout << "WARNING: It seems you are running locally. Getting Higgs mass from file name doesn't work here (yet)." << std::endl;
-	std::cout << "         You might want to think about implementing it (you could parse the information from the Set_*-get.sh script)." << std::endl;
+	std::cout << "WARNING: Not able to obtain Higgs mass neither from dataset nor from file name." << std::endl;
+	std::cout << "         Make sure the line InputNtuples is set correctly in your Input.txt. " << std::endl;
 	std::cout << "         For now, we will fall back to obtaining the Higgs mass from the generator information." << std::endl;
 	std::cout << "         Be aware that SOME EVENTS WILL END UP IN THE WRONG HISTOGRAM!!!" << std::endl;
 	std::cout << "**********************************************************************************************************************" << std::endl;
-	return getHiggsMass();
+	return getHiggsMassFromGenInfo();
 }
 
-int Ntuple_Controller::getHiggsMass(){
+int Ntuple_Controller::readHiggsMassFromString(TString input){
+	// loop over possible masses
+	for (int m = 100; m < 200; m = m+5){
+		if ( input.Contains("M-" + TString::Itoa(m, 10) + "_") ) return m;
+	}
+
+	// mass not found
+	return -999;
+}
+
+int Ntuple_Controller::getHiggsMassFromGenInfo(){
 	for (unsigned int i = 0; i < NMCSignalParticles(); i++) {
 		if (abs(MCSignalParticle_pdgid(i)) == PDGInfo::Higgs0) {
 			for (int m = 100; m < 200; m = m+5){
@@ -296,7 +333,7 @@ int Ntuple_Controller::getHiggsMass(){
 			}
 		}
 	}
-	return -1;
+	return -999;
 }
 
 TMatrixF Ntuple_Controller::Vtx_Cov(unsigned int i){

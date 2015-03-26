@@ -1,6 +1,7 @@
 #ifndef HToTaumuTauh_h
 #define HToTaumuTauh_h
 
+#include <TBenchmark.h>
 #include <TH1.h>
 #include <TString.h>
 #include <cmath>
@@ -8,6 +9,8 @@
 
 #include "Selection.h"
 #include "ReferenceScaleFactors.h"
+#include "../DataFormats/SVFitObject.h"
+#include "SVFitStorage.h"
 
 class TLorentzVector;
 class TVector3;
@@ -137,6 +140,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> TauSelDrHlt; // todo: not filled at the moment
   std::vector<TH1D> TauSelDecayMode;
   std::vector<TH1D> TauSelIso;
+  std::vector<TH1D> TauSelMass;
 
   std::vector<TH1D> MuVetoDPtSelMuon;
   std::vector<TH1D> MuVetoInvM;
@@ -234,12 +238,15 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> embeddingWeight_SelEffWeight;
   std::vector<TH1D> HiggsGenPtWeight;
   std::vector<TH1D> HiggsGenPt;
-  std::vector<TH1D> HiggsMassFromMCID;
+  std::vector<TH1D> HiggsMassFromSampleName;
 
   std::vector<TH1D> visibleMass;
 
   std::vector<TH1D> shape_VisM;
   std::vector<TH1D> shape_SVfitM;
+
+  std::vector<TH1D> SVFitTimeReal;
+  std::vector<TH1D> SVFitTimeCPU;
 
   unsigned verbose;
 
@@ -288,6 +295,12 @@ class HToTaumuTauh : public Selection {
 
   // instance of reference scale factor class
   ReferenceScaleFactors* RSF;
+
+  // instance of SVFitStorage class
+  SVFitStorage svfitstorage;
+
+  // timing information
+  TBenchmark* clock;
 
   // booleans for different analysis stages
   void setStatusBooleans(bool resetAll = false);
@@ -342,6 +355,8 @@ class HToTaumuTauh : public Selection {
   bool selectBJet(unsigned i, int selectedMuon, int selectedTau);
 
   bool selectPFJet_Relaxed(unsigned i, int selectedMuon, int selectedTau);
+
+  SVFitObject getSVFitResult();
 
   // categories
   std::vector<float> cut_VBFTight, cut_VBFLoose;

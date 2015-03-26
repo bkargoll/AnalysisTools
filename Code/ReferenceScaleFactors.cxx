@@ -1515,7 +1515,7 @@ double ReferenceScaleFactors::HiggsPtWeight(TLorentzVector vect, int mass, TStri
 		printf("ERROR: Requested mass %d not available for Higgs pT reweighting.", mass);
 		return -999;
 	}
-	if( fabs(vect.M() - mass) > 1.0 ) printf("WARNING: Using Higgs pT weights valid vor m(H)=%d, but event has m(H)=%f\n", mass, vect.M());
+	if( fabs(vect.M() - mass) > 2.5 ) printf("WARNING: Using Higgs pT weights valid vor m(H)=%d, but event has m(H)=%f\n", mass, vect.M());
 
 	// read weight from histogram
 	return weightMap[mass]->GetBinContent( weightMap[mass]->FindFixBin( vect.Pt() ) );

@@ -15,12 +15,14 @@
 #include <math.h>
 
 // Static var
-TString Parameters::file="Tools/Par.dat";
+TString Parameters::file = "Tools/Par.dat";
+bool Parameters::verbose = false;
 
 Parameters::Parameters(){
 }
 
-Parameters::Parameters(TString f){
+Parameters::Parameters(TString f, bool verbosity){
+  verbose = verbosity;
   SetFile(f);
 }
 
@@ -69,7 +71,7 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
     std::cout << "\nERROR: Opening xml file "<< file <<" for Parameters has failed.\n" << std::endl;
     return;
   }
-  //std::cout << "\nOpened Parameters xml file: "<< file <<".\n" << std::endl;
+  if (verbose) std::cout << "\nOpened Parameters xml file: "<< file <<".\n" << std::endl;
 
   std::string s;
   unsigned int a=0;
@@ -97,7 +99,7 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
   }
   if(dv!="" && v.size()==0) v.push_back(dv);
   for(unsigned int i=0; i<v.size();i++){
-    std::cout << "Parameters::GetVectorString File=" << file  << " Found: " <<  p << "=" << v.at(i) << std::endl;
+	  if (verbose) std::cout << "Parameters::GetVectorString File=" << file  << " Found: " <<  p << "=" << v.at(i) << std::endl;
   }
   return;
 }
@@ -113,7 +115,7 @@ void Parameters::GetParameter(TString p, T &v,T dv){
     std::cout << "\nERROR: Opening xml file "<< file <<" for Parameters has failed.\n" << std::endl;
     return;
   }
-  //std::cout << "\nOpened Parameters xml file: "<< file <<".\n" << std::endl;
+  if (verbose) std::cout << "\nOpened Parameters xml file: "<< file <<".\n" << std::endl;
 
   std::string s;
   unsigned int a=0;
@@ -128,7 +130,7 @@ void Parameters::GetParameter(TString p, T &v,T dv){
     p.ToLower();
     if(p.Contains(par) && par.Contains(p)){
       v=val;
-      std::cout << "Parameters::GetParameter File=" << file << " Found: " <<  p << "=" << v << std::endl;
+      if (verbose) std::cout << "Parameters::GetParameter File=" << file << " Found: " <<  p << "=" << v << std::endl;
       return;
     }
   }
@@ -179,7 +181,7 @@ void Parameters::GetVectorStringDouble(TString p, std::vector<TString> &v1, std:
     }
   }
   for(unsigned int i=0; i<v1.size();i++){
-    std::cout << "Parameters::GetVectorStringDouble File=" << file  << " Found: " <<  p << "=" << v1.at(i) << " " << v2.at(i) << std::endl;
+	  if (verbose) std::cout << "Parameters::GetVectorStringDouble File=" << file  << " Found: " <<  p << "=" << v1.at(i) << " " << v2.at(i) << std::endl;
   }
   return;
 }

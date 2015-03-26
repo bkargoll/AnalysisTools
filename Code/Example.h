@@ -4,6 +4,7 @@
 #include "Selection.h"
 #include <vector>
 #include "TString.h"
+#include "SVFitStorage.h"
 
 class Example : public Selection {
 
@@ -26,7 +27,7 @@ class Example : public Selection {
   std::vector<TH1D> NVtx;
   std::vector<TH1D> NGoodVtx;
   std::vector<TH1D> NTrackperVtx;
-
+  SVFitStorage svfitstorage;
 
 };
 #endif

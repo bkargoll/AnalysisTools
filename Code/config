@@ -5,6 +5,7 @@ if [ "${1}"  == "--help" ]; then
     echo "--ReBuild                 Cleans out existing downloads and resets the configuration"
     echo "--useRoot <ROOTSYSPath>   Configures the enviroment to use root versions <ROOTSYSPath> instead of default version" 
     echo "--TauSpinner              Configures the make file to use TauSpinner"
+    echo "--SVfit                   Configures the make file to use SVfit"
     echo "--cherepanov              Configures the make file to compile files in the directory cherepanov"
     echo "--inugent                 Configures the make file to compile files in the directory inugent"
     echo "--kargoll                 Configures the make file to compile files in the directory kargoll"
@@ -15,6 +16,9 @@ else
 
     echo "Configuring Environment...."
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/CommonUtils/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/DataFormats/lib
+    export DATAFORMATS_LIB=$PWD/DataFormats/lib/libDataFormats.so
+    export codedir=$PWD
     ## setup variables for make files
     export ROOTSYS=$PWD/../root/
     ROOT="$PWD/../root/"
@@ -25,11 +29,13 @@ else
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib/
     export PATH=$PATH:$ROOTSYS/bin/
     
+    UseSVfit=0
     UseTauSpinner=0
     for var in $@ ; do
 	if [ "${var}" == "--ReBuild" ]; then
 	    rm -rf CommonUtils/SimpleFits 
 	    rm -rf CommonUtils/TauDataFormat 
+	    rm -rf CommonUtils/SVfit_standalone
 	    rm -rf CommonUtils/lib
 	    rm -rf TauSpiner/hepmc
 	    rm -rf TauSpiner/HepMC-2.06.05*
@@ -41,15 +47,23 @@ else
 	if [ "${var}" == "--TauSpinner" ]; then
 	    UseTauSpinner=1
 	fi
+	if [ "${var}" == "--SVfit" ]; then
+	    UseSVfit=1
+	fi
     done
     
     myINC=$(ls | grep make.inc | wc -l)
     if [ $myINC == 0 ]; then
 	echo "# -*- mode: makefile-gmake -*-" >> make.inc
 	for var in $@ ; do
+		echo ${var}
 	    if [ "${var}" == "--TauSpinner" ]; then
-		echo "Configuring Code to TauSpinner"
+		echo "Configuring Code to use TauSpinner"
 		echo "USE_TauSpinner=1" >> make.inc
+	    fi
+	   	if [ "${var}" == "--SVfit" ]; then
+		echo "Configuring Code to use SVfit"
+		echo "USE_SVfit=1" >> make.inc
 	    fi
 	    if [ "${var}" == "--cherepanov" ]; then
 		echo "Configuring Code to use directory cherepanov"
@@ -74,11 +88,11 @@ else
 	    if [ "${var}" == "--zotz" ]; then
 	    echo "Configuring Code to use directory zotz"
 	    echo "USE_zotz=1" >> make.inc
-	    fi
+	    fi 
 	done
     fi
     
-    ## now downloading required code from CVS
+    ## now downloading required code from github
     cd CommonUtils
     CommonUtils=$(ls | grep TauDataFormat | wc -l)
     cd ..
@@ -86,17 +100,13 @@ else
 	cd CommonUtils
 	mkdir lib
 	
-	git init 
 	git clone https://github.com/inugent/SimpleFits.git SimpleFits
-	cd SimpleFits
-	git checkout
-	cd ../
 	
-	git init
 	git clone https://github.com/inugent/TauDataFormat.git TauDataFormat
-	cd TauDataFormat
-	git checkout
-	cd ../
+	
+	if [ $UseSVfit == 1 ]; then
+		git clone -b 2015Feb10 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
+	fi
 	
 	cd ../
     fi
@@ -139,7 +149,6 @@ else
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/pythia8/176/lib/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/lhapdf/lib/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/hepmc/install/lib/
-    
     
     echo "Environment Configured"
 fi

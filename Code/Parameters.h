@@ -8,8 +8,10 @@ class Parameters {
 
  public:
   Parameters();
-  Parameters(TString f);
+  Parameters(TString f, bool verbosity = false);
   virtual ~Parameters();
+
+  void SetVerbosity(bool verbosity){verbose = verbosity;}
 
 
   void    SetFile(TString f);
@@ -24,6 +26,7 @@ class Parameters {
 
  private:
   static TString file;
+  static bool verbose;
 
   template<typename T> void GetParameter(TString p, T &v, T dv);
 
