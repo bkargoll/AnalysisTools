@@ -17,6 +17,9 @@ class DataStorage {
  private:
   TString mydir;
 
+  // list of temporary files to be deleted
+  std::vector<TString> filesToDelete;
+
  protected:
   TString inputFileName;
 };

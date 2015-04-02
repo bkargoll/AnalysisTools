@@ -15,7 +15,11 @@ DataStorage::DataStorage(){
 }
 
 DataStorage::~DataStorage(){
-
+	for (unsigned int i_file = 0; i_file < filesToDelete.size(); i_file++){
+		TString cmd = "rm " + filesToDelete.at(i_file);
+		std::cout << "cmd: " << cmd << std::endl;
+		system(cmd.Data());
+	}
 }
 
 int DataStorage::GetFile(TString key){
@@ -32,6 +36,7 @@ int DataStorage::GetFile(TString key){
     TString cmd1= "srmcp srm://" + gridsite + ":8443/" + Files.at(i) + " file:////" + mydir + "/" + inFile;
     std::cout << "cmd: " << cmd1 << std::endl;
     system(cmd1.Data());
+    filesToDelete.push_back(mydir + "/" + inFile);
     ifstream f(inFile);
     if(!f) return 0;
   }

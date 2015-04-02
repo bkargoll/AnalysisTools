@@ -1242,15 +1242,15 @@ void  HToTaumuTauh::doEvent(){
 
 	  clock->Start("SVFit");
 	  // get SVFit result from cache
-	  SVFitObject svfObj = getSVFitResult();
+	  SVFitObject *svfObj = getSVFitResult();
 	  clock->Stop("SVFit");
 
-	  std::cout << "   m = " << svfObj.get_mass() << " +/- " << svfObj.get_massUncert() << ", pT = " << svfObj.get_pt() << " +/- " << svfObj.get_ptUncert() << std::endl;
+	  std::cout << "   m = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pT = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() << std::endl;
 	  std::cout << "   SVFit calculation took " << clock->GetRealTime("SVFit") <<  " s (real), " << clock->GetCpuTime("SVFit") << " s (CPU)" << std::endl;
 
 	  // shape distributions for final fit
 	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
-	  shape_SVfitM.at(t).Fill(svfObj.get_mass(), w);
+	  shape_SVfitM.at(t).Fill(svfObj->get_mass(), w);
 
 	  // additional info on mass reconstruction
 	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFit"), 1); // filled w/o weight
@@ -2511,17 +2511,17 @@ void HToTaumuTauh::setStatusBooleans(bool resetAll){
 }
 
 // obtain, or create and store, SVFit results from/on dCache
-SVFitObject HToTaumuTauh::getSVFitResult() {
+SVFitObject* HToTaumuTauh::getSVFitResult() {
 	 // configure svfitstorage on first call
 	if ( !svfitstorage.isConfigured() ) svfitstorage.Configure(Ntp->GetInputDatasetName());
 	// get SVFit result from cache
-	SVFitObject svfObj = svfitstorage.GetEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber());
+	SVFitObject* svfObj = svfitstorage.GetEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber());
 	// if obtained object is not valid, create and store it
-	if (!svfObj.isValid()) {
+	if (!svfObj->isValid()) {
 		objects::MET met(Ntp, "CorrMVAMuTau");
 		SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
-		svfObj = svfProv.runAndMakeObject();
-		if (svfObj.isValid()) {
+		*svfObj = svfProv.runAndMakeObject();
+		if (svfObj->isValid()) {
 			// store only if object is valid
 			svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), svfObj);
 		} else {

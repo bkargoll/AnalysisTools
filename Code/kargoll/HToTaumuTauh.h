@@ -356,7 +356,7 @@ class HToTaumuTauh : public Selection {
 
   bool selectPFJet_Relaxed(unsigned i, int selectedMuon, int selectedTau);
 
-  SVFitObject getSVFitResult();
+  SVFitObject* getSVFitResult();
 
   // categories
   std::vector<float> cut_VBFTight, cut_VBFLoose;
