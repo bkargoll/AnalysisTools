@@ -31,6 +31,13 @@ class SVFitObject{
 	// validity MUST be checked before using
 	bool isValid() const {return valid_;}
 
+	// compare with other SVFitObject (allow for numerical differences)
+	bool operator==(const SVFitObject& other){
+		if ( fabs(mass_ - other.get_mass()) > 0.001 ) 				return false;
+		if ( fabs(massUncert_ - other.get_massUncert()) > 0.001 )	return false;
+		return true;
+	}
+
 	//// getter functions
 	// kinematics of di-tau system
 	double get_mass() const {return mass_;}

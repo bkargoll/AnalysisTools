@@ -3,8 +3,9 @@
 if [ "${1}"  == "--help" ] ; then
     echo "Script to submit grid jobs (if wanted), monitor grid jobs, run Combine and purge the jobs."
     echo "Options for running this this script"
-    echo "./Run.sh --Runtime <number of mintues>     Set Maximum RunTime of GRID gobs. Default 24hr. "
-    echo "./Run.sh --NoCombine                       Turn off Combining the files from the GRID.  "    
+    echo "./Run.sh --Runtime <number of minutes>     Set Maximum RunTime of GRID jobs. Default 24hr. "
+    echo "./Run.sh --NoCombine                       Turn off Combining the files from the GRID.  "
+    echo "./Run.sh --NoPurge                         Turn off Purging of the jobs for debugging. Make sure you purge them manually!  "
     echo "./Run.sh --Submit                          Submits jobs to the GRID before starting job monitoring." 
 else
     nretries=0;
@@ -19,7 +20,7 @@ else
 	    nmin=$nmindefault;
 	fi
 	
-	if [ "${1}"  == "--Submit" ] || [ "${2}"  == "--Submit" ] || [ "${3}"  == "--Submit" ] || [ "${4}"  == "--Submit" ];   then
+	if [ "${1}"  == "--Submit" ] || [ "${2}"  == "--Submit" ] || [ "${3}"  == "--Submit" ] || [ "${4}"  == "--Submit" ] || [ "${5}"  == "--Submit" ];   then
 	    if [ -f  jobs_complete ]; then
 		rm jobs_complete
 	    fi
@@ -54,7 +55,7 @@ else
 	  running=`cat jobs_submitted  | wc -l`
 	  echo ${running} " jobs still running"
 	  if [[  ${running} -eq 0 ]]; then
-	      if [ "${1}"  == "--NoCombine" ] || [ "${2}"  == "--NoCombine" ] || [ "${3}"  == "--NoCombine" ] || [ "${4}"  == "--NoCombine" ]; then
+	      if [ "${1}"  == "--NoCombine" ] || [ "${2}"  == "--NoCombine" ] || [ "${3}"  == "--NoCombine" ] || [ "${4}"  == "--NoCombine" ] || [ "${5}"  == "--NoCombine" ]; then
 		  echo "Jobs Complete"
 	      else
 		  echo "Starting Combine"
@@ -80,7 +81,12 @@ else
 	      if [[  ${nrunning} -eq 0 ]]; then
 		  echo "finished in loop " $idx
 		  let idx=nmin+1
-		  source Purge_Jobs.sh --all
+		  if [ "${1}"  == "--NoPurge" ] || [ "${2}"  == "--NoPurge" ] || [ "${3}"  == "--NoPurge" ] || [ "${4}"  == "--NoPurge" ] || [ "${5}"  == "--NoPurge" ]; then
+			echo "Jobs are not purged. Make sure to purge them manually."
+		  else
+			echo "Purging jobs..."
+			source Purge_Jobs.sh --all
+		  fi
 		  echo "Job Complete"
 	      fi
 	  else

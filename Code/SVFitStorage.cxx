@@ -76,14 +76,24 @@ void SVFitStorage::LoadTree(){
 		intree_->SetName(treeName_);
 		intree_->SetTitle(treeName_);
 		TDirectory *gdirectory_save = gDirectory;
+		int nFilesLoaded = 0;
 		for (int i = 0; i < nfiles; i++) {
 			TString name = inputFileName;
 			name += i;
 			name += ".root";
-			intree_->Add(name);
+			if ( isTreeInFile(name) ){ // check if tree exists in file (avoids TChain error)
+				intree_->Add(name);
+				nFilesLoaded++;
+			}
 		}
-		//intree_->GetEntries();
-		//intree_ = (TTree*) chain;
+		if( nFilesLoaded == 0) {
+			Logger(Logger::Info) << "None of the input files contains a tree " << treeName_
+					<< "\n\t All SVFit values need to be calculated." << std::endl;
+			intreeLoaded_ = false;
+			gDirectory = gdirectory_save;
+			gDirectory->cd();
+			return;
+		}
 		if (intree_->LoadTree(0) < 0)
 			Logger(Logger::Error) << "Input TChain was not loaded correctly." << std::endl;
 
@@ -93,15 +103,34 @@ void SVFitStorage::LoadTree(){
 		intree_->SetBranchAddress("EventNumber", &EventNumber_, &b_EventNumber_);
 		intree_->SetBranchAddress("svfit", &svfit_, &b_svfit_);
 
+		// Create and set index
 		Logger(Logger::Debug) << "Building the index ..." << std::endl;
-		int a = intree_->BuildIndex("(RunNumber<<13) + LumiNumber", "EventNumber"); // works only for run<262144 and lumi<4096 (true in 2012)
-		Logger(Logger::Debug) << "BuildIndex done with return value " << a << std::endl;
-		index_ = (TChainIndex*) intree_->GetTreeIndex();
+		index_ = new TTreeIndex(intree_,"(RunNumber<<13) + LumiNumber", "EventNumber");
+		intree_->SetTreeIndex(index_);
+
 		gDirectory = gdirectory_save;
 		gDirectory->cd();
 
 		intreeLoaded_ = true;
 	}
+}
+
+bool SVFitStorage::isTreeInFile(TString fileName){
+	TFile* file = new TFile(fileName.Data(),"READ");
+	if (!file || file->IsZombie()){
+		Logger(Logger::Error) << "File " << fileName << " does not exist or is corrupted." << std::endl;
+		delete file;
+		return false;
+	}
+	bool hasTree = true;
+	TObject* obj = file->Get(treeName_);
+	if (!obj || !obj->InheritsFrom(TTree::Class())){
+		Logger(Logger::Verbose) << "File " << fileName << " does not contain a tree named " << treeName_ << " -> Skip"<< std::endl;
+		hasTree = false;
+	}
+
+	delete file;
+	return hasTree;
 }
 
 
@@ -159,7 +188,7 @@ SVFitObject* SVFitStorage::GetEvent(UInt_t RunNumber, UInt_t LumiNumber, UInt_t 
 		return svfit_;
 	}
 	if (!intreeLoaded_) {
-		Logger(Logger::Debug) << "SVFitStorage not configured, thus GetEvent does not work." << std::endl;
+		Logger(Logger::Verbose) << "SVFitStorage not configured, thus GetEvent does not work." << std::endl;
 		*svfit_ = SVFitObject(); // invalid object
 		return svfit_;
 	}

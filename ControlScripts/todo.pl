@@ -50,6 +50,7 @@ $Cleaning ="NO";
 $maxdata=100;
 $maxmc=100;
 $ARCH="slc6_amd64_gcc472";
+$Queue="cream-pbs-short";
 
 if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\nThis code requires one input option. The systax is:./todo_Grid.pl [OPTION]");
@@ -106,6 +107,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --BuildRoot <ROOT Version> builds custom version for root instead of copying lib+include");
     printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n                                                     --GRIDSite <site> the grid site you wish to run on. Default=grid-srm.physik.rwth-aachen.de");
+    printf("\n                                                     --LongQueue Option to run on CMS queue (allows for longer jobs)");
     printf("\n                                                     --TauSpinner Option to turn on TauSpinner");
     printf("\n                                                     --SVfit Option to turn on SVfit \n ");
     exit(0);  
@@ -184,6 +186,10 @@ for($l=2;$l<$numArgs; $l++){
 	$ubergridsite="grid-ftp."+$ARGV[$l];
 	$dcapgridsite="grid-dcap."+$ARGV[$l];
 	$gridsite="grid-srm."+$ARGV[$l];
+    }
+    if($ARGV[$l] eq  "--LongQueue"){
+		$l++;
+		$Queue="cream-pbs-cms";
     }
     if($ARGV[$l] eq  "--ARCH" ){
         $l++;
@@ -998,7 +1004,7 @@ if( $ARGV[0] eq "--GRID" ){
     system(sprintf("echo \"        echo 'Submitting Set_'\\\${c}'/GRIDJob.jdl' \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"        isSkim=\\\$(cat listOfSrmlsFileNames | grep SKIMMED_NTUP_\\\${c}.root | wc -l) \n      if [[ \\\${isSkim} -eq 1 ]]; then \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"          srmrm srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/SKIMMED_NTUP_\\\${c}.root \n     fi \" >> $OutputDir/workdir$set/Submit "));
-    system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/cream-pbs-short $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx \\\" \\\"}' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"          glite-ce-job-submit -a -r grid-ce.physik.rwth-aachen.de:8443/$Queue $OutputDir/workdir$set/Set_\\\${c}/GRIDJob.jdl | tee junk ; cat junk >> jobs_log; cat junk | grep https | awk -v idx=\\\${c} '{print \\\$1 \\\" $OutputDir/workdir$set/Set_\\\" idx \\\" \\\"}' | tee -a $OutputDir/workdir$set/jobs_submittedOrComplete >> $OutputDir/workdir$set/jobs_submitted ; rm junk \" >> $OutputDir/workdir$set/Submit"));
     #system(sprintf("echo \"          cp $OutputDir/workdir$set/jobs_submitted $OutputDir/workdir$set/jobs_submittedOrComplete \" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"      fi \n    done\n  done \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"  njobs=\\\$(cat jobs_submittedOrComplete | wc -l)  \" >> $OutputDir/workdir$set/Submit"));

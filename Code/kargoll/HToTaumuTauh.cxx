@@ -509,8 +509,8 @@ void  HToTaumuTauh::Setup(){
   shape_VisM = HConfig.GetTH1D(Name+"_shape_VisM","shape_VisM",400,0.,400.,"m_{vis}(#tau_{h},#mu)/GeV");
   shape_SVfitM = HConfig.GetTH1D(Name+"_shape_SVfitM","shape_SVfitM",400,0.,400.,"m_{SVfit}(#tau_{h},#mu)/GeV");
 
-  SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"");
-  SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"");
+  SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"t_{real}(SVFit)/sec");
+  SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"t_{CPU}(SVFit)/sec");
 
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
@@ -2526,6 +2526,20 @@ SVFitObject* HToTaumuTauh::getSVFitResult() {
 			svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), svfObj);
 		} else {
 			std::cout << "ERROR: Unable to create a valid SVFit object." << std::endl;
+		}
+	}
+	else{
+		// calculate every 2000th event and compare with what is stored
+		if( (Ntp->EventNumber() % 2000) == 123){
+			objects::MET met(Ntp, "CorrMVAMuTau");
+			SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
+			SVFitObject newSvfObj = svfProv.runAndMakeObject();
+			if (*svfObj == newSvfObj)
+				std::cout << "Recalculation of SVFit object gave same result." << std::endl;
+			else
+				std::cout << "Recalculation of SVFit object gave DIFFERENT result!!" <<
+				"\n\told: mass = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pt = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() <<
+				"\n\tnew: mass = " << newSvfObj.get_mass() << " +/- " << newSvfObj.get_massUncert() << ", pt = " << newSvfObj.get_pt() << " +/- " << newSvfObj.get_ptUncert()<< std::endl;
 		}
 	}
 	return svfObj;
