@@ -4,6 +4,7 @@
 #include "HistoConfig.h"
 #include <iostream>
 #include "SVFitObject.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 Example::Example(TString Name_, TString id_):
   Selection(Name_,id_),
@@ -13,11 +14,11 @@ Example::Example(TString Name_, TString id_):
 
 Example::~Example(){
   for(unsigned int j=0; j<Npassed.size(); j++){
-    std::cout << "Example::~Example Selection Summary before: " 
+	 Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
   }
-  std::cout << "Example::~Example()" << std::endl;
+  Logger(Logger::Info) << "complete." << std::endl;
 }
 
 void  Example::Configure(){
@@ -79,7 +80,7 @@ void  Example::Store_ExtraDist(){
 void  Example::doEvent(){
   unsigned int t;
   int id(Ntp->GetMCID());
-  if(!HConfig.GetHisto(Ntp->isData(),id,t)){ std::cout << "failed to find id" <<std::endl; return;}
+  if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}
   
   // Apply Selection
   unsigned int nGoodVtx=0;

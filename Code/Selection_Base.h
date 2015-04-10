@@ -36,7 +36,6 @@ class Selection_Base {
   void SetMode(int mode_);
   void SetRunType(int runtype_);
   void SetDetail(bool i){doDetails=i;}
-  void SetVerbosity(int i){if(i>=FATAL && i<=DEBUG) verbose=i;}
   void SetLumi(double l){Lumi=l;}
   double GetLumi(){return Lumi;}
 
@@ -53,7 +52,6 @@ class Selection_Base {
   bool isNtp;
   int mode;
   int runtype;
-  int verbose;
   bool doDetails;
   double Lumi;
 };

@@ -1,4 +1,5 @@
 #include "Selection_Factory.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 #include "Example.h"
 #include "TauSpinExample.h"
@@ -102,7 +103,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ztotaumutauh")) s=new ZToTaumuTauh(Analysis,UncertType);
 #endif
   else{
-    std::cout << "WARNING: Selection_Factory::Factory INVALID ANALYSIS TYPE.... USING DEFAULT <Example.h> " << std::endl;
+	Logger(Logger::Error)<< "INVALID ANALYSIS TYPE.... USING DEFAULT <Example.h> " << std::endl;
     s=new Example(Analysis,UncertType);
   }
   s->SetMode(mode);

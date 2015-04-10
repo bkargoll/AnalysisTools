@@ -1,4 +1,5 @@
 #include "Tables.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -372,7 +373,7 @@ void Tables::AddPlots(std::vector<TString> names) {
 	DIR *dp;
 	struct dirent *dirp;
 	if ((dp = opendir(dir.c_str())) == NULL) {
-		cout << "Error(" << errno << ") opening " << dir << endl;
+		Logger(Logger::Error) << "error number " << errno << " opening " << dir << endl;
 	} else {
 		while ((dirp = readdir(dp)) != NULL) {
 			files.push_back(string(dirp->d_name));
@@ -389,14 +390,12 @@ void Tables::AddPlots(std::vector<TString> names) {
 		for (unsigned int l = 0; l < names.size(); l++) {
 			for (unsigned int i = 0; i < files.size(); i++) {
 				if (files.at(i).Contains(".eps") && files.at(i).Contains(Name)) {
-					//cout << files[i] << endl;
 					TString index = "Data_index_";
 					index += l;
 					index += ".eps";
 					TString idxstr = "_index_";
 					idxstr += l;
 					if (j == 0 && files.at(i).Contains("Nminus1_") && files.at(i).Contains(index)) {
-						//cout << files[i] << endl;
 						TString EPSName0 = files.at(i);
 						TString EPSName1 = EPSName0;
 						EPSName1.ReplaceAll("Nminus1", "Nminus0");
@@ -557,7 +556,7 @@ void Tables::AddPlots(std::vector<TString> names) {
 
 					} else if (j == 1 && files.at(i).Contains(idxstr) && !files.at(i).Contains("Nminus1") && !files.at(i).Contains("Nminus0") && !files.at(i).Contains("Accumdist")
 							&& !files.at(i).Contains("Nminus1dist") && !files.at(i).Contains("_log_") && !files.at(i).Contains("_sig") && !files.at(i).Contains("_sigtobkg")) {
-						cout << "in File loop" << endl;
+						Logger(Logger::Verbose) << "in File loop" << endl;
 						TString EPSName1 = files.at(i);
 						TString EPSName2 = EPSName1;
 						EPSName2.ReplaceAll("_index_", "_log_index_");

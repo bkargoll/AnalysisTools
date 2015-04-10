@@ -7,6 +7,7 @@
 #include "TauSolver.h"
 #include "SimpleFits/FitSoftware/interface/PDGInfo.h"
 #include "TauSpinerInterface.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 TauSpinExample::TauSpinExample(TString Name_, TString id_):
   Selection(Name_,id_),
@@ -19,11 +20,11 @@ TauSpinExample::TauSpinExample(TString Name_, TString id_):
 
 TauSpinExample::~TauSpinExample(){
   for(unsigned int j=0; j<Npassed.size(); j++){
-    std::cout << "TauSpinExample::~TauSpinExample Selection Summary before: " 
+    Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
   }
-  std::cout << "TauSpinExample::~TauSpinExample()" << std::endl;
+  Logger(Logger::Info) << "done." << std::endl;
 }
 
 void  TauSpinExample::Configure(){
@@ -246,13 +247,13 @@ void  TauSpinExample::doEvent(){
 
   double wobs=1;
   double w=1;
-  if(verbose)  std::cout << Ntp->GetMCID() << " " << Npassed.size() << " " << t << " " << Boson_idx << " " << " " << tau_idx 
+  Logger(Logger::Verbose) << Ntp->GetMCID() << " " << Npassed.size() << " " << t << " " << Boson_idx << " " << " " << tau_idx
 	    << " " << Ntp->NMCTaus() << std::endl;
   bool status=AnalysisCuts(t,w,wobs); 
   ///////////////////////////////////////////////////////////
   // Add plots
   if(status){
-    if(verbose)std::cout<<"MC type: " << Ntp->GetMCID() <<std::endl;
+	  Logger(Logger::Verbose) <<"MC type: " << Ntp->GetMCID() <<std::endl;
     // reject unsupported modes
     if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,tau1_idx,tau2_idx)){
       bool ImpTau=true;
@@ -262,10 +263,10 @@ void  TauSpinExample::doEvent(){
       if(!(jakid2==TauDecay::JAK_PION || jakid2==TauDecay::JAK_MUON || jakid2==TauDecay::JAK_RHO_PIPI0 || jakid2==TauDecay::JAK_A1_3PI)) ImpTau=false;
       //if(jakid1!=TauDecay::JAK_MUON && jakid2!=TauDecay::JAK_MUON) return;
       if(jakid1!=jakid2) return;
-      if(!ImpTau){ std::cout << "Decay modes not implemented in TauSpinner " << std::endl; return;}
+      if(!ImpTau){ Logger(Logger::Warning) << "Decay modes not implemented in TauSpinner " << std::endl; return;}
     }
     else{
-      std::cout << "Not a valid Z0->tau+tau- decay" <<std::endl;
+      Logger(Logger::Warning) << "Not a valid Z0->tau+tau- decay" <<std::endl;
       return;
     }
     double Spin_WT=Ntp->TauSpinerGet(TauSpinerInterface::Spin);
@@ -273,15 +274,14 @@ void  TauSpinExample::doEvent(){
     double FlipSpin_WT=1;//Ntp->TauSpinerGet(TauSpinerInterface::FlipSpin);
     double hplus=Ntp->TauSpinerGet(TauSpinerInterface::hplus);
     double hminus=1-hplus;//Ntp->TauSpinerGet(TauSpinerInterface::hminus);//1-hplus;
-    std::cout << "hplus " << hplus << " hminus " << hminus << std::endl;
+    Logger(Logger::Info) << "hplus " << hplus << " hminus " << hminus << std::endl;
     //if(Spin_WT<=0 || 2<=Spin_WT){Spin_WT=0.000001;UnSpin_WT=0.000001;FlipSpin_WT=0.000001;}
-    if(verbose)std::cout<< "A " <<std::endl;
       ////////////////////////////////////////////////
       //
       // Spin Validation
       //
     if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,TauDecay::JAK_MUON,tau_idx)){
-      if(verbose)std::cout << "muon" << std::endl;
+    	Logger(Logger::Verbose) << "muon" << std::endl;
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
@@ -312,19 +312,17 @@ void  TauSpinExample::doEvent(){
 	mu_WT_UnSpin.at(t).Fill(UnSpin_WT,w);
 	mu_WT_FlipSpin.at(t).Fill(FlipSpin_WT,w);
 
-	if(verbose){
 	  for(int i=0;i<Ntp->NMCTauDecayProducts(tau_idx);i++){
 	    TLorentzVector LV=Ntp->MCTauandProd_p4(tau_idx,i);
-	    std::cout << Ntp->MCTauandProd_pdgid(tau_idx,i) << " " << LV.Px() << " " << LV.Py() << " " << LV.Pz() << " " << LV.E() << std::endl;
+	    Logger(Logger::Verbose) << Ntp->MCTauandProd_pdgid(tau_idx,i) << " " << LV.Px() << " " << LV.Py() << " " << LV.Pz() << " " << LV.E() << std::endl;
 	  }
-	}
-	if(verbose)std::cout << "mu : x " << X_LV.E()/Tau_LV.E() << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;	
+	  Logger(Logger::Verbose) << "mu : x " << X_LV.E()/Tau_LV.E() << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
       }
-      if(verbose)std::cout<< "muon done " <<std::endl;
+      Logger(Logger::Verbose)<< "muon done " <<std::endl;
     }
     if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,tau1_idx,tau2_idx) ){
       if(Ntp->MCTau_JAK(tau1_idx)==TauDecay::JAK_PION && Ntp->MCTau_JAK(tau2_idx)==TauDecay::JAK_PION){
-	if(verbose)std::cout<< "pi-pi " <<std::endl;
+    Logger(Logger::Verbose)<< "pi-pi " <<std::endl;
 	double x1(0),x2(0); 
 	TLorentzVector Zboson=Ntp->MCSignalParticle_p4(Boson_idx);
 	TLorentzVector LVTau=Ntp->MCTau_p4(tau2_idx);
@@ -380,14 +378,14 @@ void  TauSpinExample::doEvent(){
 	  pi_Mvis_FlipSpin.at(t).Fill(pipi.M()/tautau.M(),w*FlipSpin_WT);
 	  pi_Mvis_hplus.at(t).Fill(pipi.M()/tautau.M(),w*hplus*UnSpin_WT);
 	  pi_Mvis_hminus.at(t).Fill(pipi.M()/tautau.M(),w*hminus*UnSpin_WT);
-	  if(verbose)std::cout << "pipi : mtau " << pipi.M()/tautau.M() << " zs " << myzs  
+	  Logger(Logger::Verbose) << "pipi : mtau " << pipi.M()/tautau.M() << " zs " << myzs
 			       << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
 	}
       }
-      if(verbose)std::cout<< "pi-pi done" <<std::endl;
+      Logger(Logger::Verbose)<< "pi-pi done" <<std::endl;
     }
    if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,TauDecay::JAK_PION,tau_idx)){
-      if(verbose)std::cout << "pion" << std::endl;
+	   Logger(Logger::Verbose) << "pion" << std::endl;
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
@@ -417,13 +415,13 @@ void  TauSpinExample::doEvent(){
 	pi_WT_Spin.at(t).Fill(Spin_WT,w);
 	pi_WT_UnSpin.at(t).Fill(UnSpin_WT,w);
 	pi_WT_FlipSpin.at(t).Fill(FlipSpin_WT,w);
-	if(verbose)std::cout << "pi : x " << X_LV.E()/Tau_LV.E() << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
+	Logger(Logger::Verbose) << "pi : x " << X_LV.E()/Tau_LV.E() << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
       }
-      if(verbose)std::cout<< "pion done " <<std::endl;
+      Logger(Logger::Verbose) << "pion done " <<std::endl;
     }
    if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,TauDecay::JAK_A1_3PI,tau_idx)){
      if(Ntp->MCTau_charge(tau_idx)==-1){
-      if(verbose)std::cout << "a1to3pi" << std::endl;
+    	 Logger(Logger::Verbose) << "a1to3pi" << std::endl;
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
@@ -441,7 +439,7 @@ void  TauSpinExample::doEvent(){
 	  pions_charge.push_back(Ntp->MCTauandProd_charge(tau_idx,i));
         }
       }
-      if(verbose)std::cout << "a1to3pi - 1" << std::endl;
+      Logger(Logger::Verbose) << "a1to3pi - 1" << std::endl;
       if(Tau_LV.E()>0){
         a1_PtRatio_hplus.at(t).Fill(X_LV.Pt()/Tau_LV.Pt(),w*hplus*UnSpin_WT);
         a1_PtRatio_hminus.at(t).Fill(X_LV.Pt()/Tau_LV.Pt(),w*hminus*UnSpin_WT);
@@ -450,7 +448,7 @@ void  TauSpinExample::doEvent(){
         X_LV.Boost(-Boson_LV.BoostVector());
         Boson_LV.Boost(-Boson_LV.BoostVector());
         // Now fill results               
-	if(verbose)std::cout << "a1to3pi - 2 " << std::endl;                                                                                                                                                                                                   
+        Logger(Logger::Verbose) << "a1to3pi - 2 " << std::endl;
         Ntp->TauSpinerSetSignal(Ntp->MCTau_charge(tau_idx));
 	a1_ExoverEtau.at(t).Fill(X_LV.E()/Tau_LV.E(),w);
 	a1_ExoverEtau_Spin.at(t).Fill(X_LV.E()/Tau_LV.E(),w*Spin_WT);
@@ -462,7 +460,7 @@ void  TauSpinExample::doEvent(){
 	a1_WT_UnSpin.at(t).Fill(UnSpin_WT,w);
 	a1_WT_FlipSpin.at(t).Fill(FlipSpin_WT,w);
 
-	if(verbose)std::cout << "a1to3pi - 3 " << std::endl;
+	Logger(Logger::Verbose) << "a1to3pi - 3 " << std::endl;
 
 	TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
 	int charge=Ntp->MCTau_charge(tau_idx);
@@ -471,9 +469,9 @@ void  TauSpinExample::doEvent(){
 	  TLorentzVector LV=Ntp->MCTauandProd_p4(tau_idx,i);
 	  if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi_plus) && Ntp->MCTauandProd_pdgid(tau_idx,i)/abs(Ntp->MCTauandProd_pdgid(tau_idx,i))!=charge){pi+=LV; a1+=LV;}
           else if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi0) || abs(Ntp->MCTauandProd_pdgid(tau_idx,i))==abs(PDGInfo::pi_plus)){a1+=LV;}
-	  else if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))!=abs(PDGInfo::nu_tau)){std::cout << Ntp->MCTauandProd_pdgid(tau_idx,i) << std::endl;}
+	  else if(abs(Ntp->MCTauandProd_pdgid(tau_idx,i))!=abs(PDGInfo::nu_tau)){Logger(Logger::Info) << Ntp->MCTauandProd_pdgid(tau_idx,i) << std::endl;}
 	}
-	if(verbose)std::cout << "a1to3pi - 3 " << std::endl;
+	Logger(Logger::Verbose) << "a1to3pi - 3 " << std::endl;
 	double gamma=2*pi.P()/a1.P()-1;
      
         a1_Gamma.at(t).Fill(gamma,w);
@@ -482,14 +480,14 @@ void  TauSpinExample::doEvent(){
         a1_Gamma_FlipSpin.at(t).Fill(gamma,w*FlipSpin_WT);
         a1_Gamma_hplus.at(t).Fill(gamma,w*hplus*UnSpin_WT);
         a1_Gamma_hminus.at(t).Fill(gamma,w*hminus*UnSpin_WT);
-	if(verbose)std::cout << "a1to3pi : gamma " << gamma << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
+        Logger(Logger::Verbose) << "a1to3pi : gamma " << gamma << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << std::endl;
       }
-      if(verbose)std::cout<< "a1 done " <<std::endl;
+      Logger(Logger::Verbose)<< "a1 done " <<std::endl;
      }
     }
     if(Ntp->hasSignalTauDecay(PDGInfo::Z0,Boson_idx,TauDecay::JAK_RHO_PIPI0,tau_idx)){
       if(Ntp->MCTau_charge(tau_idx)==-1){
-      if(verbose)std::cout << "rho" << std::endl;
+      Logger(Logger::Verbose) << "rho" << std::endl;
       TLorentzVector Boson_LV=Ntp->MCSignalParticle_p4(Boson_idx);
       TLorentzVector Tau_LV(0,0,0,0);
       TLorentzVector X_LV(0,0,0,0);
@@ -536,16 +534,16 @@ void  TauSpinExample::doEvent(){
         rho_Gamma_hplus.at(t).Fill(gamma,w*hplus*UnSpin_WT);
         rho_Gamma_hminus.at(t).Fill(gamma,w*hminus*UnSpin_WT);
 
-	if(verbose)std::cout << "rho : gamma " << gamma << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << " rho " << rho.E() << std::endl;
+        Logger(Logger::Verbose) << "rho : gamma " << gamma << " w " << w << "spin " <<  Spin_WT << " unspin " << UnSpin_WT << " spin flip " << FlipSpin_WT << " hplus " << hplus << " hminus " << hminus  << " rho " << rho.E() << std::endl;
 	rho_WT_Spin.at(t).Fill(Spin_WT,w);
 	rho_WT_UnSpin.at(t).Fill(UnSpin_WT,w);
 	rho_WT_FlipSpin.at(t).Fill(FlipSpin_WT,w);
       }
     }
-    if(verbose)std::cout << "rho done" << std::endl;
+      Logger(Logger::Verbose) << "rho done" << std::endl;
     }
   }
-  if(verbose)std::cout << "done" << std::endl;
+  Logger(Logger::Verbose) << "done" << std::endl;
 }
 
 

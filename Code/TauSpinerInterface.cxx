@@ -1,4 +1,5 @@
 #include "TauSpinerInterface.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 #ifdef USE_TauSpinner
 #include "Tauola.h"
@@ -84,7 +85,7 @@ double TauSpinerInterface::Get(int type, SimpleParticle X, SimpleParticle tau, s
   if(Spin==type || type==hplus ||  type==hminus) return WT;
   if(UnSpin==type) return 1.0/WT;
   if(FlipSpin==type) return (2.0-WT)/(WT);
-  std::cout << "Warning TauSpinerWeight TauSpinerType " << type << " is INVALID. Returning Spin WT=1.0." << std::endl;
+  Logger(Logger::Warning) << "TauSpinerWeight TauSpinerType " << type << " is INVALID. Returning Spin WT=1.0." << std::endl;
   return 1.0;
 }
 

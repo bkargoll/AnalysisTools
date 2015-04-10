@@ -80,8 +80,6 @@ class Ntuple_Controller{
   int nb;
   bool copyTree;
 
-  bool verbose;
-
   int currentEvent;
 
   bool cannotObtainHiggsMass; // avoid repeated printing of warning when running locally

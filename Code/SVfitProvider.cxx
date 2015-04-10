@@ -6,6 +6,7 @@
  */
 
 #include "SVfitProvider.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 void SVfitProvider::createSvFitAlgo() {
 	svFitAlgo_ = new SVfitStandaloneAlgorithm(inputTauLeptons_, inputMet_.ex(), inputMet_.ey(), inputMet_.significanceMatrix(), verbosity_);
@@ -57,7 +58,7 @@ void SVfitProvider::run(){
 	else if(fitMethod_ == "Minuit")
 		svFitAlgo_->fit();
 	else{
-		std::cout << "WARNING: Method " << fitMethod_ << " not available for SVfit. Using MarkovChain integration..." << std::endl;
+		Logger(Logger::Warning) << "Method " << fitMethod_ << " not available for SVfit. Using MarkovChain integration..." << std::endl;
 		svFitAlgo_->integrateMarkovChain();
 	}
 
@@ -126,7 +127,7 @@ void SVfitProvider::addMeasuredLepton(TString type, int index){
 		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, ntp_->PFTau_p4(index).Pt(), ntp_->PFTau_p4(index).Eta(), ntp_->PFTau_p4(index).Phi(), ntp_->PFTau_p4(index).M());
 	}
 	else
-		std::cout << "ERROR: Object type " << type << " not implemented in SVfitProvider." << std::endl;
+		Logger(Logger::Error) << "Object type " << type << " not implemented in SVfitProvider." << std::endl;
 
 	inputTauLeptons_.push_back(lep);
 	isSetup_ = false;

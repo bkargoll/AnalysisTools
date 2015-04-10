@@ -6,6 +6,7 @@
 #include "PDG_Var.h"
 #include "TF1.h"
 #include "Parameters.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 
 // External code
@@ -19,26 +20,25 @@
 ///////////////////////////////////////////////////////////////////////
 Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   copyTree(false)
-  ,verbose(false)
   ,cannotObtainHiggsMass(false)
   ,ObjEvent(-1)
   ,isInit(false)
 {
   // TChains the ROOTuple file
   TChain *chain = new TChain("t");
-  std::cout << "Ntuple_Controller" << RootFiles.size() << std::endl;
+  Logger(Logger::Verbose) << "Loading " << RootFiles.size() << " files" << std::endl;
   for(unsigned int i=0; i<RootFiles.size(); i++){
     chain->Add(RootFiles[i]);
   }
   TTree *tree = (TTree*)chain;  
   if(chain==0){
-    std::cout << "failed" << std::endl;
+	Logger(Logger::Error) << "chain points to NULL" << std::endl;
   }
-  std::cout << "Number of Events in Ntuple: " << chain->GetEntries() << std::endl;
+  Logger(Logger::Info) << "Number of Events in Ntuple: " << chain->GetEntries() << std::endl;
   Ntp=new NtupleReader(tree);
   nbytes=0; 
   nb=0;
-  std::cout << "Ntuple Configured" << std::endl;
+  Logger(Logger::Info) << "Ntuple Configured" << std::endl;
 
   // Fit setup 
 
@@ -82,7 +82,6 @@ void Ntuple_Controller::InitEvent(){
 //
 ///////////////////////////////////////////////////////////////////////
 Int_t Ntuple_Controller::Get_Entries(){
-  std::cout << Ntp->fChain->GetEntries() << std::endl;
   return Int_t(Ntp->fChain->GetEntries());
 }
 
@@ -142,16 +141,16 @@ void Ntuple_Controller::Branch_Setup(TString B_Name, int type){
 //
 ///////////////////////////////////////////////////////////////////////
 Ntuple_Controller::~Ntuple_Controller() {
-  std::cout << "Ntuple_Controller::~Ntuple_Controller()" << std::endl;
+  Logger(Logger::Verbose) << "Cleaning up" << std::endl;
   delete Ntp;
   delete rmcor;
-    std::cout << "Ntuple_Controller::~Ntuple_Controller() complete" << std::endl;
+  Logger(Logger::Verbose) << "Complete." << std::endl;
 }
 
 
 void Ntuple_Controller::CloneTree(TString n){
   if(!copyTree){
-    std::cout << "Starting D3PD cloning " << std::endl;  
+	Logger(Logger::Info) << "Starting D3PD cloning" << std::endl;
     newfile = new TFile(n+".root","recreate");
     SkimmedTree=Ntp->fChain->CloneTree(0);
     copyTree=true;
@@ -159,18 +158,15 @@ void Ntuple_Controller::CloneTree(TString n){
 }
 
 void Ntuple_Controller::SaveCloneTree(){
-  std::cout << "Ntuple_Controller::SaveCloneTree()"<< std::endl;
   if(copyTree){
     SkimmedTree->AutoSave();
     newfile->Close();
   }
-  std::cout << "Ntuple_Controller::SaveCloneTree() Done"<< std::endl;
+  Logger(Logger::Info) << "Done"<< std::endl;
 }
 
 void Ntuple_Controller::ThinTree(){
-  std::cout << "Ntuple_Controller::ThinTree" << std::endl;
-
-  std::cout << "Ntuple_Controller::ThinTree complete" << std::endl;  
+  Logger(Logger::Warning) << "ThinTree not implemented." << std::endl;
 }
 
 int Ntuple_Controller::SetupSystematics(TString sys){
@@ -249,7 +245,7 @@ int64_t Ntuple_Controller::GetMCID(){
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_VBF ||
 		(DataMCTypeFromTupel % 100) == DataMCType::H_tautau_WHZHTTH){
 	  int mass = getSampleHiggsMass();
-	  if (mass > 999)	std::cout << "ERROR: Read mass with more than 3 digits from sample." << std::endl;
+	  if (mass > 999)	Logger(Logger::Error) << "Read mass with more than 3 digits from sample." << std::endl;
 	  if (mass > 0)		DataMCTypeFromTupel += mass*100;
 	  // strip off JAK-Id from DataMCType
 	  if (HistoC.hasID(DataMCTypeFromTupel % 100000)) {
@@ -304,12 +300,10 @@ int Ntuple_Controller::getSampleHiggsMass(){
 	if (mass >= 0) return mass;
 
 	// second fallback: get Higgs mass from MC info
-	std::cout << "**********************************************************************************************************************" << std::endl;
-	std::cout << "WARNING: Not able to obtain Higgs mass neither from dataset nor from file name." << std::endl;
-	std::cout << "         Make sure the line InputNtuples is set correctly in your Input.txt. " << std::endl;
-	std::cout << "         For now, we will fall back to obtaining the Higgs mass from the generator information." << std::endl;
-	std::cout << "         Be aware that SOME EVENTS WILL END UP IN THE WRONG HISTOGRAM!!!" << std::endl;
-	std::cout << "**********************************************************************************************************************" << std::endl;
+	Logger(Logger::Warning) << "Not able to obtain Higgs mass neither from dataset nor from file name."
+	<< "\n\tMake sure the line InputNtuples is set correctly in your Input.txt. "
+	<< "\n\tFor now, we will fall back to obtaining the Higgs mass from the generator information."
+	<< "\n\tBe aware that SOME EVENTS WILL END UP IN THE WRONG HISTOGRAM!!!" << std::endl;
 	return getHiggsMassFromGenInfo();
 }
 
@@ -441,7 +435,7 @@ void Ntuple_Controller::CorrectMuonP4(){
 		Muon_isCorrected = true;
 	}else{
 		Muon_isCorrected = false;
-		std::cout << "No muon corrections applied" << std::endl;
+		Logger(Logger::Warning) << "No muon corrections applied" << std::endl;
 	}
 }
 
@@ -467,8 +461,9 @@ TLorentzVector Ntuple_Controller::Muon_p4(unsigned int i, TString corr){
 		}
 		if(Muon_isCorrected){
 			vec = Muon_corrected_p4.at(i);
-		}else{
-			std::cout << "No muon corrections applied" << std::endl;
+		}
+		else{
+			Logger(Logger::Warning) << "No muon corrections applied" << std::endl;
 		}
 	}
 	if(!isData() && GetStrippedMCID()!=DataMCType::DY_emu_embedded && GetStrippedMCID()!=DataMCType::DY_mutau_embedded){
@@ -562,11 +557,11 @@ TLorentzVector Ntuple_Controller::Electron_p4(unsigned int i, TString corr){
 					else vec.SetPerp(gRandom->Gaus(vec.Perp() * Electron_RegEnergy(i),Electron_RegEnergy(i)*0.0451) / Electron_RegEnergy(i));
 				}
 				else{
-					std::cout << "Eta out of range: " << Electron_supercluster_eta(i) << ". Returning fourvector w/o smearing for resolution uncertainties." << std::endl;
+					Logger(Logger::Warning) << "Eta out of range: " << Electron_supercluster_eta(i) << ". Returning fourvector w/o smearing for resolution uncertainties." << std::endl;
 				}
 			}
 			else{
-				std::cout << "Energy <= 0: " << Electron_RegEnergy(i) << ". Returning fourvector w/o smearing for resolution uncertainties." << std::endl;
+				Logger(Logger::Warning) << "Energy <= 0: " << Electron_RegEnergy(i) << ". Returning fourvector w/o smearing for resolution uncertainties." << std::endl;
 			}
 		}
 		if(corr.Contains("met")){
@@ -579,7 +574,7 @@ TLorentzVector Ntuple_Controller::Electron_p4(unsigned int i, TString corr){
 				else vec.SetPerp(vec.Perp() * 0.985);
 			}
 			else{
-				std::cout << "Eta out of range: " << Electron_supercluster_eta(i) << ". Returning fourvector w/o scale corrections for MET uncertainties." << std::endl;
+				Logger(Logger::Warning) << "Eta out of range: " << Electron_supercluster_eta(i) << ". Returning fourvector w/o scale corrections for MET uncertainties." << std::endl;
 			}
 		}
 	}
@@ -744,7 +739,7 @@ double Ntuple_Controller::Electron_Aeff_R04(double Eta){
 	else if(eta>=2.2 && eta<2.3) return 0.183;
 	else if(eta>=2.3 && eta<2.4) return 0.194;
 	else if(eta>=2.4) return 0.261;
-	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
+	else {Logger(Logger::Error) << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }
 
 double Ntuple_Controller::Electron_Aeff_R03(double Eta){
@@ -756,7 +751,7 @@ double Ntuple_Controller::Electron_Aeff_R03(double Eta){
 	else if(eta>=2.2 && eta<2.3) return 0.11;
 	else if(eta>=2.3 && eta<2.4) return 0.11;
 	else if(eta>=2.4) return 0.14;
-	else {std::cout << "Electron eta out of range: " << Eta << std::endl; return -1;}
+	else {Logger(Logger::Error) << "Electron eta out of range: " << Eta << std::endl; return -1;}
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -968,7 +963,7 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 	  bool tau1good(false),tau2good(false);
 	  //first tau
 	  unsigned int tauidx=MCSignalParticle_Tauidx(i).at(0);
-	  if(verbose)std::cout  << "tau 1 indx " << tauidx  << " Number of Tau and Products " << NMCTauDecayProducts(tauidx) << std::endl;
+	  Logger(Logger::Verbose) << "tau 1 indx " << tauidx  << " Number of Tau and Products " << NMCTauDecayProducts(tauidx) << std::endl;
 	  if(tauidx<NMCTaus()){
 	    for(int t=0;t<NMCTauDecayProducts(tauidx);t++){
 	      int mypdgid=abs((int)MCTauandProd_pdgid(tauidx,t));
@@ -986,7 +981,7 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 	  }
 	  // second tau
 	  tauidx=MCSignalParticle_Tauidx(i).at(1);
-	  if(verbose)std::cout  << "tau 2 indx " << tauidx  << " Number of Tau and Products " << NMCTauDecayProducts(tauidx) << std::endl;
+	  Logger(Logger::Verbose) << "tau 2 indx " << tauidx  << " Number of Tau and Products " << NMCTauDecayProducts(tauidx) << std::endl;
 	  if(tauidx<NMCTaus()){
 	    for(int t=0;t<NMCTauDecayProducts(tauidx);t++){
 	      int mypdgid=abs((int)MCTauandProd_pdgid(tauidx,t));
@@ -999,7 +994,7 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 		    tau2good=true;
 	      }
 	      if((taudecay.isTauFinalStateParticle(mypdgid) && mypdgid!=PDGInfo::gamma)){
-		if(verbose) std::cout << "isDaughter" << std::endl;
+	    Logger(Logger::Verbose) << "isDaughter" << std::endl;
 		if(tau_daughters.size()>0)tau2good=true;
 		tau_daughters2.push_back(SimpleParticle(MCTauandProd_p4(tauidx,t).Px(),
 							MCTauandProd_p4(tauidx,t).Py(),
@@ -1010,7 +1005,7 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 	    }
 	  }
 	  if(tau1good && tau2good){
-	    if(verbose)std::cout  << "Two Taus found: " << tau_daughters.size() << " " << tau_daughters2.size() << std::endl;
+		Logger(Logger::Verbose)  << "Two Taus found: " << tau_daughters.size() << " " << tau_daughters2.size() << std::endl;
 	    return TauSpinerInt.Get(SpinType,X,tau,tau_daughters,tau2,tau_daughters2);
 	  }
 	}
@@ -1055,13 +1050,13 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
     if(MCSignalParticle_pdgid(i)==(int)parent_pdgid){
       for(unsigned int j=0; j<MCSignalParticle_Tauidx(i).size();j++){
 	if((int)MCSignalParticle_Tauidx(i).at(j)>=NMCTaus()){
-	  std::cout << "Warning INVALID Tau index... Skipping event! MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << std::endl;
+	  Logger(Logger::Warning) << "INVALID Tau index... Skipping event! MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << std::endl;
 	  return false;
 	}
       }
       for(unsigned int j=0; j<MCSignalParticle_Tauidx(i).size();j++){
 	unsigned int tauidx=MCSignalParticle_Tauidx(i).at(j);
-	if(verbose)std::cout << "MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << " " << Ntp->MCTau_JAK->size() << " " << Ntp->MCTauandProd_pdgid->size() << std::endl;
+	Logger(Logger::Verbose) << "MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << " " << Ntp->MCTau_JAK->size() << " " << Ntp->MCTauandProd_pdgid->size() << std::endl;
 	if((int)MCTau_JAK(tauidx)==tau_jak){ tau_idx=tauidx;Boson_idx=i;return true;}
       }
     }
@@ -1074,7 +1069,7 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
     if(MCSignalParticle_pdgid(i)==parent_pdgid){
       for(unsigned int j=0; j<MCSignalParticle_Tauidx(i).size();j++){
         if((int)MCSignalParticle_Tauidx(i).at(j)>=NMCTaus()){
-	  std::cout << "Warning INVALID Tau index... Skipping event! MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << std::endl;
+          Logger(Logger::Warning) << "INVALID Tau index... Skipping event! MCSignalParticle_Tauidx: " << MCSignalParticle_Tauidx(i).at(j) << " Number of MC Taus: " << NMCTaus() << std::endl;
           return false;
         }
       }
@@ -1155,14 +1150,14 @@ bool Ntuple_Controller::matchTruth(TLorentzVector tvector, int pid, double dr){
 
 //// draw decay chain
 void Ntuple_Controller::printMCDecayChainOfEvent(bool printStatus, bool printPt, bool printEtaPhi, bool printQCD){
-	std::cout << "=== Draw MC decay chain of event ===" << std::endl;
+	Logger(Logger::Info) << "=== Draw MC decay chain of event ===" << std::endl;
 	for(unsigned int par = 0; par < NMCParticles(); par++){
 		if ( !MCParticle_hasMother(par) )
 			printMCDecayChainOfMother(par, printStatus, printPt, printEtaPhi, printQCD);
 	}
 }
 void Ntuple_Controller::printMCDecayChainOfMother(unsigned int par, bool printStatus, bool printPt, bool printEtaPhi, bool printQCD){
-	std::cout << "Draw decay chain for mother particle at index " << par << " :" << std::endl;
+	Logger(Logger::Info) << "Draw decay chain for mother particle at index " << par << " :" << std::endl;
 	printMCDecayChain(par, 0, printStatus, printPt, printEtaPhi, printQCD);
 }
 void Ntuple_Controller::printMCDecayChain(unsigned int par, unsigned int level, bool printStatus, bool printPt, bool printEtaPhi, bool printQCD){
@@ -1476,7 +1471,7 @@ bool Ntuple_Controller::findCorrMVAMuTauSrcTau(unsigned int tau_idx, int &mvaMuT
 // function to sort any objects by any value in descending order
 std::vector<int> Ntuple_Controller::sortObjects(std::vector<int> indices, std::vector<double> values){
 	if (indices.size() != values.size()){
-		std::cout << "WARNING: Please make sure indices and values have same size for sorting. Abort." << std::endl;
+		Logger(Logger::Warning) << "Please make sure indices and values have same size for sorting. Abort." << std::endl;
 		return std::vector<int>();
 	}
 	// create vector of pairs to allow for sorting by value
@@ -1522,7 +1517,7 @@ std::vector<int> Ntuple_Controller::sortDefaultObjectsByPt(TString objectType){
 	  }
 	}
 	else{
-	  std::cout << "WARNING: sortDefaultObjectsByPt is only implemented for Jets, Taus, Muons and Electrons. Abort." << std::endl;
+	  Logger(Logger::Warning) << "sortDefaultObjectsByPt is only implemented for Jets, Taus, Muons and Electrons. Abort." << std::endl;
 	  return std::vector<int>();
 	}
 	return sortObjects(indices, values);

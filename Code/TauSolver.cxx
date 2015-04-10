@@ -1,10 +1,10 @@
 #include "TauSolver.h"
 #include "PDG_Var.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 TauSolver::TauSolver(TVector3 Tau_, TLorentzVector a1_):
   Tau(Tau_),
-  a1(a1_),
-  verbose(false)
+  a1(a1_)
 {
   if(Tau.Mag()!=0)Tau*=1/Tau.Mag();
 }
@@ -107,29 +107,29 @@ bool TauSolver::EulerAnglesfor3prong(std::vector<TLorentzVector> Particle, std::
     Q_LV+=Particle.at(i);
     if(chargesum!=Charge.at(i)){ 
       q3_LV=Particle.at(i); 
-      if(verbose) cout << "Found q3: " << i << " " << Charge.at(i) << " " 
+      Logger(Logger::Debug) << "Found q3: " << i << " " << Charge.at(i) << " "
 	   << Particle.at(i).Px() << " " << Particle.at(i).Py() << " " << Particle.at(i).Pz() << endl;
     }
     else if(!foundq1){
       q1_LV=Particle.at(i);foundq1=true;
-      if(verbose) cout << "Found q1: " << i << " " << Charge.at(i) << " "
+      Logger(Logger::Debug) << "Found q1: " << i << " " << Charge.at(i) << " "
            << Particle.at(i).Px() << " " << Particle.at(i).Py() << " " << Particle.at(i).Pz() << endl;
     }
     else{ 
       q2_LV=Particle.at(i);
-      if(verbose) cout << "Found q1: " << i << " " << Charge.at(i) << " "
+      Logger(Logger::Debug) << "Found q1: " << i << " " << Charge.at(i) << " "
            << Particle.at(i).Px() << " " << Particle.at(i).Py() << " " << Particle.at(i).Pz() << endl;
     }
   }
-  if(verbose) cout << "Q" << Q_LV.M() << endl;  
-  if(verbose) cout << "Q direction (noboost or rot) " << Q_LV.Px() << " " <<  Q_LV.Py() << " " << Q_LV.Pz() << endl;
+  Logger(Logger::Debug) << "Q" << Q_LV.M() << endl;
+  Logger(Logger::Debug) << "Q direction (noboost or rot) " << Q_LV.Px() << " " <<  Q_LV.Py() << " " << Q_LV.Pz() << endl;
   if(Q_LV.M()>=PDG_Var::Tau_mass())return false;
   // Rotate and boost system  to enter s' frame
   double phi(Q_LV.Phi()),theta(Q_LV.Theta());
   Q_LV.RotateZ(-phi);
   Q_LV.RotateY(-theta);
   
-  if(verbose) cout << "Q direction (noboost - check rotation) " << Q_LV.Px() << " " <<  Q_LV.Py() << " " << Q_LV.Pz() << endl;
+  Logger(Logger::Debug) << "Q direction (noboost - check rotation) " << Q_LV.Px() << " " <<  Q_LV.Py() << " " << Q_LV.Pz() << endl;
 
   q1_LV.RotateZ(-phi);
   q1_LV.RotateY(-theta);
@@ -170,9 +170,9 @@ bool TauSolver::EulerAnglesfor3prong(std::vector<TLorentzVector> Particle, std::
   TVector3 q2(q2_LV.Px(),q2_LV.Py(),q2_LV.Pz()); 
   TVector3 q3(q3_LV.Px(),q3_LV.Py(),q3_LV.Pz());
   TLorentzVector Q_a1frame=q1_LV; Q_a1frame+=q2_LV+q3_LV;
-  if(verbose) cout <<  "Q in a1 rest frame (checks boost is correct): " << Q_a1frame.Px() << " " <<  Q_a1frame.Py() << " " <<  Q_a1frame.Pz() << " " <<  Q_a1frame.M() << endl;
-  if(verbose) cout << "nl direction (checks nl direction - should be along z) " << -Q_LV.Px() << " " << -Q_LV.Py() << " " << -Q_LV.Pz() << endl;
-  if(verbose) cout << "mag (before normilization) " << q1.Mag() << " " << q2.Mag() << " " << q3.Mag() << " " <<endl; 
+  Logger(Logger::Debug) <<  "Q in a1 rest frame (checks boost is correct): " << Q_a1frame.Px() << " " <<  Q_a1frame.Py() << " " <<  Q_a1frame.Pz() << " " <<  Q_a1frame.M() << endl;
+  Logger(Logger::Debug) << "nl direction (checks nl direction - should be along z) " << -Q_LV.Px() << " " << -Q_LV.Py() << " " << -Q_LV.Pz() << endl;
+  Logger(Logger::Debug) << "mag (before normilization) " << q1.Mag() << " " << q2.Mag() << " " << q3.Mag() << " " <<endl;
   if(nl.Mag()>0 && q1.Mag()>0 &&q2.Mag()>0 && q3.Mag()>0 ){
     nl*=1/nl.Mag();
     q1*=1/q1.Mag();
@@ -186,11 +186,11 @@ bool TauSolver::EulerAnglesfor3prong(std::vector<TLorentzVector> Particle, std::
       TVector3 nperp12=q12.Cross(q2);
       if(nperp12.Dot(nperp)<0)nperp*=-1;
     }
-    if(verbose) cout << "norm. mag (check normilization) " << q1.Mag() << " " << q2.Mag() << " " << q3.Mag() << " " << nperp.Mag() <<endl;
+    Logger(Logger::Debug) << "norm. mag (check normilization) " << q1.Mag() << " " << q2.Mag() << " " << q3.Mag() << " " << nperp.Mag() <<endl;
     TVector3 nlcrossnperp=nl.Cross(nperp);
     
     cosbeta=nl.Dot(nperp);
-    if(verbose) cout << "Dot products (show nperp is really normal to plane): " << q1.Dot(nperp) << " " << q2.Dot(nperp) << " " << q3.Dot(nperp) << " " << nl.Dot(nperp)  << " " << cosbeta << endl;
+    Logger(Logger::Debug) << "Dot products (show nperp is really normal to plane): " << q1.Dot(nperp) << " " << q2.Dot(nperp) << " " << q3.Dot(nperp) << " " << nl.Dot(nperp)  << " " << cosbeta << endl;
     double sine_gamma=nlcrossnperp.Dot(q3)/nlcrossnperp.Mag();
     double cosine_gamma=-nl.Dot(q3)/nlcrossnperp.Mag();
     gamma=atan2(sine_gamma,cosine_gamma);

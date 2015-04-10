@@ -3,22 +3,23 @@
 #include <cstdlib>
 #include "HistoConfig.h"
 #include <iostream>
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 MuTauSync::MuTauSync(TString Name_, TString id_):
   HToTaumuTauh(Name_,id_)
 {
-	std::cout << "Setting up the class MuTauSync" << std::endl;
+	Logger(Logger::Info) << "Setting up the class MuTauSync" << std::endl;
 	// always run without category for sync exercise
 	categoryFlag = "NoCategory";
 }
 
 MuTauSync::~MuTauSync(){
   for(unsigned int j=0; j<Npassed.size(); j++){
-    std::cout << "MuTauSync::~MuTauSync Selection Summary before: "
+    Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
   }
-  std::cout << "MuTauSync::~MuTauSync()" << std::endl;
+  Logger(Logger::Info) << "Done." << std::endl;
 }
 
 void  MuTauSync::Configure(){

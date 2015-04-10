@@ -59,7 +59,7 @@ else
 		  echo "Jobs Complete"
 	      else
 		  echo "Starting Combine"
-		  source Combine >& log_Combine
+		  source Combine 2>&1 | tee >(sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" > log_Combine)
 		  if [[ ${nretries} -eq 0 ]]; then
 		      let nsetspad=10+${nsets}
 		      echo "Searching " ${nsetspad} " line for failed jobs."

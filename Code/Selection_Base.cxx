@@ -1,5 +1,6 @@
 #include "Selection_Base.h"
- 
+#include "SimpleFits/FitSoftware/interface/Logger.h"
+
 Selection_Base::Selection_Base(TString Name_, TString id_):  
   GeV(1000)
   ,Analysis(Name_)
@@ -7,17 +8,16 @@ Selection_Base::Selection_Base(TString Name_, TString id_):
   ,systype(id_)
   ,isNtp(false)
   ,runtype(GRID)
-  ,verbose(false)
   ,doDetails(false)
   ,Lumi(1)
 {
   Name+="_";
   Name+=systype;
-  std::cout << "Configuring Selection " << Name << std::endl;
+  Logger(Logger::Info) << "Configuring Selection " << Name << std::endl;
 }
 
 Selection_Base::~Selection_Base(){
-  std::cout << "Selection_Base::~Selection_Base() " << std::endl;
+	Logger(Logger::Info) << "done." << std::endl;
 }
 
 

@@ -7,12 +7,13 @@
 
 #include "HToTaumuTauhBackgrounds.h"
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 HToTaumuTauhBackgrounds::HToTaumuTauhBackgrounds(TString Name_, TString id_):
 	HToTaumuTauh(Name_,id_)
 
 {
-	std::cout << "Setting up the class HToTaumuTauhBackgrounds" << std::endl;
+	Logger(Logger::Info) << "Setting up the class HToTaumuTauhBackgrounds" << std::endl;
 	// always run without category for background methods
 	// the numbers will be produced for all categories individually
 	categoryFlag = "NoCategory";
@@ -29,15 +30,15 @@ HToTaumuTauhBackgrounds::HToTaumuTauhBackgrounds(TString Name_, TString id_):
 
 HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds() {
 	  for(unsigned int j=0; j<Npassed.size(); j++){
-	    std::cout << "HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds Selection Summary before: "
+	    Logger(Logger::Info) << "Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
-	  std::cout << "HToTaumuTauhBackgrounds::~HToTaumuTauhBackgrounds()" << std::endl;
+	  Logger(Logger::Info) << "Done." << std::endl;
 }
 
 void HToTaumuTauhBackgrounds::Setup(){
-	if (verbose) std::cout << "HToTaumuTauhBackgrounds::Setup()" << std::endl;
+	Logger(Logger::Verbose) << "Start." << std::endl;
 
 	Cat0JetLowMt = HConfig.GetTH1D(Name + "_Cat0JetLowMt", "Cat0JetLowMt", 125, 0., 250., "0JL: m_{T}/GeV");
 	Cat0JetLowMtSideband = HConfig.GetTH1D(Name + "_Cat0JetLowMtSideband", "Cat0JetLowMtSideband", 90, 70., 250., "0JL: m_{T}/GeV");
@@ -157,7 +158,7 @@ void HToTaumuTauhBackgrounds::Setup(){
 }
 
 void HToTaumuTauhBackgrounds::Configure(){
-	if (verbose) std::cout << "HToTaumuTauhBackgrounds::Configure()" << std::endl;
+	Logger(Logger::Verbose) << "Start.)" << std::endl;
 	HToTaumuTauh::Setup();
 	Setup();
 	Selection::ConfigureHistograms();
@@ -165,7 +166,7 @@ void HToTaumuTauhBackgrounds::Configure(){
 }
 
 void HToTaumuTauhBackgrounds::Store_ExtraDist(){
-	if (verbose) std::cout << "HToTaumuTauhBackgrounds::Store_ExtraDist()" << std::endl;
+	Logger(Logger::Verbose) << "Start." << std::endl;
 	HToTaumuTauh::Store_ExtraDist();
 
 	Extradist1d.push_back(&Cat0JetLowMt);
@@ -285,8 +286,7 @@ void HToTaumuTauhBackgrounds::Store_ExtraDist(){
 }
 
 void HToTaumuTauhBackgrounds::doEvent() {
-	if (verbose)
-		std::cout << "HToTaumuTauhBackgrounds::doEvent()" << std::endl;
+	Logger(Logger::Verbose) << "Start Event" << std::endl;
 	HToTaumuTauh::doEvent();
 
 	////// W+Jets Background estimation
@@ -465,8 +465,7 @@ void HToTaumuTauhBackgrounds::doEvent() {
 	//    C  |  D
 	//   ---------> relIso(mu)
 	//    A  |  B
-	if (verbose)
-		std::cout << "	QCD Background plots (ABCD)" << std::endl;
+	Logger(Logger::Debug) << "	QCD Background plots (ABCD)" << std::endl;
 	if (passedFullInclusiveNoTauNoMuNoCharge) {
 		// veto events with signal muon AND antiIsoMuon, as in these cases mT etc. are calculated using the signal muon
 		bool isA = pass.at(OppCharge) && passedObjects;
@@ -597,8 +596,7 @@ void HToTaumuTauhBackgrounds::doEvent() {
 		}
 	}
 
-	if (verbose)
-			std::cout << "	Mt in AntiIso region" << std::endl;
+	Logger(Logger::Debug) << "	Mt in AntiIso region" << std::endl;
 	if(!passedMu && hasRelaxedIsoTau && hasAntiIsoMuon){
 		if(pass.at(OppCharge)){
 			CatInclusiveMtAntiIso.at(t).Fill(value.at(MT), w);
@@ -625,10 +623,10 @@ void HToTaumuTauhBackgrounds::doEvent() {
 }
 
 void HToTaumuTauhBackgrounds::Finish() {
-	if (verbose) std::cout << "HToTaumuTauhBackgrounds::Finish()" << std::endl;
+	Logger(Logger::Verbose) << "HToTaumuTauhBackgrounds::Finish()" << std::endl;
 
 	if(wJetsBGSource != "MC"){
-		std::cout << "Please set wJetsBGSource = \"MC\" to obtain background yields. Abort...";
+		Logger(Logger::Error) << "Please set wJetsBGSource = \"MC\" to obtain background yields. Abort...";
 		return;
 	}
 

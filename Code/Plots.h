@@ -44,7 +44,6 @@ class Plots {
  static int plotLabel;
  bool doscale;
  bool doprofiles;
- bool verbose;
  bool dooneprofile;
 };
 #endif

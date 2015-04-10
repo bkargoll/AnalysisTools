@@ -6,11 +6,12 @@
  */
 
 #include "OneJetHigh.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 OneJetHigh::OneJetHigh(TString Name_, TString id_):
 	HToTaumuTauh(Name_,id_)
 {
-	std::cout << "Setting up the class OneJetHigh" << std::endl;
+	Logger(Logger::Info) << "Setting up the class OneJetHigh" << std::endl;
 	// run OneJetHigh category
 	categoryFlag = "OneJetHigh";
 
@@ -26,10 +27,10 @@ OneJetHigh::OneJetHigh(TString Name_, TString id_):
 
 OneJetHigh::~OneJetHigh() {
 	  for(unsigned int j=0; j<Npassed.size(); j++){
-	    std::cout << "OneJetHigh::~OneJetHigh Selection Summary before: "
+	    Logger(Logger::Info) << "Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
-	  std::cout << "OneJetHigh::~OneJetHigh()" << std::endl;
+	  Logger(Logger::Info) << "Done." << std::endl;
 }
 

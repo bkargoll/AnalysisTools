@@ -6,6 +6,7 @@
  */
 
 #include "Objects.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 namespace objects {
 
@@ -139,7 +140,7 @@ void MET::Init(Ntuple_Controller* const Ntp){
 	   hasSignificance_= true;
 	}
 	else
-		std::cout << "ERROR: MET type " << metType_ << " unknown!" << std::endl;
+		Logger(Logger::Error) << "MET type " << metType_ << " unknown!" << std::endl;
 }
 
 MET::~MET() {

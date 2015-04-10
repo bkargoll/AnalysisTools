@@ -25,6 +25,5 @@ class TauSolver {
 
   TVector3 Tau;
   TLorentzVector a1;
-  bool verbose;
 };
 #endif

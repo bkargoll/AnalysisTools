@@ -6,11 +6,12 @@
  */
 
 #include "VBFTight.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 VBFTight::VBFTight(TString Name_, TString id_):
 	HToTaumuTauh(Name_,id_)
 {
-	std::cout << "Setting up the class VBFTight" << std::endl;
+	Logger(Logger::Info) << "Setting up the class VBFTight" << std::endl;
 	// run VBFTight category
 	categoryFlag = "VBFTight";
 
@@ -26,10 +27,10 @@ VBFTight::VBFTight(TString Name_, TString id_):
 
 VBFTight::~VBFTight() {
 	  for(unsigned int j=0; j<Npassed.size(); j++){
-	    std::cout << "VBFTight::~VBFTight Selection Summary before: "
+	    Logger(Logger::Info) << "Selection Summary before: "
 		 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 		 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	  }
-	  std::cout << "VBFTight::~VBFTight()" << std::endl;
+	  Logger(Logger::Info) << "Done." << std::endl;
 }
 

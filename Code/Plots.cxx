@@ -1,4 +1,5 @@
 #include "Plots.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 #include "THStack.h"
 #include "TLegend.h"
@@ -16,7 +17,7 @@ TString Plots::File_;
 std::vector<TString> Plots::HistogramNames_;
 
 Plots::Plots() :
-		doscale(false), verbose(false), dooneprofile(false) {
+		doscale(false), dooneprofile(false) {
 
 }
 
@@ -56,7 +57,7 @@ void Plots::SaveHistograms(TString File, std::vector<TString> HistogramNames) {
 
 void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colour, std::vector<TString> legend) {
 
-	std::cout << "Plots::Plot1D" << std::endl;
+	Logger(Logger::Verbose) << "Create 1D plots" << std::endl;
 	TCanvas canv("canv", "canv", 200, 10, 750, 750);
 	canv.Update();
 	canv.Clear();
@@ -67,8 +68,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 
 	// loop over all plots
 	for (unsigned int i_plot = 0; i_plot < histo.size(); i_plot++) {
-		if (verbose)
-			std::cout << "Plots::Plot1D -> N(plots)= " << histo.size() << ", i_plot= " << i_plot << ", color.size()= " << colour.size() << ", N(histos)=  " << histo.at(i_plot).size() << std::endl;
+		Logger(Logger::Debug) << "N(plots)= " << histo.size() << ", i_plot= " << i_plot << ", color.size()= " << colour.size() << ", N(histos)=  " << histo.at(i_plot).size() << std::endl;
 
 		// check that histos and colors exist
 		if (histo.at(i_plot).size() > 0 && histo.at(i_plot).size() == colour.size()) {
@@ -108,8 +108,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 			histo.at(i_plot).at(0).SetMarkerColor(colour.at(0));
 
 			// === settings for individual histograms ===
-			if (verbose)
-				std::cout << "Setup plot " << histo.at(i_plot).at(0).GetTitle() << std::endl;
+			Logger(Logger::Debug) << "Setup plot " << histo.at(i_plot).at(0).GetTitle() << std::endl;
 
 			// set colours and legends of histograms
 			for (int i_hist = histo.at(i_plot).size() - 1; i_hist >= 0; i_hist--) {
@@ -161,8 +160,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 						Total.Add(&histo.at(i_plot).at(i_hist));
 					}
 					MC_Integral += histo.at(i_plot).at(i_hist).Integral();
-					if (verbose)
-						std::cout << histo.at(i_plot).at(i_hist).GetTitle() << " " << histo.at(i_plot).at(i_hist).Integral() << " i_hist= " << i_hist << std::endl;
+					Logger(Logger::Debug) << histo.at(i_plot).at(i_hist).GetTitle() << " " << histo.at(i_plot).at(i_hist).Integral() << " i_hist= " << i_hist << std::endl;
 				}
 			}
 
@@ -179,7 +177,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 			}
 
 			// === draw the plot ===
-			if (verbose) std::cout << "Start drawing ... " << std::endl;
+			Logger(Logger::Verbose) << "Start drawing ... " << std::endl;
 
 			// loop to create linear (linlog = 0) and logarithmic (linlog = 1) plots
 			for (unsigned int linlog = 0; linlog < 2; linlog++) {
@@ -223,8 +221,7 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 						latex.DrawLatex(0.225, 0.95, hTitle);
 					}
 
-					if (verbose)
-						std::cout << "Integrals of Data: " << histo.at(i_plot).at(0).Integral() << ", MC: " << Total.Integral() << std::endl;
+					Logger(Logger::Debug) << "Integrals of Data: " << histo.at(i_plot).at(0).Integral() << ", MC: " << Total.Integral() << std::endl;
 				}
 
 				// draw in case this is MC only
@@ -288,15 +285,15 @@ void Plots::Plot1D(std::vector<std::vector<TH1D> > histo, std::vector<int> colou
 			}
 		}
 		else{
-			std::cout << "ERROR: List of histograms empty OR the list of colors is not of equal length than the list of histograms" << std::endl;
+			Logger(Logger::Error) << "List of histograms empty OR the list of colors is not of equal length than the list of histograms" << std::endl;
 		}
 	}
-	std::cout << "Plot1D done " << std::endl;
+	Logger(Logger::Verbose) << "done. " << std::endl;
 }
 
 void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt, bool lt, std::vector<int> colour, std::vector<TString> legend) {
-	// plots significance: assumes the histograms have been normilized
-	std::cout << "Plots::Plot1DSignificance" << std::endl;
+	// plots significance: assumes the histograms have been normalized
+	Logger(Logger::Verbose) << "Start" << std::endl;
 	gStyle->SetPadTopMargin(0.05);
 	gStyle->SetPadBottomMargin(0.20);
 	gStyle->SetPadLeftMargin(0.175);
@@ -356,17 +353,16 @@ void Plots::Plot1DSignificance(std::vector<TH1D> histo, bool gt, bool lt, std::v
 			int bmax = histo.at(0).GetMaximumBin();
 			if (gt)
 				bmax += 1;
-			if (verbose)
-				std::cout << "Opt. Sig. " << EPSName << " Sig: " << histo.at(0).GetMaximum() << " bin: " << bmax << std::endl;
+			Logger(Logger::Debug) << "Opt. Sig. " << EPSName << " Sig: " << histo.at(0).GetMaximum() << " bin: " << bmax << std::endl;
 		}
 	}
 
-	std::cout << "Plots::Plot1DSignificance done" << std::endl;
+	Logger(Logger::Verbose) << "done" << std::endl;
 }
 
 void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt, bool lt, std::vector<int> colour, std::vector<TString> legend) {
 	// plots significance: assumes the histograms have been normilized
-	std::cout << "Plots::Plot1Dsigtobkg" << std::endl;
+	Logger(Logger::Verbose) << "Start" << std::endl;
 	gStyle->SetPadTopMargin(0.05);
 	gStyle->SetPadBottomMargin(0.20);
 	gStyle->SetPadLeftMargin(0.175);
@@ -450,11 +446,11 @@ void Plots::Plot1Dsigtobkg(std::vector<TH1D> histo, bool gt, bool lt, std::vecto
 			c.Print(EPSName);
 		}
 	}
-	std::cout << "Plots::Plot1Dsigtobkg done" << std::endl;
+	Logger(Logger::Verbose) << "Plots::Plot1Dsigtobkg done" << std::endl;
 }
 
 void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, std::vector<int> colour, std::vector<TString> legend) {
-	std::cout << "Plots::Plot1D_DataMC_Compare Start" << std::endl;
+	Logger(Logger::Verbose) << "Start" << std::endl;
 	gStyle->SetPadTopMargin(0.05);
 	gStyle->SetPadBottomMargin(0.20);
 	gStyle->SetPadLeftMargin(0.175);
@@ -470,8 +466,7 @@ void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, std::vector<int> colo
 			}
 		}
 		if (doscale) {
-			if (verbose)
-				std::cout << "Comparison Integral Scale:" << histo.at(0).Integral() << " " << histo.at(1).Integral() << std::endl;
+			Logger(Logger::Debug) << "Comparison Integral Scale:" << histo.at(0).Integral() << " " << histo.at(1).Integral() << std::endl;
 			histo.at(1).Scale(histo.at(0).Integral() / histo.at(1).Integral());
 		}
 		for (int b = 1; b <= histo.at(0).GetNbinsX(); b++) {
@@ -542,26 +537,24 @@ void Plots::Plot1D_DataMC_Compare(std::vector<TH1D> histo, std::vector<int> colo
 		}
 
 	}
-	std::cout << "Plots::Plot1D_DataMC_Compare Finished" << std::endl;
+	Logger(Logger::Verbose) << "Finished" << std::endl;
 }
 
 void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector<TString> legend) {
-	std::cout << "Plots::Plot2D" << std::endl;
+	Logger(Logger::Verbose) << "Create 2D plots" << std::endl;
 	gStyle->SetPadTopMargin(0.10);
 	gStyle->SetPadBottomMargin(0.22);
 	gStyle->SetPadLeftMargin(0.180);
 	gStyle->SetPadRightMargin(0.175);
 //	gStyle->SetPalette(53,0);
-	if (verbose)
-		std::cout << "Starting Plot2D" << histo.size() << " " << colour.size() << " " << legend.size() << std::endl;
+	Logger(Logger::Debug) << "Starting Plot2D" << histo.size() << " " << colour.size() << " " << legend.size() << std::endl;
 	if (histo.size() > 0) {
 		std::vector<int> types;
 		TString LegType = "";
 		double integral = 0;
 		for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
 			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
-			if (verbose)
-				std::cout << "Legend " << legend.at(i_hist) << " Integral " << histo.at(i_hist).Integral() << std::endl;
+			Logger(Logger::Debug) << "Legend " << legend.at(i_hist) << " Integral " << histo.at(i_hist).Integral() << std::endl;
 			if (LegType != legend.at(i_hist)) {
 				LegType = legend.at(i_hist);
 				integral = 0;
@@ -571,8 +564,7 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 				}
 				if (integral != 0) {
 					types.push_back((i_hist != 0) ? i_hist + 1 : i_hist); // +1 as later on the TotalMC histo is added
-					if (verbose)
-						std::cout << "adding one type to types list" << std::endl;
+					Logger(Logger::Debug) << "adding one type to types list" << std::endl;
 				}
 				integral = 0;
 			}
@@ -595,30 +587,24 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
 			histo.at(1).Add(&histo.at(i_hist));
 		}
-		if (verbose)
-			std::cout << "n(types) = " << types.size() << std::endl;
+		Logger(Logger::Debug) << "n(types) = " << types.size() << std::endl;
 		LegType = "null";
 
 		for (unsigned int i_hist = 0; i_hist < histo.size(); i_hist++) {
 			if( colour.at(i_hist) == -999 ) continue; // don't draw if colour is set to -999
-			if (verbose)
-				std::cout << "histo i" << i_hist << std::endl;
+			Logger(Logger::Debug) << "histo i" << i_hist << std::endl;
 			if (LegType != legend.at(i_hist)) {
 				LegType = legend.at(i_hist);
 				for (unsigned int j = i_hist + 1; j < histo.size(); j++) {
-					if (verbose)
-						std::cout << "histo j" << j << std::endl;
+					Logger(Logger::Debug) << "histo j" << j << std::endl;
 					if (legend.at(j) == legend.at(i_hist)) {
 						histo.at(i_hist).Add(&histo.at(j));
-						if (verbose)
-							std::cout << "Added histo " << j << " to histo " << i_hist << std::endl;
+						Logger(Logger::Debug) << "Added histo " << j << " to histo " << i_hist << std::endl;
 					}
 				}
-				if (verbose)
-					std::cout << "legend " << i_hist << " " << histo.at(i_hist).Integral() << std::endl;
+				Logger(Logger::Debug) << "legend " << i_hist << " " << histo.at(i_hist).Integral() << std::endl;
 				if (histo.at(i_hist).Integral() != 0) {
-					if (verbose)
-						std::cout << "legend " << i_hist << histo.at(i_hist).Integral() << std::endl;
+					Logger(Logger::Debug) << "legend " << i_hist << histo.at(i_hist).Integral() << std::endl;
 				}
 			}
 		}
@@ -626,34 +612,28 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 		// loop to allow splitting of TH2D histograms on multiple canvases
 		unsigned int nPlotted(0);
 		while (nPlotted < types.size()) {
-			if (verbose)
-				std::cout << "nPlotted = " << nPlotted << ", ntypes = " << types.size() << std::endl;
+			Logger(Logger::Debug) << "nPlotted = " << nPlotted << ", ntypes = " << types.size() << std::endl;
 			// split canvas for TH2D histograms
 			TCanvas c("c", "c", 200, 10, 750, 750);
 			c.Clear();
 
 			if (types.size() - nPlotted == 1) {
-				if (verbose)
-					std::cout << "Canvas: Divide(1,1)" << std::endl;
+				Logger(Logger::Debug) << "Canvas: Divide(1,1)" << std::endl;
 				c.Divide(1, 1);
 			} else if (types.size() - nPlotted == 2 || types.size() - nPlotted == 3 || types.size() - nPlotted == 4) {
-				if (verbose)
-					std::cout << "Canvas: Divide(2,2)" << std::endl;
+				Logger(Logger::Debug) << "Canvas: Divide(2,2)" << std::endl;
 				c.Divide(2, 2);
 			} else {
-				if (verbose)
-					std::cout << "Canvas: Divide(2,3)" << std::endl;
+				Logger(Logger::Debug) << "Canvas: Divide(2,3)" << std::endl;
 				// plot only up to 6 TH2D in one canvas
 				c.Divide(2, 3);
 			}
 
 			for (unsigned int i = nPlotted; (i < nPlotted + 6) && (i < types.size()); i++) {
 				int type = types.at(i);
-				if (verbose)
-					std::cout << "loop: " << i << ", type = " << types.at(i) << " legend.at(type) = " << legend.at(type) << std::endl;
+				Logger(Logger::Debug) << "loop: " << i << ", type = " << types.at(i) << " legend.at(type) = " << legend.at(type) << std::endl;
 				c.cd(i - nPlotted + 1);
-				if (verbose)
-					std::cout << "Draw histogram " << type << " into subcanvas " << i - nPlotted + 1 << " with Integral = " << histo.at(type).Integral() << std::endl;
+				Logger(Logger::Debug) << "Draw histogram " << type << " into subcanvas " << i - nPlotted + 1 << " with Integral = " << histo.at(type).Integral() << std::endl;
 				histo.at(type).Draw("colz");
 				c.Update();
 				TLatex l;
@@ -679,7 +659,7 @@ void Plots::Plot2D(std::vector<TH2D> histo, std::vector<int> colour, std::vector
 }
 
 void Plots::Plot3D(std::vector<TH3F> histo, std::vector<int> colour, std::vector<TString> legend) {
-	std::cout << "Plots::Plot3D" << std::endl;
+	Logger(Logger::Verbose) << "Create 3D plots" << std::endl;
 	gStyle->SetPadTopMargin(0.10);
 	gStyle->SetPadBottomMargin(0.22);
 	gStyle->SetPadLeftMargin(0.180);
@@ -689,8 +669,7 @@ void Plots::Plot3D(std::vector<TH3F> histo, std::vector<int> colour, std::vector
 
 	TCanvas c("c", "c", 200, 10, 750, 750);
 	if (histo.size() > 0) {
-		if (verbose)
-			std::cout << "Starting Plot3D" << histo.size() << " " << colour.size() << " " << legend.size() << std::endl;
+		Logger(Logger::Debug) << "Starting Plot3D" << histo.size() << " " << colour.size() << " " << legend.size() << std::endl;
 		c.Clear();
 		c.Divide(2, 2);
 		TLegend leg(0.1, 0.4, 0.9, 0.9);
@@ -744,13 +723,12 @@ void Plots::Plot3D(std::vector<TH3F> histo, std::vector<int> colour, std::vector
 		EPSName += name;
 		EPSName += ".eps";
 		c.Print(EPSName);
-		if (verbose)
-			std::cout << "Histo 3D " << EPSName << std::endl;
+		Logger(Logger::Debug) << "Histo 3D " << EPSName << std::endl;
 	}
 }
 
 void Plots::CMSStyle1() {
-	std::cout << "Configuring Plots::CMSStyle1()" << std::endl;
+	Logger(Logger::Info) << "Configuring Plots::CMSStyle1()" << std::endl;
 	// use plain black on white colors
 	int icol = 0; // WHITE
 	gStyle->SetFrameBorderMode(icol);
@@ -821,7 +799,7 @@ void Plots::CMSStyle1() {
 }
 
 void Plots::CMSStyle2() {
-	std::cout << "Configuring Plots::CMSStyle2()" << std::endl;
+	Logger(Logger::Info) << "Configuring Plots::CMSStyle2()" << std::endl;
 	// use plain black on white colors
 	int icol = 0; // WHITE
 	gStyle->SetFrameBorderMode(icol);

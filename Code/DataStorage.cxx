@@ -1,3 +1,4 @@
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 #include "DataStorage.h"
 #include "Parameters.h"
 #include <sys/types.h>
@@ -17,7 +18,7 @@ DataStorage::DataStorage(){
 DataStorage::~DataStorage(){
 	for (unsigned int i_file = 0; i_file < filesToDelete.size(); i_file++){
 		TString cmd = "rm " + filesToDelete.at(i_file);
-		std::cout << "cmd: " << cmd << std::endl;
+		Logger(Logger::Info) << "calling shell command: " << cmd << std::endl;
 		system(cmd.Data());
 	}
 }
@@ -34,7 +35,7 @@ int DataStorage::GetFile(TString key){
   for(unsigned int i=0;i<Files.size();i++){
     TString inFile=inputFileName; inFile+=i; inFile+=".root";
     TString cmd1= "srmcp srm://" + gridsite + ":8443/" + Files.at(i) + " file:////" + mydir + "/" + inFile;
-    std::cout << "cmd: " << cmd1 << std::endl;
+    Logger(Logger::Info) << "calling shell command: "<< cmd1 << std::endl;
     system(cmd1.Data());
     filesToDelete.push_back(mydir + "/" + inFile);
     ifstream f(inFile);
@@ -58,12 +59,12 @@ void DataStorage::StoreFile(TString File, TString savedFile){
   // create output folder, if neccessary
   TString command;
   command = "srmls -count=1 " + outpath;
-  std::cout << "Calling: " << command << std::endl;
+  Logger(Logger::Info) << "calling shell command: " << command << std::endl;
   int isDir =  system( (command).Data() );
-  if (isDir != 0)	{command = "srmmkdir " + outpath; std::cout << "Calling: " << command << std::endl; system( (command).Data() ); }
+  if (isDir != 0)	{command = "srmmkdir " + outpath; Logger(Logger::Info) << "calling shell command: " << command << std::endl; system( (command).Data() ); }
 
   TString cmd1 = "srmcp file:////" + mydir + "/" + File + outfile;
-  std::cout << "calling command: " << cmd1 << std::endl;
+  Logger(Logger::Info) << "calling shell command: " << cmd1 << std::endl;
   system(cmd1.Data());
 }
 

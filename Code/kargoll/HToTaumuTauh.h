@@ -248,8 +248,6 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> SVFitTimeReal;
   std::vector<TH1D> SVFitTimeCPU;
 
-  unsigned verbose;
-
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
   double cTau_pt, cTau_eta, cTau_rawIso, cMuTau_dR, cTau_dRHltMatch;

@@ -6,10 +6,10 @@
 #include <iostream>
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 #include "SVfitProvider.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   Selection(Name_,id_),
-  verbose(0),
   cMu_dxy(0.045),
   cMu_dz(0.2),
   cMu_relIso(0.1),
@@ -33,7 +33,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   cCat_splitTauPt(45.0),
   cJetClean_dR(0.5)
 {
-	if (verbose) std::cout << "HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_)" << std::endl;
+	Logger(Logger::Verbose) << "Start." << std::endl;
 	TString trigNames[] = {"HLT_IsoMu18_eta2p1_LooseIsoPFTau20","HLT_IsoMu17_eta2p1_LooseIsoPFTau20"};
 	std::vector<TString> temp (trigNames, trigNames + sizeof(trigNames) / sizeof(TString) );
 	cTriggerNames = temp;
@@ -106,9 +106,9 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 }
 
 HToTaumuTauh::~HToTaumuTauh(){
-	if (verbose) std::cout << "HToTaumuTauh::~HToTaumuTauh()" << std::endl;
+	Logger(Logger::Verbose) << "start destructing" << std::endl;
 	for(unsigned int j=0; j<Npassed.size(); j++){
-	std::cout << "HToTaumuTauh::~HToTaumuTauh Selection Summary before: "
+	Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
 	 << Npassed.at(j).GetBinContent(NCuts+1) << " +/- " << Npassed.at(j).GetBinError(NCuts) << std::endl;
 	}
@@ -118,11 +118,11 @@ HToTaumuTauh::~HToTaumuTauh(){
 	}
 	delete clock;
 
-	std::cout << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
+	Logger(Logger::Info) << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
 }
 
 void  HToTaumuTauh::Setup(){
-  if (verbose) std::cout << "HToTaumuTauh::Setup()" << std::endl;
+  Logger(Logger::Verbose) << "HToTaumuTauh::Setup()" << std::endl;
   // Setup Cut Values
   for(int i=0; i<NCuts;i++){
     cut.push_back(0);
@@ -523,7 +523,7 @@ void  HToTaumuTauh::Setup(){
   else if (categoryFlag == "Inclusive") configure_NoCategory();
   else if (categoryFlag == "NoCategory")	configure_NoCategory();
   else{
-	  std::cout << "WARNING: category " << categoryFlag << " does not exist. Using NoCategory instead." << std::endl;
+	  Logger(Logger::Warning) << "category " << categoryFlag << " does not exist. Using NoCategory instead." << std::endl;
 	  configure_NoCategory();
   }
 
@@ -533,7 +533,7 @@ void  HToTaumuTauh::Setup(){
 }
 
 void HToTaumuTauh::Configure(){
-  if (verbose) std::cout << "HToTaumuTauh::Configure()" << std::endl;
+  Logger(Logger::Verbose) << "Start." << std::endl;
   Setup();
   Selection::ConfigureHistograms();
   HConfig.GetHistoInfo(types, CrossSectionandAcceptance, legend, colour);
@@ -541,7 +541,7 @@ void HToTaumuTauh::Configure(){
 
 
 void  HToTaumuTauh::Store_ExtraDist(){
- if (verbose) std::cout << "HToTaumuTauh::Store_ExtraDist()" << std::endl;
+ Logger(Logger::Verbose) << "Start." << std::endl;
  Extradist1d.push_back(&NCatFired);
  Extradist1d.push_back(&CatFired);
 
@@ -688,8 +688,8 @@ void  HToTaumuTauh::Store_ExtraDist(){
 }
 
 void  HToTaumuTauh::doEvent(){
-  if (verbose) std::cout << "HToTaumuTauh::doEvent() >>>>>>>>>>>>>>>>" << std::endl;
-  if (verbose) std::cout << "	Category: " << categoryFlag << std::endl;
+  Logger(Logger::Verbose) << ">>>>>>>>>>>>>>>>" << std::endl;
+  Logger(Logger::Verbose) << "\tCategory: " << categoryFlag << std::endl;
 
   clock->Reset(); // reset all benchmark clocks
 
@@ -707,8 +707,7 @@ void  HToTaumuTauh::doEvent(){
 
   int64_t id(Ntp->GetMCID());
   int idStripped(Ntp->GetStrippedMCID());
-  //std::cout << "ID before = " << id << std::endl;
-  if(!HConfig.GetHisto(Ntp->isData(),id,t)){ std::cout << "failed to find id" <<std::endl; return;}
+  if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Warning) << "failed to find id" <<std::endl; return;}
   
   double wobs=1;
   if(!Ntp->isData() && Ntp->GetMCID() != DataMCType::DY_mutau_embedded){
@@ -727,7 +726,7 @@ void  HToTaumuTauh::doEvent(){
   // Apply Selection
 
   // Vertex
-  if (verbose) std::cout << "	Cut: Vertex" << std::endl;
+  Logger(Logger::Debug) << "Cut: Vertex" << std::endl;
   unsigned int nGoodVtx=0;
   for(unsigned int i_vtx=0;i_vtx<Ntp->NVtx();i_vtx++){
     if(Ntp->isGoodVtx(i_vtx)){
@@ -740,7 +739,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
   
   // Trigger
-  if (verbose) std::cout << "	Cut: Trigger" << std::endl;
+  Logger(Logger::Debug) << "Cut: Trigger" << std::endl;
   value.at(TriggerOk) = -1;
   for (std::vector<TString>::iterator it_trig = cTriggerNames.begin(); it_trig != cTriggerNames.end(); ++it_trig){
 	  if(Ntp->TriggerAccept(*it_trig)){
@@ -755,7 +754,7 @@ void  HToTaumuTauh::doEvent(){
   if (idStripped == DataMCType::DY_mutau_embedded) pass.at(TriggerOk) = true;
   
   // Muon cuts
-  if (verbose) std::cout << "	Cut: Muon ID" << std::endl;
+  Logger(Logger::Debug) << "Cut: Muon ID" << std::endl;
   std::vector<int> selectedMuonsId;
   selectedMuonsId.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -766,7 +765,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NMuId)=selectedMuonsId.size();
   pass.at(NMuId)=(value.at(NMuId)>=cut.at(NMuId));
 
-  if (verbose) std::cout << "	Cut: Muon Kinematics" << std::endl;
+  Logger(Logger::Debug) << "Cut: Muon Kinematics" << std::endl;
   std::vector<int> selectedMuons;	// full selection: ID and Kinematics
   selectedMuons.clear();
   for(std::vector<int>::iterator it_mu = selectedMuonsId.begin(); it_mu != selectedMuonsId.end(); ++it_mu){
@@ -778,7 +777,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(NMuKin)=(value.at(NMuKin)>=cut.at(NMuKin));
 
   // muons for QCD background method
-  if (verbose) std::cout << "	QCD Muons" << std::endl;
+  Logger(Logger::Debug) << "QCD Muons" << std::endl;
   std::vector<int> antiIsoMuons;
   antiIsoMuons.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -788,13 +787,13 @@ void  HToTaumuTauh::doEvent(){
   }
   hasAntiIsoMuon = (antiIsoMuons.size() > 0);
 
-  if (verbose) std::cout << "	select Muon" << std::endl;
+  Logger(Logger::Debug) << "select Muon" << std::endl;
   if (selectedMuons.size() > 0)
 	  selMuon = selectedMuons.at(0); // use signal muon
   if (selectedMuons.size() == 0 && hasAntiIsoMuon)
 	  selMuon = antiIsoMuons.at(0); // for background methods: use anti-iso muon
 
-  if (verbose) std::cout << "	Cut: Di-muon Veto" << std::endl;
+  Logger(Logger::Debug) << "Cut: Di-muon Veto" << std::endl;
   std::vector<int> diMuonVetoMuonsPositive;	// muons selected for the dimuon veto
   diMuonVetoMuonsPositive.clear();
   std::vector<int> diMuonVetoMuonsNegative;	// muons selected for the dimuon veto
@@ -830,7 +829,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(DiMuonVeto) = (value.at(DiMuonVeto) < cut.at(DiMuonVeto));
 
   // Tau cuts
-  if (verbose) std::cout << "	Cut: Tau ID" << std::endl;
+  Logger(Logger::Debug) << "Cut: Tau ID" << std::endl;
   std::vector<int> selectedTausId;
   selectedTausId.clear();
   for(unsigned i_tau=0; i_tau < Ntp->NPFTaus(); i_tau++){
@@ -841,7 +840,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NTauId)=selectedTausId.size();
   pass.at(NTauId)=(value.at(NTauId)>=cut.at(NTauId));
 
-  if (verbose) std::cout << "	Cut: Tau Iso" << std::endl;
+  Logger(Logger::Debug) << "Cut: Tau Iso" << std::endl;
   std::vector<int> selectedTausIso;
   selectedTausIso.clear();
   for(std::vector<int>::iterator it_tau = selectedTausId.begin(); it_tau != selectedTausId.end(); ++it_tau){
@@ -852,7 +851,7 @@ void  HToTaumuTauh::doEvent(){
   value.at(NTauIso)=selectedTausIso.size();
   pass.at(NTauIso)=(value.at(NTauIso)>=cut.at(NTauIso));
 
-  if (verbose) std::cout << "	Cut: Tau Kinematics" << std::endl;
+  Logger(Logger::Debug) << "Cut: Tau Kinematics" << std::endl;
   std::vector<int> selectedTaus;
   selectedTaus.clear();
   for(std::vector<int>::iterator it_tau = selectedTausIso.begin(); it_tau != selectedTausIso.end(); ++it_tau){
@@ -864,7 +863,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(NTauKin)=(value.at(NTauKin)>=cut.at(NTauKin));
 
   // taus for QCD background method
-  if (verbose) std::cout << "	QCD Taus" << std::endl;
+  Logger(Logger::Debug) << "QCD Taus" << std::endl;
   std::vector<int> relaxedIsoTaus;
   relaxedIsoTaus.clear();
   for(unsigned i_tau=0; i_tau < Ntp->NPFTaus(); i_tau++){
@@ -874,14 +873,14 @@ void  HToTaumuTauh::doEvent(){
   }
   hasRelaxedIsoTau = (relaxedIsoTaus.size() > 0);
 
-  if (verbose) std::cout << "	select Tau" << std::endl;
+  Logger(Logger::Debug) << "select Tau" << std::endl;
   if(selectedTaus.size() > 0)
 	  selTau = selectedTaus.at(0); // use signal tau
   if(selectedTaus.size() == 0 && hasRelaxedIsoTau)
 	  selTau = relaxedIsoTaus.at(0); // relaxed isolation tau
 
   // Tri-lepton veto
-  if (verbose) std::cout << "	Cut: Tri-lepton veto" << std::endl;
+  Logger(Logger::Debug) << "Cut: Tri-lepton veto" << std::endl;
   std::vector<int> triLepVetoMuons;
   triLepVetoMuons.clear();
   for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -900,7 +899,7 @@ void  HToTaumuTauh::doEvent(){
   pass.at(TriLeptonVeto) = (value.at(TriLeptonVeto) <= cut.at(TriLeptonVeto));
 
   // Opposite charge
-  if (verbose) std::cout << "	Cut: Opposite Charge" << std::endl;
+  Logger(Logger::Debug) << "Cut: Opposite Charge" << std::endl;
   if (selMuon != -1 && selTau != -1){
 	  value.at(OppCharge) = Ntp->Muon_Charge(selMuon) + Ntp->PFTau_Charge(selTau);
   }
@@ -914,7 +913,7 @@ void  HToTaumuTauh::doEvent(){
 	  pass.at(OppCharge) = (value.at(OppCharge) == cut.at(OppCharge));
 
   // Transverse mass
-  if (verbose) std::cout << "	Cut: transverse mass" << std::endl;
+  Logger(Logger::Debug) << "Cut: transverse mass" << std::endl;
   if(selMuon == -1){ // no good muon in event: set MT to small dummy value -10 -> pass cut
 	  value.at(MT) = -10.0;
   }
@@ -931,7 +930,7 @@ void  HToTaumuTauh::doEvent(){
 	  pass.at(MT) = (value.at(MT) < cut.at(MT));
 
   // sort jets by corrected pt
-  if (verbose) std::cout << "	select Jets" << std::endl;
+  Logger(Logger::Debug) << "select Jets" << std::endl;
   std::vector<int> sortedPFJets = Ntp->sortDefaultObjectsByPt("Jets");
   // select jets for categories
   // PFJet and bjet collections can have mutual elements!
@@ -974,12 +973,12 @@ void  HToTaumuTauh::doEvent(){
   // QCD background method
   bool isQCDShapeEvent = false;
   if (qcdShapeFromData && Ntp->isData() && idStripped!=DataMCType::DY_mutau_embedded){
-	  if (verbose) std::cout << "	QCD shape" << std::endl;
+	  Logger(Logger::Debug) << "QCD shape" << std::endl;
 	  // use anti-iso muons and SS for QCD shape
 	  if( !passedMu && hasAntiIsoMuon && !pass.at(OppCharge)){
 		 // use this data event for QCD shape
 		 isQCDShapeEvent = true;
-		 if (!HConfig.GetHisto(false, DataMCType::QCD, t)) {std::cout << "ERROR: failed to find id " << DataMCType::QCD << std::endl; return;}
+		 if (!HConfig.GetHisto(false, DataMCType::QCD, t)) {Logger(Logger::Error) << "failed to find id " << DataMCType::QCD << std::endl; return;}
 	  	 pass.at(OppCharge) = true;
 	  	 pass.at(NMuId) = true;
 	  	 pass.at(NMuKin) = true;
@@ -997,7 +996,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // b-Jet veto
-  if (verbose) std::cout << "	Cut: b-jet veto" << std::endl;
+  Logger(Logger::Debug) << "Cut: b-jet veto" << std::endl;
   value.at(BJetVeto) = selectedBJets.size();
   pass.at(BJetVeto) = (value.at(BJetVeto) <= cut.at(BJetVeto));
 
@@ -1008,7 +1007,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // calculate pt of higgs candidate
-  if (verbose) std::cout << "	calculate Higgs pT" << std::endl;
+  Logger(Logger::Debug) << "calculate Higgs pT" << std::endl;
   double higgsPt = -10;
   double higgsPhi = -10;
   if (selMuon != -1 && selTau != -1){
@@ -1021,7 +1020,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   // calculate jet-related variables used by categories
-  if (verbose) std::cout << "	calculate VBF Jet variables" << std::endl;
+  Logger(Logger::Debug) << "calculate VBF Jet variables" << std::endl;
   unsigned nJets = jetsForCategorization.size();
 
   if (nJets >= 2){
@@ -1099,7 +1098,7 @@ void  HToTaumuTauh::doEvent(){
   setStatusBooleans();
 
   // remove some cuts for smoother WJet shape
-  if (verbose) std::cout << "	WJet shape" << std::endl;
+  Logger(Logger::Debug) << "WJet shape" << std::endl;
   isWJetMC = (idStripped >= DataMCType::W_lnu) && (idStripped <= DataMCType::W_taunu);
   bool isWJetShapeEvent =  (wJetsBGSource == "Data") && isWJetMC; // overwrite pass-vector with relaxed categories (for WJets shape) only if wanted
   if (isWJetShapeEvent) {
@@ -1118,7 +1117,7 @@ void  HToTaumuTauh::doEvent(){
   setStatusBooleans();
 
   // run categories
-  if (verbose) std::cout << "	run Categories" << std::endl;
+  Logger(Logger::Debug) << "run Categories" << std::endl;
   passed_VBFTight		= category_VBFTight(nJets, selJetdeta, selNjetingap, selMjj, higgsPt);
   passed_VBFLoose		= category_VBFLoose(nJets, selJetdeta, selNjetingap, selMjj, passed_VBFTight);
   passed_VBF = passed_VBFTight || passed_VBFLoose;
@@ -1150,7 +1149,7 @@ void  HToTaumuTauh::doEvent(){
   if (passedFullInclusiveSel) {NCatFired.at(t).Fill(nCat, w);}
 
   if (passedFullInclusiveSel && nCat == 0){
-	  std::cout << "                       Here comes a bad event" << std::endl;
+	  Logger(Logger::Warning) << "Here comes a bad event:" << std::endl;
 	  const char* format = "%12s : %5s %5s %5s %5s %5s %5s %5s %5s \n";
 	  printf(format,"Event", "NJets", "dEta", "CJV", "mjj", "pT(H)", "isVBT", "isVBF", "pT(t)");
 	  format = "%12i : %5i %5.2f %5i %5.2f %5.2f %5i %5i %5,2f \n";
@@ -1158,7 +1157,7 @@ void  HToTaumuTauh::doEvent(){
   }
 
   if (passedFullInclusiveSel && !(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
-		  std::cout << "************* NO CATEGORY PASSED! ****************" << std::endl;
+		  Logger(Logger::Warning) << "************* NO CATEGORY PASSED! ****************" << std::endl;
 
   bool status=AnalysisCuts(t,w,wobs); // true only if full selection passed
 
@@ -1166,7 +1165,7 @@ void  HToTaumuTauh::doEvent(){
   // Add plots
   ///////////////////////////////////////////////////////////
 
-  if (verbose) std::cout << "	Fill Plots" << std::endl;
+  Logger(Logger::Debug) << "Fill Plots" << std::endl;
   //////// fill most plots after full selection
   if (status){
 	  // Vertex plots
@@ -1237,16 +1236,16 @@ void  HToTaumuTauh::doEvent(){
 	  // Mu-Tau Mass
 	  visibleMass.at(t).Fill( (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
 	  // SVFit
-	  std::cout << "        RUN SVFIT" << std::endl;
-	  printf ("input:  pt = %f, eta = %f, phi = %f, mass = %f, decayMode = %d\n", Ntp->PFTau_p4(selTau).Pt(), Ntp->PFTau_p4(selTau).Eta(), Ntp->PFTau_p4(selTau).Phi(), Ntp->PFTau_p4(selTau).M(), Ntp->PFTau_hpsDecayMode(selTau));
+	  //Logger(Logger::Info) << "        RUN SVFIT" << std::endl;
+	  //printf ("input:  pt = %f, eta = %f, phi = %f, mass = %f, decayMode = %d\n", Ntp->PFTau_p4(selTau).Pt(), Ntp->PFTau_p4(selTau).Eta(), Ntp->PFTau_p4(selTau).Phi(), Ntp->PFTau_p4(selTau).M(), Ntp->PFTau_hpsDecayMode(selTau));
 
 	  clock->Start("SVFit");
 	  // get SVFit result from cache
 	  SVFitObject *svfObj = getSVFitResult();
 	  clock->Stop("SVFit");
 
-	  std::cout << "   m = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pT = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() << std::endl;
-	  std::cout << "   SVFit calculation took " << clock->GetRealTime("SVFit") <<  " s (real), " << clock->GetCpuTime("SVFit") << " s (CPU)" << std::endl;
+	  //Logger(Logger::Info) << "   m = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pT = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() << std::endl;
+	  //Logger(Logger::Info) << "   SVFit calculation took " << clock->GetRealTime("SVFit") <<  " s (real), " << clock->GetCpuTime("SVFit") << " s (CPU)" << std::endl;
 
 	  // shape distributions for final fit
 	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
@@ -1415,12 +1414,11 @@ void  HToTaumuTauh::doEvent(){
 
 
 void HToTaumuTauh::Finish() {
-	if (verbose)
-		std::cout << "HToTaumuTauh::Finish()" << std::endl;
+	Logger(Logger::Verbose) << "Start." << std::endl;
 
 	if (wJetsBGSource == "Data") {
 		if (mode == RECONSTRUCT) { // only apply data-driven numbers on "combine" level
-			std::cout << "WJet BG: Using data driven yield method." << std::endl;
+			Logger(Logger::Info) << "WJet BG: Using data driven yield method." << std::endl;
 
 			double sumSelEvts = 0;
 			for (unsigned id = 20; id < 24; id++) {
@@ -1432,7 +1430,7 @@ void HToTaumuTauh::Finish() {
 				if (oldXSec != -1) {
 					// Histo.txt has WJet xsec unequal -1, so set it to -1 to avoid scaling by framework
 					if (!HConfig.SetCrossSection(id, -1))
-						std::cout << "WARNING: Could not change cross section for id " << id << std::endl;
+						Logger(Logger::Warning) << "Could not change cross section for id " << id << std::endl;
 					printf("WJet process %i had xsec = %6.1f. Setting to %6.1f for data-driven WJet yield.\n", id, oldXSec, HConfig.GetCrossSection(id));
 				}
 				sumSelEvts += Npassed.at(type).GetBinContent(NCuts+1);
@@ -1451,18 +1449,19 @@ void HToTaumuTauh::Finish() {
 			}
 		}
 		else
-			std::cout << "WJet BG: Data driven will be used at Combine stage, but not in this individual set." << std::endl;
+			Logger(Logger::Info) << "WJet BG: Data driven will be used at Combine stage, but not in this individual set." << std::endl;
 	}
-	else if (wJetsBGSource == "MC")
-		std::cout << "WJet BG: Using MC." << std::endl;
+	else if (wJetsBGSource == "MC"){
+		Logger(Logger::Info) << "WJet BG: Using MC." << std::endl;
+	}
 	else
-		std::cout << "WJet BG: Please specify \"MC\" or \"Data\". Using MC for this run..." << std::endl;
+		Logger(Logger::Warning) << "WJet BG: Please specify \"MC\" or \"Data\". Using MC for this run..." << std::endl;
 
 	if(qcdShapeFromData){
 		if (mode == RECONSTRUCT) { // only apply data-driven numbers on "combine" level
-			std::cout << "QCD BG: Using data driven estimation." << std::endl;
+			Logger(Logger::Info) << "QCD BG: Using data driven estimation." << std::endl;
 			if(!HConfig.hasID(DataMCType::QCD)){
-				std::cout << "QCD BG: Please add QCD to your Histo.txt. Abort." << std::endl;
+				Logger(Logger::Error) << "QCD BG: Please add QCD to your Histo.txt. Abort." << std::endl;
 			}
 			else{
 				double rawQcdShapeEvents = Npassed.at(HConfig.GetType(DataMCType::QCD)).GetBinContent(NCuts+1);
@@ -1483,16 +1482,16 @@ void HToTaumuTauh::Finish() {
 			}
 		}
 		else
-			std::cout << "QCD BG: Data driven will be used at Combine stage, but not in this individual set." << std::endl;
+			Logger(Logger::Info) << "QCD BG: Data driven will be used at Combine stage, but not in this individual set." << std::endl;
 	}
 	else
-		std::cout << "QCD BG: No data driven QCD background available. Histos will be empty." << std::endl;
+		Logger(Logger::Warning) << "QCD BG: No data driven QCD background available. Histos will be empty." << std::endl;
 
 	if(useEmbedding){
 		if (mode == RECONSTRUCT) { // only apply data-driven numbers on "combine" level
-			std::cout << "Using embedding for DY." << std::endl;
+			Logger(Logger::Info) << "Using embedding for DY." << std::endl;
 			if(!HConfig.hasID(DataMCType::DY_mutau_embedded) || !HConfig.hasID(DataMCType::DY_tautau)){
-				std::cout << "Embedding: Please add DY_mutau_embedded and DY_tautau to your Histo.txt. Abort." << std::endl;
+				Logger(Logger::Error) << "Embedding: Please add DY_mutau_embedded and DY_tautau to your Histo.txt. Abort." << std::endl;
 			}
 			else{
 				// read in skimsummary
@@ -1513,10 +1512,11 @@ void HToTaumuTauh::Finish() {
 				ScaleAllHistOfType(HConfig.GetType(DataMCType::DY_mutau_embedded), dyEmbScale);
 				// make sure that embedded is not scaled again by framework
 				if (HConfig.GetCrossSection(DataMCType::DY_mutau_embedded) != -1){
-					if (HConfig.SetCrossSection(DataMCType::DY_mutau_embedded, -1))
-						std::cout << "Cross section for DY_mutau_embedded was set to -1" << std::endl;
+					if (HConfig.SetCrossSection(DataMCType::DY_mutau_embedded, -1)){
+						Logger(Logger::Info) << "Cross section for DY_mutau_embedded was set to -1" << std::endl;
+					}
 					else
-						std::cout << "WARNING: Could not change cross section for DY_mutau_embedded" << std::endl;
+						Logger(Logger::Warning) << "Could not change cross section for DY_mutau_embedded" << std::endl;
 				}
 				// do not draw MC DY sample
 				suppressDrawingHistOfType(HConfig.GetType(DataMCType::DY_tautau));
@@ -2474,7 +2474,7 @@ void HToTaumuTauh::setStatusBooleans(bool resetAll){
 		// make sure that all booleans defined above are false
 		for (unsigned i = 0; i<NCuts; i++){
 			if (pass.at(i) != false){
-				std::cout << "WARNING: pass vector not cleared properly" << std::endl;
+				Logger(Logger::Warning) << "pass vector not cleared properly" << std::endl;
 				pass.at(i) = false;
 			}
 		}
@@ -2525,7 +2525,7 @@ SVFitObject* HToTaumuTauh::getSVFitResult() {
 			// store only if object is valid
 			svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), svfObj);
 		} else {
-			std::cout << "ERROR: Unable to create a valid SVFit object." << std::endl;
+			Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
 		}
 	}
 	else{
@@ -2534,12 +2534,14 @@ SVFitObject* HToTaumuTauh::getSVFitResult() {
 			objects::MET met(Ntp, "CorrMVAMuTau");
 			SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
 			SVFitObject newSvfObj = svfProv.runAndMakeObject();
-			if (*svfObj == newSvfObj)
-				std::cout << "Recalculation of SVFit object gave same result." << std::endl;
-			else
-				std::cout << "Recalculation of SVFit object gave DIFFERENT result!!" <<
+			if (*svfObj == newSvfObj){
+				Logger(Logger::Info) << "Recalculation of SVFit object gave same result." << std::endl;
+			}
+			else {
+				Logger(Logger::Warning) << "Recalculation of SVFit object gave DIFFERENT result!!" <<
 				"\n\told: mass = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pt = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() <<
 				"\n\tnew: mass = " << newSvfObj.get_mass() << " +/- " << newSvfObj.get_massUncert() << ", pt = " << newSvfObj.get_pt() << " +/- " << newSvfObj.get_ptUncert()<< std::endl;
+			}
 		}
 	}
 	return svfObj;

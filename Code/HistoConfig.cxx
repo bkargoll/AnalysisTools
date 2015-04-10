@@ -1,4 +1,5 @@
 #include "HistoConfig.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 #include <cstdlib>
 #include <algorithm>                                     
@@ -34,7 +35,7 @@ bool HistoConfig::Load(){
 bool HistoConfig::Load(TString Name_)  
 {
   if(loaded) return true;
-  std::cout << "HistoConfig::Load("<< Name_ <<")" << std::endl;
+  Logger(Logger::Verbose) << "HistoConfig::Load("<< Name_ <<")" << std::endl;
   ID.clear();
   HistoName.clear();
   HistoLegend.clear();
@@ -44,11 +45,11 @@ bool HistoConfig::Load(TString Name_)
   char *file_=(char*)Name_.Data();
   input_file.open(file_, std::ios::in);
   if (!(input_file)){
-    std::cout << "\nERROR: Opening xml file "<< Name_ <<" for HistoConfig has failed.\n" << std::endl;
+	  Logger(Logger::Error) << "Opening xml file "<< Name_ <<" for HistoConfig has failed." << std::endl;
     return false;
   }
   loaded=true;
-  std::cout << "\nOpened HistoConfig xml file: "<< Name_ <<".\n" << std::endl;
+  Logger(Logger::Info) << "Opened HistoConfig xml file: "<< Name_ << std::endl;
 
   std::string s;
   unsigned int a=0;
@@ -79,10 +80,10 @@ bool HistoConfig::Load(TString Name_)
   }
   input_file.close();
   for(unsigned int i=0; i<ID.size();i++){
-    std::cout << "Hitogram Data/MC ID: " << ID.at(i) << " CS: " << CS.at(i) << " Name: " <<  HistoName.at(i) << " Legend: " <<  HistoLegend.at(i) << " Colour: " << HistoColour.at(i) << std::endl;
+	  Logger(Logger::Verbose) << "Histogram Data/MC ID: " << ID.at(i) << " CS: " << CS.at(i) << " Name: " <<  HistoName.at(i) << " Legend: " <<  HistoLegend.at(i) << " Colour: " << HistoColour.at(i) << std::endl;
   }
 
-  std::cout << "HistoConfig::Load("<< Name_ <<") complete" << std::endl;
+  Logger(Logger::Verbose) << "HistoConfig::Load("<< Name_ <<") complete" << std::endl;
   if(HistoName.size()>=1) return true;
   return false;
 }
@@ -150,7 +151,7 @@ TString HistoConfig::GetLeg(unsigned int i){
 
 std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, double min, double max, TString xaxis, TString yaxis){
   std::vector<TH1D> histos;
-  std::cout << "Adding TH1D " << name << " " << title << std::endl;
+  Logger(Logger::Verbose) << "Adding TH1D " << name << " " << title << std::endl;
   for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH1D(name+HistoName.at(i),HistoLegend.at(i),nbins,min,max));
     histos.at(i).Sumw2();
@@ -162,7 +163,7 @@ std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, do
 
 std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, double* xbins, TString xaxis,TString yaxis){
   std::vector<TH1D> histos;
-  std::cout << "Adding TH1D " << name << " " << title << std::endl;
+  Logger(Logger::Verbose) << "Adding TH1D " << name << " " << title << std::endl;
   for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH1D(name+HistoName.at(i),HistoLegend.at(i),nbins,xbins));
     histos.at(i).Sumw2();
@@ -175,7 +176,7 @@ std::vector<TH1D> HistoConfig::GetTH1D(TString name,TString title, int nbins, do
 std::vector<TH2D> HistoConfig::GetTH2D(TString name,TString title,int nbinsx, double minx, double maxx, 
 				       int nbinsy, double miny, double maxy, TString xaxis, TString yaxis){
   std::vector<TH2D> histos;
-  std::cout << "Adding TH2D " << name << " " << title << std::endl;
+  Logger(Logger::Verbose) << "Adding TH2D " << name << " " << title << std::endl;
   for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH2D(name+HistoName.at(i),HistoLegend.at(i),nbinsx,minx,maxx, nbinsy,miny,maxy));
     histos.at(i).Sumw2();
@@ -190,7 +191,7 @@ std::vector<TH3F> HistoConfig::GetTH3F(TString name,TString title, int nbinsx, d
 			  TString xaxis, TString yaxis,TString zaxis){
 
   std::vector<TH3F> histos;
-  std::cout << "Adding TH2D " << name << " " << title << std::endl;
+  Logger(Logger::Verbose) << "Adding TH2D " << name << " " << title << std::endl;
   for(unsigned int i=0;i<HistoName.size();i++){
     histos.push_back(TH3F(name+HistoName.at(i),HistoLegend.at(i),nbinsx,minx,maxx,nbinsy,miny,maxy,nbinsz,minz,maxz));
     histos.at(i).Sumw2();

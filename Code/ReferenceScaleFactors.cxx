@@ -7,6 +7,7 @@
 
 #include "ReferenceScaleFactors.h"
 #include "Selection_Base.h"
+#include "SimpleFits/FitSoftware/interface/Logger.h"
 
 ///////////////////////////
 //
@@ -651,7 +652,7 @@ double ReferenceScaleFactors::HiggsTauTau_MuTau_IsoUnc_Mu(TLorentzVector vect){
 
 // Electrons need eta from supercluster -> not using four vector as argument
 double ReferenceScaleFactors::ElectronReconstruction2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eff = 1.;
 	if(fabs(Eta)<2.5){
@@ -662,7 +663,7 @@ double ReferenceScaleFactors::ElectronReconstruction2012(double Et, double Eta){
 }
 
 double ReferenceScaleFactors::ElectronReconstructionUnc2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double err = 0.;
 	if(fabs(Eta)<2.5){
@@ -673,7 +674,7 @@ double ReferenceScaleFactors::ElectronReconstructionUnc2012(double Et, double Et
 }
 
 double ReferenceScaleFactors::ElectronIdTrig2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eta = fabs(Eta);
 	double eff = 1.;
@@ -685,7 +686,7 @@ double ReferenceScaleFactors::ElectronIdTrig2012(double Et, double Eta){
 }
 
 double ReferenceScaleFactors::ElectronIdTrigUnc2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eta = fabs(Eta);
 	double err = 0.;
@@ -697,7 +698,7 @@ double ReferenceScaleFactors::ElectronIdTrigUnc2012(double Et, double Eta){
 }
 
 double ReferenceScaleFactors::ElectronIdNonTrig2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eff = 1.;
 	if(fabs(Eta)<2.5){
@@ -708,7 +709,7 @@ double ReferenceScaleFactors::ElectronIdNonTrig2012(double Et, double Eta){
 }
 
 double ReferenceScaleFactors::ElectronIdNonTrigUnc2012(double Et, double Eta){
-	if(!loadElectronID){std::cout << "ERROR: Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadElectronID){Logger(Logger::Error) << "Electron ID not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double err = 0.;
 	if(fabs(Eta)<2.5){
@@ -1188,7 +1189,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_Trigger(TLorentzVector mu_vect, double
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_SingleEle(double Et, double Eta){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eta = fabs(Eta);
 	double eff = 1.;
@@ -1199,7 +1200,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_SingleEle(double Et, double Eta){
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_DoubleEleLeading(double Et, double Eta){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eta = fabs(Eta);
 	double eff = 1.;
@@ -1210,7 +1211,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_DoubleEleLeading(double Et, double Eta
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_DoubleEleTrailing(double Et, double Eta){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double et = Et;
 	double eta = fabs(Eta);
 	double eff = 1.;
@@ -1221,7 +1222,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_DoubleEleTrailing(double Et, double Et
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_SingleMu(TLorentzVector vect){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double pt = vect.Pt();
 	double eta = fabs(vect.Eta());
 	double eff = 1.;
@@ -1234,7 +1235,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_SingleMu(TLorentzVector vect){
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_DoubleMuLeading(TLorentzVector vect){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double pt = vect.Pt();
 	double eta = fabs(vect.Eta());
 	double eff = 1.;
@@ -1246,7 +1247,7 @@ double ReferenceScaleFactors::HiggsWW_EMu_DoubleMuLeading(TLorentzVector vect){
 }
 
 double ReferenceScaleFactors::HiggsWW_EMu_DoubleMuTrailing(TLorentzVector vect){
-	if(!loadEMuTriggerEff){std::cout << "ERROR: EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
+	if(!loadEMuTriggerEff){Logger(Logger::Error) << "EMu trigger efficiency not loaded in ReferenceScaleFactors." << std::endl; return -999;}
 	double pt = vect.Pt();
 	double eta = fabs(vect.Eta());
 	double eff = 1.;
