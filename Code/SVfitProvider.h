@@ -11,14 +11,18 @@
 #ifndef SVFITPROVIDER_H_
 #define SVFITPROVIDER_H_
 
-#include "Ntuple_Controller.h"
 #include "Objects.h"
 #include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 #include "DataFormats/SVFitObject.h"
 
+class Ntuple_Controller;
+
 class SVfitProvider {
 public:
-	SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TString typeLep2, int idxLep2, int verbosity = 1);
+	// default constructor to be used in analysis
+	SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TString typeLep2, int idxLep2,
+			int verbosity = 1, double scaleLep1 = 1 , double scaleLep2 = 1 );
+
 	virtual ~SVfitProvider();
 
 	// run SVfit algorithm and create  SVfitObject
@@ -78,7 +82,7 @@ private:
 	// output information
 	SVfitStandaloneAlgorithm* svFitAlgo_;
 
-	void addMeasuredLepton(TString type, int index);
+	void addMeasuredLepton(TString type, int index, double energyScale = 1);
 	void createSvFitAlgo();
 };
 

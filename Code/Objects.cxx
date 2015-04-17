@@ -7,6 +7,7 @@
 
 #include "Objects.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
+#include "Ntuple_Controller.h"
 
 namespace objects {
 

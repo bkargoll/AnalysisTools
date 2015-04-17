@@ -1522,3 +1522,42 @@ std::vector<int> Ntuple_Controller::sortDefaultObjectsByPt(TString objectType){
 	}
 	return sortObjects(indices, values);
 }
+
+// obtain, or create and store, SVFit results from/on dCache
+#ifdef USE_SVfit
+SVFitObject* Ntuple_Controller::getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, TString suffix /* ="" */, double scaleMu /* =1 */, double scaleTau /* =1 */) {
+	 // configure svfitstorage on first call
+	if ( !svFitStor.isConfigured() ) svFitStor.Configure(GetInputDatasetName(), suffix);
+	// get SVFit result from cache
+	SVFitObject* svfObj = svFitStor.GetEvent(RunNumber(), LuminosityBlock(), EventNumber());
+	// if obtained object is not valid, create and store it
+	if (!svfObj->isValid()) {
+		objects::MET met(this, metType);
+		SVfitProvider svfProv(this, met, "Mu", muIdx, "Tau", tauIdx, 1, scaleMu, scaleTau);
+		*svfObj = svfProv.runAndMakeObject();
+		if (svfObj->isValid()) {
+			// store only if object is valid
+			svFitStor.SaveEvent(RunNumber(), LuminosityBlock(), EventNumber(), svfObj);
+		} else {
+			Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
+		}
+	}
+	else{
+		// calculate every 2000th event and compare with what is stored
+		if( (EventNumber() % 2000) == 123){
+			objects::MET met(this, metType);
+			SVfitProvider svfProv(this, met, "Mu", muIdx, "Tau", tauIdx);
+			SVFitObject newSvfObj = svfProv.runAndMakeObject();
+			if (*svfObj == newSvfObj){
+				Logger(Logger::Info) << "Recalculation of SVFit object gave same result." << std::endl;
+			}
+			else {
+				Logger(Logger::Warning) << "Recalculation of SVFit object gave DIFFERENT result!!" <<
+				"\n\told: mass = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pt = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() <<
+				"\n\tnew: mass = " << newSvfObj.get_mass() << " +/- " << newSvfObj.get_massUncert() << ", pt = " << newSvfObj.get_pt() << " +/- " << newSvfObj.get_ptUncert()<< std::endl;
+			}
+		}
+	}
+	return svfObj;
+}
+#endif

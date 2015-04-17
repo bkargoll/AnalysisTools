@@ -48,12 +48,9 @@ TARGETS       =	Ntuple_Controller \
 		TauSpinerInterface \
 		ReferenceScaleFactors \
 		rochcor2012jan22 \
-		SVfitProvider \
-		Objects \
-		DataStorage \
-		SVFitStorage
+		Objects 
 
-CINTTARGETS = SVFitObject
+CINTTARGETS = 
 
 # now include conditional options set by flags in make.inc
 ifdef USE_TauSpinner
@@ -71,6 +68,8 @@ ifdef USE_TauSpinner
 endif
 
 ifdef USE_SVfit
+	TARGETS += SVfitProvider DataStorage SVFitStorage
+	CINTTARGETS += SVFitObject
 	SHAREDLIBFLAGS += -L./CommonUtils/lib -lSVfit
 	DEFS += -DUSE_SVfit=1
 endif

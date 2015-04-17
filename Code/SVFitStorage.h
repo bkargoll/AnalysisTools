@@ -20,7 +20,7 @@ class SVFitStorage : public DataStorage {
   SVFitStorage();
   ~SVFitStorage();
 
-  void Configure(TString datasetName);
+  void Configure(TString datasetName, TString suffix = "");
 
   void SaveTree();
   void SaveEvent(Int_t RunNumber, Int_t LumiNumber, Int_t EventNumber, SVFitObject* svfit);
@@ -39,6 +39,7 @@ class SVFitStorage : public DataStorage {
   TTreeIndex *index_;
   
   TString treeName_;
+  TString suffix_; // optional identifier for modifications (e.g. systematics)
 
   UInt_t RunNumber_;
   UInt_t LumiNumber_;

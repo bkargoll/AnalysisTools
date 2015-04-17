@@ -9,7 +9,7 @@ PlotStyle: style2
 
 # Everything below is only needed if you intend to use SVFit
 # DO NOT modify the fields in curly brackets {xyz}, they are set by the framework
-InputAuxiliaryFile: /pnfs/physik.rwth-aachen.de/cms/store/user/myPathToSVFitFiles/mySVFitInputFile.root
-OutputAuxiliaryFile: /pnfs/physik.rwth-aachen.de/cms/store/user/inugent/{DATE}/MySVFIT_{SET}_{TIME}.root 
+InputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/myPathToSVFitFiles/mySVFitInputFile.root
+OutputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/inugent/{DATE}/MySVFIT_{SET}_{TIME}.root 
 GRIDSite: grid-srm.physik.rwth-aachen.de
 InputNtuples: {FileDir}

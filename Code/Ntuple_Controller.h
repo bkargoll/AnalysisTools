@@ -34,9 +34,14 @@
 #ifdef USE_TauSpinner
 #include "TauSpinerInterface.h"
 #endif
-#include "HistoConfig.h"
 #include "SimpleFits/FitSoftware/interface/PDGInfo.h"
 #include "TauDataFormat/TauNtuple/interface/TauDecay.h"
+
+#ifdef USE_SVfit
+#include "DataFormats/SVFitObject.h"
+#include "SVFitStorage.h"
+#include "SVfitProvider.h"
+#endif
 
 
 #include "SimpleFits/FitSoftware/interface/TrackParticle.h"
@@ -169,6 +174,12 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
      qualitySize = 7
    };
   enum TrackPar{i_qoverp = 0, i_lambda, i_phi, i_dxy,i_dsz};
+
+  // access to SVFit
+  #ifdef USE_SVfit
+  SVFitObject* getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
+  #endif
+
 
   // Ntuple Access Functions 
   virtual Int_t Get_Entries();

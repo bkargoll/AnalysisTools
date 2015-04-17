@@ -245,6 +245,16 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> shape_VisM;
   std::vector<TH1D> shape_SVfitM;
 
+  std::vector<TH1D> shape_VisM_ZLScaleUp;
+  std::vector<TH1D> shape_VisM_ZLScaleDown;
+  std::vector<TH1D> shape_SVfitM_ZLScaleUp;
+  std::vector<TH1D> shape_SVfitM_ZLScaleDown;
+
+  std::vector<TH1D> shape_VisM_TauESUp;
+  std::vector<TH1D> shape_VisM_TauESDown;
+  std::vector<TH1D> shape_SVfitM_TauESUp;
+  std::vector<TH1D> shape_SVfitM_TauESDown;
+
   std::vector<TH1D> SVFitTimeReal;
   std::vector<TH1D> SVFitTimeCPU;
 
@@ -294,8 +304,10 @@ class HToTaumuTauh : public Selection {
   // instance of reference scale factor class
   ReferenceScaleFactors* RSF;
 
-  // instance of SVFitStorage class
+  // instances of SVFitStorage class
   SVFitStorage svfitstorage;
+  SVFitStorage svfitstorTauESUp;
+  SVFitStorage svfitstorTauESDown;
 
   // timing information
   TBenchmark* clock;
@@ -353,8 +365,6 @@ class HToTaumuTauh : public Selection {
   bool selectBJet(unsigned i, int selectedMuon, int selectedTau);
 
   bool selectPFJet_Relaxed(unsigned i, int selectedMuon, int selectedTau);
-
-  SVFitObject* getSVFitResult();
 
   // categories
   std::vector<float> cut_VBFTight, cut_VBFLoose;

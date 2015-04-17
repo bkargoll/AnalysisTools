@@ -418,7 +418,7 @@ void  HToTaumuTauh::Setup(){
   NElecTriLepVeto=HConfig.GetTH1D(Name+"_NElecTriLepVeto","NElecTriLepVeto",5,-0.5,4.5,"N(e_{3l veto})");
 
   MuCharge=HConfig.GetTH1D(Name+"_MuCharge","MuCharge",3,-1.5,1.5,"q(#mu)/e");
-  TauCharge=HConfig.GetTH1D(Name+"_TauCharge","TauCharge",3,-1.5,1.5,"q(#tau)/e");
+  TauCharge=HConfig.GetTH1D(Name+"_TauCharge","TauCharge",7,-3.5,3.5,"q(#tau)/e");
 
   MuTauDR=HConfig.GetTH1D(Name+"_MuTauDR","MuTauDR",50,0.,5.,"#DeltaR(#mu,#tau_{h})");
   MuTauDPhi=HConfig.GetTH1D(Name+"_MuTauDPhi","MuTauDPhi",50,0.,3.2,"#Delta#phi(#mu,#tau_{h})");
@@ -508,6 +508,16 @@ void  HToTaumuTauh::Setup(){
 
   shape_VisM = HConfig.GetTH1D(Name+"_shape_VisM","shape_VisM",400,0.,400.,"m_{vis}(#tau_{h},#mu)/GeV");
   shape_SVfitM = HConfig.GetTH1D(Name+"_shape_SVfitM","shape_SVfitM",400,0.,400.,"m_{SVfit}(#tau_{h},#mu)/GeV");
+
+  shape_VisM_ZLScaleUp 		= HConfig.GetTH1D(Name+"_shape_VisM_ZLScaleUp",		"shape_VisM_ZLScaleUp",		400,0.,400.,"m_{vis}^{ZL up}(#tau_{h},#mu)/GeV");
+  shape_VisM_ZLScaleDown 	= HConfig.GetTH1D(Name+"_shape_VisM_ZLScaleDown",	"shape_VisM_ZLScaleDown",	400,0.,400.,"m_{vis}^{ZL down}(#tau_{h},#mu)/GeV");
+  shape_SVfitM_ZLScaleUp 	= HConfig.GetTH1D(Name+"_shape_SVfitM_ZLScaleUp",	"shape_SVfitM_ZLScaleUp",	400,0.,400.,"m_{SVfit}^{ZL up}(#tau_{h},#mu)/GeV");
+  shape_SVfitM_ZLScaleDown 	= HConfig.GetTH1D(Name+"_shape_SVfitM_ZLScaleDown",	"shape_SVfitM_ZLScaleDown",	400,0.,400.,"m_{SVfit}^{ZL down}(#tau_{h},#mu)/GeV");
+
+  shape_VisM_TauESUp     = HConfig.GetTH1D(Name+"_shape_VisM_TauESUp",		"shape_VisM_TauESUp",		400,0.,400.,"m_{vis}^{#tauES up}(#tau_{h},#mu)/GeV");
+  shape_VisM_TauESDown   = HConfig.GetTH1D(Name+"_shape_VisM_TauESDown",	"shape_VisM_TauESDown",		400,0.,400.,"m_{vis}^{#tauES down}(#tau_{h},#mu)/GeV");
+  shape_SVfitM_TauESUp   = HConfig.GetTH1D(Name+"_shape_SVfitM_TauESUp",	"shape_SVfitM_TauESUp",		400,0.,400.,"m_{SVfit}^{#tauES up}(#tau_{h},#mu)/GeV");
+  shape_SVfitM_TauESDown = HConfig.GetTH1D(Name+"_shape_SVfitM_TauESDown",	"shape_SVfitM_TauESDown",	400,0.,400.,"m_{SVfit}^{#tauES down}(#tau_{h},#mu)/GeV");
 
   SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"t_{real}(SVFit)/sec");
   SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"t_{CPU}(SVFit)/sec");
@@ -682,6 +692,16 @@ void  HToTaumuTauh::Store_ExtraDist(){
 
  Extradist1d.push_back(&shape_VisM);
  Extradist1d.push_back(&shape_SVfitM);
+
+ Extradist1d.push_back(&shape_VisM_ZLScaleUp);
+ Extradist1d.push_back(&shape_VisM_ZLScaleDown);
+ Extradist1d.push_back(&shape_SVfitM_ZLScaleUp);
+ Extradist1d.push_back(&shape_SVfitM_ZLScaleDown);
+
+ Extradist1d.push_back(&shape_VisM_TauESUp    );
+ Extradist1d.push_back(&shape_VisM_TauESDown  );
+ Extradist1d.push_back(&shape_SVfitM_TauESUp  );
+ Extradist1d.push_back(&shape_SVfitM_TauESDown);
 
  Extradist1d.push_back(&SVFitTimeReal);
  Extradist1d.push_back(&SVFitTimeCPU);
@@ -1236,24 +1256,54 @@ void  HToTaumuTauh::doEvent(){
 	  // Mu-Tau Mass
 	  visibleMass.at(t).Fill( (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
 	  // SVFit
-	  //Logger(Logger::Info) << "        RUN SVFIT" << std::endl;
-	  //printf ("input:  pt = %f, eta = %f, phi = %f, mass = %f, decayMode = %d\n", Ntp->PFTau_p4(selTau).Pt(), Ntp->PFTau_p4(selTau).Eta(), Ntp->PFTau_p4(selTau).Phi(), Ntp->PFTau_p4(selTau).M(), Ntp->PFTau_hpsDecayMode(selTau));
-
 	  clock->Start("SVFit");
 	  // get SVFit result from cache
-	  SVFitObject *svfObj = getSVFitResult();
+	  SVFitObject *svfObj = Ntp->getSVFitResult(svfitstorage, "CorrMVAMuTau", selMuon, selTau);
 	  clock->Stop("SVFit");
 
-	  //Logger(Logger::Info) << "   m = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pT = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() << std::endl;
-	  //Logger(Logger::Info) << "   SVFit calculation took " << clock->GetRealTime("SVFit") <<  " s (real), " << clock->GetCpuTime("SVFit") << " s (CPU)" << std::endl;
-
 	  // shape distributions for final fit
-	  shape_VisM.at(t).Fill((Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
-	  shape_SVfitM.at(t).Fill(svfObj->get_mass(), w);
+	  double visMass = (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M();
+	  double svfMass = svfObj->get_mass();
+	  shape_VisM.at(t).Fill(visMass, w);
+	  shape_SVfitM.at(t).Fill(svfMass, w);
 
-	  // additional info on mass reconstruction
+	  // ZL shape uncertainty
+	  if (HConfig.GetID(t) == DataMCType::DY_ll || HConfig.GetID(t) == DataMCType::DY_ee || HConfig.GetID(t) == DataMCType::DY_mumu){
+		  shape_VisM_ZLScaleUp.at(t).Fill(1.02 * visMass);
+		  shape_VisM_ZLScaleDown.at(t).Fill(0.98 * visMass);
+		  shape_SVfitM_ZLScaleUp.at(t).Fill(1.02 * svfMass);
+		  shape_SVfitM_ZLScaleDown.at(t).Fill(0.98 * svfMass);
+	  }
+
+	  // tau energy scale uncertainty
+	  TLorentzVector tauP4Up 	= 1.03 * Ntp->PFTau_p4(selTau);
+	  TLorentzVector tauP4Down	= 0.97 * Ntp->PFTau_p4(selTau);
+	  clock->Start("SVFitTauESUp");
+	  SVFitObject *svfObjTauESUp = Ntp->getSVFitResult(svfitstorTauESUp, "CorrMVAMuTau", selMuon, selTau, "TauESUp", 1., 1.03);
+	  clock->Stop("SVFitTauESUp");
+	  clock->Start("SVFitTauESDown");
+	  SVFitObject *svfObjTauESDown = Ntp->getSVFitResult(svfitstorTauESDown, "CorrMVAMuTau", selMuon, selTau, "TauESDown", 1., 0.97);
+	  clock->Stop("SVFitTauESDown");
+
+	  double visMass_tauESUp	= (Ntp->Muon_p4(selMuon) + tauP4Up).M();
+	  double visMass_tauEsDown	= (Ntp->Muon_p4(selMuon) + tauP4Down).M();
+	  double svfMass_tauESUp	= svfObjTauESUp->get_mass();
+	  double svfMass_tauESDown	= svfObjTauESDown->get_mass();
+
+	  shape_VisM_TauESUp.at(t).Fill(visMass_tauESUp, w);
+	  shape_VisM_TauESDown.at(t).Fill(visMass_tauEsDown, w);
+	  shape_SVfitM_TauESUp.at(t).Fill(svfMass_tauESUp, w);
+	  shape_SVfitM_TauESDown.at(t).Fill(svfMass_tauESDown, w);
+
+	  // timing info on mass reconstruction
 	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFit"), 1); // filled w/o weight
 	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFit"), 1); // filled w/o weight
+	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESUp"), 1); // filled w/o weight
+	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESUp"), 1); // filled w/o weight
+	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESDown"), 1); // filled w/o weight
+	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESDown"), 1); // filled w/o weight
+
+	  // QCD shape uncertainty and scaling to be done on datacard level
 
 	  // lepton charge
 	  MuCharge.at(t).Fill( Ntp->Muon_Charge(selMuon), w);
@@ -2508,41 +2558,4 @@ void HToTaumuTauh::setStatusBooleans(bool resetAll){
 	passedObjectsFailDiMuonVeto = passedObjects && !pass.at(DiMuonVeto);
 
 	return;
-}
-
-// obtain, or create and store, SVFit results from/on dCache
-SVFitObject* HToTaumuTauh::getSVFitResult() {
-	 // configure svfitstorage on first call
-	if ( !svfitstorage.isConfigured() ) svfitstorage.Configure(Ntp->GetInputDatasetName());
-	// get SVFit result from cache
-	SVFitObject* svfObj = svfitstorage.GetEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber());
-	// if obtained object is not valid, create and store it
-	if (!svfObj->isValid()) {
-		objects::MET met(Ntp, "CorrMVAMuTau");
-		SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
-		*svfObj = svfProv.runAndMakeObject();
-		if (svfObj->isValid()) {
-			// store only if object is valid
-			svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), svfObj);
-		} else {
-			Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
-		}
-	}
-	else{
-		// calculate every 2000th event and compare with what is stored
-		if( (Ntp->EventNumber() % 2000) == 123){
-			objects::MET met(Ntp, "CorrMVAMuTau");
-			SVfitProvider svfProv(Ntp, met, "Mu", selMuon, "Tau", selTau);
-			SVFitObject newSvfObj = svfProv.runAndMakeObject();
-			if (*svfObj == newSvfObj){
-				Logger(Logger::Info) << "Recalculation of SVFit object gave same result." << std::endl;
-			}
-			else {
-				Logger(Logger::Warning) << "Recalculation of SVFit object gave DIFFERENT result!!" <<
-				"\n\told: mass = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pt = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() <<
-				"\n\tnew: mass = " << newSvfObj.get_mass() << " +/- " << newSvfObj.get_massUncert() << ", pt = " << newSvfObj.get_pt() << " +/- " << newSvfObj.get_ptUncert()<< std::endl;
-			}
-		}
-	}
-	return svfObj;
 }

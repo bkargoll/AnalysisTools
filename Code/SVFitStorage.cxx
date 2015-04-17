@@ -17,6 +17,7 @@
 
 SVFitStorage::SVFitStorage():
 	treeName_("invalid"),
+	suffix_(""),
 	isConfigured_(false),
 	intreeLoaded_(false){
 
@@ -44,13 +45,19 @@ SVFitStorage::~SVFitStorage(){
 	delete svfit_;
 }
 
-void SVFitStorage::Configure(TString datasetName){
+void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
 	if (isConfigured_){
 		Logger(Logger::Warning) << "SVFitStorage object has been configured before. Make sure to configure only once. Abort config..." << std::endl;
 		return;
 	}
 
 	treeName_ = "Tree_" +  datasetName;
+
+	suffix_ = suffix;
+	if (suffix_ != ""){
+		treeName_ = treeName_ + "_" + suffix_;
+		inputFileName = inputFileName + suffix_ + "_";
+	}
 
 	// setup output tree
 	outtree_->SetName(treeName_);
@@ -67,7 +74,7 @@ void SVFitStorage::Configure(TString datasetName){
 }
 
 void SVFitStorage::LoadTree(){
-	TString key = "InputAuxiliaryFile:";
+	TString key = "InputFileSVFit" + suffix_ + ":";
 	int nfiles = GetFile(key);
 	if (nfiles == 0) {
 		Logger(Logger::Warning) << "Key not found: " << key <<
@@ -140,15 +147,16 @@ void SVFitStorage::SaveTree(){
 		return;
 	}
 	if ( outtree_->GetEntries() < 1){
-		Logger(Logger::Info) << "Output tree contains no events, and thus no output file is created." << std::endl;
+		Logger(Logger::Info) << "Output tree " << treeName_ << " contains no events, thus no output file is created." << std::endl;
 		return;
 	}
 
 	//Load File name
 	Parameters Par; // assumes configured in Analysis.cxx
 	TString outputFileDCache;
-	Par.GetString("OutputAuxiliaryFile:", outputFileDCache);
-	TString outputFileLocal = "MySVFIT.root";
+	TString key = "OutputFileSVFit" + suffix_ + ":";
+	Par.GetString(key, outputFileDCache);
+	TString outputFileLocal = "MySVFIT" + suffix_ + ".root";
 	//Save output
 	TDirectory *gdirectory_save = gDirectory;
 	TFile *outfile_ = TFile::Open(outputFileLocal, "RECREATE");
@@ -192,12 +200,14 @@ SVFitObject* SVFitStorage::GetEvent(UInt_t RunNumber, UInt_t LumiNumber, UInt_t 
 		*svfit_ = SVFitObject(); // invalid object
 		return svfit_;
 	}
-	if (RunNumber > 262143 || LumiNumber > 4095) {
-		Logger(Logger::Error) << "RunNumber must be smaller than 262144 and LumiNumber smaller than 4096" <<
-				"\n\tTrying to access run " << RunNumber << " and lumi " << LumiNumber <<
-				"\n\tExpect undefined behavior!" << std::endl;
-		*svfit_ = SVFitObject(); // invalid object
-		return svfit_;
+	if ( RunNumber != 1) { // true for data, false for MC
+		if (RunNumber > 262143 || LumiNumber > 4095) {
+			Logger(Logger::Error) << "In Data RunNumber must be smaller than 262144 and LumiNumber smaller than 4096" <<
+					"\n\tTrying to access run " << RunNumber << " and lumi " << LumiNumber <<
+					"\n\tExpect undefined behavior!" << std::endl;
+			*svfit_ = SVFitObject(); // invalid object
+			return svfit_;
+		}
 	}
 
 	//Get tree entry using index and then get svfit

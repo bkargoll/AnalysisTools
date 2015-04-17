@@ -13,7 +13,8 @@
 #include "Math/Vector3D.h"
 #include "TMatrixD.h"
 #include "TString.h"
-#include "Ntuple_Controller.h"
+
+class Ntuple_Controller;
 
 namespace objects {
 

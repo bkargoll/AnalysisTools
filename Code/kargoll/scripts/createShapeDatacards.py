@@ -5,7 +5,15 @@ import argparse
 import os
 from sys import stdout
 from array import array
+from itertools import takewhile
 
+# context manager to collect output from stdout
+# printouts to stdout will be collected and appended to a list
+# Usage:
+# with Capturing() as output:
+#     do_something(my_object)
+# output is now a list containing the output
+# http://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
 class Capturing(list):
     def __enter__(self):
         self._stdout = sys.stdout
@@ -15,6 +23,33 @@ class Capturing(list):
         self.extend(self._stringio.getvalue().splitlines())
         sys.stdout = self._stdout
 
+# save histogram to file
+def SaveHist(hist):
+    "save histogram into output file"
+    global args, newDir
+    hist.Write()
+    if args.verbose:
+        print '----> Histogram ', hist.GetName(), " written to ", newDir.GetPath()
+        
+# Scale all bins up to value upTo of a histogram hist by scaleBy
+def ScaleHist(hist, scaleBy, upTo):
+    "Scale a TH1 hist by a given amount scaleBy up to value upTo"
+    global binning, binKey
+    for binEdge in takewhile(lambda b: b <= upTo, binning[binKey]): # loop only over bins < 'upTo' GeV
+        if binEdge == 0: continue
+        binNum = hist.FindFixBin(binEdge - 0.1)
+        hist.SetBinContent(binNum, scaleBy * hist.GetBinContent(binNum))
+
+# QCD scaling
+# put in a "function" (accessing global variables) for readability
+def QCDScaling():
+    "Scale QCD bins below 50GeV up by 10% for some categories"
+    global cat, args, binning, binKey, inHistReb
+    if cat in ["onejetlow", "onejethigh"]:
+        if args.verbose: print '  -> Rescale by 1.1 for mtt < 50 GeV'
+        ScaleHist(inHistReb, 1.1, 50.)
+
+###### 
 
 # parse arguments from command line
 parser = argparse.ArgumentParser(description='Create shape datacards (ROOT files) from HToTauhTaumu analysis results.')
@@ -24,6 +59,7 @@ parser.add_argument('--categories', nargs="+",
                     default=["zerojetlow", "zerojethigh", "onejetlow", "onejethigh", "onejetboost", "vbfloose", "vbftight"],
                     help="list of categories to be processed (default: all of them)")
 parser.add_argument('--fitVariable', default ='visibleMass') #default="shape_SVfitM")
+parser.add_argument('--noQCDScaling', action='store_true', help="Disable scaling QCD up by 10%% in 1-jet low and high categories for mtt<50GeV.")
 parser.add_argument('--verbose', action='store_true', help="Print more stuff")
 args = parser.parse_args()
 
@@ -31,9 +67,11 @@ args = parser.parse_args()
 inFileTemplate = 'LOCAL_COMBINED_<CAT>_default_LumiScaled.root'
 histoTemplate = '<CAT>_default_<VAR><PROC>'
 outFileTemplate = 'htt_<CHANNEL>.inputs-sm-<DATASET>.root'
+qcdShapeUncTemplate = 'CMS_htt_QCDShape_<CHANNEL>_<CAT>_<DATASET><UPDOWN>'
 # specify some fields in templates
 histoTemplate = histoTemplate.replace('<VAR>', args.fitVariable)
 outFileTemplate = outFileTemplate.replace('<CHANNEL>', 'mt').replace('<DATASET>', '8TeV')
+qcdShapeUncTemplate = qcdShapeUncTemplate.replace('<CHANNEL>', 'mutau').replace('<DATASET>', '8TeV')
 
 # define binning to be used in mass plots
 binning = {'nonVBF' :   array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]),#, 225, 250, 275, 300, 325, 350]),
@@ -86,6 +124,9 @@ for cat in args.categories:
         binKey = 'VBF'
     else:
         binKey = 'nonVBF'
+        
+    # store scaled QCD histogram for uncertainties
+    qcdHist = 0
     
     # loop over processes to be put in the datacard
     for procKey in procs.keys():
@@ -98,12 +139,30 @@ for cat in args.categories:
             if args.verbose : print 'Loading histogram', histName
             inHist = inFile.Get(histName)
             inHistReb = inHist.Rebin(len(binning[binKey])-1, 'inHistReb', binning[binKey])
+            
+            
+            if sample == "QCD":
+                if not args.noQCDScaling:
+                    # scale QCD histogram up by 10% for mtt<50
+                    QCDScaling()
+                    
+                qcdHist = inHistReb
+            
             outHist.Add(inHistReb)
         
         # save histogram into output file
-        outHist.Write()
-        if args.verbose:
-            print '----> Histogram ', outHist.GetName(), " written to ", newDir.GetPath()
+        SaveHist(outHist)
+            
+    # create QCD shape uncertainties
+    histName = qcdShapeUncTemplate.replace('<CAT>', translate[cat])
+    
+    qcdScaleUp   = qcdHist.Clone( histName.replace('<UPDOWN>', 'Up'))
+    ScaleHist(qcdScaleUp, 1.1, 50.)
+    SaveHist(qcdScaleUp)
+    
+    qcdScaleDown = qcdHist.Clone( histName.replace('<UPDOWN>', 'Down'))
+    ScaleHist(qcdScaleDown, 0.9, 50.)
+    SaveHist(qcdScaleDown)
 
 
 print 'Results have been stored in', outFileName
