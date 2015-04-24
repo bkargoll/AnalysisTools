@@ -38,6 +38,7 @@
 #include "kargoll/ZeroJetLow.h"
 #include "kargoll/Inclusive.h"
 #include "kargoll/MCDecayChain.h"
+#include "kargoll/ZeroJetLow3Prong.h"
 #endif
 #ifdef USE_pistone
 
@@ -82,6 +83,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("tvariable_emu"))s=new Tvariable_EMu(Analysis,UncertType);
 #endif
 #ifdef USE_kargoll
+  else if(Analysis.Contains("zerojetlow3prong")) s=new ZeroJetLow3Prong(Analysis,UncertType);
   else if(Analysis.Contains("htotaumutauhskim")) s=new HToTaumuTauhSkim(Analysis,UncertType);
   else if(Analysis.Contains("htotaumutauhbackgrounds")) s=new HToTaumuTauhBackgrounds(Analysis,UncertType);
   else if(Analysis.Contains("htotaumutauh")) s=new HToTaumuTauh(Analysis,UncertType);

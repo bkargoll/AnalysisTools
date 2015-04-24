@@ -86,6 +86,7 @@ endif
 
 ifdef USE_kargoll
 	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive MCDecayChain
+	TARGETS += ZeroJetLow3Prong
 	DEFS += -DUSE_kargoll=1
 endif 
 

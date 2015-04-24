@@ -90,6 +90,13 @@ class HToTaumuTauh : public Selection {
 		ZeroJetLow_TauPt,
 		ZeroJetLow_NCuts
 	};
+	/*
+	enum cuts_ZeroJetLow3Prong{
+		ZeroJetLow3Prong_NJet = CatCut1,
+		ZeroJetLow3Prong_TauPt,
+		ZeroJetLow3Prong_
+	};
+	*/
 	enum cuts_NoCategory {
 		NoCategory_NCuts = CatCut1
 	};
@@ -277,6 +284,8 @@ class HToTaumuTauh : public Selection {
   bool qcdUseEfficiencyMethod;
   // flag to use embedding
   bool useEmbedding;
+  // flog to enable/disable SVFit calculation
+  bool runSVFit;
 
   // map to hold WJets yields for each category
   std::map<TString, double> wJetsYieldMap;

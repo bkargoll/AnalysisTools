@@ -1292,7 +1292,7 @@ void  HToTaumuTauh::doEvent(){
 		  shape_SVfitM_ZLScaleDown.at(t).Fill(0.98 * svfMass);
 	  }
 
-	  // tau energy scale uncertainty
+/*	  // tau energy scale uncertainty
 	  TLorentzVector tauP4Up 	= 1.03 * Ntp->PFTau_p4(selTau);
 	  TLorentzVector tauP4Down	= 0.97 * Ntp->PFTau_p4(selTau);
 	  clock->Start("SVFitTauESUp");
@@ -1311,14 +1311,14 @@ void  HToTaumuTauh::doEvent(){
 	  shape_VisM_TauESDown.at(t).Fill(visMass_tauEsDown, w);
 	  shape_SVfitM_TauESUp.at(t).Fill(svfMass_tauESUp, w);
 	  shape_SVfitM_TauESDown.at(t).Fill(svfMass_tauESDown, w);
-
+*/
 	  // timing info on mass reconstruction
 	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFit"), 1); // filled w/o weight
 	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFit"), 1); // filled w/o weight
-	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESUp"), 1); // filled w/o weight
-	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESUp"), 1); // filled w/o weight
-	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESDown"), 1); // filled w/o weight
-	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESDown"), 1); // filled w/o weight
+//	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESUp"), 1); // filled w/o weight
+//	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESUp"), 1); // filled w/o weight
+//	  SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESDown"), 1); // filled w/o weight
+//	  SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESDown"), 1); // filled w/o weight
 
 	  // QCD shape uncertainty and scaling to be done on datacard level
 

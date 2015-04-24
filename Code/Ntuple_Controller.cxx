@@ -1346,7 +1346,7 @@ TMatrixTSym<double> Ntuple_Controller::PF_Tau_FlightLegth3d_TauFrame_cov(unsigne
     }
   }
   TMatrixT<double> Resp=MultiProngTauSolver::RotateToTauFrame(Res);
-  TMatrixTSym<double> RespCov=ErrorMatrixPropagator::PropogateError(&MultiProngTauSolver::RotateToTauFrame,Res,ResCov);
+  TMatrixTSym<double> RespCov=ErrorMatrixPropagator::PropagateError(&MultiProngTauSolver::RotateToTauFrame,Res,ResCov);
   for(int s=0;s<LorentzVectorParticle::NVertex;s++){
     for(int t=0;t<LorentzVectorParticle::NVertex;t++){
       cov(s,t)=RespCov(s,t);
