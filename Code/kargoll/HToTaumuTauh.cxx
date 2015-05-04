@@ -116,6 +116,7 @@ HToTaumuTauh::~HToTaumuTauh(){
 	if (mode == ANALYSIS) {
 		delete RSF;
 	}
+
 	delete clock;
 
 	Logger(Logger::Info) << "HToTaumuTauh::~HToTaumuTauh() done" << std::endl;
@@ -522,6 +523,8 @@ void  HToTaumuTauh::Setup(){
   SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"t_{real}(SVFit)/sec");
   SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"t_{CPU}(SVFit)/sec");
 
+  SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
+
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
   else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
@@ -705,6 +708,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
 
  Extradist1d.push_back(&SVFitTimeReal);
  Extradist1d.push_back(&SVFitTimeCPU);
+ Extradist1d.push_back(&SVFitStatus);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -1263,8 +1267,21 @@ void  HToTaumuTauh::doEvent(){
 
 	  // shape distributions for final fit
 	  double visMass = (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M();
-	  double svfMass = svfObj->get_mass();
 	  shape_VisM.at(t).Fill(visMass, w);
+	  double svfMass = -999;
+	  if ( !svfObj->isValid() ) {
+		  Logger(Logger::Warning) << "SVFit object is invalid. SVFit mass set to -999." << std::endl;
+		  SVFitStatus.at(t).Fill(1);
+	  }
+	  else if ( svfObj->get_mass() < visMass ) {
+		  Logger(Logger::Warning) << "SVFit mass " << svfObj->get_mass() << " smaller than visible mass " << visMass << ". SVFit mass SVFit mass set to -999." << std::endl;
+		  SVFitStatus.at(t).Fill(2);
+	  }
+	  else {
+		  svfMass = svfObj->get_mass();
+		  SVFitStatus.at(t).Fill(0);
+	  }
+
 	  shape_SVfitM.at(t).Fill(svfMass, w);
 
 	  // ZL shape uncertainty
@@ -1279,16 +1296,16 @@ void  HToTaumuTauh::doEvent(){
 	  TLorentzVector tauP4Up 	= 1.03 * Ntp->PFTau_p4(selTau);
 	  TLorentzVector tauP4Down	= 0.97 * Ntp->PFTau_p4(selTau);
 	  clock->Start("SVFitTauESUp");
-	  SVFitObject *svfObjTauESUp = Ntp->getSVFitResult(svfitstorTauESUp, "CorrMVAMuTau", selMuon, selTau, "TauESUp", 1., 1.03);
+	  SVFitObject *svfObjTauESUp = Ntp->getSVFitResult(svfitstorTauESUp, "CorrMVAMuTau", selMuon, selTau, 2000, "TauESUp", 1., 1.03);
 	  clock->Stop("SVFitTauESUp");
 	  clock->Start("SVFitTauESDown");
-	  SVFitObject *svfObjTauESDown = Ntp->getSVFitResult(svfitstorTauESDown, "CorrMVAMuTau", selMuon, selTau, "TauESDown", 1., 0.97);
+	  SVFitObject *svfObjTauESDown = Ntp->getSVFitResult(svfitstorTauESDown, "CorrMVAMuTau", selMuon, selTau, 2000, "TauESDown", 1., 0.97);
 	  clock->Stop("SVFitTauESDown");
 
 	  double visMass_tauESUp	= (Ntp->Muon_p4(selMuon) + tauP4Up).M();
 	  double visMass_tauEsDown	= (Ntp->Muon_p4(selMuon) + tauP4Down).M();
-	  double svfMass_tauESUp	= svfObjTauESUp->get_mass();
-	  double svfMass_tauESDown	= svfObjTauESDown->get_mass();
+	  double svfMass_tauESUp	= (svfObjTauESUp->isValid())   ? svfObjTauESUp->get_mass()   : -999.;
+	  double svfMass_tauESDown	= (svfObjTauESDown->isValid()) ? svfObjTauESDown->get_mass() : -999.;
 
 	  shape_VisM_TauESUp.at(t).Fill(visMass_tauESUp, w);
 	  shape_VisM_TauESDown.at(t).Fill(visMass_tauEsDown, w);
@@ -1585,11 +1602,9 @@ void HToTaumuTauh::Finish() {
 		}
 	}
 
-
 	// call GetHistoInfo here (instead of in Configure function), otherwise the SetCrossSection calls are not reflected
 	HConfig.GetHistoInfo(types, CrossSectionandAcceptance, legend, colour);
 	Selection::Finish();
-
 }
 
 

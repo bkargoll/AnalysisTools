@@ -177,7 +177,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   // access to SVFit
   #ifdef USE_SVfit
-  SVFitObject* getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
+  SVFitObject* getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery = 5000, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
   #endif
 
 

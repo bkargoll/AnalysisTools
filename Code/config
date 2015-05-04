@@ -105,7 +105,7 @@ else
 	git clone https://github.com/inugent/TauDataFormat.git TauDataFormat
 	
 	if [ $UseSVfit == 1 ]; then
-		git clone -b 2015Feb10 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
+		git clone -b svFit_2015Apr03 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
 	fi
 	
 	cd ../

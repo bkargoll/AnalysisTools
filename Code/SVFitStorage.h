@@ -14,7 +14,6 @@
 #include "DataStorage.h"
 #include "TBranch.h"
 
-
 class SVFitStorage : public DataStorage {
  public:
   SVFitStorage();
@@ -40,6 +39,7 @@ class SVFitStorage : public DataStorage {
   
   TString treeName_;
   TString suffix_; // optional identifier for modifications (e.g. systematics)
+  TString storageFileName_;
 
   UInt_t RunNumber_;
   UInt_t LumiNumber_;

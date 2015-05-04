@@ -76,7 +76,7 @@ void Parameters::GetVectorString(TString p, std::vector<TString> &v, TString dv)
   unsigned int a=0;
   while(getline(input_file, s)){
     a++;
-    if(a>10000){Logger(Logger::Error) << "More than 10000 line in file??? Breaking" << std::endl; break;}
+    if(a>50000){Logger(Logger::Error) << "More than 50000 line in file??? Breaking" << std::endl; break;}
     std::stringstream line(s);
     TString par;
     TString val;

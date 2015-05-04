@@ -4,9 +4,12 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
+#include "TKey.h"
+#include "TIterator.h"
 #include <TEntryList.h>
 #include <iostream>
 #include <set>
+#include <vector>
 
 using namespace std;
 
@@ -33,53 +36,7 @@ void removeDuplicatesFromTTree() {
 	TFile fileOut(outputFileName.Data(), "RECREATE");
 	fileOut.cd();
 
-	std::vector<TString> treeNames;
-	treeNames.push_back("Tree_TauPlusX");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-110_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-115_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-125_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-130_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-135_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-140_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-145_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-150_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-155_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-160_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-110_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-115_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-125_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-130_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-135_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-140_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-145_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-150_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-155_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-160_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-110_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-120_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-135_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-140_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-150_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-155_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_WH_ZH_TTH_HToTauTau_M-160_8TeV-pythia6-tauola");
-	treeNames.push_back("Tree_DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball");
-	treeNames.push_back("Tree_WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola");
-	treeNames.push_back("Tree_TT_CT10_TuneZ2star_8TeV-powheg-tauola");
-	treeNames.push_back("Tree_T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola");
-	treeNames.push_back("Tree_Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola");
-	treeNames.push_back("Tree_WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball");
-	treeNames.push_back("Tree_GluGluToHToTauTau_M-120_8TeV-powheg-pythia6");
-	treeNames.push_back("Tree_VBF_HToTauTau_M-120_8TeV-powheg-pythia6");
-
+	std::vector<TString> treeNames = getListOfTrees(inFile);
 	int nTrees = treeNames.size();
 	printf("loop over %i trees...\n", nTrees);
 	for (int itree = 0; itree < nTrees; itree++) {
@@ -148,4 +105,19 @@ void removeDuplicatesFromTTree() {
 	printf("Cleaned trees have been saved to %s.\nDone.\n", outputFileName.Data());
 
 	// delete [] index;
+}
+
+// stolen from $ROOTSYS/tutorials/io/loopdir.C
+std::vector<TString> getListOfTrees(TFile* f){
+	std::vector<TString> list;
+
+	TIter next(f->GetListOfKeys());
+	TKey *key;
+	while( (key = (TKey*)next() ) ){
+		TClass *cl = gROOT->GetClass(key->GetClassName());
+		if (!cl->InheritsFrom("TTree")) continue;
+		list.push_back(key->GetName());
+	}
+
+	return list;
 }

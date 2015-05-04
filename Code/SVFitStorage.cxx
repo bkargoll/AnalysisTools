@@ -16,8 +16,17 @@
 #include "TTreeIndex.h"
 
 SVFitStorage::SVFitStorage():
+	outfile_(0),
+	outtree_(0),
+	intree_(0),
+	index_(0),
 	treeName_("invalid"),
 	suffix_(""),
+	svfit_(0),
+	b_RunNumber_(0),
+	b_LumiNumber_(0),
+	b_EventNumber_(0),
+	b_svfit_(0),
 	isConfigured_(false),
 	intreeLoaded_(false){
 
@@ -26,23 +35,22 @@ SVFitStorage::SVFitStorage():
 
 	inputFileName = "SVFitInput_temp_";
 
-	// create ipnut and output tree
-	// make sure to set name and title to proper values in Configure(...)
-	outtree_= new TTree("temp", "temp");
-	intree_ = new TChain("temp", "temp");
-
-	// allocate memory for objects to be stored in tree
-	svfit_ = new SVFitObject();
+	// Configure(...) MUST be called before instance of this class can be called
 }
 
 SVFitStorage::~SVFitStorage(){
-	if (isConfigured_)
+	if (isConfigured_){
 		SaveTree();
 
-	delete outtree_;
-	delete intree_;
+		// cleaning up:
+		// make sure to delete the TTree objects before closing/destroying the TFile they are associated to
+		delete outtree_;
+		delete intree_;
+		delete outfile_;
 
-	delete svfit_;
+		delete svfit_;
+	}
+	Logger(Logger::Debug) << "Properly destroyed." << std::endl;
 }
 
 void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
@@ -51,13 +59,34 @@ void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
 		return;
 	}
 
+	suffix_ = suffix;
 	treeName_ = "Tree_" +  datasetName;
 
-	suffix_ = suffix;
 	if (suffix_ != ""){
 		treeName_ = treeName_ + "_" + suffix_;
 		inputFileName = inputFileName + suffix_ + "_";
 	}
+
+	// Specify file name of output file
+	Parameters Par; // assumes configured in Analysis.cxx
+	TString key = "OutputFileSVFit" + suffix_ + ":";
+	Par.GetString(key, storageFileName_);
+	TString outputFileLocal = "MySVFIT" + suffix_ + ".root";
+	// Load output file
+	outfile_ = TFile::Open(outputFileLocal, "RECREATE");
+	if (!outfile_) {
+		Logger(Logger::Error) << outputFileLocal << " could not be created" << std::endl;
+		return;
+	}
+
+	// create input and output tree
+	// make sure to set name and title to proper values below
+	outtree_= new TTree("temp", "temp");
+	intree_ = new TChain("temp2", "temp2");
+	intree_->SetDirectory(0);
+
+	// allocate memory for objects to be stored in tree
+	svfit_ = new SVFitObject();
 
 	// setup output tree
 	outtree_->SetName(treeName_);
@@ -67,13 +96,18 @@ void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
 	outtree_->Branch("EventNumber", &EventNumber_);
 	outtree_->Branch("svfit", &svfit_);
 
+	isConfigured_ = true;
+
 	// setup input tree
 	LoadTree();
-
-	isConfigured_ = true;
 }
 
 void SVFitStorage::LoadTree(){
+	if ( !isConfigured_ ){
+		Logger(Logger::Error) << "SVFitStorage must be configured before LoadTree can be called." << std::endl;
+		return;
+	}
+
 	TString key = "InputFileSVFit" + suffix_ + ":";
 	int nfiles = GetFile(key);
 	if (nfiles == 0) {
@@ -118,6 +152,7 @@ void SVFitStorage::LoadTree(){
 		gDirectory = gdirectory_save;
 		gDirectory->cd();
 
+		Logger(Logger::Verbose) << "Input TTree " << treeName_ << " has been loaded." << std::endl;
 		intreeLoaded_ = true;
 	}
 }
@@ -151,28 +186,17 @@ void SVFitStorage::SaveTree(){
 		return;
 	}
 
-	//Load File name
-	Parameters Par; // assumes configured in Analysis.cxx
-	TString outputFileDCache;
-	TString key = "OutputFileSVFit" + suffix_ + ":";
-	Par.GetString(key, outputFileDCache);
-	TString outputFileLocal = "MySVFIT" + suffix_ + ".root";
 	//Save output
 	TDirectory *gdirectory_save = gDirectory;
-	TFile *outfile_ = TFile::Open(outputFileLocal, "RECREATE");
-	if (!outfile_) {
-		Logger(Logger::Error) << outputFileDCache << " not saved" << std::endl;
-		return;
-	}
 	outfile_->cd();
 	outtree_->Write(treeName_);
-	outfile_->Close();
+	// do not close outfile_ here, because outtree_ is associated to it
 	gDirectory = gdirectory_save;
 	gDirectory->cd();
-	Logger(Logger::Info) << "SVFit_Tree saved to " << outputFileLocal << std::endl;
+	Logger(Logger::Info) << "SVFit_Tree saved to " << outfile_->GetName() << std::endl;
 	//Store file on the grid
-	StoreFile(outputFileLocal, outputFileDCache);
-	Logger(Logger::Info) << outputFileLocal << " saved to the grid " << outputFileDCache << std::endl;
+	StoreFile(outfile_->GetName() , storageFileName_);
+	Logger(Logger::Info) << outfile_->GetName() << " saved to the grid " << storageFileName_.Data() << std::endl;
 }
 
 void SVFitStorage::SaveEvent(Int_t RunNumber, Int_t LumiNumber, Int_t EventNumber, SVFitObject* svfit){
@@ -196,7 +220,7 @@ SVFitObject* SVFitStorage::GetEvent(UInt_t RunNumber, UInt_t LumiNumber, UInt_t 
 		return svfit_;
 	}
 	if (!intreeLoaded_) {
-		Logger(Logger::Verbose) << "SVFitStorage not configured, thus GetEvent does not work." << std::endl;
+		Logger(Logger::Verbose) << "No input tree loaded, thus GetEvent does not work." << std::endl;
 		*svfit_ = SVFitObject(); // invalid object
 		return svfit_;
 	}
@@ -233,5 +257,3 @@ SVFitObject* SVFitStorage::GetEvent(UInt_t RunNumber, UInt_t LumiNumber, UInt_t 
 	}
 	return svfit_;
 }
-
-
