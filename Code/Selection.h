@@ -48,6 +48,7 @@ class Selection : public Selection_Base {
   virtual void ResetEvent();
   virtual void ScaleAllHistOfType(unsigned int t,float);
   void suppressDrawingHistOfType(unsigned int t);
+  bool passFullSelection();
   bool passAllBut(std::vector<unsigned int> index);
   bool passAllBut(unsigned int i_cut);
   bool passAllUntil(unsigned int i_cut);

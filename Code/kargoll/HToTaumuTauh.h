@@ -103,9 +103,11 @@ class HToTaumuTauh : public Selection {
 
  protected:
   virtual void Setup();
-  virtual void doEvent();
   virtual void Store_ExtraDist();
   virtual void  Finish();
+
+  virtual void doEvent(); // to be called directly by framework
+  virtual void doEvent(bool runAnalysisCuts); // to be called from derived classes
 
   // Selection Variables
   std::vector<TH1D> NCatFired;
@@ -284,7 +286,7 @@ class HToTaumuTauh : public Selection {
   bool qcdUseEfficiencyMethod;
   // flag to use embedding
   bool useEmbedding;
-  // flog to enable/disable SVFit calculation
+  // flag to enable/disable SVFit calculation
   bool runSVFit;
 
   // map to hold WJets yields for each category

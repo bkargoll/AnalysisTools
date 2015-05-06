@@ -154,7 +154,8 @@ void ZeroJetLow3Prong::Store_ExtraDist(){
 
 void ZeroJetLow3Prong::doEvent(){
 	Logger(Logger::Verbose) << std::endl;
-	HToTaumuTauh::doEvent();
+	HToTaumuTauh::doEvent(false); // run HToTaumuTauh::doEvent without filling framework plots
+
 	// todo: split analysis part from plotting part in HToTaumuTauh
 
 	Logger(Logger::Debug) << "Cut: Tau decay mode" << std::endl;

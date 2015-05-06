@@ -465,6 +465,15 @@ void Selection::suppressDrawingHistOfType(unsigned int t) {
 	}
 }
 
+// Returns true if all analysis cuts have been passed, and false otherwise.
+// Return value is same as of AnalysisCuts(...), but histograms are NOT filled.
+bool Selection::passFullSelection(){
+	for (unsigned int i_cut = 0; i_cut < pass.size(); i_cut++) {
+		if (!pass.at(i_cut)) return false; // checks whether cut passed or not
+	}
+	return true;
+}
+
 // Returns true, if all cuts except for those in vector 'indices' passed.
 // Elements of vector 'indices' are the indices i_cut of the vector cut
 bool Selection::passAllBut(std::vector<unsigned int> indices) {

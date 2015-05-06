@@ -712,6 +712,10 @@ void  HToTaumuTauh::Store_ExtraDist(){
 }
 
 void  HToTaumuTauh::doEvent(){
+	doEvent(true);
+}
+
+void HToTaumuTauh::doEvent(bool runAnalysisCuts){
   Logger(Logger::Verbose) << ">>>>>>>>>>>>>>>>" << std::endl;
   Logger(Logger::Verbose) << "\tCategory: " << categoryFlag << std::endl;
 
@@ -1183,7 +1187,9 @@ void  HToTaumuTauh::doEvent(){
   if (passedFullInclusiveSel && !(passed_VBFTight || passed_VBFLoose || passed_OneJetHigh|| passed_OneJetLow || passed_OneJetBoost || passed_ZeroJetHigh || passed_ZeroJetLow))
 		  Logger(Logger::Warning) << "************* NO CATEGORY PASSED! ****************" << std::endl;
 
-  bool status=AnalysisCuts(t,w,wobs); // true only if full selection passed
+  bool status;  // true only if full selection passed
+  if (runAnalysisCuts)	status = AnalysisCuts(t,w,wobs);	// fill plots for framework
+  else					status = passFullSelection();		// make sure plots are filled somewhere else (e.g. in a derived class)
 
   ///////////////////////////////////////////////////////////
   // Add plots
