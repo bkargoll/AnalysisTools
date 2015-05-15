@@ -1,0 +1,24 @@
+# Put data in first line
+Histo:	1   	-1 			Data 					Data 									1
+
+# Higgs signal sample for drawing in plots (m = 125 GeV)
+Histo:	12511  	1.217744 	MC_ggFHTauTauM125 		H^{125}_{ggF}#rightarrow{}^{}#tau#tau 	632
+Histo:	12512  	0.099730 	MC_VBFHTauTauM125 		H^{125}_{VBF}#rightarrow{}^{}#tau#tau 	633
+Histo:	12513  	0.078949 	MC_WHZHTTHTauTauM125	H^{125}_{AP}#rightarrow{}^{}#tau#tau 	634
+
+# Background samples (in order from bottom to top)
+Histo:	60  	-1 			QCD 					QCD 									606
+Histo:	56  	5.824 		MC_WW_2l2nu 			WW#rightarrow{}^{}2l2#nu 				417
+Histo:	57  	2.207 		MC_WZ_2l2q 				WZ#rightarrow{}^{}2l2q 					418
+Histo:	58  	1.058 		MC_WZ_3l1nu 			WZ#rightarrow{}^{}3l1#nu 				419
+Histo:	53  	0.181 		MC_ZZ_4l 				ZZ#rightarrow{}^{}4l 					420
+Histo:	54  	0.716 		MC_ZZ_2l2nu 			ZZ#rightarrow{}^{}2l2#nu 				416
+Histo:	55  	2.502 		MC_ZZ_2l2q 				ZZ#rightarrow{}^{}2l2q 					415
+Histo:	70  	245.8 		MC_ttbar 				t#bar{t} 								600
+Histo:	71  	11.1 		MC_tw 					tW 										603
+Histo:	72  	11.1 		MC_tbarw 				#bar{t}w 								591
+Histo:	20  	24171.3 	MC_W_lnu 				W#rightarrow{}^{}l#nu 					876
+Histo:	23  	12085.7 	MC_W_taunu 				W#rightarrow{}^{}#tau#nu 				874
+Histo:	30  	2336.0 		MC_DY_ll 				Z/#gamma#rightarrow{}^{}ll 				800
+Histo:	33  	1168.0 		MC_DY_tautau 			Z/#gamma#rightarrow{}^{}#tau#tau 		394
+Histo:	35  	-1 			MC_DY_embedded 			Z/#gamma#rightarrow{}^{}#tau#tau{}^{}emb. 400
