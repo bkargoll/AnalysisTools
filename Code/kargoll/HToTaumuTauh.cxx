@@ -525,6 +525,16 @@ void  HToTaumuTauh::Setup(){
 
   SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
 
+  TrueMass						= HConfig.GetTH1D(Name+"_TrueMass","TrueMass",100,0.,200.,"m_{gen}(#tau_{h},#mu)/GeV");
+  TrueMassFull3ProngVisibleMuon	= HConfig.GetTH1D(Name+"_TrueMassFull3ProngVisibleMuon","TrueMassFull3ProngVisibleMuon",100,0.,200.,"m(#tau_{h}^{full, gen},#mu^{vis.})/GeV");
+  TrueVisibleMass				= HConfig.GetTH1D(Name+"_TrueVisibleMass","TrueVisibleMass",100,0.,200.,"m_{vis gen}(#tau_{h},#mu)/GeV");
+  TauhPtSVFitted	= HConfig.GetTH1D(Name+"_TauhPtSVFitted","TauhPtSVFitted",50,0.,100.,"p_{T}^{SVFit}(#tau_{h}^{sel})/GeV");
+  TauhEtaSVFitted   = HConfig.GetTH1D(Name+"_TauhEtaSVFitted","TauhEtaSVFitted",50,-2.5,2.5,"#eta^{SVFit}(#tau_{h}^{sel})");
+  TauhPhiSVFitted   = HConfig.GetTH1D(Name+"_TauhPhiSVFitted","TauhPhiSVFitted",50,-3.14159,3.14159,"#phi^{SVFit}(#tau_{h}^{sel})");
+  TauMuPtSVFitted	= HConfig.GetTH1D(Name+"_TauMuPtSVFitted","TauMuPtSVFitted",50,0.,100.,"p_{T}^{SVFit}(#tau_{#mu}^{sel})/GeV");
+  TauMuEtaSVFitted  = HConfig.GetTH1D(Name+"_TauMuEtaSVFitted","TauMuEtaSVFitted",50,-2.5,2.5,"#eta^{SVFit}(#tau_{#mu}^{sel})");
+  TauMuPhiSVFitted  = HConfig.GetTH1D(Name+"_TauMuPhiSVFitted","TauMuPhiSVFitted",50,-3.14159,3.14159,"#phi^{SVFit}(#tau_{#mu}^{sel})");
+
   // configure category
   if (categoryFlag == "VBFTight")	configure_VBFTight();
   else if (categoryFlag == "VBFLoose")	configure_VBFLoose();
@@ -709,6 +719,16 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&SVFitTimeReal);
  Extradist1d.push_back(&SVFitTimeCPU);
  Extradist1d.push_back(&SVFitStatus);
+
+ Extradist1d.push_back(&TrueMass);
+ Extradist1d.push_back(&TrueMassFull3ProngVisibleMuon);
+ Extradist1d.push_back(&TrueVisibleMass);
+ Extradist1d.push_back(&TauhPtSVFitted);
+ Extradist1d.push_back(&TauhEtaSVFitted);
+ Extradist1d.push_back(&TauhPhiSVFitted);
+ Extradist1d.push_back(&TauMuPtSVFitted);
+ Extradist1d.push_back(&TauMuEtaSVFitted);
+ Extradist1d.push_back(&TauMuPhiSVFitted);
 }
 
 void  HToTaumuTauh::doEvent(){
@@ -1265,10 +1285,18 @@ void HToTaumuTauh::doEvent(bool runAnalysisCuts){
 
 	  // Mu-Tau Mass
 	  visibleMass.at(t).Fill( (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M(), w);
+	  TrueMass.at(t).Fill(Ntp->getResonanceMassFromGenInfo(), w);
+	  int i_matchedMCTau = Ntp->matchTauTruth(selTau, true);
+	  if (i_matchedMCTau >= 0) {
+		  TrueMassFull3ProngVisibleMuon.at(t).Fill( (Ntp->MCTau_p4(i_matchedMCTau) + Ntp->Muon_p4(selMuon)).M(), w);
+		  int mcMuIdx = Ntp->getMatchTruthIndex(Ntp->Muon_p4(selMuon), PDGInfo::mu_plus, 0.3);
+		  if(mcMuIdx>=0) TrueVisibleMass.at(t).Fill( (Ntp->MCTau_visiblePart(i_matchedMCTau) + Ntp->MCParticle_p4( mcMuIdx )).M(), w);
+	  }
+
 	  // SVFit
 	  clock->Start("SVFit");
 	  // get SVFit result from cache
-	  SVFitObject *svfObj = Ntp->getSVFitResult(svfitstorage, "CorrMVAMuTau", selMuon, selTau);
+	  SVFitObject *svfObj = Ntp->getSVFitResult_MuTauh(svfitstorage, "CorrMVAMuTau", selMuon, selTau, 50000);
 	  clock->Stop("SVFit");
 
 	  // shape distributions for final fit
@@ -1289,6 +1317,14 @@ void HToTaumuTauh::doEvent(bool runAnalysisCuts){
 	  }
 
 	  shape_SVfitM.at(t).Fill(svfMass, w);
+
+	  // SVfitted leptons
+	  TauhPtSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(1).Pt(), w);
+	  TauhEtaSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(1).Eta(), w);
+	  TauhPhiSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(1).Phi(), w);
+	  TauMuPtSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(0).Pt(), w);
+	  TauMuEtaSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(0).Eta(), w);
+	  TauMuPhiSVFitted.at(t).Fill(svfObj->get_fittedTauLeptons().at(0).Phi(), w);
 
 	  // ZL shape uncertainty
 	  if (HConfig.GetID(t) == DataMCType::DY_ll || HConfig.GetID(t) == DataMCType::DY_ee || HConfig.GetID(t) == DataMCType::DY_mumu){

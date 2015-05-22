@@ -112,6 +112,38 @@ void ZeroJetLow3Prong::Setup(){
 	EventFit_Res_Eta= HConfig.GetTH1D(Name+"_EventFit_Res_Eta","EventFit_Res_Eta" ,50,-2.5,2.5,"#eta(X^{fit})");
 	EventFit_Res_Phi= HConfig.GetTH1D(Name+"_EventFit_Res_Phi","EventFit_Res_Phi" ,50,-3.14159,3.14159,"#phi(X^{fit})");
 	EventFit_Res_E	= HConfig.GetTH1D(Name+"_EventFit_Res_E","EventFit_Res_E"     ,50,0.,200.,"E(X^{fit})/GeV");
+
+	svFit3pMass_PlusSol		= HConfig.GetTH1D(Name+"_svFit3pMass_PlusSol",	"svFit3pMass_PlusSol",	100, 0., 200., "m_{SVfit}(#tau_{3p}^{+},#mu)/GeV");
+	svFit3pMass_MinusSol	= HConfig.GetTH1D(Name+"_svFit3pMass_MinusSol",	"svFit3pMass_MinusSol",	100, 0., 200., "m_{SVfit}(#tau_{3p}^{-},#mu)/GeV");
+	svFit3pMass_ZeroSol		= HConfig.GetTH1D(Name+"_svFit3pMass_ZeroSol",	"svFit3pMass_ZeroSol",	100, 0., 200., "m_{SVfit}(#tau_{3p}^{0},#mu)/GeV");
+	svFit3pMass_TrueSol		= HConfig.GetTH1D(Name+"_svFit3pMass_TrueSol",	"svFit3pMass_TrueSol",	100, 0., 200., "m_{SVfit}(#tau_{3p}^{true},#mu)/GeV");
+	svFit3pMassResol_PlusSol	= HConfig.GetTH1D(Name+"_svFit3pMassResol_PlusSol",	"svFit3pMassResol_PlusSol",	150, 0.5, 2.0, "#frac{m_{SVfit} - m_{true}}{m_{true}}(#tau_{3p}^{+},#mu)");
+	svFit3pMassResol_MinusSol	= HConfig.GetTH1D(Name+"_svFit3pMassResol_MinusSol","svFit3pMassResol_MinusSol",150, 0.5, 2.0, "#frac{m_{SVfit} - m_{true}}{m_{true}}(#tau_{3p}^{-},#mu)");
+	svFit3pMassResol_ZeroSol	= HConfig.GetTH1D(Name+"_svFit3pMassResol_ZeroSol",	"svFit3pMassResol_ZeroSol",	150, 0.5, 2.0, "#frac{m_{SVfit} - m_{true}}{m_{true}}(#tau_{3p}^{0},#mu)");
+	svFit3pMassResol_TrueSol	= HConfig.GetTH1D(Name+"_svFit3pMassResol_TrueSol",	"svFit3pMassResol_TrueSol",	150, 0.5, 2.0, "#frac{m_{SVfit} - m_{true}}{m_{true}}(#tau_{3p}^{true},#mu)");
+
+	Tau_Pt_3pTrueVsSVfit3pTrueSol	= HConfig.GetTH2D(Name+"_Tau_Pt_3pTrueVsSVfit3pTrueSol","Tau_Pt_3pTrueVsSVfit3pTrueSol", 50, 0., 200., 50, 0., 200., "p_{T}(#tau_{3p}^{true})/GeV", "p_{T}(#tau_{SVFit}^{3p true})/GeV");
+	Tau_Pt_3pTrueSVfit3pTrueSolResol	= HConfig.GetTH1D(Name+"_Tau_Pt_3pTrueSVfitResol","Tau_Pt_3pTrueSVfitResol",150, 0.5, 2.0, "#frac{p_{T}(#tau_{3p}^{true}) - p_{T}(#tau_{SVFit}^{3p true})}{p_{T}(#tau_{3p}^{true}}");
+	Tau_Pt_3pTrueVsSVfit3pZeroSol = HConfig.GetTH2D(Name+"_Tau_Pt_3pTrueVsSVfit3pZeroSol","Tau_Pt_3pTrueVsSVfit3pZeroSol", 50, 0., 200., 50, 0., 200., "p_{T}(#tau_{3p}^{true})/GeV", "p_{T}(#tau_{SVFit}^{3p zero})/GeV");
+	Tau_Pt_3pTrueSVfit3pZeroSolResol	= HConfig.GetTH1D(Name+"_Tau_Pt_3pTrueSVfit3pZeroSolResol","Tau_Pt_3pTrueSVfit3pZeroSolResol",150, 0.5, 2.0, "#frac{p_{T}(#tau_{3p}^{true}) - p_{T}(#tau_{SVFit}^{3p zero})}{p_{T}(#tau_{3p}^{true}}");
+
+	vis3pMass_PlusSol		= HConfig.GetTH1D(Name+"_vis3pMass_PlusSol",	"vis3pMass_PlusSol",	100, 0., 200., "m_{vis}(#tau_{3p}^{+},#mu)/GeV");
+	vis3pMass_MinusSol		= HConfig.GetTH1D(Name+"_vis3pMass_MinusSol",	"vis3pMass_MinusSol",	100, 0., 200., "m_{vis}(#tau_{3p}^{-},#mu)/GeV");
+	vis3pMass_ZeroSol		= HConfig.GetTH1D(Name+"_vis3pMass_ZeroSol",	"vis3pMass_ZeroSol",	100, 0., 200., "m_{vis}(#tau_{3p}^{0},#mu)/GeV");
+	vis3pMass_TrueSol		= HConfig.GetTH1D(Name+"_vis3pMass_TrueSol",	"vis3pMass_TrueSol",	100, 0., 200., "m_{vis}(#tau_{3p}^{true},#mu)/GeV");
+	vis3pMassResol_PlusSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_PlusSol",	"vis3pMassResol_PlusSol",	150, 0.5, 2.0, "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{+},#mu)");
+	vis3pMassResol_MinusSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_MinusSol","vis3pMassResol_MinusSol",150, 0.5, 2.0, "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{-},#mu)");
+	vis3pMassResol_ZeroSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_ZeroSol",	"vis3pMassResol_ZeroSol",	150, 0.5, 2.0, "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{0},#mu)");
+	vis3pMassResol_TrueSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_TrueSol",	"vis3pMassResol_TrueSol",	150, 0.5, 2.0, "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{true},#mu)");
+
+	Tau3p_True_Pt  = HConfig.GetTH1D(Name+"_Tau3p_True_Pt","Tau3p_True_Pt"	,50,0.,100.,"p_{T}(#tau_{3p}^{true sol.})/GeV");
+	Tau3p_True_Eta = HConfig.GetTH1D(Name+"_Tau3p_True_Eta","Tau3p_True_Eta",50,-2.5,2.5,"#eta(#tau_{3p}^{true sol.})");
+	Tau3p_True_Phi = HConfig.GetTH1D(Name+"_Tau3p_True_Phi","Tau3p_True_Phi",50,-3.14159,3.14159,"#phi(#tau_{3p}^{true sol.})");
+	Tau3p_True_E   = HConfig.GetTH1D(Name+"_Tau3p_True_E","Tau3p_True_E"	,50,0.,200.,"E(#tau_{3p}^{true sol.})/GeV");
+	Tau3p_True_Pt_Resol  = HConfig.GetTH1D(Name+"_Tau3p_True_Pt_Resol","Tau3p_True_Pt_Resol"	,150, 0.5, 2.0,"p_{T} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{tau_{gen}}");
+	Tau3p_True_Eta_Resol = HConfig.GetTH1D(Name+"_Tau3p_True_Eta_Resol","Tau3p_True_Eta_Resol"	,150, 0.5, 2.0,"#eta resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{tau_{gen}}");
+	Tau3p_True_Phi_Resol = HConfig.GetTH1D(Name+"_Tau3p_True_Phi_Resol","Tau3p_True_Phi_Resol"	,150, 0.5, 2.0,"#phi resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{tau_{gen}}");
+	Tau3p_True_E_Resol   = HConfig.GetTH1D(Name+"_Tau3p_True_E_Resol","Tau3p_True_E_Resol"		,150, 0.5, 2.0,"E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{tau_{gen}}");
 }
 
 void ZeroJetLow3Prong::Store_ExtraDist(){
@@ -150,6 +182,38 @@ void ZeroJetLow3Prong::Store_ExtraDist(){
 	Extradist1d.push_back(&EventFit_Res_Eta);
 	Extradist1d.push_back(&EventFit_Res_Phi);
 	Extradist1d.push_back(&EventFit_Res_E);
+
+	Extradist1d.push_back(&svFit3pMass_PlusSol);
+	Extradist1d.push_back(&svFit3pMass_MinusSol);
+	Extradist1d.push_back(&svFit3pMass_ZeroSol);
+	Extradist1d.push_back(&svFit3pMass_TrueSol);
+	Extradist1d.push_back(&svFit3pMassResol_PlusSol);
+	Extradist1d.push_back(&svFit3pMassResol_MinusSol);
+	Extradist1d.push_back(&svFit3pMassResol_ZeroSol);
+	Extradist1d.push_back(&svFit3pMassResol_TrueSol);
+
+	Extradist2d.push_back(&Tau_Pt_3pTrueVsSVfit3pTrueSol);
+	Extradist1d.push_back(&Tau_Pt_3pTrueSVfit3pTrueSolResol);
+	Extradist2d.push_back(&Tau_Pt_3pTrueVsSVfit3pZeroSol);
+	Extradist1d.push_back(&Tau_Pt_3pTrueSVfit3pZeroSolResol);
+
+	Extradist1d.push_back(&vis3pMass_PlusSol);
+	Extradist1d.push_back(&vis3pMass_MinusSol);
+	Extradist1d.push_back(&vis3pMass_ZeroSol);
+	Extradist1d.push_back(&vis3pMass_TrueSol);
+	Extradist1d.push_back(&vis3pMassResol_PlusSol);
+	Extradist1d.push_back(&vis3pMassResol_MinusSol);
+	Extradist1d.push_back(&vis3pMassResol_ZeroSol);
+	Extradist1d.push_back(&vis3pMassResol_TrueSol);
+
+	Extradist1d.push_back(&Tau3p_True_Pt);
+	Extradist1d.push_back(&Tau3p_True_Eta);
+	Extradist1d.push_back(&Tau3p_True_Phi);
+	Extradist1d.push_back(&Tau3p_True_E);
+	Extradist1d.push_back(&Tau3p_True_Pt_Resol);
+	Extradist1d.push_back(&Tau3p_True_Eta_Resol);
+	Extradist1d.push_back(&Tau3p_True_Phi_Resol);
+	Extradist1d.push_back(&Tau3p_True_E_Resol);
 }
 
 void ZeroJetLow3Prong::doEvent(){
@@ -189,8 +253,8 @@ void ZeroJetLow3Prong::doEvent(){
 	double wobs = 1;
 	bool status = AnalysisCuts(t,w,wobs); // true only if full selection passed
 
+	TPTRObject TPResults;
 	if (status){
-
 		LorentzVectorParticle A1 = Ntp->PFTau_a1_lvp(selTau);
 		TrackParticle MuonTP = Ntp->Muon_TrackParticle(selMuon);
 		TVector3 PV = Ntp->PFTau_TIP_primaryVertex_pos(selTau);
@@ -205,7 +269,7 @@ void ZeroJetLow3Prong::doEvent(){
 		double Phi_Res = (Recoil.Phi() > 0) ? Recoil.Phi() - TMath::Pi() : Recoil.Phi() + TMath::Pi();
 
 		GlobalEventFit GEF(MuonTP, A1, Phi_Res, PV, PVCov);
-		TPTRObject TPResults = GEF.getTPTRObject();
+		TPResults = GEF.getTPTRObject();
 		LorentzVectorParticle test = TPResults.getA1();
 		Logger(Logger::Debug) << test.LV().E() << std::endl;
 		GEFObject Results = GEF.Fit();
@@ -252,5 +316,87 @@ void ZeroJetLow3Prong::doEvent(){
 		EventFit_Res_E.at(t).Fill(Results.getResonance().LV().E(), w);
 	}
 
+	// calculate SVFit stuff for comparison
+	if (status) {
+		double trueHiggsMass = Ntp->getResonanceMassFromGenInfo(false, true, false);
+		int i_matchedMCTau = Ntp->matchTauTruth(selTau, true);
+		int true3ProngAmbig = Ntp->MCTau_true3prongAmbiguity( i_matchedMCTau );
+		bool isSignalTauDecay = (i_matchedMCTau < 0 || true3ProngAmbig < 0);
+		double ptSVFittrue(-9), ptSVFitZero(-9);
+		TLorentzVector trueTauP4 = Ntp->MCTau_p4(i_matchedMCTau);
+
+		if (TPResults.isAmbiguous()) {
+			SVFitObject *svfObjPlus  = Ntp->getSVFitResult_MuTau3p(svfitstor_Tau3pPlus, "CorrMVAMuTau", selMuon, TPResults.getTauPlus().LV(), "3ProngRecoPlus");
+			SVFitObject *svfObjMinus = Ntp->getSVFitResult_MuTau3p(svfitstor_Tau3pMinus, "CorrMVAMuTau", selMuon, TPResults.getTauMinus().LV(), "3ProngRecoMinus");
+
+			svFit3pMass_PlusSol.at(t).Fill(svfObjPlus->get_mass(), w);
+			svFit3pMass_MinusSol.at(t).Fill(svfObjMinus->get_mass(), w);
+			svFit3pMassResol_PlusSol.at(t).Fill( (svfObjPlus->get_mass() - trueHiggsMass) / trueHiggsMass, w);
+			svFit3pMassResol_MinusSol.at(t).Fill((svfObjMinus->get_mass() - trueHiggsMass) / trueHiggsMass, w);
+			double visMassPlus = (Ntp->Muon_p4(selMuon) + TPResults.getTauPlus().LV()).M();
+			double visMassMinus = (Ntp->Muon_p4(selMuon) + TPResults.getTauMinus().LV()).M();
+			vis3pMass_PlusSol.at(t).Fill( visMassPlus, w);
+			vis3pMass_MinusSol.at(t).Fill( visMassMinus, w);
+			vis3pMassResol_PlusSol.at(t).Fill( (visMassPlus - trueHiggsMass)/trueHiggsMass, w);
+			vis3pMassResol_MinusSol.at(t).Fill( (visMassMinus - trueHiggsMass)/trueHiggsMass, w);
+			switch (true3ProngAmbig) {
+				case MultiProngTauSolver::plus:
+					svFit3pMass_TrueSol.at(t).Fill(svfObjPlus->get_mass(), w);
+					svFit3pMassResol_TrueSol.at(t).Fill((svfObjPlus->get_mass() - trueHiggsMass) / trueHiggsMass, w);
+					vis3pMass_TrueSol.at(t).Fill((Ntp->Muon_p4(selMuon) + TPResults.getTauPlus().LV()).M(), w);
+					vis3pMassResol_TrueSol.at(t).Fill((visMassPlus - trueHiggsMass)/trueHiggsMass, w);
+					ptSVFittrue = svfObjPlus->get_fittedTauLeptons().at(1).Pt();
+
+					Tau3p_True_Pt.at(t).Fill(TPResults.getTauPlus().LV().Pt(), w);
+					Tau3p_True_Eta.at(t).Fill(TPResults.getTauPlus().LV().Eta(), w);
+					Tau3p_True_Phi.at(t).Fill(TPResults.getTauPlus().LV().Phi(), w);
+					Tau3p_True_E.at(t).Fill(TPResults.getTauPlus().LV().E(), w);
+					Tau3p_True_Pt_Resol.at(t).Fill( (TPResults.getTauPlus().LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() , w);
+					Tau3p_True_Eta_Resol.at(t).Fill((TPResults.getTauPlus().LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
+					Tau3p_True_Phi_Resol.at(t).Fill((TPResults.getTauPlus().LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
+					Tau3p_True_E_Resol.at(t).Fill((TPResults.getTauPlus().LV().E() - trueTauP4.E())/trueTauP4.E(), w);
+					break;
+				case MultiProngTauSolver::minus:
+					svFit3pMass_TrueSol.at(t).Fill(svfObjMinus->get_mass(), w);
+					svFit3pMassResol_TrueSol.at(t).Fill((svfObjMinus->get_mass() - trueHiggsMass) / trueHiggsMass, w);
+					vis3pMass_TrueSol.at(t).Fill((Ntp->Muon_p4(selMuon) + TPResults.getTauMinus().LV()).M(), w);
+					vis3pMassResol_TrueSol.at(t).Fill((visMassMinus - trueHiggsMass)/trueHiggsMass, w);
+					ptSVFittrue = svfObjMinus->get_fittedTauLeptons().at(1).Pt();
+
+					Tau3p_True_Pt.at(t).Fill(TPResults.getTauMinus().LV().Pt(), w);
+					Tau3p_True_Eta.at(t).Fill(TPResults.getTauMinus().LV().Eta(), w);
+					Tau3p_True_Phi.at(t).Fill(TPResults.getTauMinus().LV().Phi(), w);
+					Tau3p_True_E.at(t).Fill(TPResults.getTauMinus().LV().E(), w);
+					Tau3p_True_Pt_Resol.at(t).Fill( (TPResults.getTauMinus().LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() , w);
+					Tau3p_True_Eta_Resol.at(t).Fill((TPResults.getTauMinus().LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
+					Tau3p_True_Phi_Resol.at(t).Fill((TPResults.getTauMinus().LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
+					Tau3p_True_E_Resol.at(t).Fill((TPResults.getTauMinus().LV().E() - trueTauP4.E())/trueTauP4.E(), w);
+					break;
+				case -9:
+					Logger(Logger::Verbose) << "HPS tau not matched to signal tau decay." << std::endl;
+					break;
+				default:
+					Logger(Logger::Warning) << "True ambiguity value is " << true3ProngAmbig << ", which does not make sense." << std::endl;
+					break;
+			}
+
+		}
+		else {
+			SVFitObject *svfObjZero  = Ntp->getSVFitResult_MuTau3p(svfitstor_Tau3pZero, "CorrMVAMuTau", selMuon, TPResults.getTauZero().LV(), "3ProngRecoZero");
+
+			svFit3pMass_ZeroSol.at(t).Fill(svfObjZero->get_mass(), w);
+			svFit3pMassResol_ZeroSol.at(t).Fill((svfObjZero->get_mass() - trueHiggsMass) / trueHiggsMass, w);
+			double visMassZero = (Ntp->Muon_p4(selMuon) + TPResults.getTauZero().LV()).M();
+			vis3pMass_ZeroSol.at(t).Fill(visMassZero, w);
+			vis3pMassResol_ZeroSol.at(t).Fill((visMassZero - trueHiggsMass)/trueHiggsMass, w);
+
+			ptSVFitZero = svfObjZero->get_fittedTauLeptons().at(1).Pt();
+		}
+
+		Tau_Pt_3pTrueVsSVfit3pTrueSol.at(t).Fill(trueTauP4.Pt(), ptSVFittrue, w);
+		Tau_Pt_3pTrueSVfit3pTrueSolResol.at(t).Fill( (trueTauP4.Pt() - ptSVFittrue)/ptSVFittrue, w);
+		Tau_Pt_3pTrueVsSVfit3pZeroSol.at(t).Fill(trueTauP4.Pt(), ptSVFitZero, w);
+		Tau_Pt_3pTrueSVfit3pZeroSolResol.at(t).Fill( (trueTauP4.Pt() - ptSVFitZero)/ptSVFitZero, w);
+	}
 
 }

@@ -304,7 +304,7 @@ int Ntuple_Controller::getSampleHiggsMass(){
 	<< "\n\tMake sure the line InputNtuples is set correctly in your Input.txt. "
 	<< "\n\tFor now, we will fall back to obtaining the Higgs mass from the generator information."
 	<< "\n\tBe aware that SOME EVENTS WILL END UP IN THE WRONG HISTOGRAM!!!" << std::endl;
-	return getHiggsMassFromGenInfo();
+	return getHiggsSampleMassFromGenInfo();
 }
 
 int Ntuple_Controller::readHiggsMassFromString(TString input){
@@ -317,14 +317,24 @@ int Ntuple_Controller::readHiggsMassFromString(TString input){
 	return -999;
 }
 
-int Ntuple_Controller::getHiggsMassFromGenInfo(){
+double Ntuple_Controller::getResonanceMassFromGenInfo(bool useZ0 /* = true*/, bool useHiggs0 /* = true*/, bool useW /* = true*/){
 	for (unsigned int i = 0; i < NMCSignalParticles(); i++) {
-		if (abs(MCSignalParticle_pdgid(i)) == PDGInfo::Higgs0) {
-			for (int m = 100; m < 200; m = m+5){
-				if (fabs(MCSignalParticle_p4(i).M() - m) < 2.5 ) {
-					return m;
-				}
-			}
+		unsigned pdgid = abs(MCSignalParticle_pdgid(i));
+		bool Z0 = useZ0 && (pdgid == PDGInfo::Z0);
+		bool H0 = useHiggs0 && (pdgid == PDGInfo::Higgs0);
+		bool W = useW && (pdgid == PDGInfo::W_plus);
+		if (Z0 || H0 || W) {
+			return MCSignalParticle_p4(i).M();
+		}
+	}
+	return -999;
+}
+
+int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
+	double resMass = getResonanceMassFromGenInfo(false, true, false);
+	for (int m = 100; m < 200; m = m+5){
+		if (fabs(resMass - m) < 2.5 ) {
+			return m;
 		}
 	}
 	return -999;
@@ -1138,14 +1148,94 @@ int Ntuple_Controller::matchTruth(TLorentzVector tvector){
 	return pdgid;
 }
 bool Ntuple_Controller::matchTruth(TLorentzVector tvector, int pid, double dr){
+	if (getMatchTruthIndex(tvector, pid, dr) >= 0) return true;
+	return false;
+}
+int Ntuple_Controller::getMatchTruthIndex(TLorentzVector tvector, int pid, double dr){
+	int index = -9;
 	for(unsigned int i=0;i<NMCParticles();i++){
 		if(MCParticle_p4(i).Pt()>0.){
 			if(fabs(MCParticle_pdgid(i))==pid){
-				if(tvector.DeltaR(MCParticle_p4(i))<dr) return true;
+				if(tvector.DeltaR(MCParticle_p4(i))<dr) index = i;
 			}
 		}
 	}
-	return false;
+	return index;
+}
+
+int Ntuple_Controller::MCTau_true3prongAmbiguity(unsigned int i){
+	int amb = -9;
+
+	int j_a1 = MCTau_getDaughterOfType(i, PDGInfo::a_1_plus, true);
+	if (j_a1 < 0){
+		Logger(Logger::Warning) << "MCTau has no a1 decay product." << std::endl;
+		return -9;
+	}
+
+	TLorentzVector genTauh	= MCTau_p4(i);
+	TLorentzVector genA1	= MCTauandProd_p4(i, j_a1);
+
+	TLorentzVector GenA1_boosted(BoostToRestFrame(genTauh, genA1));
+	double dotProduct = GenA1_boosted.Vect().Dot( genTauh.Vect() );
+	if(dotProduct < 0){
+		amb = MultiProngTauSolver::plus;
+	}
+	else if(dotProduct > 0){
+		amb = MultiProngTauSolver::minus;
+	}
+	else if(dotProduct == 0){
+		amb = MultiProngTauSolver::zero;
+	}
+
+	return amb;
+}
+int Ntuple_Controller::MCTau_getDaughterOfType(unsigned int i_mcTau, int daughter_pdgid, bool ignoreCharge /*= true*/){
+	int matchedIndex = -1;
+	for(unsigned i_dau=0; i_dau < NMCTauDecayProducts(i_mcTau); i_dau++){
+		if( ignoreCharge ){
+			if( abs(MCTauandProd_pdgid(i_mcTau, i_dau)) == abs(daughter_pdgid) )
+				matchedIndex = i_dau;
+		}
+		else{
+			if( MCTauandProd_pdgid(i_mcTau, i_dau) == daughter_pdgid )
+				matchedIndex = i_dau;
+		}
+	}
+	return matchedIndex;
+}
+int Ntuple_Controller::matchTauTruth(unsigned int i_hpsTau, bool onlyHadrDecays /*= false*/){
+	int matchedIndex = -1;
+	for(unsigned i=0; i < NMCTaus(); i++){
+		if( onlyHadrDecays && (MCTau_JAK(i) <= 2) ) continue; // exclude decays to electrons and muons
+		if( MCTau_p4(i).DeltaR(PFTau_p4(i_hpsTau)) < 0.5 )
+			matchedIndex = i;
+	}
+	return matchedIndex;
+}
+
+//gets two TLorentzVectors (1. defines RF/Boost, 2. is boosted), creates a copy of the second and boosts it
+TLorentzVector Ntuple_Controller::BoostToRestFrame(TLorentzVector TLV1, TLorentzVector TLV2){
+	TVector3 boostvector = TLV1.BoostVector();
+	TLorentzVector boosted_TLV2(TLV2);
+	boosted_TLV2.Boost(-boostvector);
+	return boosted_TLV2;
+}
+
+// get visible/invisible part of gen Tau 4-vector
+TLorentzVector Ntuple_Controller::MCTau_invisiblePart(unsigned int i){
+	TLorentzVector lv(0,0,0,0);
+	for(unsigned i_dau=1; i_dau < NMCTauDecayProducts(i); i_dau++){
+		if( abs(MCTauandProd_pdgid(i, i_dau)) == PDGInfo::nu_e ||
+			abs(MCTauandProd_pdgid(i, i_dau)) == PDGInfo::nu_mu ||
+			abs(MCTauandProd_pdgid(i, i_dau)) == PDGInfo::nu_tau)
+				lv += MCTauandProd_p4(i, i_dau);
+	}
+	return lv;
+}
+TLorentzVector Ntuple_Controller::MCTau_visiblePart(unsigned int i){
+	TLorentzVector lv = MCTau_p4(i);
+	lv -= MCTau_invisiblePart(i);
+	return lv;
 }
 
 //// draw decay chain
@@ -1523,42 +1613,73 @@ std::vector<int> Ntuple_Controller::sortDefaultObjectsByPt(TString objectType){
 	return sortObjects(indices, values);
 }
 
+
+
 // obtain, or create and store, SVFit results from/on dCache
 #ifdef USE_SVfit
-SVFitObject* Ntuple_Controller::getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery /* = 5000 */, TString suffix /* ="" */, double scaleMu /* =1 */, double scaleTau /* =1 */) {
+SVFitObject* Ntuple_Controller::getSVFitResult_MuTauh(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery /* = 5000 */, TString suffix /* ="" */, double scaleMu /* =1 */, double scaleTau /* =1 */) {
 	 // configure svfitstorage on first call
 	if ( !svFitStor.isConfigured() ) svFitStor.Configure(GetInputDatasetName(), suffix);
 	// get SVFit result from cache
 	SVFitObject* svfObj = svFitStor.GetEvent(RunNumber(), LuminosityBlock(), EventNumber());
 	// if obtained object is not valid, create and store it
 	if (!svfObj->isValid()) {
-		objects::MET met(this, metType);
-		SVfitProvider svfProv(this, met, "Mu", muIdx, "Tau", tauIdx, 1, scaleMu, scaleTau);
-		*svfObj = svfProv.runAndMakeObject();
-		if (svfObj->isValid()) {
-			// store only if object is valid
-			svFitStor.SaveEvent(RunNumber(), LuminosityBlock(), EventNumber(), svfObj);
-		} else {
-			Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
-		}
+		runAndSaveSVFit_MuTauh(svfObj, svFitStor, metType, muIdx, tauIdx, scaleMu, scaleTau);
 	}
 	else{
 		// calculate every N'th event and compare with what is stored
 		if( (EventNumber() % rerunEvery) == 123){
-			objects::MET met(this, metType);
-			SVfitProvider svfProv(this, met, "Mu", muIdx, "Tau", tauIdx);
-			SVFitObject newSvfObj = svfProv.runAndMakeObject();
-			if (*svfObj == newSvfObj){
+			SVFitObject* newSvfObj = 0;
+			runAndSaveSVFit_MuTauh(newSvfObj, svFitStor, metType, muIdx, tauIdx, scaleMu, scaleTau, false); // will not be saved in output files
+
+			if (*svfObj == *newSvfObj){
 				Logger(Logger::Info) << "Recalculation of SVFit object gave same result." << std::endl;
 			}
 			else {
 				Logger(Logger::Warning) << "Recalculation of SVFit object gave DIFFERENT result!!" <<
 				"\n\told: mass = " << svfObj->get_mass() << " +/- " << svfObj->get_massUncert() << ", pt = " << svfObj->get_pt() << " +/- " << svfObj->get_ptUncert() <<
-				"\n\tnew: mass = " << newSvfObj.get_mass() << " +/- " << newSvfObj.get_massUncert() << ", pt = " << newSvfObj.get_pt() << " +/- " << newSvfObj.get_ptUncert() <<
+				"\n\tnew: mass = " << newSvfObj->get_mass() << " +/- " << newSvfObj->get_massUncert() << ", pt = " << newSvfObj->get_pt() << " +/- " << newSvfObj->get_ptUncert() <<
 				"\n\tSmall discrepancies could be caused by fitting details. It's up to you whether to ignore them." << std::endl;
 			}
 		}
 	}
 	return svfObj;
 }
-#endif
+SVFitObject* Ntuple_Controller::getSVFitResult_MuTau3p(SVFitStorage& svFitStor, TString metType, unsigned muIdx, TLorentzVector tauLV, TString suffix /* ="" */, double scaleMu /* =1 */, double scaleTau /* =1 */) {
+	 // configure svfitstorage on first call
+	if ( !svFitStor.isConfigured() ) svFitStor.Configure(GetInputDatasetName(), suffix);
+	// get SVFit result from cache
+	SVFitObject* svfObj = svFitStor.GetEvent(RunNumber(), LuminosityBlock(), EventNumber());
+	// if obtained object is not valid, create and store it
+	if (!svfObj->isValid()) {
+		runAndSaveSVFit_MuTau3p(svfObj, svFitStor, metType, muIdx, tauLV, scaleMu, scaleTau);
+	}
+	return svfObj;
+}
+
+// create SVFitObject from standard muon and standard tau_h
+void Ntuple_Controller::runAndSaveSVFit_MuTauh(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, unsigned tauIdx, double scaleMu, double scaleTau, bool save /*= true*/) {
+	objects::MET met(this, metType);
+	SVfitProvider svfProv(this, met, "Mu", muIdx, "Tau", tauIdx, 1, scaleMu, scaleTau);
+	*svfObj = svfProv.runAndMakeObject();
+	if (svfObj->isValid()) {
+		// store only if object is valid
+		if (save) svFitStor.SaveEvent(RunNumber(), LuminosityBlock(), EventNumber(), svfObj);
+	} else {
+		Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
+	}
+}
+// create SVFitObject from standard muon and fully reconstructed 3prong tau
+void Ntuple_Controller::runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, TLorentzVector tauLV, double scaleMu, double scaleTau, bool save /*= true*/){
+	objects::MET met(this, metType);
+	SVfitProvider svfProv(this, met, "Mu", muIdx, tauLV, 1, scaleMu, scaleTau);
+	*svfObj = svfProv.runAndMakeObject();
+	if (svfObj->isValid()) {
+		// store only if object is valid
+		if (save) svFitStor.SaveEvent(RunNumber(), LuminosityBlock(), EventNumber(), svfObj);
+	} else {
+		Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
+	}
+}
+
+#endif // USE_SVfit
