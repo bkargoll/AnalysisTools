@@ -155,7 +155,7 @@ class Ntuple_Controller{
   // create SVFitObject from standard muon and standard tau_h
   void runAndSaveSVFit_MuTauh(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, unsigned tauIdx, double scaleMu, double scaleTau, bool save = true);
   // create SVFitObject from standard muon and fully reconstructed 3prong tau
-  void runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, TLorentzVector tauLV, double scaleMu, double scaleTau, bool save = true);
+  void runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, TLorentzVector tauLV, LorentzVectorParticle neutrino, double scaleMu, double scaleTau, bool save = true);
 #endif
 
  public:
@@ -186,7 +186,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   // access to SVFit
   #ifdef USE_SVfit
   SVFitObject* getSVFitResult_MuTauh(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery = 5000, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
-  SVFitObject* getSVFitResult_MuTau3p(SVFitStorage& svFitStor, TString metType, unsigned muIdx, TLorentzVector tauLV, TString suffix = "", double scaleMu = 1, double scaleTau = 1);
+  SVFitObject* getSVFitResult_MuTau3p(SVFitStorage& svFitStor, TString metType, unsigned muIdx, TLorentzVector tauLV, LorentzVectorParticle neutrino, TString suffix = "", double scaleMu = 1, double scaleTau = 1);
   #endif
 
 

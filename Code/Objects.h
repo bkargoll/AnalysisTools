@@ -15,6 +15,7 @@
 #include "TString.h"
 
 class Ntuple_Controller;
+class LorentzVectorParticle;
 
 namespace objects {
 
@@ -27,6 +28,8 @@ public:
 	virtual ~MET();
 
 	void Init(Ntuple_Controller* const Ntp);
+
+	void subtractNeutrino(LorentzVectorParticle neutrino);
 
 	float et() const {return et_;}
 	void set_et(float et) {et_ = et;}

@@ -269,6 +269,9 @@ class HToTaumuTauh : public Selection {
 
   std::vector<TH1D> SVFitStatus;
 
+  std::vector<TH1D> SVFitMassResol;
+  std::vector<TH1D> visibleMassResol;
+
   std::vector<TH1D> TrueMass;
   std::vector<TH1D> TrueMassFull3ProngVisibleMuon;
   std::vector<TH1D> TrueVisibleMass;

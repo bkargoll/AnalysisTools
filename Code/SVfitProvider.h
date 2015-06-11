@@ -39,7 +39,7 @@ public:
 	void run();
 
 	// create SVfitObject
-	SVFitObject makeObject(const SVfitStandaloneAlgorithm*, TString fitMethod);
+	SVFitObject makeObject(const SVfitStandaloneAlgorithm* svfitAlgo, TString fitMethod);
 
 	// conversions
 	static svFitStandalone::LorentzVector convert_p4Vect(const TLorentzVector& in);
