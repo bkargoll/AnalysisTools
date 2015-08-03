@@ -48,7 +48,8 @@ TARGETS       =	Ntuple_Controller \
 		TauSpinerInterface \
 		ReferenceScaleFactors \
 		rochcor2012jan22 \
-		Objects 
+		Objects \
+		UncertaintyValue
 
 CINTTARGETS = 
 
@@ -85,7 +86,11 @@ ifdef USE_inugent
 endif
 
 ifdef USE_kargoll
-	TARGETS += HToTaumuTauh HToTaumuTauhSkim HToTaumuTauhBackgrounds MuTauSync OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive MCDecayChain
+	TARGETS += HToTaumuTauh Category
+	TARGETS += OneJetBoost OneJetHigh OneJetLow VBFLoose VBFTight ZeroJetHigh ZeroJetLow Inclusive
+	TARGETS += CategoryStandalone VBFLooseStandalone VBFTightStandalone RelaxedVBFTightStandalone RelaxedVBFLooseStandalone
+	#TARGETS += MuTauSync MCDecayChain
+	TARGETS += ZeroJetLow3Prong
 	DEFS += -DUSE_kargoll=1
 endif 
 

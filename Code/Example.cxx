@@ -7,8 +7,7 @@
 #include "SimpleFits/FitSoftware/interface/Logger.h"
 
 Example::Example(TString Name_, TString id_):
-  Selection(Name_,id_),
-  svfitstorage()
+  Selection(Name_,id_)
 {
 }
 
@@ -106,9 +105,6 @@ void  Example::doEvent(){
   ///////////////////////////////////////////////////////////
   // Add plots
   if(status){
-    //SVFitObject mysvfit;
-    //mysvfit.Set_a(Ntp->EventNumber());
-    //svfitstorage.SaveEvent(Ntp->RunNumber(), Ntp->LuminosityBlock(), Ntp->EventNumber(), mysvfit);
     NVtx.at(t).Fill(Ntp->NVtx(),w);
     unsigned int nGoodVtx=0;
     for(unsigned int i=0;i<Ntp->NVtx();i++){

@@ -100,9 +100,9 @@ else
 	cd CommonUtils
 	mkdir lib
 	
-	git clone https://github.com/inugent/SimpleFits.git SimpleFits
+	git clone https://github.com/CMSAachen3B/SimpleFits.git SimpleFits
 	
-	git clone https://github.com/inugent/TauDataFormat.git TauDataFormat
+	git clone https://github.com/CMSAachen3B/TauDataFormat.git TauDataFormat
 	
 	if [ $UseSVfit == 1 ]; then
 		git clone -b svFit_2015Apr03 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone

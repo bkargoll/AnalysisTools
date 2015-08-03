@@ -7,7 +7,9 @@
 
 #include "Objects.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
+#include "SimpleFits/FitSoftware/interface/LorentzVectorParticle.h"
 #include "Ntuple_Controller.h"
+#include "TVector2.h"
 
 namespace objects {
 
@@ -145,6 +147,36 @@ void MET::Init(Ntuple_Controller* const Ntp){
 }
 
 MET::~MET() {
+}
+
+void MET::subtractNeutrino(LorentzVectorParticle neutrino){
+	metType_ += "NeutrinoSubtracted";
+
+	TVectorD metvec(2), nuvec(2);
+	metvec[0] = ex_;
+	metvec[1] = ey_;
+	nuvec[0] = neutrino.LV().Px();
+	nuvec[1] = neutrino.LV().Py();
+	TVectorD diff = metvec - nuvec;
+	ex_ = diff[0];
+	ey_ = diff[1];
+	et_ = sqrt(ex_*ex_ + ey_*ey_);
+	TVector2 temp(ex_, ey_);
+	phi_ = temp.Phi();
+
+	significanceXX_ = significanceXX_ + neutrino.Covariance(LorentzVectorParticle::px,LorentzVectorParticle::px);
+	significanceXY_ = significanceXY_ + neutrino.Covariance(LorentzVectorParticle::px,LorentzVectorParticle::py);
+	significanceYY_ = significanceYY_ + neutrino.Covariance(LorentzVectorParticle::py,LorentzVectorParticle::py);
+	TMatrixD metmat = significanceMatrix();
+	if (fabs(metmat.Determinant())>0.00001){
+		metmat.Invert();
+		significance_ = diff * (metmat * diff);
+	}
+	else{
+		Logger(Logger::Warning) << "Cannot update significance of MET object." << std::endl;
+		significance_ = -1;
+		hasSignificance_ = false;
+	}
 }
 
 TMatrixD MET::significanceMatrix() const {

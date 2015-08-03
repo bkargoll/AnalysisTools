@@ -138,16 +138,16 @@ void MuTauSync::doEvent(){
 		mvacov10 = Ntp->MET_CorrMVAMuTau_significance_xy();
 		mvacov11 = Ntp->MET_CorrMVAMuTau_significance_yy();
 		// First jet: leading jet after applying Jet energy corrections (excluding hadronic Tau)
-		if (selJets.size() > 0){
-			jpt_1 = Ntp->PFJet_p4(selJets.at(0)).Pt();
-			jeta_1 = Ntp->PFJet_p4(selJets.at(0)).Eta();
-			jphi_1 = Ntp->PFJet_p4(selJets.at(0)).Phi();
+		if (selectedJetsClean.size() > 0){
+			jpt_1 = Ntp->PFJet_p4(selectedJetsClean.at(0)).Pt();
+			jeta_1 = Ntp->PFJet_p4(selectedJetsClean.at(0)).Eta();
+			jphi_1 = Ntp->PFJet_p4(selectedJetsClean.at(0)).Phi();
 			jptraw_1 = -10;
 			jptunc_1 = -10;
-			jmva_1 = Ntp->PFJet_PUJetID_discr(selJets.at(0));
+			jmva_1 = Ntp->PFJet_PUJetID_discr(selectedJetsClean.at(0));
 			jlrm_1 = -10;
 			jctm_1 = -10;
-			jpass_1 = int(Ntp->PFJet_PUJetID_looseWP(selJets.at(0)));
+			jpass_1 = int(Ntp->PFJet_PUJetID_looseWP(selectedJetsClean.at(0)));
 		}
 		else {
 			jpt_1 = -20;
@@ -161,16 +161,16 @@ void MuTauSync::doEvent(){
 			jpass_1 = -20;
 		}
 		 // Second Jet : 2nd leading jet (in pt) afer applying Jet energy corrections (excluding Tau)
-		if (selJets.size() > 1){
-			jpt_2 = Ntp->PFJet_p4(selJets.at(1)).Pt();
-			jeta_2 = Ntp->PFJet_p4(selJets.at(1)).Eta();
-			jphi_2 = Ntp->PFJet_p4(selJets.at(1)).Phi();
+		if (selectedJetsClean.size() > 1){
+			jpt_2 = Ntp->PFJet_p4(selectedJetsClean.at(1)).Pt();
+			jeta_2 = Ntp->PFJet_p4(selectedJetsClean.at(1)).Eta();
+			jphi_2 = Ntp->PFJet_p4(selectedJetsClean.at(1)).Phi();
 			jptraw_2 = -10;
 			jptunc_2 = -10;
-			jmva_2 = Ntp->PFJet_PUJetID_discr(selJets.at(1));
+			jmva_2 = Ntp->PFJet_PUJetID_discr(selectedJetsClean.at(1));
 			jlrm_2 = -10;
 			jctm_2 = -10;
-			jpass_2 = int(Ntp->PFJet_PUJetID_looseWP(selJets.at(1)));
+			jpass_2 = int(Ntp->PFJet_PUJetID_looseWP(selectedJetsClean.at(1)));
 		}
 		else {
 			jpt_2 = -20;
@@ -184,10 +184,10 @@ void MuTauSync::doEvent(){
 			jpass_2 = -20;
 		}
 		 // B Tagged Jet : leading btagged jet (in pt) passing btag wp (pt > 20 + cvs medium)
-		if (selBJets.size() > 0){
-			bpt = Ntp->PFJet_p4(selBJets.at(0)).Pt();
-			beta = Ntp->PFJet_p4(selBJets.at(0)).Eta();
-			bphi = Ntp->PFJet_p4(selBJets.at(0)).Phi();
+		if (selectedBJets.size() > 0){
+			bpt = Ntp->PFJet_p4(selectedBJets.at(0)).Pt();
+			beta = Ntp->PFJet_p4(selectedBJets.at(0)).Eta();
+			bphi = Ntp->PFJet_p4(selectedBJets.at(0)).Phi();
 		}
 		else{
 			bpt = -20;
@@ -207,9 +207,9 @@ void MuTauSync::doEvent(){
 		 visjeteta = -10;
 		 ptvis = -10;
 		 // number of btags passing btag id (pt > 20)
-		nbtag = selBJets.size();
+		nbtag = selectedBJets.size();
 		 // number of jets passing jet id ( pt > 30 )
-		njets = selJets.size();
+		njets = selectedJetsClean.size();
 		njetspt20 = -10;
 		 // mva output for e+mu channel
 		mva_gf = -10;

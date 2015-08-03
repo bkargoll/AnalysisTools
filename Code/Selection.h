@@ -51,6 +51,7 @@ class Selection : public Selection_Base {
   bool passAllBut(std::vector<unsigned int> index);
   bool passAllBut(unsigned int i_cut);
   bool passAllUntil(unsigned int i_cut);
+  double scaleFactorToLumi(unsigned int id);
 
   HistoConfig HConfig;
 
@@ -81,6 +82,8 @@ class Selection : public Selection_Base {
   int NGoodFiles;
   int NBadFiles;
   std::vector<TString>  ListofBadFiles;
+
+  bool histsAreScaled; // info if histograms have been scaled already or not
 
  private:
   bool isStored;

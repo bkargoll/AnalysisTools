@@ -33,7 +33,7 @@ SVFitStorage::SVFitStorage():
 	TString thelib= getenv ("DATAFORMATS_LIB");
 	gSystem->Load(thelib.Data());
 
-	inputFileName = "SVFitInput_temp_";
+	inputFileName = "SVFitInput_temp";
 
 	// Configure(...) MUST be called before instance of this class can be called
 }
@@ -42,6 +42,10 @@ SVFitStorage::~SVFitStorage(){
 	if (isConfigured_){
 		SaveTree();
 
+		// check state of output information
+		bool storeOutFile = (outtree_->GetEntries() > 0);
+		TString outfileName = outfile_->GetName();
+
 		// cleaning up:
 		// make sure to delete the TTree objects before closing/destroying the TFile they are associated to
 		delete outtree_;
@@ -49,6 +53,12 @@ SVFitStorage::~SVFitStorage(){
 		delete outfile_;
 
 		delete svfit_;
+
+		//Store file on the grid
+		if (storeOutFile){ // do not copy empty file to dCache
+			StoreFile(outfileName , storageFileName_);
+			Logger(Logger::Info) << outfileName.Data() << " saved to the grid " << storageFileName_.Data() << std::endl;
+		}
 	}
 	Logger(Logger::Debug) << "Properly destroyed." << std::endl;
 }
@@ -64,14 +74,14 @@ void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
 
 	if (suffix_ != ""){
 		treeName_ = treeName_ + "_" + suffix_;
-		inputFileName = inputFileName + suffix_ + "_";
+		inputFileName = inputFileName + suffix_;
 	}
 
 	// Specify file name of output file
 	Parameters Par; // assumes configured in Analysis.cxx
 	TString key = "OutputFileSVFit" + suffix_ + ":";
 	Par.GetString(key, storageFileName_);
-	TString outputFileLocal = "MySVFIT" + suffix_ + ".root";
+	TString outputFileLocal = "MySVFIT" + suffix_ + TString::Itoa(instance,10) + ".root";
 	// Load output file
 	outfile_ = TFile::Open(outputFileLocal, "RECREATE");
 	if (!outfile_) {
@@ -119,9 +129,7 @@ void SVFitStorage::LoadTree(){
 		TDirectory *gdirectory_save = gDirectory;
 		int nFilesLoaded = 0;
 		for (int i = 0; i < nfiles; i++) {
-			TString name = inputFileName;
-			name += i;
-			name += ".root";
+			TString name = assemblyFileName(i);
 			if ( isTreeInFile(name) ){ // check if tree exists in file (avoids TChain error)
 				intree_->Add(name);
 				nFilesLoaded++;
@@ -194,9 +202,6 @@ void SVFitStorage::SaveTree(){
 	gDirectory = gdirectory_save;
 	gDirectory->cd();
 	Logger(Logger::Info) << "SVFit_Tree saved to " << outfile_->GetName() << std::endl;
-	//Store file on the grid
-	StoreFile(outfile_->GetName() , storageFileName_);
-	Logger(Logger::Info) << outfile_->GetName() << " saved to the grid " << storageFileName_.Data() << std::endl;
 }
 
 void SVFitStorage::SaveEvent(Int_t RunNumber, Int_t LumiNumber, Int_t EventNumber, SVFitObject* svfit){

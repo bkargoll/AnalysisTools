@@ -14,14 +14,21 @@
 #include "Objects.h"
 #include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 #include "DataFormats/SVFitObject.h"
+#include "TLorentzVector.h"
 
 class Ntuple_Controller;
 
 class SVfitProvider {
 public:
-	// default constructor to be used in analysis
+	// Constructor to be used in analysis:
+	// Use default CMS leptons as input (electron, muon, hadronic tau)
 	SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TString typeLep2, int idxLep2,
 			int verbosity = 1, double scaleLep1 = 1 , double scaleLep2 = 1 );
+
+	// Constructor to be used in analysis:
+	// Use default one default CMS lepton (electron, muon, hadronic tau) and a fully reconstructed 3prong tau
+	SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TLorentzVector lvec3ProngTau,
+			int verbosity/* =1 */, double scaleLep1 /* =1 */, double scaleLep2 /* =1 */);
 
 	virtual ~SVfitProvider();
 
@@ -32,7 +39,7 @@ public:
 	void run();
 
 	// create SVfitObject
-	SVFitObject makeObject(const SVfitStandaloneAlgorithm*, TString fitMethod);
+	SVFitObject makeObject(const SVfitStandaloneAlgorithm* svfitAlgo, TString fitMethod);
 
 	// conversions
 	static svFitStandalone::LorentzVector convert_p4Vect(const TLorentzVector& in);
@@ -83,6 +90,7 @@ private:
 	SVfitStandaloneAlgorithm* svFitAlgo_;
 
 	void addMeasuredLepton(TString type, int index, double energyScale = 1);
+	void addFullReco3ProngTau(TLorentzVector lv);
 	void createSvFitAlgo();
 };
 

@@ -1509,14 +1509,16 @@ double ReferenceScaleFactors::HiggsPtWeight(TLorentzVector vect, int mass, TStri
 	if (shift == "nominal")		weightMap = HiggsPtWeightsNominal;
 	else if (shift == "down")	weightMap = HiggsPtWeightsDown;
 	else if (shift == "up")		weightMap = HiggsPtWeightsUp;
-	else {printf("ERROR: shift of type %s not known for Higgs pT weights.\n", shift.Data()); return -999;}
+	else {
+		Logger(Logger::Error) << "ERROR: shift of type " << shift.Data() << " not known for Higgs pT weights." << std::endl;
+		return -999;
+	}
 
 	// do some checks
 	if( weightMap.find(mass) == weightMap.end() ){
-		printf("ERROR: Requested mass %d not available for Higgs pT reweighting.", mass);
+		Logger(Logger::Error) << "Requested mass " << mass << " not available for Higgs pT reweighting." << std::endl;
 		return -999;
 	}
-	if( fabs(vect.M() - mass) > 2.5 ) printf("WARNING: Using Higgs pT weights valid vor m(H)=%d, but event has m(H)=%f\n", mass, vect.M());
 
 	// read weight from histogram
 	return weightMap[mass]->GetBinContent( weightMap[mass]->FindFixBin( vect.Pt() ) );

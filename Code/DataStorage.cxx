@@ -10,9 +10,14 @@
 #include <iostream>
 #include <time.h>
 
+int DataStorage::instanceCounter = 0;
+
 DataStorage::DataStorage(){
   mydir= getenv ("PWD");
-  inputFileName = "dataStorageInput_temp_";
+  inputFileName = "dataStorageInput_temp";
+  instanceCounter++;
+  instance = instanceCounter;
+  Logger(Logger::Verbose) << "Creating instance " << instance << std::endl;
 }
 
 DataStorage::~DataStorage(){
@@ -21,6 +26,8 @@ DataStorage::~DataStorage(){
 		Logger(Logger::Info) << "calling shell command: " << cmd << std::endl;
 		system(cmd.Data());
 	}
+	instanceCounter--;
+	Logger(Logger::Verbose) << "Destroyed instance " << instance << ", " << instanceCounter << " are remaining." << std::endl;
 }
 
 int DataStorage::GetFile(TString key){
@@ -33,13 +40,22 @@ int DataStorage::GetFile(TString key){
   if(gridsite=="none" || Files.size()==0) return 0;
   
   for(unsigned int i=0;i<Files.size();i++){
-    TString inFile=inputFileName; inFile+=i; inFile+=".root";
+	TString inFile = assemblyFileName(i);
+	// check if file already exists
+    ifstream check1(inFile);
+    if (check1) Logger(Logger::Warning) << "File " << inFile << " already exists and will be overwritten." << std::endl;
+
     TString cmd1= "srmcp srm://" + gridsite + ":8443/" + Files.at(i) + " file:////" + mydir + "/" + inFile;
     Logger(Logger::Info) << "calling shell command: "<< cmd1 << std::endl;
     system(cmd1.Data());
     filesToDelete.push_back(mydir + "/" + inFile);
-    ifstream f(inFile);
-    if(!f) return 0;
+
+    // check if file was properly created
+    ifstream check2(inFile);
+    if(!check2){
+    	Logger(Logger::Error) << "Download of file " << inFile << " not successful." << std::endl;
+    	return 0;
+    }
   }
   return Files.size();
 }
@@ -89,4 +105,15 @@ TString DataStorage::timeStamp(bool Date, bool Time){
 
 	strftime (buffer,80,pattern.Data(),timeinfo);
 	return TString(buffer);
+}
+
+TString DataStorage::assemblyFileName(unsigned int idx_File) {
+	// pattern: <name>_inst<i_instance>_file<i_file>.root
+	TString file = inputFileName;
+	file += "_inst";
+	file += instance;
+	file += "_file";
+	file += idx_File;
+	file += ".root";
+	return file;
 }

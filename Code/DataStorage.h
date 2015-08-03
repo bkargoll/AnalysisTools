@@ -22,5 +22,13 @@ class DataStorage {
 
  protected:
   TString inputFileName;
+
+  // Count number of instances of this class.
+  // This is used to avoid duplication of local filenames for input and output files.
+  static int instanceCounter;
+  // Index of this instance of the class
+  int instance;
+
+  TString assemblyFileName(unsigned int idx_File);
 };
 #endif

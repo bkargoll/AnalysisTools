@@ -37,6 +37,8 @@ class HistoConfig {
   bool hasID(int64_t id_);
   int GetID(unsigned int i);
   int GetType(int64_t id);
+  static bool isloaded() { return loaded; }
+
  private:
   static std::vector<int64_t>      ID;
   static std::vector<double>       CS;

@@ -17,7 +17,8 @@ void SVfitProvider::createSvFitAlgo() {
 	isSetup_ = true;
 }
 
-// constructor to be used in analysis
+// Constructor to be used in analysis:
+// Use default CMS leptons as input (electron, muon, hadronic tau)
 SVfitProvider::SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TString typeLep2, int idxLep2,
 		int verbosity/* =1 */, double scaleLep1 /* =1 */, double scaleLep2 /* =1 */){
 	ntp_ = Ntp;
@@ -38,6 +39,29 @@ SVfitProvider::SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TS
 	createSvFitAlgo();
 }
 
+// Constructor to be used in analysis:
+// Use default one default CMS lepton (electron, muon, hadronic tau) and a fully reconstructed 3prong tau
+SVfitProvider::SVfitProvider(Ntuple_Controller* const Ntp, objects::MET& met, TString typeLep1, int idxLep1, TLorentzVector lvec3ProngTau,
+		int verbosity/* =1 */, double scaleLep1 /* =1 */, double scaleLep2 /* =1 */){
+	ntp_ = Ntp;
+	inputMet_ = met;
+
+	addMeasuredLepton(typeLep1, idxLep1, scaleLep1);
+	addFullReco3ProngTau(lvec3ProngTau);
+
+	verbosity_ = verbosity;
+
+	// use default settings for SVfit
+	// can be switched by individual functions
+	fitMethod_ = "MarkovChain";
+	addLogM_ = false;
+	maxObjFunctionCalls_ = -1;
+	metPower_ = -1;
+
+	createSvFitAlgo();
+
+}
+
 SVfitProvider::~SVfitProvider() {
 	delete svFitAlgo_;
 }
@@ -45,7 +69,8 @@ SVfitProvider::~SVfitProvider() {
 // create SVfitObject (includes running of SVfit algorithm)
 SVFitObject SVfitProvider::runAndMakeObject(){
 	run();
-	return makeObject(result(), get_fitMethod());
+	SVFitObject res = makeObject(result(), get_fitMethod());
+	return res;
 }
 
 // execute SVfit
@@ -131,6 +156,12 @@ void SVfitProvider::addMeasuredLepton(TString type, int index, double energyScal
 	else
 		Logger(Logger::Error) << "Object type " << type << " not implemented in SVfitProvider." << std::endl;
 
+	inputTauLeptons_.push_back(lep);
+	isSetup_ = false;
+}
+
+void SVfitProvider::addFullReco3ProngTau(TLorentzVector lv){
+	svFitStandalone::MeasuredTauLepton lep(svFitStandalone::kPrompt, lv.Pt(), lv.Eta(), lv.Phi(), lv.M());
 	inputTauLeptons_.push_back(lep);
 	isSetup_ = false;
 }

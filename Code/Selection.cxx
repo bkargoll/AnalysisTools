@@ -13,7 +13,7 @@
 #include <sstream>
 
 Selection::Selection(TString Name_, TString id_) :
-		Selection_Base(Name_, id_), HConfig(), NGoodFiles(0), NBadFiles(0), isStored(false), data(0) {
+		Selection_Base(Name_, id_), HConfig(), NGoodFiles(0), NBadFiles(0), histsAreScaled(false), isStored(false), data(0) {
 	if (Name_)
 		ListofBadFiles.clear();
 }
@@ -242,6 +242,7 @@ void Selection::Finish() {
 				printf("  --> will not be scaled \n");
 		}
 		Save(fName + "_LumiScaled");      // Save file with Lumi-scaled events - required for combining code
+		histsAreScaled = true;
 
 		///Now make the plots
 		Logger(Logger::Info) << "Printing Plots " << std::endl;
@@ -493,4 +494,20 @@ bool Selection::passAllUntil(unsigned int lastCutToApply) {
 			return false;
 	}
 	return true;
+}
+
+// calculate scale factor for a given DataMCType
+double Selection::scaleFactorToLumi(unsigned int id){
+	if (not HConfig.isloaded()) {
+		Logger(Logger::Error) << "HistoConfig is not loaded." << std::endl;
+		return -1.0;
+	}
+	double xsec = HConfig.GetCrossSection(id);
+	double nEvts = Npassed.at(HConfig.GetType(id)).GetBinContent(0);
+
+	if (nEvts <= 0) {
+		Logger(Logger::Warning) << "No events to be scaled." << std::endl;
+	}
+
+	return Lumi * xsec / nEvts;
 }

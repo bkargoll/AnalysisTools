@@ -150,6 +150,14 @@ class Ntuple_Controller{
   void           CorrectMuonP4();
   bool           Muon_isCorrected;
 
+  // helpers for SVFit
+#ifdef USE_SVfit
+  // create SVFitObject from standard muon and standard tau_h
+  void runAndSaveSVFit_MuTauh(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, unsigned tauIdx, double scaleMu, double scaleTau, bool save = true);
+  // create SVFitObject from standard muon and fully reconstructed 3prong tau
+  void runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorage& svFitStor, const TString& metType, unsigned muIdx, TLorentzVector tauLV, LorentzVectorParticle neutrino, double scaleMu, double scaleTau, bool save = true);
+#endif
+
  public:
   // Constructor
   Ntuple_Controller(std::vector<TString> RootFiles);
@@ -177,7 +185,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
   // access to SVFit
   #ifdef USE_SVfit
-  SVFitObject* getSVFitResult(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery = 5000, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
+  SVFitObject* getSVFitResult_MuTauh(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery = 5000, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
+  SVFitObject* getSVFitResult_MuTau3p(SVFitStorage& svFitStor, TString metType, unsigned muIdx, TLorentzVector tauLV, LorentzVectorParticle neutrino, TString suffix = "", double scaleMu = 1, double scaleTau = 1);
   #endif
 
 
@@ -220,7 +229,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   TString GetInputPublishDataName();
   int getSampleHiggsMass();
   int readHiggsMassFromString(TString input);
-  int getHiggsMassFromGenInfo();
+
+  // resonance mass
+  int getHiggsSampleMassFromGenInfo();
+  double getResonanceMassFromGenInfo(bool useZ0 = true, bool useHiggs0 = true, bool useW = true);
 
   // Physics Variable Get Functions
   // Event Variables
@@ -740,6 +752,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::vector<int>           MCParticle_childpdgid(unsigned int i){return Ntp->MC_childpdgid->at(i);}
    std::vector<int>           MCParticle_childidx(unsigned int i){return Ntp->MC_childidx->at(i);}
    int						  MCParticle_status(unsigned int i){return Ntp->MC_status->at(i);}
+   int 						  getMatchTruthIndex(TLorentzVector tvector, int pid, double dr);
    int						  matchTruth(TLorentzVector tvector);
    bool						  matchTruth(TLorentzVector tvector, int pid, double dr);
    // decay tree functionality
@@ -756,6 +769,13 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    int MCTau_charge(unsigned int i){return MCTauandProd_charge(i,0);}
    unsigned int MCTau_JAK(unsigned int i){return Ntp->MCTau_JAK->at(i);}
    unsigned int MCTau_DecayBitMask(unsigned int i){return Ntp->MCTau_DecayBitMask->at(i);}
+   int MCTau_getDaughterOfType(unsigned int i_mcTau, int daughter_pdgid, bool ignoreCharge = true);
+   int MCTau_true3prongAmbiguity(unsigned int i);
+   int matchTauTruth(unsigned int i_hpsTau, bool onlyHadrDecays = false);
+   TLorentzVector BoostToRestFrame(TLorentzVector TLV1, TLorentzVector TLV2);
+   TLorentzVector MCTau_invisiblePart(unsigned int i);
+   TLorentzVector MCTau_visiblePart(unsigned int i);
+
    //Tau and decay products
    int NMCTauDecayProducts(unsigned int i){if(0<=i && i<(unsigned int)NMCTaus()) return Ntp->MCTauandProd_p4->at(i).size(); return 0;}
    TLorentzVector MCTauandProd_p4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->MCTauandProd_p4->at(i).at(j).at(1),Ntp->MCTauandProd_p4->at(i).at(j).at(2),Ntp->MCTauandProd_p4->at(i).at(j).at(3),Ntp->MCTauandProd_p4->at(i).at(j).at(0));}
@@ -768,6 +788,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,unsigned int &Boson_idx,TauDecay::JAK tau_jak, unsigned int &idx);
    bool hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,unsigned int &Boson_idx,unsigned int &tau1_idx, unsigned int &tau2_idx);
 
+
+   // overlap of objects
    bool jethasMuonOverlap(unsigned int jet_idx,unsigned int &muon_idx);
    bool muonhasJetOverlap(unsigned int muon_idx,unsigned int &jet_idx);
    bool muonhasJetMatch(unsigned int muon_idx,unsigned int &jet_idx);
@@ -921,7 +943,6 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    double       GenEventInfoProduct_x1(){return Ntp->GenEventInfoProduct_x1;}
    double       GenEventInfoProduct_x2(){return Ntp->GenEventInfoProduct_x2;}
    double       GenEventInfoProduct_scalePDF(){return Ntp->GenEventInfoProduct_scalePDF;}
-
 };
 
 #endif
