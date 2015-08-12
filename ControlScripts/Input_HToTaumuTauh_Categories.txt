@@ -9,7 +9,7 @@ Analysis: OneJetHigh
 Analysis: OneJetBoost
 Analysis: VBFLoose
 Analysis: VBFTight
-Analysis: ZeroJetLow3Prong
+Analysis: ZeroJet3Prong
 UncertType: default
 SkimInfo: InputData/SkimSummary_HToTaumuTauh.log
 Lumi: 19712

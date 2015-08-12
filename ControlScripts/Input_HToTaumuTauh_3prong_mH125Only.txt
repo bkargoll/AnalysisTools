@@ -1,7 +1,7 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo_HToTaumuTauh_mH125Only.txt
-Analysis: ZeroJetLow3Prong
+Analysis: ZeroJet3Prong
 UncertType: default
 SkimInfo: InputData/SkimSummary_HToTaumuTauh_mH125Only.log
 Lumi: 19712
