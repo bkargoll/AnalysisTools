@@ -1095,7 +1095,7 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
 }
 
 // calculate flight length significance from primary and secondary vertex info
-double Ntuple_Controller::PFTau_FlightLenght_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
+double Ntuple_Controller::PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
   TVector3 SVPV = sv - pv;
   TVectorF FD;
   FD.ResizeTo(3);
@@ -1426,44 +1426,6 @@ std::vector<TVector3> Ntuple_Controller::PFTau_daughterTracks_poca(unsigned int 
   return poca;
 }
    
-
-TMatrixTSym<double> Ntuple_Controller::PF_Tau_FlightLegth3d_TauFrame_cov(unsigned int i){
-  TVector3 f=PFTau_FlightLength3d(i);
-  TMatrixT<double> Res(5,1);
-  Res(0,0)=f.X();
-  Res(1,0)=f.Y();
-  Res(2,0)=f.Z();
-  Res(3,0)=f.Phi();
-  Res(4,0)=f.Theta();
-  TMatrixTSym<double> ResCov(5);
-  TMatrixTSym<double> cov=PFTau_FlightLength3d_cov(i);
-  for(int s=0;s<LorentzVectorParticle::NVertex;s++){
-    for(int t=0;t<LorentzVectorParticle::NVertex;t++){
-      ResCov(s,t)=cov(s,t);
-    }
-  }
-  TMatrixT<double> Resp=MultiProngTauSolver::RotateToTauFrame(Res);
-  TMatrixTSym<double> RespCov=ErrorMatrixPropagator::PropagateError(&MultiProngTauSolver::RotateToTauFrame,Res,ResCov);
-  for(int s=0;s<LorentzVectorParticle::NVertex;s++){
-    for(int t=0;t<LorentzVectorParticle::NVertex;t++){
-      cov(s,t)=RespCov(s,t);
-    }
-  }
-  return cov;
-}
-
-TVector3 Ntuple_Controller::PF_Tau_FlightLegth3d_TauFrame(unsigned int i){
-  TVector3 f=PFTau_FlightLength3d(i);
-  TMatrixT<double> Res(5,1);
-  Res(0,0)=f.X();
-  Res(1,0)=f.Y();
-  Res(2,0)=f.Z();
-  Res(3,0)=f.Phi();
-  Res(4,0)=f.Theta();
-  TMatrixT<double> Resp=MultiProngTauSolver::RotateToTauFrame(Res);
-  return TVector3(Resp(0,0),Resp(1,0),Resp(2,0));
-}
-
 double Ntuple_Controller::dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx){
 	return (-(poca.X()-vtx.X())*fourvector.Py()+(poca.Y()-vtx.Y())*fourvector.Px())/fourvector.Pt();
 }
