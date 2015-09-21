@@ -114,9 +114,21 @@ protected:
 	std::vector<TH1D> MetMinus3pNeutrino_XResol;
 	std::vector<TH1D> MetMinus3pNeutrino_YResol;
 
+	std::vector<TH1D> MetMinus3pNeutrino_PhiResol_FailedSVFit;
+	std::vector<TH1D> MetMinus3pNeutrino_DeltaPhiMuon;
+	std::vector<TH1D> MetMinus3pNeutrino_DeltaPhiMuon_FailedSVFit;
+
 	std::vector<TH1D> svFitMass_Default;
 	std::vector<TH1D> svFit3pMass;
 	std::vector<TH1D> svFit3pMassResol;
+
+	std::vector<TH1D> svFit3p_MassLMax_TrueSol;
+	std::vector<TH1D> svFit3p_MassLMax_WrongSol;
+	std::vector<TH1D> svFit3p_MassLMax_ZeroSol;
+	std::vector<TH1D> svFit3p_MassLMax_PlusSol;
+	std::vector<TH1D> svFit3p_MassLMax_MinusSol;
+	std::vector<TH1D> svFit3p_TrueSolByHigherLMax;
+	std::vector<TH2D> svFit3p_SolutionMatrixByLMax;
 
 	std::vector<TH1D> MetPxPull;
 	std::vector<TH1D> MetPyPull;

@@ -394,7 +394,7 @@ void  HToTaumuTauh::Setup(){
   //h_Mt1ProngOnly = HConfig.GetTH1D(Name+"_Mt1ProngOnly","Mt1ProngOnly",100,0.,200.,"m_{T}/GeV");
   //h_Mt3ProngOnly = HConfig.GetTH1D(Name+"_Mt3ProngOnly","Mt3ProngOnly",100,0.,200.,"m_{T}/GeV");
   //h_Mt3ProngSV = HConfig.GetTH1D(Name+"_Mt3ProngSV","Mt3ProngSV",100,0.,200.,"m_{T}/GeV");
-  h_Mt3ProngSVFlight = HConfig.GetTH1D(Name+"_Mt3ProngSVFlight","Mt3ProngSVFlight",100,0.,200.,"m_{T}/GeV");
+  //h_Mt3ProngSVFlight = HConfig.GetTH1D(Name+"_Mt3ProngSVFlight","Mt3ProngSVFlight",100,0.,200.,"m_{T}/GeV");
 
   //h_MetPt1ProngOnly  = HConfig.GetTH1D(Name+"_MetPt1ProngOnly","MetPt1ProngOnly",50,0.,200.,"E_{T}^{miss}/GeV");
   //h_MetPhi1ProngOnly = HConfig.GetTH1D(Name+"_MetPhi1ProngOnly","MetPhi1ProngOnly",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
@@ -444,6 +444,17 @@ void  HToTaumuTauh::Setup(){
   h_TrueMass						= HConfig.GetTH1D(Name+"_TrueMass","TrueMass",100,0.,200.,"m_{gen}(#tau_{h},#mu)/GeV");
   h_TrueMassFull3ProngVisibleMuon	= HConfig.GetTH1D(Name+"_TrueMassFull3ProngVisibleMuon","TrueMassFull3ProngVisibleMuon",100,0.,200.,"m(#tau_{h}^{full, gen},#mu^{vis.})/GeV");
   h_TrueVisibleMass					= HConfig.GetTH1D(Name+"_TrueVisibleMass","TrueVisibleMass",100,0.,200.,"m_{vis gen}(#tau_{h},#mu)/GeV");
+
+  h_GenTauhPt_NoSel	= HConfig.GetTH1D(Name+"_GenTauhPt_NoSel","GenTauhPt_NoSel",50,0.,100.,"p_{T}(#tau_{MC})/GeV");
+  h_GenTauhPt_FullSel= HConfig.GetTH1D(Name+"_GenTauhPt_FullSel","GenTauhPt_FullSel",50,0.,100.,"p_{T}(#tau_{MC})/GeV");
+
+  // input corrections for SVFit
+  h_recMinusGenTauMass_recDecayModeEq0	= HConfig.GetTH1D(Name+"_recMinusGenTauMass_recDecayModeEq0",  "recMinusGenTauMass_recDecayModeEq0"  , 1000, -5., 5., "#Deltam_{#tau}(rec-gen)/GeV");
+  h_recMinusGenTauMass_recDecayModeEq1	= HConfig.GetTH1D(Name+"_recMinusGenTauMass_recDecayModeEq1",  "recMinusGenTauMass_recDecayModeEq1"  , 1000, -5., 5., "#Deltam_{#tau}(rec-gen)/GeV");
+  h_recMinusGenTauMass_recDecayModeEq10	= HConfig.GetTH1D(Name+"_recMinusGenTauMass_recDecayModeEq10", "recMinusGenTauMass_recDecayModeEq10" , 1000, -5., 5., "#Deltam_{#tau}(rec-gen)/GeV");
+  h_recTauPtDivGenTauPt_recDecayModeEq0	= HConfig.GetTH1D(Name+"_recTauPtDivGenTauPt_recDecayModeEq0", "recTauPtDivGenTauPt_recDecayModeEq0" , 2500, 0., 2.5, "#Deltap_{T}(rec-gen)/GeV");
+  h_recTauPtDivGenTauPt_recDecayModeEq1	= HConfig.GetTH1D(Name+"_recTauPtDivGenTauPt_recDecayModeEq1", "recTauPtDivGenTauPt_recDecayModeEq1" , 2500, 0., 2.5, "#Deltap_{T}(rec-gen)/GeV");
+  h_recTauPtDivGenTauPt_recDecayModeEq10= HConfig.GetTH1D(Name+"_recTauPtDivGenTauPt_recDecayModeEq10","recTauPtDivGenTauPt_recDecayModeEq10", 2500, 0., 2.5, "#Deltap_{T}(rec-gen)/GeV");
 
   // background methods
   h_BGM_Mt = HConfig.GetTH1D(Name + "_h_BGM_Mt", "h_BGM_Mt", 125, 0., 250., "m_{T}/GeV");
@@ -592,7 +603,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  //Extradist1d.push_back(&h_Mt1ProngOnly);
  //Extradist1d.push_back(&h_Mt3ProngOnly);
  //Extradist1d.push_back(&h_Mt3ProngSV);
- Extradist1d.push_back(&h_Mt3ProngSVFlight);
+ //Extradist1d.push_back(&h_Mt3ProngSVFlight);
 
  //Extradist1d.push_back(&h_MetPt1ProngOnly);
  //Extradist1d.push_back(&h_MetPhi1ProngOnly);
@@ -642,6 +653,16 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_TrueMass);
  Extradist1d.push_back(&h_TrueMassFull3ProngVisibleMuon);
  Extradist1d.push_back(&h_TrueVisibleMass);
+
+ Extradist1d.push_back(&h_GenTauhPt_NoSel);
+ Extradist1d.push_back(&h_GenTauhPt_FullSel);
+
+ Extradist1d.push_back(&h_recMinusGenTauMass_recDecayModeEq0);
+ Extradist1d.push_back(&h_recMinusGenTauMass_recDecayModeEq1);
+ Extradist1d.push_back(&h_recMinusGenTauMass_recDecayModeEq10);
+ Extradist1d.push_back(&h_recTauPtDivGenTauPt_recDecayModeEq0);
+ Extradist1d.push_back(&h_recTauPtDivGenTauPt_recDecayModeEq1);
+ Extradist1d.push_back(&h_recTauPtDivGenTauPt_recDecayModeEq10);
 
  Extradist1d.push_back(&h_BGM_Mt);
  Extradist1d.push_back(&h_BGM_MtSideband);
@@ -1079,6 +1100,52 @@ void HToTaumuTauh::doSelection(bool runAnalysisCuts){
 
 void HToTaumuTauh::doPlotting(){
 	Logger(Logger::Verbose) << std::endl;
+
+	// generator studies
+	if (isSignal) {
+		if (Ntp->NMCTaus() == 2) {
+			for (int i = 0; i < Ntp->NMCTaus(); i++) {
+				if (Ntp->MCTau_JAK(i) == 2) {
+					//Tau->Muon
+				}
+				else if (Ntp->MCTau_JAK(i) != 2) {
+					for (int j = 0; j < Ntp->NMCTauDecayProducts(i); j++) {
+						if (fabs(Ntp->MCTauandProd_pdgid(i, j)) == PDGInfo::a_1_plus) {
+							//Tau->A1
+							h_GenTauhPt_NoSel.at(t).Fill(Ntp->MCTauandProd_p4(i, 0).Pt(), w);
+							if (status)	{
+								TLorentzVector genTau = Ntp->MCTauandProd_p4(i, 0);
+								TLorentzVector genTauVis = Ntp->MCTau_visiblePart(i);
+								h_GenTauhPt_FullSel.at(t).Fill(genTau.Pt(), w);
+
+								// SVFit input corrections
+								switch (Ntp->PFTau_hpsDecayMode(selTau)) {
+									case 0:
+										h_recMinusGenTauMass_recDecayModeEq0.at(t).Fill(Ntp->PFTau_p4(selTau).M() - genTauVis.M(), w);
+										h_recTauPtDivGenTauPt_recDecayModeEq0.at(t).Fill(Ntp->PFTau_p4(selTau).Pt() - genTauVis.Pt(), w);
+										break;
+									case 1:
+									case 2:
+										h_recMinusGenTauMass_recDecayModeEq1.at(t).Fill(Ntp->PFTau_p4(selTau).M() - genTauVis.M(), w);
+										h_recTauPtDivGenTauPt_recDecayModeEq1.at(t).Fill(Ntp->PFTau_p4(selTau).Pt() - genTauVis.Pt(), w);
+										break;
+									case 10:
+										h_recMinusGenTauMass_recDecayModeEq10.at(t).Fill(Ntp->PFTau_p4(selTau).M() - genTauVis.M(), w);
+										h_recTauPtDivGenTauPt_recDecayModeEq10.at(t).Fill(Ntp->PFTau_p4(selTau).Pt() - genTauVis.Pt(), w);
+										break;
+									default:
+										Logger(Logger::Warning) << "Tau has unknown decay mode " << Ntp->PFTau_hpsDecayMode(selTau) << std::endl;
+										break;
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	//////// fill most plots after full selection
 	if (status) {
 		// Vertex plots
@@ -1313,7 +1380,7 @@ void HToTaumuTauh::doPlotting(){
 		}
 	}
 
-	if (getStatusBoolean(FullInclusiveSelNoMt)) {
+/*	if (getStatusBoolean(FullInclusiveSelNoMt)) {
 		//if (Ntp->Muon_Charge(selMuon) > 0)
 		//	h_MtMuPlusOnly.at(t).Fill(value.at(MT), w);
 		//if (Ntp->Muon_Charge(selMuon) < 0)
@@ -1340,7 +1407,7 @@ void HToTaumuTauh::doPlotting(){
 				}
 			}
 		}
-	}
+	}*/
 
 	/////// plots filled after full muon and tau selection
 	//if (getStatusBoolean(ObjectsFailDiMuonVeto)) {
@@ -1557,6 +1624,11 @@ void HToTaumuTauh::Finish() {
 				double dyEmbYield   = Npassed.at(HConfig.GetType(DataMCType::DY_mutau_embedded)).GetBinContent(MT+1);
 
 				double dyEmbScale = dyMCYield / dyEmbYield;
+				if (dyEmbScale < 0.01) {
+					// Check if scale makes sense. It can be zero if DY MC sample is not run.
+					Logger(Logger::Warning) << "Embedding sample should be scaled to " << dyEmbScale << ", which seems unreasonable. Will not scale at all." << std::endl;
+					dyEmbScale = 1.;
+				}
 				// scale embedding sample to estimated yield
 				ScaleAllHistOfType(HConfig.GetType(DataMCType::DY_mutau_embedded), dyEmbScale);
 				// make sure that embedded is not scaled again by framework

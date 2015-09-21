@@ -170,7 +170,7 @@ class HToTaumuTauh : public Selection {
   //std::vector<TH1D> h_Mt1ProngOnly;
   //std::vector<TH1D> h_Mt3ProngOnly;
   //std::vector<TH1D> h_Mt3ProngSV;
-  std::vector<TH1D> h_Mt3ProngSVFlight;
+  //std::vector<TH1D> h_Mt3ProngSVFlight;
 
   //std::vector<TH1D> h_MetPt1ProngOnly;
   //std::vector<TH1D> h_MetPhi1ProngOnly;
@@ -249,12 +249,17 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> TrueMass;
   std::vector<TH1D> TrueMassFull3ProngVisibleMuon;
   std::vector<TH1D> TrueVisibleMass;
-  std::vector<TH1D> TauhPtSVFitted;
-  std::vector<TH1D> TauhEtaSVFitted;
-  std::vector<TH1D> TauhPhiSVFitted;
-  std::vector<TH1D> TauMuPtSVFitted;
-  std::vector<TH1D> TauMuEtaSVFitted;
-  std::vector<TH1D> TauMuPhiSVFitted;
+
+  std::vector<TH1D> h_GenTauhPt_NoSel;
+  std::vector<TH1D> h_GenTauhPt_FullSel;
+
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq0;
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq1;
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq10;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq0;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq1;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq10;
+
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
