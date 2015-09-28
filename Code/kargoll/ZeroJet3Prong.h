@@ -82,6 +82,28 @@ protected:
 	std::vector<TH1D> svFit3pMassResol_ZeroSol;
 	std::vector<TH1D> svFit3pMassResol_TrueSol;
 
+	std::vector<TH1D> svFit3pMass_PlusSol_notCleaned;
+	std::vector<TH1D> svFit3pMass_MinusSol_notCleaned;
+	std::vector<TH1D> svFit3pMass_ZeroSol_notCleaned;
+	std::vector<TH1D> svFit3pMass_TrueSol_notCleaned;
+	std::vector<TH1D> svFit3pMass_TruePlusSol_notCleaned;
+	std::vector<TH1D> svFit3pMass_TrueMinusSol_notCleaned;
+	std::vector<TH1D> svFit3pMassResol_PlusSol_notCleaned;
+	std::vector<TH1D> svFit3pMassResol_MinusSol_notCleaned;
+	std::vector<TH1D> svFit3pMassResol_ZeroSol_notCleaned;
+	std::vector<TH1D> svFit3pMassResol_TrueSol_notCleaned;
+
+	std::vector<TH1D> svFit3pMass_PlusSol_invalid;
+	std::vector<TH1D> svFit3pMass_MinusSol_invalid;
+	std::vector<TH1D> svFit3pMass_ZeroSol_invalid;
+	std::vector<TH1D> svFit3pMass_TrueSol_invalid;
+	std::vector<TH1D> svFit3pMass_TruePlusSol_invalid;
+	std::vector<TH1D> svFit3pMass_TrueMinusSol_invalid;
+	std::vector<TH1D> svFit3pMassResol_PlusSol_invalid;
+	std::vector<TH1D> svFit3pMassResol_MinusSol_invalid;
+	std::vector<TH1D> svFit3pMassResol_ZeroSol_invalid;
+	std::vector<TH1D> svFit3pMassResol_TrueSol_invalid;
+
 	std::vector<TH1D> vis3pMass_PlusSol;
 	std::vector<TH1D> vis3pMass_MinusSol;
 	std::vector<TH1D> vis3pMass_ZeroSol;
@@ -109,6 +131,10 @@ protected:
 	std::vector<TH1D> Tau3p_Neutrino_PhiResol;
 	std::vector<TH1D> Tau3p_Neutrino_XResol;
 	std::vector<TH1D> Tau3p_Neutrino_YResol;
+	std::vector<TH1D> Tau3p_Neutrino_EPull;
+	std::vector<TH1D> Tau3p_Neutrino_XPull;
+	std::vector<TH1D> Tau3p_Neutrino_YPull;
+
 	std::vector<TH1D> MetMinus3pNeutrino_PtResol;
 	std::vector<TH1D> MetMinus3pNeutrino_PhiResol;
 	std::vector<TH1D> MetMinus3pNeutrino_XResol;
@@ -122,6 +148,11 @@ protected:
 	std::vector<TH1D> svFit3pMass;
 	std::vector<TH1D> svFit3pMassResol;
 
+	std::vector<TH1D> svFit3pMass_notCleaned;
+	std::vector<TH1D> svFit3pMassResol_notCleaned;
+	std::vector<TH1D> svFit3pMass_invalid;
+	std::vector<TH1D> svFit3pMassResol_invalid;
+
 	std::vector<TH1D> svFit3p_MassLMax_TrueSol;
 	std::vector<TH1D> svFit3p_MassLMax_WrongSol;
 	std::vector<TH1D> svFit3p_MassLMax_ZeroSol;
@@ -129,6 +160,11 @@ protected:
 	std::vector<TH1D> svFit3p_MassLMax_MinusSol;
 	std::vector<TH1D> svFit3p_TrueSolByHigherLMax;
 	std::vector<TH2D> svFit3p_SolutionMatrixByLMax;
+
+	std::vector<TH2D> invalidSvFit3p_Tau3pNeutrinoXPull;
+	std::vector<TH2D> invalidSvFit3p_Tau3pNeutrinoYPull;
+	std::vector<TH2D> invalidSvFit3p_MetMinus3pNeutrinoXPull;
+	std::vector<TH2D> invalidSvFit3p_MetMinus3pNeutrinoYPull;
 
 	std::vector<TH1D> MetPxPull;
 	std::vector<TH1D> MetPyPull;
