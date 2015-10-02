@@ -43,13 +43,15 @@ int DataStorage::GetFile(TString key){
 	TString inFile = assemblyFileName(i);
 	// check if file already exists
     ifstream check1(inFile);
-    if (check1) Logger(Logger::Warning) << "File " << inFile << " already exists and will be overwritten." << std::endl;
-
-    TString cmd1= "srmcp srm://" + gridsite + ":8443/" + Files.at(i) + " file:////" + mydir + "/" + inFile;
-    Logger(Logger::Info) << "calling shell command: "<< cmd1 << std::endl;
-    system(cmd1.Data());
-    filesToDelete.push_back(mydir + "/" + inFile);
-
+    if (check1) {
+    	Logger(Logger::Warning) << "File " << inFile << " already exists and will be re-used." << std::endl;
+    }
+    else{
+		TString cmd1= "srmcp srm://" + gridsite + ":8443/" + Files.at(i) + " file:////" + mydir + "/" + inFile;
+		Logger(Logger::Info) << "calling shell command: "<< cmd1 << std::endl;
+		system(cmd1.Data());
+		filesToDelete.push_back(mydir + "/" + inFile);
+    }
     // check if file was properly created
     ifstream check2(inFile);
     if(!check2){

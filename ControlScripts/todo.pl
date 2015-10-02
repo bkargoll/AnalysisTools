@@ -767,8 +767,8 @@ if( $ARGV[0] eq "--GRID" ){
 
     # Generate Combine Input
     system(sprintf("cp $InputFile $OutputDir/workdir$set/Input.txt "));
-    system(sprintf("cd $OutputDir/workdir$set; subs '{SET}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
-    system(sprintf("cd $OutputDir/workdir$set; subs '{FileDir}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
+    system(sprintf("cd $OutputDir/workdir$set; $dir/subs '{SET}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
+    system(sprintf("cd $OutputDir/workdir$set; $dir/subs '{FileDir}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
     system(sprintf("echo \"Mode: RECONSTRUCT\" >> $OutputDir/workdir$set/Input.txt"));
     system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Input.txt"));
 
@@ -1054,9 +1054,8 @@ if( $ARGV[0] eq "--GRID" ){
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
     printf("\nTo compile the code in the workdir: source compile --useRoot $OutputDir/workdir$set/root/ $UserDir $tauspinner $svfit");
-    printf("\nTo submit jobs to the GRID: source Submit ");
-    printf("\nTo check the status of the GRID jobs and download finished jobs: source CheckandGet.sh");
-    printf("\nTo additionally print the details of all the jobs: source CheckandGet.sh  --detailed");
+    printf("\nTo submit jobs to the GRID: source Run.sh --Submit ");
+    printf("\nTo manually submit and investigate the jobs status use Submit and CheckandGet.sh scripts.");
     printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1.sh; cd ..\n");
     
 } 

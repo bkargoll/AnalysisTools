@@ -8,6 +8,7 @@ from tdrstyle import setTDRStyle
 setTDRStyle(False)
 
 gStyle.SetLegendBorderSize(0)
+gStyle.SetFillStyle(0)
 folder = "/net/scratch_cms/institut_3b/kargoll/workdirSVFitSmallMassSampleRangeAug_26_2015/Set_1/SVFitLikelihoods/"
 colors = [TColor.GetColor(0,84,159), # dark blue
           TColor.GetColor(204,7,30), # red
@@ -17,7 +18,7 @@ colors = [TColor.GetColor(0,84,159), # dark blue
 
 def drawLikelihoods(files, names, outputName, genMass = None, xMax = 300):
     can = TCanvas()
-    legend = TLegend(.54,.72,.94,.85)
+    legend = TLegend(.64, 0.90-0.05*(len(names)+1) ,.94,.90)
     hists = []
     
     if len(files) != len(names):
@@ -59,7 +60,7 @@ Event = "TruePlus_Rotated"
 genM =  90.4558
 Files = [ TFile(folder+"SVFLikelihood_Mass82.963897705078125_8kP07.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass64.963993072509766_hMFSv.root","READ")] 
-Names = [ "3-prong SVFit Rotated",
+Names = [ "3#pi SVFit Rot.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)
@@ -69,7 +70,7 @@ Event = "TrueMinus_Rotated"
 genM =  90.4302
 Files = [ TFile(folder+"SVFLikelihood_Mass170.00048065185547_2tK0L.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass94.475265502929688_KWrO7.root","READ")] 
-Names = [ "3-prong SVFit Rotated",
+Names = [ "3#pi SVFit Rot.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)
@@ -79,7 +80,7 @@ Event = "TrueMinus_Rotated_2"
 genM =  89.5857
 Files = [ TFile(folder+"SVFLikelihood_Mass146.70893096923828_tjH22.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass97.278984069824219_e1IX5.root","READ")] 
-Names = [ "3-prong SVFit Rotated",
+Names = [ "3#pi SVFit Rot.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)
@@ -90,8 +91,8 @@ genM =  89.097
 Files = [ TFile(folder+"SVFLikelihood_Mass341.85054016113281_4ogHF.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass121.29331588745117_ZQxwQ.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass91.262699127197266_Iwo7J.root","READ")] 
-Names = [ "3-prong SVFit Plus Sol.",
-          "3-prong SVFit Minus Sol.",
+Names = [ "3#pi SVFit +Sol.",
+          "3#pi SVFit -Sol.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM, 400)
@@ -102,8 +103,8 @@ genM =  91.603
 Files = [ TFile(folder+"SVFLikelihood_Mass205.82180023193359_8b7mt.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass99.432666778564453_KLHIG.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass94.247104644775391_lFrXL.root","READ")] 
-Names = [ "3-prong SVFit Plus Sol.",
-          "3-prong SVFit Minus Sol.",
+Names = [ "3#pi SVFit +Sol.",
+          "3#pi SVFit -Sol.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)
@@ -114,8 +115,8 @@ genM =  111.691
 Files = [ TFile(folder+"SVFLikelihood_Mass133.78108978271484_YL8rq.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass0_DiZSk.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass112.15602111816406_iNJj8.root","READ")] 
-Names = [ "3-prong SVFit Plus Sol.",
-          "3-prong SVFit Minus Sol.",
+Names = [ "3#pi SVFit +Sol.",
+          "3#pi SVFit -Sol.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)
@@ -126,8 +127,8 @@ genM =   90.9831
 Files = [ TFile(folder+"SVFLikelihood_Mass94.164077758789062_E2fMt.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass89.527969360351562_VXa2z.root","READ"), 
           TFile(folder+"SVFLikelihood_Mass76.925491333007812_Cd5WK.root","READ")] 
-Names = [ "3-prong SVFit Plus Sol.",
-          "3-prong SVFit Minus Sol.",
+Names = [ "3#pi SVFit +Sol.",
+          "3#pi SVFit -Sol.",
           "Default SVFit"]
 
 drawLikelihoods(Files, Names, Event, genM)

@@ -34,6 +34,7 @@ namespace Tools {
     return LV1.DeltaR(LV2);
   }
 
+  double phiUncertainty(double px, double py, double pxVar, double pyVar, double pxpyCov);
  
 }
 #endif

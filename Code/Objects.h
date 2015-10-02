@@ -13,6 +13,7 @@
 #include "Math/Vector3D.h"
 #include "TMatrixD.h"
 #include "TString.h"
+#include "Tools.h"
 
 class Ntuple_Controller;
 class LorentzVectorParticle;
@@ -59,6 +60,7 @@ public:
 	void set_hasSignificance(bool hasSignificance) {hasSignificance_ = hasSignificance;}
 
 	TMatrixD significanceMatrix() const;
+	double phiUncertainty() const {return Tools::phiUncertainty(ex(), ey(), significanceXX(), significanceYY(), significanceXY());};
 	Vector3D met3D() const;
 
 	const TString& metType() const {return metType_;}

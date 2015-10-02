@@ -9,6 +9,7 @@
 #define ZeroJet3Prong_H_
 
 #include "Category.h"
+class TPTRObject;
 
 class ZeroJet3Prong: public Category {
 public:
@@ -22,6 +23,13 @@ public:
 		SigmaSV,
 		NCuts
 	};
+
+	TLorentzVector getTauLV(const TPTRObject& tau, int tau_ambiguity);
+	double mtt_mu3prong_projectMetOnMu(const TPTRObject& tau, int tau_ambiguity, unsigned i_mu, const objects::MET& met);
+	double mtt_mu3prong_UseRaw3prongMuonMET(const TPTRObject& tau, int tau_ambiguity, unsigned i_mu, const objects::MET& met);
+	double mtt_mu3prong_projectMetOnMuAndRotate(const TPTRObject& tau, int tau_ambiguity, unsigned i_mu, const objects::MET& met);
+	double mtt_mu3prong_calculateZnu(const TPTRObject& tau, int tau_ambiguity, unsigned i_mu, const objects::MET& met);
+	double mtt_mu3prong_calculateZnuNoAmb(const TPTRObject& tau, int tau_ambiguity, unsigned i_mu, const objects::MET& met);
 
 protected:
 	void categoryConfiguration();
@@ -50,6 +58,7 @@ protected:
 	std::vector<TH1D> Tau3p_Zero_Eta;
 	std::vector<TH1D> Tau3p_Zero_Phi;
 	std::vector<TH1D> Tau3p_Zero_E;
+	std::vector<TH1D> Tau3p_Zero_RotSignificance;
 
 	std::vector<TH1D> Tau3p_fit_Pt;
 	std::vector<TH1D> Tau3p_fit_Eta;
@@ -134,11 +143,13 @@ protected:
 	std::vector<TH1D> Tau3p_Neutrino_EPull;
 	std::vector<TH1D> Tau3p_Neutrino_XPull;
 	std::vector<TH1D> Tau3p_Neutrino_YPull;
+	std::vector<TH1D> Tau3p_Neutrino_PhiPull;
 
 	std::vector<TH1D> MetMinus3pNeutrino_PtResol;
 	std::vector<TH1D> MetMinus3pNeutrino_PhiResol;
 	std::vector<TH1D> MetMinus3pNeutrino_XResol;
 	std::vector<TH1D> MetMinus3pNeutrino_YResol;
+	std::vector<TH2D> MetMinus3pNeutrino_PhiPtResol;
 
 	std::vector<TH1D> MetMinus3pNeutrino_PhiResol_FailedSVFit;
 	std::vector<TH1D> MetMinus3pNeutrino_DeltaPhiMuon;
@@ -161,18 +172,51 @@ protected:
 	std::vector<TH1D> svFit3p_TrueSolByHigherLMax;
 	std::vector<TH2D> svFit3p_SolutionMatrixByLMax;
 
-	std::vector<TH2D> invalidSvFit3p_Tau3pNeutrinoXPull;
-	std::vector<TH2D> invalidSvFit3p_Tau3pNeutrinoYPull;
-	std::vector<TH2D> invalidSvFit3p_MetMinus3pNeutrinoXPull;
-	std::vector<TH2D> invalidSvFit3p_MetMinus3pNeutrinoYPull;
+	std::vector<TH1D> invalidSvFit3p_Tau3pNeutrinoXPull;
+	std::vector<TH1D> invalidSvFit3p_Tau3pNeutrinoYPull;
+	std::vector<TH1D> invalidSvFit3p_Tau3pNeutrinoPhiPull;
+	std::vector<TH1D> invalidSvFit3p_MetMinus3pNeutrinoXPull;
+	std::vector<TH1D> invalidSvFit3p_MetMinus3pNeutrinoYPull;
+	std::vector<TH1D> invalidSvFit3p_MetMinus3pNeutrinoPhiPull;
 
 	std::vector<TH1D> MetPxPull;
 	std::vector<TH1D> MetPyPull;
 	std::vector<TH2D> MetPxPyPull;
+	std::vector<TH1D> MetPhiPull;
 	std::vector<TH1D> MetMinus3pNeutrino_PxPull;
 	std::vector<TH1D> MetMinus3pNeutrino_PyPull;
 	std::vector<TH2D> MetMinus3pNeutrino_PxPyPull;
+	std::vector<TH1D> MetMinus3pNeutrino_PhiPull;
 
+	std::vector<TH1D> mtt_calculateZnu_PlusSol;
+    std::vector<TH1D> mtt_calculateZnu_MinusSol;
+	std::vector<TH1D> mtt_calculateZnu_ZeroSol;
+	std::vector<TH1D> mtt_calculateZnu_TrueSol;
+	std::vector<TH1D> mtt_calculateZnuNoAmb_PlusSol;
+    std::vector<TH1D> mtt_calculateZnuNoAmb_MinusSol;
+	std::vector<TH1D> mtt_calculateZnuNoAmb_ZeroSol;
+	std::vector<TH1D> mtt_calculateZnuNoAmb_TrueSol;
+	std::vector<TH1D> mtt_3prongMuonRawMET_PlusSol;
+	std::vector<TH1D> mtt_3prongMuonRawMET_MinusSol;
+	std::vector<TH1D> mtt_3prongMuonRawMET_ZeroSol;
+	std::vector<TH1D> mtt_3prongMuonRawMET_TrueSol;
+	std::vector<TH1D> mtt_projectMetOnMu_PlusSol;
+	std::vector<TH1D> mtt_projectMetOnMu_MinusSol;
+	std::vector<TH1D> mtt_projectMetOnMu_ZeroSol;
+	std::vector<TH1D> mtt_projectMetOnMu_TrueSol;
+	std::vector<TH1D> mtt_projectMetOnMuRotate_PlusSol;
+	std::vector<TH1D> mtt_projectMetOnMuRotate_MinusSol;
+	std::vector<TH1D> mtt_projectMetOnMuRotate_ZeroSol;
+	std::vector<TH1D> mtt_projectMetOnMuRotate_TrueSol;
+
+	std::vector<TH1D> deltaMtt_calculateZnu;
+
+	std::vector<TH2D> svFit3pMassResol_vs_MetPhiResol;
+	std::vector<TH2D> mttCalculateZnuResol_vs_MetPhiResol;
+	std::vector<TH2D> mttCalculateZnuNoAmbResol_vs_MetPhiResol;
+	std::vector<TH2D> mtt3prongMuonRawMETResol_vs_MetPhiResol;
+	std::vector<TH2D> mttprojectMetOnMuRotateResol_vs_MetPhiResol;
+	std::vector<TH2D> mttprojectMetOnMuResol_vs_MetPhiResol;
 };
 
 #endif /* ZeroJet3Prong_H_ */
