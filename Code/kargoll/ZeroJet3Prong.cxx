@@ -85,7 +85,8 @@ void  ZeroJet3Prong::categoryConfiguration(){
 	Tau3p_Zero_Eta	= HConfig.GetTH1D(Name+"_Tau3p_Zero_Eta","Tau3p_Eta"	,50,-2.5,2.5,"#eta(#tau_{3p}^{0 sol.})");
 	Tau3p_Zero_Phi	= HConfig.GetTH1D(Name+"_Tau3p_Zero_Phi","Tau3p_Phi"	,50,-3.14159,3.14159,"#phi(#tau_{3p}^{0 sol.})");
 	Tau3p_Zero_E	= HConfig.GetTH1D(Name+"_Tau3p_Zero_E","Tau3p_E"		,50,0.,200.,"E(#tau_{3p}^{0 sol.})/GeV");
-	Tau3p_Zero_RotSignificance = HConfig.GetTH1D(Name+"_Tau3p_Zero_RotSignificance","Tau3p_Zero_RotSignificance" , 50,0.,20.,"#sigma(rotation)");
+	Tau3p_Zero_RotSignificance = HConfig.GetTH1D(Name+"_Tau3p_Zero_RotSignificance","Tau3p_Zero_RotSignificance" , 40,0.,10.,"#sigma(rotation)");
+	Tau3p_FlightLengthSignificanceDefPV  = HConfig.GetTH1D(Name+"_Tau3p_FlightLengthSignificanceDefPV","Tau3p_FlightLengthSignificanceDefPV" , 80,-10.,30,"#sigma(SV - default PV)");
 
 	Tau3p_fit_Pt	= HConfig.GetTH1D(Name+"_Tau3p_fit_Pt","Tau3p_fit_Pt"  ,50,0.,100.,"p_{T}(#tau_{3p}^{fit})/GeV");
 	Tau3p_fit_Eta	= HConfig.GetTH1D(Name+"_Tau3p_fit_Eta","Tau3p_fit_Eta",50,-2.5,2.5,"#eta(#tau_{3p}^{fit})");
@@ -237,11 +238,18 @@ void  ZeroJet3Prong::categoryConfiguration(){
 	deltaMtt_calculateZnu = HConfig.GetTH1D(Name+"_deltaMtt_calculateZnu", "deltaMtt_calculateZnu", 50, -25., 25., "#Deltam_{#tau#tau}^{amb.}/GeV");
 
 	svFit3pMassResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_svFit3pMassResol_vs_MetPhiResol", "svFit3pMassResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
-	mttCalculateZnuResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttCalculateZnuTrueSolResol_vs_MetPhiResol", "mttCalculateZnuTrueSolResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(calc. z_{#nu} m_{#tau#tau} - m_{true})/GeV");
-	mttCalculateZnuNoAmbResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttcalculateZnuNoAmbTrueSolResol_vs_MetPhiResol", "mttcalculateZnuNoAmbTrueSolResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(calc. z_{#nu} m_{#tau#tau} - m_{true})/GeV");
-	mtt3prongMuonRawMETResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mtt3prongMuonRawMETTrueSolResol_vs_MetPhiResol", "mtt3prongMuonRawMETTrueSolResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(raw MET m_{#tau#tau} - m_{true})/GeV");
-	mttprojectMetOnMuRotateResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuRotateTrueSolResol_vs_MetPhiResol", "mttprojectMetOnMuRotateTrueSolResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(Project+Rotate m_{#tau#tau} - m_{true})/GeV");
-	mttprojectMetOnMuResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuTrueSolResol_vs_MetPhiResol", "mttprojectMetOnMuTrueSolResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(Projection m_{#tau#tau} - m_{true})/GeV");
+	mttCalculateZnuResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttCalculateZnuResol_vs_MetPhiResol", "mttCalculateZnuResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(calc. z_{#nu} m_{#tau#tau} - m_{true})/GeV");
+	mttCalculateZnuNoAmbResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttCalculateZnuNoAmbResol_vs_MetPhiResol", "mttCalculateZnuNoAmbResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(calc. z_{#nu} m_{#tau#tau} - m_{true})/GeV");
+	mtt3prongMuonRawMETResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mtt3prongMuonRawMETResol_vs_MetPhiResol", "mtt3prongMuonRawMETResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(raw MET m_{#tau#tau} - m_{true})/GeV");
+	mttprojectMetOnMuRotateResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuRotateResol_vs_MetPhiResol", "mttprojectMetOnMuRotateResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(Project+Rotate m_{#tau#tau} - m_{true})/GeV");
+	mttprojectMetOnMuResol_vs_MetPhiResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuResol_vs_MetPhiResol", "mttprojectMetOnMuResol_vs_MetPhiResol", 30, 0., 3., 50, -100., 100., "#phi resol. (#nu_{#tau,#mu}^{reco} - #nu_{#tau,#mu}^{gen})", "(Projection m_{#tau#tau} - m_{true})/GeV");
+
+	svFit3pMassResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_svFit3pMassResol_vs_Tau3pEResol", "svFit3pMassResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
+	mttCalculateZnuResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_mttCalculateZnuResol_vs_Tau3pEResol", "mttCalculateZnuResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
+	mttCalculateZnuNoAmbResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_mttCalculateZnuNoAmbResol_vs_Tau3pEResol", "mttCalculateZnuNoAmbResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
+	mtt3prongMuonRawMETResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_mtt3prongMuonRawMETResol_vs_Tau3pEResol", "mtt3prongMuonRawMETResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
+	mttprojectMetOnMuRotateResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuRotateResol_vs_Tau3pEResol", "mttprojectMetOnMuRotateResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
+	mttprojectMetOnMuResol_vs_Tau3pEResol = HConfig.GetTH2D(Name+"_mttprojectMetOnMuResol_vs_Tau3pEResol", "mttprojectMetOnMuResol_vs_Tau3pEResol", 50, -1., 1., 50, -100., 100., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}", "m_{SVfit} - m_{true}(#tau_{3p},#mu) /GeV");
 }
 
 void ZeroJet3Prong::categoryExtradist(){
@@ -258,6 +266,7 @@ void ZeroJet3Prong::categoryExtradist(){
 	Extradist1d.push_back(&Tau3p_Zero_Phi);
 	Extradist1d.push_back(&Tau3p_Zero_E);
 	Extradist1d.push_back(&Tau3p_Zero_RotSignificance);
+	Extradist1d.push_back(&Tau3p_FlightLengthSignificanceDefPV);
 
 	Extradist1d.push_back(&Tau3p_fit_Pt);
 	Extradist1d.push_back(&Tau3p_fit_Eta);
@@ -415,6 +424,13 @@ void ZeroJet3Prong::categoryExtradist(){
 	Extradist2d.push_back(&mtt3prongMuonRawMETResol_vs_MetPhiResol);
 	Extradist2d.push_back(&mttprojectMetOnMuRotateResol_vs_MetPhiResol);
 	Extradist2d.push_back(&mttprojectMetOnMuResol_vs_MetPhiResol);
+
+	Extradist2d.push_back(&svFit3pMassResol_vs_Tau3pEResol);
+	Extradist2d.push_back(&mttCalculateZnuResol_vs_Tau3pEResol);
+	Extradist2d.push_back(&mttCalculateZnuNoAmbResol_vs_Tau3pEResol);
+	Extradist2d.push_back(&mtt3prongMuonRawMETResol_vs_Tau3pEResol);
+	Extradist2d.push_back(&mttprojectMetOnMuRotateResol_vs_Tau3pEResol);
+	Extradist2d.push_back(&mttprojectMetOnMuResol_vs_Tau3pEResol);
 }
 
 bool ZeroJet3Prong::categorySelection(){
@@ -475,6 +491,21 @@ bool ZeroJet3Prong::categorySelection(){
 }
 
 void ZeroJet3Prong::categoryPlotting(){
+	if (passAllBut(SigmaSV) && Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
+		// flight length significance using default vertices
+		TMatrixTSym<double> pvCov(3);
+		pvCov[0][0] = Ntp->Vtx_Cov(0)[0][0];
+		pvCov[0][1] = Ntp->Vtx_Cov(0)[0][1];
+		pvCov[0][2] = Ntp->Vtx_Cov(0)[0][2];
+		pvCov[1][1] = Ntp->Vtx_Cov(0)[1][1];
+		pvCov[1][2] = Ntp->Vtx_Cov(0)[1][2];
+		pvCov[2][2] = Ntp->Vtx_Cov(0)[2][2];
+
+		int sign = ( (Ntp->PFTau_TIP_secondaryVertex_pos(selTau)-Ntp->Vtx(0)).Dot( Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0 ) ? +1 : -1;
+		double fls = Ntp->PFTau_FlightLength_significance(Ntp->Vtx(0), pvCov, Ntp->PFTau_TIP_secondaryVertex_pos(selTau), Ntp->PFTau_TIP_secondaryVertex_cov(selTau));
+		Tau3p_FlightLengthSignificanceDefPV.at(t).Fill(sign * fls, w);
+	}
+
 	TPTRObject TPResults;
 
 	if (status){
@@ -519,7 +550,6 @@ void ZeroJet3Prong::categoryPlotting(){
 			// rotation significance
 			Tau3p_Zero_RotSignificance.at(t).Fill(TPResults.getRotSigma(), w);
 		}
-
 
 		EventFit_converged.at(t).Fill(Results.Fitconverged(), w);
 		if (Results.Fitconverged()) {
@@ -601,12 +631,34 @@ void ZeroJet3Prong::categoryPlotting(){
 				if (svfObjMinus->isValid())	svFit3pMass_MinusSol.at(t).Fill(svfObjMinus->get_mass(), w);
 				else						svFit3pMass_MinusSol_invalid.at(t).Fill(svfObjMinus->get_mass(), w);
 				plusLmaxIsHigher = (svfObjPlus->get_massLmax() > svfObjMinus->get_massLmax());
+
+				svFit3p_MassLMax_PlusSol.at(t).Fill(svfObjPlus->get_massLmax(), w);
+				svFit3p_MassLMax_MinusSol.at(t).Fill(svfObjMinus->get_massLmax(), w);
 			}
 
 			double visMassPlus = (Ntp->Muon_p4(selMuon) + TPResults.getTauPlus().LV()).M();
 			double visMassMinus = (Ntp->Muon_p4(selMuon) + TPResults.getTauMinus().LV()).M();
 			vis3pMass_PlusSol.at(t).Fill( visMassPlus, w);
 			vis3pMass_MinusSol.at(t).Fill( visMassMinus, w);
+
+			objects::MET metPlus(Ntp, "CorrMVAMuTau");
+			metPlus.subtractNeutrino(TPResults.getNeutrinoPlus());
+			objects::MET metMinus(Ntp, "CorrMVAMuTau");
+			metMinus.subtractNeutrino(TPResults.getNeutrinoMinus());
+			//TLorentzVector genMet = Ntp->MCTau_invisiblePart(i_otherTau);
+			//objects::MET metPlus("gen", genMet.Px(), genMet.Py());
+			//objects::MET metMinus(metPlus);
+
+			mtt_calculateZnu_PlusSol.at(t).Fill(mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
+			mtt_calculateZnu_MinusSol.at(t).Fill(mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
+			mtt_calculateZnuNoAmb_PlusSol.at(t).Fill(mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
+			mtt_calculateZnuNoAmb_MinusSol.at(t).Fill(mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
+			mtt_3prongMuonRawMET_PlusSol.at(t).Fill(mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
+			mtt_3prongMuonRawMET_MinusSol.at(t).Fill(mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
+			mtt_projectMetOnMu_PlusSol.at(t).Fill(mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
+			mtt_projectMetOnMu_MinusSol.at(t).Fill(mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
+			mtt_projectMetOnMuRotate_PlusSol.at(t).Fill(mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
+			mtt_projectMetOnMuRotate_MinusSol.at(t).Fill(mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
 
 			if (isMC) {
 				if (runSVFit_) {
@@ -617,28 +669,12 @@ void ZeroJet3Prong::categoryPlotting(){
 					if (svfObjMinus->isValid())	svFit3pMassResol_MinusSol.at(t).Fill((svfObjMinus->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 					else 						svFit3pMassResol_MinusSol_invalid.at(t).Fill((svfObjMinus->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 
-					svFit3p_MassLMax_PlusSol.at(t).Fill(svfObjPlus->get_massLmax(), w);
-					svFit3p_MassLMax_MinusSol.at(t).Fill(svfObjMinus->get_massLmax(), w);
 				}
 				vis3pMassResol_PlusSol.at(t).Fill( (visMassPlus - trueResonanceMass)/trueResonanceMass, w);
 				vis3pMassResol_MinusSol.at(t).Fill( (visMassMinus - trueResonanceMass)/trueResonanceMass, w);
-				objects::MET metPlus(Ntp, "CorrMVAMuTau");
-				metPlus.subtractNeutrino(TPResults.getNeutrinoPlus());
-				objects::MET metMinus(Ntp, "CorrMVAMuTau");
-				metMinus.subtractNeutrino(TPResults.getNeutrinoMinus());
-
-				mtt_calculateZnu_PlusSol.at(t).Fill(mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
-				mtt_calculateZnu_MinusSol.at(t).Fill(mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
-				mtt_calculateZnuNoAmb_PlusSol.at(t).Fill(mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
-				mtt_calculateZnuNoAmb_MinusSol.at(t).Fill(mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
-				mtt_3prongMuonRawMET_PlusSol.at(t).Fill(mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
-				mtt_3prongMuonRawMET_MinusSol.at(t).Fill(mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
-				mtt_projectMetOnMu_PlusSol.at(t).Fill(mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
-				mtt_projectMetOnMu_MinusSol.at(t).Fill(mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
-				mtt_projectMetOnMuRotate_PlusSol.at(t).Fill(mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
-				mtt_projectMetOnMuRotate_MinusSol.at(t).Fill(mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::minus, selMuon, metMinus), w);
 
 				double phiUnc(-1);
+				double tau3pEresol(-1);
 				switch (true3ProngAmbig) {
 					case MultiProngTauSolver::plus:
 						if (runSVFit_) {
@@ -656,6 +692,7 @@ void ZeroJet3Prong::categoryPlotting(){
 								svFit3pMassResol.at(t).Fill((svfObjPlus->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 
 								svFit3pMassResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), (svfObjPlus->get_mass() - trueResonanceMass), w);
+								svFit3pMassResol_vs_Tau3pEResol.at(t).Fill((TPResults.getTauPlus().LV().E() - trueTauP4.E())/trueTauP4.E(), (svfObjPlus->get_mass() - trueResonanceMass), w);
 							}
 							else{
 								svFit3pMass_TrueSol_invalid.at(t).Fill(svfObjPlus->get_mass(), w);
@@ -703,11 +740,18 @@ void ZeroJet3Prong::categoryPlotting(){
 						mtt_projectMetOnMu_TrueSol.at(t).Fill(mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
 						mtt_projectMetOnMuRotate_TrueSol.at(t).Fill(mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus), w);
 
-						mttCalculateZnuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
-						mttCalculateZnuNoAmbResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
-						mtt3prongMuonRawMETResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
-						mttprojectMetOnMuRotateResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
-						mttprojectMetOnMuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttCalculateZnuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), 			mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttCalculateZnuNoAmbResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), 		mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mtt3prongMuonRawMETResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), 		mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttprojectMetOnMuRotateResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), 	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttprojectMetOnMuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metPlus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), 			mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+
+						tau3pEresol = (TPResults.getTauPlus().LV().E() - trueTauP4.E())/trueTauP4.E();
+						mttCalculateZnuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol, 		mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttCalculateZnuNoAmbResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mtt3prongMuonRawMETResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttprojectMetOnMuRotateResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
+						mttprojectMetOnMuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
 
 						Tau3p_True_Pt.at(t).Fill(TPResults.getTauPlus().LV().Pt(), w);
 						Tau3p_True_Eta.at(t).Fill(TPResults.getTauPlus().LV().Eta(), w);
@@ -771,6 +815,7 @@ void ZeroJet3Prong::categoryPlotting(){
 								svFit3pMassResol.at(t).Fill((svfObjMinus->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 
 								svFit3pMassResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metMinus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), (svfObjMinus->get_mass() - trueResonanceMass), w);
+								svFit3pMassResol_vs_Tau3pEResol.at(t).Fill((TPResults.getTauMinus().LV().E() - trueTauP4.E())/trueTauP4.E(), (svfObjMinus->get_mass() - trueResonanceMass), w);
 							}
 							else {
 								svFit3pMass_TrueSol_invalid.at(t).Fill(svfObjMinus->get_mass(), w);
@@ -823,6 +868,13 @@ void ZeroJet3Prong::categoryPlotting(){
 						mtt3prongMuonRawMETResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metMinus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
 						mttprojectMetOnMuRotateResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metMinus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
 						mttprojectMetOnMuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metMinus.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
+
+						tau3pEresol = (TPResults.getTauMinus().LV().E() - trueTauP4.E())/trueTauP4.E();
+						mttCalculateZnuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol, 		mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
+						mttCalculateZnuNoAmbResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
+						mtt3prongMuonRawMETResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
+						mttprojectMetOnMuRotateResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
+						mttprojectMetOnMuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
 
 						Tau3p_True_Pt.at(t).Fill(TPResults.getTauMinus().LV().Pt(), w);
 						Tau3p_True_Eta.at(t).Fill(TPResults.getTauMinus().LV().Eta(), w);
@@ -895,6 +947,8 @@ void ZeroJet3Prong::categoryPlotting(){
 			if (isMC) {
 				objects::MET metZero(Ntp, "CorrMVAMuTau");
 				metZero.subtractNeutrino(TPResults.getNeutrinoZero());
+				//TLorentzVector genMet = Ntp->MCTau_invisiblePart(i_otherTau);
+				//objects::MET metZero("gen", genMet.Px(), genMet.Py());
 				if (runSVFit_) {
 					svFit3pMassResol_ZeroSol_notCleaned.at(t).Fill((svfObjZero->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 					svFit3pMass_notCleaned.at(t).Fill(svfObjZero->get_mass(), w);
@@ -905,6 +959,7 @@ void ZeroJet3Prong::categoryPlotting(){
 						svFit3pMassResol.at(t).Fill((svfObjZero->get_mass() - trueResonanceMass) / trueResonanceMass, w);
 
 						svFit3pMassResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metZero.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), (svfObjZero->get_mass() - trueResonanceMass), w);
+						svFit3pMassResol_vs_Tau3pEResol.at(t).Fill((TPResults.getTauZero().LV().E() - trueTauP4.E())/trueTauP4.E(), (svfObjZero->get_mass() - trueResonanceMass), w);
 					}
 					else{
 						svFit3pMassResol_ZeroSol_invalid.at(t).Fill((svfObjZero->get_mass() - trueResonanceMass) / trueResonanceMass, w);
@@ -952,6 +1007,13 @@ void ZeroJet3Prong::categoryPlotting(){
 				mtt3prongMuonRawMETResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metZero.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
 				mttprojectMetOnMuRotateResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metZero.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
 				mttprojectMetOnMuResol_vs_MetPhiResol.at(t).Fill(fabs(Tools::DeltaPhi(metZero.phi(), Ntp->MCTau_invisiblePart(i_otherTau).Phi())), mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
+
+				double tau3pEresol = (TPResults.getTauZero().LV().E() - trueTauP4.E())/trueTauP4.E();
+				mttCalculateZnuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol, 		mtt_mu3prong_calculateZnu(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
+				mttCalculateZnuNoAmbResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_calculateZnuNoAmb(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
+				mtt3prongMuonRawMETResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_UseRaw3prongMuonMET(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
+				mttprojectMetOnMuRotateResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
+				mttprojectMetOnMuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::zero, selMuon, metZero) - trueResonanceMass, w);
 
 				if (Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt() > 0.001)
 					Tau3p_Neutrino_PtResol.at(t).Fill( (TPResults.getNeutrinoZero().LV().Pt() - Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt())/Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt(), w);

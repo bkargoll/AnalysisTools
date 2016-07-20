@@ -26,6 +26,7 @@ class MET {
 public:
 	MET();
 	MET(Ntuple_Controller* const Ntp, TString met_type);
+	MET(TString met_type, float px, float py, float sig = 0, float sigXX = 0, float sigXY = 0, float sigYY = 0);
 	virtual ~MET();
 
 	void Init(Ntuple_Controller* const Ntp);

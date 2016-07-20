@@ -59,6 +59,7 @@ protected:
 	std::vector<TH1D> Tau3p_Zero_Phi;
 	std::vector<TH1D> Tau3p_Zero_E;
 	std::vector<TH1D> Tau3p_Zero_RotSignificance;
+	std::vector<TH1D> Tau3p_FlightLengthSignificanceDefPV;
 
 	std::vector<TH1D> Tau3p_fit_Pt;
 	std::vector<TH1D> Tau3p_fit_Eta;
@@ -217,6 +218,13 @@ protected:
 	std::vector<TH2D> mtt3prongMuonRawMETResol_vs_MetPhiResol;
 	std::vector<TH2D> mttprojectMetOnMuRotateResol_vs_MetPhiResol;
 	std::vector<TH2D> mttprojectMetOnMuResol_vs_MetPhiResol;
+
+	std::vector<TH2D> svFit3pMassResol_vs_Tau3pEResol;
+	std::vector<TH2D> mttCalculateZnuResol_vs_Tau3pEResol;
+	std::vector<TH2D> mttCalculateZnuNoAmbResol_vs_Tau3pEResol;
+	std::vector<TH2D> mtt3prongMuonRawMETResol_vs_Tau3pEResol;
+	std::vector<TH2D> mttprojectMetOnMuRotateResol_vs_Tau3pEResol;
+	std::vector<TH2D> mttprojectMetOnMuResol_vs_Tau3pEResol;
 };
 
 #endif /* ZeroJet3Prong_H_ */
