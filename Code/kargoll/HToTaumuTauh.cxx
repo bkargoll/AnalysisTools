@@ -290,20 +290,6 @@ void  HToTaumuTauh::Setup(){
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
   // Setup Extra Histograms
-  //h_NVtx=HConfig.GetTH1D(Name+"_NVtx","NVtx",26,-0.5,25.5,"N(Vtx) before selection");
-  //h_VtxZ=HConfig.GetTH1D(Name+"_VtxZ","VtxZ",50,-50.0,50.0,"z(Vtx)/cm");
-  //h_VtxRho=HConfig.GetTH1D(Name+"_VtxRho","VtxRho",50,0.0,2.0,"#rho(Vtx)/cm");
-  //h_VtxPhi=HConfig.GetTH1D(Name+"_VtxPhi","VtxPhi",50,0.0,3.2,"#phi(Vtx)");
-  //h_VtxNdof=HConfig.GetTH1D(Name+"_VtxNdof","VtxNdof",50,-0.5,49.5,"NDoF(Vtx Fit)");
-  //h_VtxIsfake=HConfig.GetTH1D(Name+"_VtxIsfake","VtxIsfake",2,-0.5,1.5,"IsFake(Vtx)");
-
-  //h_MuDxy=HConfig.GetTH1D(Name+"_MuDxy","MuDxy",60,-0.3,0.3,"d_{xy}(#mu,Vtx)/cm");
-  //h_MuDz=HConfig.GetTH1D(Name+"_MuDz","MuDz",60,-.6,.6,"d_{z}(#mu,Vtx)/cm");
-  //h_MuRelIso=HConfig.GetTH1D(Name+"_MuRelIso","MuRelIso",50,0.,1.,"relIso(#mu)");
-  //h_MuPt=HConfig.GetTH1D(Name+"_MuPt","MuPt",50,0.,200.,"p_{T}(#mu)/GeV");
-  //h_MuEta=HConfig.GetTH1D(Name+"_MuEta","MuEta",50,-2.5,2.5,"#eta(#mu)");
-  //h_MuPhi=HConfig.GetTH1D(Name+"_MuPhi","MuPhi",50,-3.14159,3.14159,"#phi(#mu)");
-
   h_MuSelPt=HConfig.GetTH1D(Name+"_MuSelPt","MuSelPt",50,0.,100.,"p_{T}(#mu_{sel})/GeV");
   h_MuSelEta=HConfig.GetTH1D(Name+"_MuSelEta","MuSelEta",50,-2.5,2.5,"#eta(#mu_{sel})");
   h_MuSelPhi=HConfig.GetTH1D(Name+"_MuSelPhi","MuSelPhi",50,-3.14159,3.14159,"#phi(#mu_{sel})");
@@ -312,62 +298,20 @@ void  HToTaumuTauh::Setup(){
   h_MuSelRelIso=HConfig.GetTH1D(Name+"_MuSelRelIso","MuSelRelIso",50,0.,1.,"relIso(#mu_{sel})");
   h_MuSelFakesTauID=HConfig.GetTH1D(Name+"_MuSelFakesTauID","MuSelFakesTauID",2,-0.5,1.5,"#mu_{sel} fakes #tau_{h}");
 
-  //h_TauPt=HConfig.GetTH1D(Name+"_TauPt","TauPt",50,0.,100.,"p_{T}(#tau)/GeV");
-  //h_TauEta=HConfig.GetTH1D(Name+"_TauEta","TauEta",50,-2.5,2.5,"#eta(#tau)");
-  //h_TauPhi=HConfig.GetTH1D(Name+"_TauPhi","TauPhi",50,-3.14159,3.14159,"#phi(#tau)");
-  //h_TauDecayMode=HConfig.GetTH1D(Name+"_TauDecayMode","TauDecayMode",16,-0.5,15.5,"#tau decay mode");
-  //h_TauIso=HConfig.GetTH1D(Name+"_TauIso","TauIso",50,0.,25.,"Iso(#tau)/GeV");
-  h_TauSelMass=HConfig.GetTH1D(Name+"_TauMass","TauMass",100,-1.0,2.0,"m_{vis}(#tau)/GeV");
-
   h_TauSelPt=HConfig.GetTH1D(Name+"_TauSelPt","TauSelPt",50,0.,100.,"p_{T}(#tau_{sel})/GeV");
   h_TauSelEta=HConfig.GetTH1D(Name+"_TauSelEta","TauSelEta",50,-2.5,2.5,"#eta(#tau_{sel})");
   h_TauSelPhi=HConfig.GetTH1D(Name+"_TauSelPhi","TauSelPhi",50,-3.14159,3.14159,"#phi(#tau_{sel})");
-  //h_TauSelDrHlt=HConfig.GetTH1D(Name+"_TauSelDrHlt","TauSelDrHLT",50,0.,1.,"#DeltaR(#tau_{sel},#tau_{HLT})");
   h_TauSelDecayMode=HConfig.GetTH1D(Name+"_TauSelDecayMode","TauSelDecayMode",16,-0.5,15.5,"#tau_{sel} decay mode");
   h_TauSelIso=HConfig.GetTH1D(Name+"_TauSelIso","TauSelIso",50,0.,25.,"Iso(#tau_{sel})/GeV");
-
-  //h_MuVetoDPtSelMuon=HConfig.GetTH1D(Name+"_MuVetoDPtSelMuon","MuVetoDPtSelMuon",100,-100.,100.,"#Deltap_{T}(#mu_{veto},#mu)/GeV");
-  //h_MuVetoInvM=HConfig.GetTH1D(Name+"_MuVetoInvM","MuVetoInvM",100,0.,200,"m_{inv}(#mu_{veto}^{1},#mu_{veto}^{2})/GeV");
-  //h_MuVetoPtPositive=HConfig.GetTH1D(Name+"_MuVetoPtPositive","MuVetoPtPositive",50,0.,100.,"p_{T}(#mu_{veto}^{+})/GeV");
-  //h_MuVetoPtNegative=HConfig.GetTH1D(Name+"_MuVetoPtNegative","MuVetoPtNegative",50,0.,100.,"p_{T}(#mu_{veto}^{-})/GeV");
-  //h_MuVetoDRTau=HConfig.GetTH1D(Name+"_MuVetoDRTau","MuVetoDRTau",50,0.,5.,"#DeltaR(#mu_{veto},#tau_{h})");
-  //h_MuVetoDeltaR=HConfig.GetTH1D(Name+"_MuVetoDeltaR","MuVetoDeltaR",50,0.,5.,"#DeltaR(#mu^{+}_{veto},#mu^{-}_{veto})");
-
-  //h_NMuonTriLepVeto=HConfig.GetTH1D(Name+"_NMuonTriLepVeto","NMuonTriLepVeto",5,-0.5,4.5,"N(#mu_{3l veto})");
-  //h_NElecTriLepVeto=HConfig.GetTH1D(Name+"_NElecTriLepVeto","NElecTriLepVeto",5,-0.5,4.5,"N(e_{3l veto})");
+  h_TauSelMass=HConfig.GetTH1D(Name+"_TauSelMass","TauSelMass",100,-1.0,2.0,"m_{vis}(#tau_{sel})/GeV");
 
   h_MuCharge=HConfig.GetTH1D(Name+"_MuCharge","MuCharge",3,-1.5,1.5,"q(#mu)/e");
   h_TauCharge=HConfig.GetTH1D(Name+"_TauCharge","TauCharge",7,-3.5,3.5,"q(#tau)/e");
 
-  //h_MuTauDR=HConfig.GetTH1D(Name+"_MuTauDR","MuTauDR",50,0.,5.,"#DeltaR(#mu,#tau_{h})");
-  //h_MuTauDPhi=HConfig.GetTH1D(Name+"_MuTauDPhi","MuTauDPhi",50,0.,3.2,"#Delta#phi(#mu,#tau_{h})");
-  //h_MuTauDEta=HConfig.GetTH1D(Name+"_MuTauDEta","MuTauDEta",100,-6.,6.,"#Delta#eta(#mu,#tau_{h})");
-  //h_MuTauDPt=HConfig.GetTH1D(Name+"_MuTauDPt","MuTauDPt",100,-100.,100.,"#Deltap_{T}(#mu,#tau_{h})/GeV");
-  //h_MuTauRelDPt=HConfig.GetTH1D(Name+"_MuTauRelDPt","MuTauRelDPt",100,-2.,2.,"#Deltap_{T}(#mu,#tau_{h})/p_{T}(#mu)");
-  //h_MuPtVsTauPt=HConfig.GetTH2D(Name+"_MuPtVsTauPt","MuPtVsTauPt",50,0.,100.,50,0.,100.,"p_{T}(#mu)/GeV","p_{T}(#tau)/GeV");
-
   h_MetPt  = HConfig.GetTH1D(Name+"_MetPt","MetPt",50,0.,200.,"E_{T}^{miss}/GeV");
   h_MetPhi = HConfig.GetTH1D(Name+"_MetPhi","MetPhi",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
 
-  //h_MetLepMuDr = HConfig.GetTH1D(Name+"_MetLepMuDr","MetLepMuDr",102,-0.1,5.0,"#DeltaR(#mu,#mu^{MET})");
-  //h_MetLepTauDr = HConfig.GetTH1D(Name+"_MetLepTauDr","MetLepTauDr",102,-0.1,5.0,"#DeltaR(#tau_{h},#tau_{h}^{MET})");
-  //h_MetLepNMu = HConfig.GetTH1D(Name+"_MetLepNMu","MetLepNMu",11,-0.5,10.5,"N(#mu^{MET})");
-  //h_MetLepNTau = HConfig.GetTH1D(Name+"_MetLepNTau","MetLepNTau",11,-0.5,10.5,"N(#tau_{h}^{MET})");
-  //h_MetLepNMuMinusNMu = HConfig.GetTH1D(Name+"_MetLepNMuMinusNMu","MetLepNMuMinusNMu",11,-5.5,5.5,"N(#mu^{MET}) - N(#mu^{sel}");
-  //h_MetLepNTauMinusNTau = HConfig.GetTH1D(Name+"_MetLepNTauMinusNTau","MetLepNTauMinusNTau",11,-5.5,5.5,"N(#tau_{h}^{MET}) - N(#tau_{h}^{sel}");
-  //h_MetLepDiffMET  = HConfig.GetTH1D(Name+"_MetLepDiffMET","MetLepDiffMET",50,0.,200.,"#mu^{MET}#neq#mu^{sel}: E_{T}^{miss}/GeV");
-  //h_MetLepDiffMETPhi = HConfig.GetTH1D(Name+"_MetLepDiffMETPhi","MetLepDiffMETPhi",50,-3.14159,3.14159,"#mu^{MET}#neq#mu^{sel}: #phi(E_{T}^{miss})");
-  //h_MetLepDiffMt = HConfig.GetTH1D(Name+"_MetLepDiffMt","MetLepDiffMt",100,0.,200.,"#mu^{MET}#neq#mu^{sel}: m_{T}/GeV");
-
   h_NJetsKin = HConfig.GetTH1D(Name+"_NJetsKin","NJetsKin",11,-0.5,10.5,"N(j_{kin})");
-  //h_JetKin1Pt = HConfig.GetTH1D(Name+"_JetKin1Pt","JetKin1Pt",50,0.,200.,"p_{T}(j_{kin}^{1})/GeV");
-  //h_JetKin1Eta = HConfig.GetTH1D(Name+"_JetKin1Eta","JetKin1Eta",100,-5.0,5.0,"#eta(j_{kin}^{1})");
-  //h_JetKin1Phi = HConfig.GetTH1D(Name+"_JetKin1Phi","JetKin1Phi",50,-3.14159,3.14159,"#phi(j_{kin}^{1})");
-  //h_JetKin1IsLooseId = HConfig.GetTH1D(Name+"_JetKin1IsLooseId","JetKin1IsLooseId",2,-0.5,1.5,"isLoosePUJetID(j_{kin}^{1}");
-  //h_JetKin2IsLooseId = HConfig.GetTH1D(Name+"_JetKin2IsLooseId","JetKin2IsLooseId",2,-0.5,1.5,"isLoosePUJetID(j_{kin}^{2}");
-  //h_JetKin2Pt = HConfig.GetTH1D(Name+"_JetKin2Pt","JetKin2Pt",50,0.,200.,"p_{T}(j_{kin}^{2})/GeV");
-  //h_JetKin2Eta = HConfig.GetTH1D(Name+"_JetKin2Eta","JetKin2Eta",100,-5.0,5.0,"#eta(j_{kin}^{2})");
-  //h_JetKin2Phi = HConfig.GetTH1D(Name+"_JetKin2Phi","JetKin2Phi",50,-3.14159,3.14159,"#phi(j_{kin}^{2})");
   h_NJetsId = HConfig.GetTH1D(Name+"_NJetsId","NJetsId",11,-0.5,10.5,"N(jets)");
   h_Jet1Pt = HConfig.GetTH1D(Name+"_Jet1Pt","Jet1Pt",50,0.,200.,"p_{T}(j^{1})/GeV");
   h_Jet1Eta = HConfig.GetTH1D(Name+"_Jet1Eta","Jet1Eta",100,-5.0,5.0,"#eta(j^{1})");
@@ -389,37 +333,10 @@ void  HToTaumuTauh::Setup(){
   h_JetsInEtaGap = HConfig.GetTH1D(Name+"_JetsInEtaGap","JetsInEtaGap",6,-0.5,5.5,"N(j in #eta gap)");
   h_JetsInvM = HConfig.GetTH1D(Name+"_JetsInvM","JetsInvM",100,0.,2000.,"m_{inv}(j^{1},j^{2})");
 
-  //h_MtMuPlusOnly = HConfig.GetTH1D(Name+"_MtMuPlusOnly","MtMuPlusOnly",100,0.,200.,"m_{T}/GeV");
-  //h_MtMuMinusOnly = HConfig.GetTH1D(Name+"_MtMuMinusOnly","MtMuMinusOnly",100,0.,200.,"m_{T}/GeV");
-  //h_Mt1ProngOnly = HConfig.GetTH1D(Name+"_Mt1ProngOnly","Mt1ProngOnly",100,0.,200.,"m_{T}/GeV");
-  //h_Mt3ProngOnly = HConfig.GetTH1D(Name+"_Mt3ProngOnly","Mt3ProngOnly",100,0.,200.,"m_{T}/GeV");
-  //h_Mt3ProngSV = HConfig.GetTH1D(Name+"_Mt3ProngSV","Mt3ProngSV",100,0.,200.,"m_{T}/GeV");
-  //h_Mt3ProngSVFlight = HConfig.GetTH1D(Name+"_Mt3ProngSVFlight","Mt3ProngSVFlight",100,0.,200.,"m_{T}/GeV");
-
-  //h_MetPt1ProngOnly  = HConfig.GetTH1D(Name+"_MetPt1ProngOnly","MetPt1ProngOnly",50,0.,200.,"E_{T}^{miss}/GeV");
-  //h_MetPhi1ProngOnly = HConfig.GetTH1D(Name+"_MetPhi1ProngOnly","MetPhi1ProngOnly",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
-  //h_MetPt3ProngOnly  = HConfig.GetTH1D(Name+"_MetPt3ProngOnly","MetPt3ProngOnly",50,0.,200.,"E_{T}^{miss}/GeV");
-  //h_MetPhi3ProngOnly = HConfig.GetTH1D(Name+"_MetPhi3ProngOnly","MetPhi3ProngOnly",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
-  //h_MetPtNoMtCut = HConfig.GetTH1D(Name+"_MetPtNoMtCut","MetPtNoMtCut",50,0.,200.,"E_{T}^{miss}/GeV");
-  //h_MetPhiNoMtCut = HConfig.GetTH1D(Name+"_MetPhiNoMtCut","MetPhiNoMtCut",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
-  //h_MetPtNoMtCut1ProngOnly = HConfig.GetTH1D(Name+"_MetPtNoMtCut1ProngOnly","MetPtNoMtCut1ProngOnly",50,0.,200.,"E_{T}^{miss}/GeV");
-  //h_MetPhiNoMtCut1ProngOnly = HConfig.GetTH1D(Name+"_MetPhiNoMtCut1ProngOnly","MetPhiNoMtCut1ProngOnly",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
-  //h_MetPtNoMtCut3ProngOnly = HConfig.GetTH1D(Name+"_MetPtNoMtCut3ProngOnly","MetPtNoMtCut3ProngOnly",50,0.,200.,"E_{T}^{miss}/GeV");
-  //h_MetPhiNoMtCut3ProngOnly = HConfig.GetTH1D(Name+"_MetPhiNoMtCut3ProngOnly","MetPhiNoMtCut3ProngOnly",50,-3.14159,3.14159,"#phi(E_{T}^{miss})");
-
   h_QcdShapeRegion = HConfig.GetTH1D(Name+"_CatInclusiveQcdShapeRegion","CatInclusiveQcdShapeRegion",100,0.,200.,"Incl: m_{inv}^{QCD}/GeV");
-
-  h_embeddingWeight_TauSpinner = HConfig.GetTH1D(Name+"_embeddingWeight_TauSpinner","embeddingWeight_TauSpinner",50,0.,3.,"emb. TauSpinnerWeight");
-  h_embeddingWeight_MinVisPtFilter = HConfig.GetTH1D(Name+"_embeddingWeight_MinVisPtFilter","embeddingWeight_MinVisPtFilter",50,0.,3.,"emb. MinVisPtFilter weight");
-  h_embeddingWeight_SelEffWeight = HConfig.GetTH1D(Name+"_embeddingWeight_SelEffWeight","embeddingWeight_SelEffWeight",50,0.,3.,"emb. SelEffWeight");
-  h_HiggsGenPtWeight = HConfig.GetTH1D(Name+"_higgsPtWeight","higgsPtWeight",50,0.3,1.3,"higgsPtWeight");
-  h_HiggsGenPt = HConfig.GetTH1D(Name+"_higgsGenPt","higgsGenPt",50,0.,200.,"p_{T}(H_{gen})/GeV");
-  h_HiggsMassFromSampleName  = HConfig.GetTH1D(Name+"_HiggsMassFromMCID","HiggsMassFromMCID",40,82.5,182.5,"m_{MCID}(H)/GeV");
 
   h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#mu)/GeV");
   h_visibleMass = HConfig.GetTH1D(Name+"_visibleMass","visibleMass",100,0.,200.,"m_{vis}(#tau_{h},#mu)/GeV");
-  h_SVFitMassCoarse = HConfig.GetTH1D(Name+"_SVFitMassCoarse","SVFitMassCoarse",40,0.,200.,"m_{SVfit}(#tau_{h},#mu)/GeV");
-  h_visibleMassCoarse = HConfig.GetTH1D(Name+"_visibleMassCoarse","visibleMasCoarses",40,0.,200.,"m_{vis}(#tau_{h},#mu)/GeV");
 
   h_shape_VisM = HConfig.GetTH1D(Name+"_shape_VisM","shape_VisM",400,0.,400.,"m_{vis}(#tau_{h},#mu)/GeV");
   h_shape_SVfitM = HConfig.GetTH1D(Name+"_shape_SVfitM","shape_SVfitM",400,0.,400.,"m_{SVfit}(#tau_{h},#mu)/GeV");
@@ -440,13 +357,6 @@ void  HToTaumuTauh::Setup(){
 
   h_SVFitMassResol = HConfig.GetTH1D(Name+"_SVFitMassResol", "SVFitMassResol", 50, -1, 1, "#frac{m_{SVfit} - m_{true}}{m_{true}}(#tau_{h},#mu)");
   h_visibleMassResol = HConfig.GetTH1D(Name+"_visibleMassResol", "visibleMassResol", 50, -1, 1, "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{h},#mu)");
-
-  h_TrueMass						= HConfig.GetTH1D(Name+"_TrueMass","TrueMass",100,0.,200.,"m_{gen}(#tau_{h},#mu)/GeV");
-  h_TrueMassFull3ProngVisibleMuon	= HConfig.GetTH1D(Name+"_TrueMassFull3ProngVisibleMuon","TrueMassFull3ProngVisibleMuon",100,0.,200.,"m(#tau_{h}^{full, gen},#mu^{vis.})/GeV");
-  h_TrueVisibleMass					= HConfig.GetTH1D(Name+"_TrueVisibleMass","TrueVisibleMass",100,0.,200.,"m_{vis gen}(#tau_{h},#mu)/GeV");
-
-  h_GenTauhPt_NoSel	= HConfig.GetTH1D(Name+"_GenTauhPt_NoSel","GenTauhPt_NoSel",50,0.,100.,"p_{T}(#tau_{MC})/GeV");
-  h_GenTauhPt_FullSel= HConfig.GetTH1D(Name+"_GenTauhPt_FullSel","GenTauhPt_FullSel",50,0.,100.,"p_{T}(#tau_{MC})/GeV");
 
   // input corrections for SVFit
   h_recMinusGenTauMass_recDecayModeEq0	= HConfig.GetTH1D(Name+"_recMinusGenTauMass_recDecayModeEq0",  "recMinusGenTauMass_recDecayModeEq0"  , 1000, -5., 5., "#Deltam_{#tau}(rec-gen)/GeV");
@@ -501,19 +411,6 @@ void HToTaumuTauh::Configure(){
 
 void  HToTaumuTauh::Store_ExtraDist(){
  Logger(Logger::Verbose) << "Start." << std::endl;
- //Extradist1d.push_back(&h_NVtx);
- //Extradist1d.push_back(&h_VtxZ);
- //Extradist1d.push_back(&h_VtxRho);
- //Extradist1d.push_back(&h_VtxNdof);
- //Extradist1d.push_back(&h_VtxIsfake);
-
- //Extradist1d.push_back(&h_MuDxy);
- //Extradist1d.push_back(&h_MuDz );
- //Extradist1d.push_back(&h_MuRelIso);
- //Extradist1d.push_back(&h_MuPt  );
- //Extradist1d.push_back(&h_MuEta  );
- //Extradist1d.push_back(&h_MuPhi  );
-
  Extradist1d.push_back(&h_MuSelPt  );
  Extradist1d.push_back(&h_MuSelEta  );
  Extradist1d.push_back(&h_MuSelPhi  );
@@ -522,12 +419,6 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_MuSelRelIso);
  Extradist1d.push_back(&h_MuSelFakesTauID  );
 
- //Extradist1d.push_back(&h_TauPt  );
- //Extradist1d.push_back(&h_TauEta  );
- //Extradist1d.push_back(&h_TauPhi  );
- //Extradist1d.push_back(&h_TauDecayMode  );
- //Extradist1d.push_back(&h_TauIso );
-
  Extradist1d.push_back(&h_TauSelPt  );
  Extradist1d.push_back(&h_TauSelEta  );
  Extradist1d.push_back(&h_TauSelPhi  );
@@ -535,48 +426,13 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_TauSelIso );
  Extradist1d.push_back(&h_TauSelMass );
 
- //Extradist1d.push_back(&h_MuVetoDPtSelMuon);
- //Extradist1d.push_back(&h_MuVetoInvM);
- //Extradist1d.push_back(&h_MuVetoPtPositive);
- //Extradist1d.push_back(&h_MuVetoPtNegative);
- //Extradist1d.push_back(&h_MuVetoDRTau);
- //Extradist1d.push_back(&h_MuVetoDeltaR);
-
- //Extradist1d.push_back(&h_NMuonTriLepVeto);
- //Extradist1d.push_back(&h_NElecTriLepVeto);
-
  Extradist1d.push_back(&h_MuCharge  );
  Extradist1d.push_back(&h_TauCharge  );
-
- //Extradist1d.push_back(&h_MuTauDR);
- //Extradist1d.push_back(&h_MuTauDPhi);
- //Extradist1d.push_back(&h_MuTauDEta);
- //Extradist1d.push_back(&h_MuTauDPt);
- //Extradist1d.push_back(&h_MuTauRelDPt);
- //Extradist2d.push_back(&h_MuPtVsTauPt);
 
  Extradist1d.push_back(&h_MetPt);
  Extradist1d.push_back(&h_MetPhi);
 
- //Extradist1d.push_back(&h_MetLepMuDr);
- //Extradist1d.push_back(&h_MetLepTauDr);
- //Extradist1d.push_back(&h_MetLepNMu);
- //Extradist1d.push_back(&h_MetLepNTau);
- //Extradist1d.push_back(&h_MetLepNMuMinusNMu);
- //Extradist1d.push_back(&h_MetLepNTauMinusNTau);
- //Extradist1d.push_back(&h_MetLepDiffMET);
- //Extradist1d.push_back(&h_MetLepDiffMETPhi);
- //Extradist1d.push_back(&h_MetLepDiffMt);
-
  Extradist1d.push_back(&h_NJetsKin);
- //Extradist1d.push_back(&h_JetKin1Pt);
- //Extradist1d.push_back(&h_JetKin1Eta);
- //Extradist1d.push_back(&h_JetKin1Phi);
- //Extradist1d.push_back(&h_JetKin1IsLooseId);
- //Extradist1d.push_back(&h_JetKin2IsLooseId);
- //Extradist1d.push_back(&h_JetKin2Pt);
- //Extradist1d.push_back(&h_JetKin2Eta);
- //Extradist1d.push_back(&h_JetKin2Phi);
  Extradist1d.push_back(&h_NJetsId);
  Extradist1d.push_back(&h_Jet1Pt);
  Extradist1d.push_back(&h_Jet1Eta);
@@ -598,38 +454,10 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_JetsInEtaGap);
  Extradist1d.push_back(&h_JetsInvM);
 
- //Extradist1d.push_back(&h_MtMuPlusOnly);
- //Extradist1d.push_back(&h_MtMuMinusOnly);
- //Extradist1d.push_back(&h_Mt1ProngOnly);
- //Extradist1d.push_back(&h_Mt3ProngOnly);
- //Extradist1d.push_back(&h_Mt3ProngSV);
- //Extradist1d.push_back(&h_Mt3ProngSVFlight);
-
- //Extradist1d.push_back(&h_MetPt1ProngOnly);
- //Extradist1d.push_back(&h_MetPhi1ProngOnly);
- //Extradist1d.push_back(&h_MetPt3ProngOnly);
- //Extradist1d.push_back(&h_MetPhi3ProngOnly);
-
- //Extradist1d.push_back(&h_MetPtNoMtCut);
- //Extradist1d.push_back(&h_MetPhiNoMtCut);
- //Extradist1d.push_back(&h_MetPtNoMtCut1ProngOnly);
- //Extradist1d.push_back(&h_MetPhiNoMtCut1ProngOnly);
- //Extradist1d.push_back(&h_MetPtNoMtCut3ProngOnly);
- //Extradist1d.push_back(&h_MetPhiNoMtCut3ProngOnly);
-
  Extradist1d.push_back(&h_QcdShapeRegion);
-
- Extradist1d.push_back(&h_embeddingWeight_TauSpinner);
- Extradist1d.push_back(&h_embeddingWeight_MinVisPtFilter);
- Extradist1d.push_back(&h_embeddingWeight_SelEffWeight);
- Extradist1d.push_back(&h_HiggsGenPtWeight);
- Extradist1d.push_back(&h_HiggsGenPt);
- Extradist1d.push_back(&h_HiggsMassFromSampleName);
 
  Extradist1d.push_back(&h_SVFitMass);
  Extradist1d.push_back(&h_visibleMass);
- Extradist1d.push_back(&h_SVFitMassCoarse);
- Extradist1d.push_back(&h_visibleMassCoarse);
 
  Extradist1d.push_back(&h_shape_VisM);
  Extradist1d.push_back(&h_shape_SVfitM);
@@ -649,13 +477,6 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_SVFitStatus);
  Extradist1d.push_back(&h_SVFitMassResol);
  Extradist1d.push_back(&h_visibleMassResol);
-
- Extradist1d.push_back(&h_TrueMass);
- Extradist1d.push_back(&h_TrueMassFull3ProngVisibleMuon);
- Extradist1d.push_back(&h_TrueVisibleMass);
-
- Extradist1d.push_back(&h_GenTauhPt_NoSel);
- Extradist1d.push_back(&h_GenTauhPt_FullSel);
 
  Extradist1d.push_back(&h_recMinusGenTauMass_recDecayModeEq0);
  Extradist1d.push_back(&h_recMinusGenTauMass_recDecayModeEq1);
@@ -1112,11 +933,9 @@ void HToTaumuTauh::doPlotting(){
 					for (int j = 0; j < Ntp->NMCTauDecayProducts(i); j++) {
 						if (fabs(Ntp->MCTauandProd_pdgid(i, j)) == PDGInfo::a_1_plus) {
 							//Tau->A1
-							h_GenTauhPt_NoSel.at(t).Fill(Ntp->MCTauandProd_p4(i, 0).Pt(), w);
 							if (status)	{
 								TLorentzVector genTau = Ntp->MCTauandProd_p4(i, 0);
 								TLorentzVector genTauVis = Ntp->MCTau_visiblePart(i);
-								h_GenTauhPt_FullSel.at(t).Fill(genTau.Pt(), w);
 
 								// SVFit input corrections
 								switch (Ntp->PFTau_hpsDecayMode(selTau)) {
@@ -1148,26 +967,7 @@ void HToTaumuTauh::doPlotting(){
 
 	//////// fill most plots after full selection
 	if (status) {
-		// Vertex plots
-		//h_NVtx.at(t).Fill(Ntp->NVtx(), w);
-		//for (unsigned int i_vtx = 0; i_vtx < Ntp->NVtx(); i_vtx++) {
-		//	h_VtxZ.at(t).Fill(Ntp->Vtx(i_vtx).z(), w);
-		//	h_VtxRho.at(t).Fill(sqrt(Ntp->Vtx(i_vtx).x() * Ntp->Vtx(i_vtx).x() + Ntp->Vtx(i_vtx).y() * Ntp->Vtx(i_vtx).y()), w);
-		//	h_VtxNdof.at(t).Fill(Ntp->Vtx_ndof(i_vtx), w);
-		//	h_VtxIsfake.at(t).Fill(Ntp->Vtx_isFake(i_vtx), w);
-		//}
-
-		//// Object selection
 		// Muons
-		// plots filled with all selected muons
-		//for (std::vector<int>::iterator it_mu = selectedMuonsId.begin(); it_mu != selectedMuonsId.end(); ++it_mu) {
-		//	h_MuPt.at(t).Fill(Ntp->Muon_p4(*it_mu).Pt(), w);
-		//	h_MuEta.at(t).Fill(Ntp->Muon_p4(*it_mu).Eta(), w);
-		//	h_MuPhi.at(t).Fill(Ntp->Muon_p4(*it_mu).Phi(), w);
-		//	h_MuDxy.at(t).Fill(Ntp->dxySigned(Ntp->Muon_p4(*it_mu), Ntp->Muon_Poca(*it_mu), Ntp->Vtx(selVertex)), w);
-		//	h_MuDz.at(t).Fill(Ntp->dzSigned(Ntp->Muon_p4(*it_mu), Ntp->Muon_Poca(*it_mu), Ntp->Vtx(selVertex)), w);
-		//	h_MuRelIso.at(t).Fill(Ntp->Muon_RelIso(*it_mu), w);
-		//}
 		// plots filled only with selected muon
 		h_MuSelPt.at(t).Fill(Ntp->Muon_p4(selMuon).Pt(), w);
 		h_MuSelEta.at(t).Fill(Ntp->Muon_p4(selMuon).Eta(), w);
@@ -1186,14 +986,6 @@ void HToTaumuTauh::doPlotting(){
 		h_MuSelFakesTauID.at(t).Fill(fakes, w);
 
 		// Taus
-		// plots filled with all selected Taus
-		//for (std::vector<int>::iterator it_tau = selectedTaus.begin(); it_tau != selectedTaus.end(); ++it_tau) {
-		//	h_TauPt.at(t).Fill(Ntp->PFTau_p4(*it_tau).Pt(), w);
-		//	h_TauEta.at(t).Fill(Ntp->PFTau_p4(*it_tau).Eta(), w);
-		//	h_TauPhi.at(t).Fill(Ntp->PFTau_p4(*it_tau).Phi(), w);
-		//	h_TauDecayMode.at(t).Fill(Ntp->PFTau_hpsDecayMode(*it_tau), w);
-		//	h_TauIso.at(t).Fill(Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(*it_tau), w);
-		//}
 		// plots filled only with selected tau
 		h_TauSelPt.at(t).Fill(Ntp->PFTau_p4(selTau).Pt(), w);
 		h_TauSelEta.at(t).Fill(Ntp->PFTau_p4(selTau).Eta(), w);
@@ -1202,26 +994,10 @@ void HToTaumuTauh::doPlotting(){
 		h_TauSelIso.at(t).Fill(Ntp->PFTau_HPSPFTauDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits(selTau), w);
 		h_TauSelMass.at(t).Fill(Ntp->PFTau_p4(selTau).M(), w);
 
-		// Mu-Tau correlations
-		//h_MuTauDR.at(t).Fill(Ntp->Muon_p4(selMuon).DeltaR(Ntp->PFTau_p4(selTau)), w);
-		//h_MuTauDPhi.at(t).Fill(Ntp->Muon_p4(selMuon).DeltaPhi(Ntp->PFTau_p4(selTau)), w);
-		//h_MuTauDEta.at(t).Fill(Ntp->Muon_p4(selMuon).Eta() - Ntp->PFTau_p4(selTau).Eta(), w);
-		//h_MuTauDPt.at(t).Fill(Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt(), w);
-		//h_MuTauRelDPt.at(t).Fill((Ntp->Muon_p4(selMuon).Pt() - Ntp->PFTau_p4(selTau).Pt()) / Ntp->Muon_p4(selMuon).Pt(), w);
-		//h_MuPtVsTauPt.at(t).Fill(Ntp->Muon_p4(selMuon).Pt(), Ntp->PFTau_p4(selTau).Pt(), w);
-
 		// Mu-Tau Mass
 		double m_Vis = (Ntp->Muon_p4(selMuon)+Ntp->PFTau_p4(selTau)).M();
 		double m_Truth = Ntp->getResonanceMassFromGenInfo();
 		h_visibleMass.at(t).Fill(m_Vis, w);
-		h_TrueMass.at(t).Fill(m_Truth, w);
-		int i_matchedMCTau = Ntp->matchTauTruth(selTau, true);
-		if (i_matchedMCTau >= 0) {
-		  h_TrueMassFull3ProngVisibleMuon.at(t).Fill( (Ntp->MCTau_p4(i_matchedMCTau) + Ntp->Muon_p4(selMuon)).M(), w);
-		  int mcMuIdx = Ntp->getMatchTruthIndex(Ntp->Muon_p4(selMuon), PDGInfo::mu_minus, 0.3);
-		  if(mcMuIdx>=0) h_TrueVisibleMass.at(t).Fill( (Ntp->MCTau_visiblePart(i_matchedMCTau) + Ntp->MCParticle_p4( mcMuIdx )).M(), w);
-		}
-		h_visibleMassCoarse.at(t).Fill((Ntp->Muon_p4(selMuon) + Ntp->PFTau_p4(selTau)).M(), w);
 		// SVFit
 		clock->Start("SVFit");
 		// get SVFit result from cache
@@ -1246,7 +1022,6 @@ void HToTaumuTauh::doPlotting(){
 		h_shape_SVfitM.at(t).Fill(svfMass, w);
 
 		h_SVFitMass.at(t).Fill(svfMass, w);
-		h_SVFitMassCoarse.at(t).Fill(svfMass, w);
 
 		h_SVFitMassResol.at(t).Fill((svfObj->get_mass() - m_Truth) / m_Truth, w);
 		h_visibleMassResol.at(t).Fill((m_Vis - m_Truth) / m_Truth, w);
@@ -1296,45 +1071,9 @@ void HToTaumuTauh::doPlotting(){
 		// MET
 		h_MetPt.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
 		h_MetPhi.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		//if (Ntp->PFTau_hpsDecayMode(selTau) < 5) {
-		//	h_MetPt1ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-		//	h_MetPhi1ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		//} else {
-		//	h_MetPt3ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-		//	h_MetPhi3ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		//}
-
-		// MET leptons
-		//int metMuon_idx(-1), metTau_idx(-1);
-		//float metMuon_dR(-1), metTau_dR(-1);
-		//Ntp->findCorrMVAMuTauSrcMuon(selMuon, metMuon_idx, metMuon_dR);
-		//Ntp->findCorrMVAMuTauSrcTau(selTau, metTau_idx, metTau_dR);
-		//h_MetLepMuDr.at(t).Fill(metMuon_dR, w);
-		//h_MetLepTauDr.at(t).Fill(metTau_dR, w);
-		//h_MetLepNMu.at(t).Fill(Ntp->NMET_CorrMVAMuTau_srcMuons(), w);
-		//h_MetLepNTau.at(t).Fill(Ntp->NMET_CorrMVAMuTau_srcTaus(), w);
-		//h_MetLepNMuMinusNMu.at(t).Fill(Ntp->NMET_CorrMVAMuTau_srcMuons() - selectedMuons.size(), w);
-		//h_MetLepNTauMinusNTau.at(t).Fill(Ntp->NMET_CorrMVAMuTau_srcTaus() - selectedTaus.size(), w);
-		//if (Ntp->NMET_CorrMVAMuTau_srcMuons() != selectedMuons.size()) {
-		//	h_MetLepDiffMET.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-		//	h_MetLepDiffMETPhi.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		//	h_MetLepDiffMt.at(t).Fill(value.at(MT), w);
-		//}
 
 		// Jets
 		h_NJetsKin.at(t).Fill(selectedJetsKin.size(), w);
-		//if (selectedJetsKin.size() > 0) {
-		//	h_JetKin1Pt.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(0)).Pt(), w);
-		//	h_JetKin1Eta.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(0)).Eta(), w);
-		//	h_JetKin1Phi.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(0)).Phi(), w);
-		//	h_JetKin1IsLooseId.at(t).Fill(Ntp->PFJet_PUJetID_looseWP(selectedJetsKin.at(0)), w);
-		//}
-		//if (selectedJetsKin.size() > 1) {
-		//	h_JetKin2IsLooseId.at(t).Fill(Ntp->PFJet_PUJetID_looseWP(selectedJetsKin.at(1)), w);
-		//	h_JetKin2Pt.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(1)).Pt(), w);
-		//	h_JetKin2Eta.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(1)).Eta(), w);
-		//	h_JetKin2Phi.at(t).Fill(Ntp->PFJet_p4(selectedJetsKin.at(1)).Phi(), w);
-		//}
 		std::vector<int>* jetColl = &selectedJets;
 		if (isQCDShapeEvent && (categoryFlag == "VBFLoose" || categoryFlag == "VBFTight"))
 			jetColl = &selectedLooseJets;
@@ -1352,20 +1091,6 @@ void HToTaumuTauh::doPlotting(){
 			h_Jet2IsB.at(t).Fill(Ntp->PFJet_bDiscriminator(jetColl->at(1)) > cCat_btagDisc, w);
 		}
 
-		// plot embedding weights
-		if (idStripped == DataMCType::DY_mutau_embedded) {
-			h_embeddingWeight_TauSpinner.at(t).Fill(Ntp->Embedding_TauSpinnerWeight()); // no weight applied
-			h_embeddingWeight_SelEffWeight.at(t).Fill(Ntp->Embedding_SelEffWeight()); // no weight applied
-			h_embeddingWeight_MinVisPtFilter.at(t).Fill(Ntp->Embedding_MinVisPtFilter()); // no weight applied
-		}
-
-		// plot Higgs pT weight
-		if (idStripped >= DataMCType::H_tautau && idStripped <= DataMCType::H_tautau_WHZHTTH) {
-			h_HiggsGenPtWeight.at(t).Fill(higgs_GenPtWeight); // no weight applied
-			h_HiggsGenPt.at(t).Fill(higgs_GenPt, w);
-			h_HiggsMassFromSampleName.at(t).Fill(Ntp->getSampleHiggsMass());
-		}
-
 		// variables for categorization
 		h_HiggsPt.at(t).Fill(higgsPt_, w);
 		h_HiggsPhi.at(t).Fill(higgsPhi, w);
@@ -1380,56 +1105,6 @@ void HToTaumuTauh::doPlotting(){
 		}
 	}
 
-/*	if (getStatusBoolean(FullInclusiveSelNoMt)) {
-		//if (Ntp->Muon_Charge(selMuon) > 0)
-		//	h_MtMuPlusOnly.at(t).Fill(value.at(MT), w);
-		//if (Ntp->Muon_Charge(selMuon) < 0)
-		//	h_MtMuMinusOnly.at(t).Fill(value.at(MT), w);
-        //
-		//h_MetPtNoMtCut.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-		//h_MetPhiNoMtCut.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-
-		if (Ntp->PFTau_hpsDecayMode(selTau) < 5) {
-			//h_Mt1ProngOnly.at(t).Fill(value.at(MT), w);
-			//h_MetPtNoMtCut1ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-			//h_MetPhiNoMtCut1ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-		} else {
-			//h_Mt3ProngOnly.at(t).Fill(value.at(MT), w);
-			//h_MetPtNoMtCut3ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_et(), w);
-			//h_MetPhiNoMtCut3ProngOnly.at(t).Fill(Ntp->MET_CorrMVAMuTau_phi(), w);
-			if (Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
-				//h_Mt3ProngSV.at(t).Fill(value.at(MT), w);
-
-				double FlightLenghtSignificance = Ntp->PFTau_FlightLenght_significance(Ntp->PFTau_TIP_primaryVertex_pos(selTau), Ntp->PFTau_TIP_primaryVertex_cov(selTau),
-						Ntp->PFTau_a1_lvp(selTau).Vertex(), Ntp->PFTau_a1_lvp(selTau).VertexCov());
-				if (FlightLenghtSignificance > 2.2) {
-					h_Mt3ProngSVFlight.at(t).Fill(value.at(MT), w);
-				}
-			}
-		}
-	}*/
-
-	/////// plots filled after full muon and tau selection
-	//if (getStatusBoolean(ObjectsFailDiMuonVeto)) {
-	//	// Investigate events discarded by the DiMuon Veto
-	//	if (Ntp->Muon_Charge(selMuon) == 1) {
-	//		h_MuVetoDPtSelMuon.at(t).Fill(Ntp->Muon_p4(diMuonNeg).Pt() - Ntp->Muon_p4(selMuon).Pt(), w);
-	//		h_MuVetoDRTau.at(t).Fill(Ntp->Muon_p4(diMuonNeg).DeltaR(Ntp->PFTau_p4(selTau)), w);
-	//	} else if (Ntp->Muon_Charge(selMuon) == -1) {
-	//		h_MuVetoDPtSelMuon.at(t).Fill(Ntp->Muon_p4(diMuonPos).Pt() - Ntp->Muon_p4(selMuon).Pt(), w);
-	//		h_MuVetoDRTau.at(t).Fill(Ntp->Muon_p4(diMuonPos).DeltaR(Ntp->PFTau_p4(selTau)), w);
-	//	}
-	//	h_MuVetoInvM.at(t).Fill((Ntp->Muon_p4(diMuonPos) + Ntp->Muon_p4(diMuonNeg)).M(), w);
-	//	h_MuVetoPtPositive.at(t).Fill(Ntp->Muon_p4(diMuonPos).Pt(), w);
-	//	h_MuVetoPtNegative.at(t).Fill(Ntp->Muon_p4(diMuonNeg).Pt(), w);
-	//	h_MuVetoDeltaR.at(t).Fill(Ntp->Muon_p4(diMuonPos).DeltaR(Ntp->Muon_p4(diMuonNeg)), w);
-	//}
-
-	//if (getStatusBoolean(ObjectsDiMuonVeto)) {
-	//	// Tri-lepton vetoes
-	//	h_NMuonTriLepVeto.at(t).Fill(triLepVetoMuons.size(), w);
-	//	h_NElecTriLepVeto.at(t).Fill(triLepVetoElecs.size(), w);
-	//}
 	//////// plots filled after full selection without BJetVeto
 	if (getStatusBoolean(FullInclusiveSelNoBVeto)) {
 		h_NBJets.at(t).Fill(selectedBJets.size(), w);
