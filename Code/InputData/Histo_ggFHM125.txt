@@ -1,0 +1,5 @@
+# Put data in first line
+Histo:	1   	-1 			Data 					Data 									1
+
+# Higgs signal sample for drawing in plots (m = 125 GeV)
+Histo:	12511  	1.217744 	MC_ggFHTauTauM125 		H^{125}_{ggF}#rightarrow{}^{}#tau#tau 	632

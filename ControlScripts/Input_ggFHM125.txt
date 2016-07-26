@@ -1,0 +1,20 @@
+Thin: False
+Skim: False
+HistoFile: InputData/Histo_ggFHM125.txt
+Analysis: ZeroJet3Prong
+UncertType: default
+SkimInfo: InputData/SkimSummary_ggFHM125.log
+Lumi: 19712
+PlotStyle: style2
+
+# Everything below is only needed if you intend to use SVFit
+# DO NOT modify the fields in curly brackets {xyz}, they are set by the framework
+InputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage/SVFitCache_2015-04-20.root
+OutputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/{DATE}/MySVFIT_{SET}_{TIME}.root 
+OutputFileSVFitTauESUp: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/TauESUp/{DATE}/MySVFIT_{SET}_{TIME}.root 
+OutputFileSVFitTauESDown: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/TauESDown/{DATE}/MySVFIT_{SET}_{TIME}.root 
+OutputFile3ProngRecoPlus: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/{DATE}/MySVFIT_3ProngRecoPlus_{SET}_{TIME}.root
+OutputFile3ProngRecoMinus: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/{DATE}/MySVFIT_3ProngRecoMinus_{SET}_{TIME}.root
+OutputFile3ProngRecoZero: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/{DATE}/MySVFIT_3ProngRecoZero_{SET}_{TIME}.root
+GRIDSite: grid-srm.physik.rwth-aachen.de
+InputNtuples: {FileDir}
