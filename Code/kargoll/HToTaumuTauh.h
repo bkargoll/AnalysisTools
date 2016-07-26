@@ -96,6 +96,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_BJet1Phi;
 
   std::vector<TH1D> h_HiggsPt;
+  std::vector<TH1D> h_HiggsPt_1JetSel;
   std::vector<TH1D> h_HiggsPhi;
   std::vector<TH1D> h_JetsDEta;
   std::vector<TH1D> h_JetsInEtaGap;

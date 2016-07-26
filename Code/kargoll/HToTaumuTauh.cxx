@@ -328,6 +328,7 @@ void  HToTaumuTauh::Setup(){
   h_BJet1Phi = HConfig.GetTH1D(Name+"_BJet1Phi","BJet1Phi",50,-3.14159,3.14159,"#phi(b^{1})");
 
   h_HiggsPt = HConfig.GetTH1D(Name+"_HiggsPt","HiggsPt",50,0.,200.,"p_{T}(H)/GeV");
+  h_HiggsPt_1JetSel = HConfig.GetTH1D(Name+"_HiggsPt_1JetSel","HiggsPt_1JetSel",50,0.,200.,"p_{T}(H)/GeV");
   h_HiggsPhi = HConfig.GetTH1D(Name+"_HiggsPhi","HiggsPhi",50,-3.14159,3.14159,"#phi(H)");
   h_JetsDEta = HConfig.GetTH1D(Name+"_JetsDEta","JetsDEta",100,-10.,10.,"#Delta#eta(j^{1},j^{2})");
   h_JetsInEtaGap = HConfig.GetTH1D(Name+"_JetsInEtaGap","JetsInEtaGap",6,-0.5,5.5,"N(j in #eta gap)");
@@ -449,6 +450,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_BJet1Phi);
 
  Extradist1d.push_back(&h_HiggsPt);
+ Extradist1d.push_back(&h_HiggsPt_1JetSel);
  Extradist1d.push_back(&h_HiggsPhi);
  Extradist1d.push_back(&h_JetsDEta);
  Extradist1d.push_back(&h_JetsInEtaGap);
@@ -1094,6 +1096,7 @@ void HToTaumuTauh::doPlotting(){
 		// variables for categorization
 		h_HiggsPt.at(t).Fill(higgsPt_, w);
 		h_HiggsPhi.at(t).Fill(higgsPhi, w);
+		if (nJets_ >= 1) h_HiggsPt_1JetSel.at(t).Fill(higgsPt_, w);
 		h_JetsDEta.at(t).Fill(jetdEta_, w);
 		h_JetsInEtaGap.at(t).Fill(nJetsInGap_, w);
 		h_JetsInvM.at(t).Fill(mjj_, w);
