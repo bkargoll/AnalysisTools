@@ -45,14 +45,6 @@ class HToTaumuTauh : public Selection {
 	  CatCut5,
 	  NCuts};
 
-	/*
-	enum cuts_ZeroJetLow3Prong{
-		ZeroJetLow3Prong_NJet = CatCut1,
-		ZeroJetLow3Prong_TauPt,
-		ZeroJetLow3Prong_
-	};
-	*/
-
  protected:
   virtual void Setup();
   virtual void Store_ExtraDist();
@@ -65,20 +57,6 @@ class HToTaumuTauh : public Selection {
   virtual void doPlotting();
 
   // Histograms
-  //std::vector<TH1D> h_NVtx;
-  //std::vector<TH1D> h_VtxZ;
-  //std::vector<TH1D> h_VtxRho;
-  //std::vector<TH1D> h_VtxPhi;
-  //std::vector<TH1D> h_VtxNdof;
-  //std::vector<TH1D> h_VtxIsfake;
-
-  //std::vector<TH1D> h_MuDxy;
-  //std::vector<TH1D> h_MuDz;
-  //std::vector<TH1D> h_MuRelIso;
-  //std::vector<TH1D> h_MuPt;
-  //std::vector<TH1D> h_MuEta;
-  //std::vector<TH1D> h_MuPhi;
-
   std::vector<TH1D> h_MuSelPt;
   std::vector<TH1D> h_MuSelEta;
   std::vector<TH1D> h_MuSelPhi;
@@ -88,62 +66,20 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_MuSelFakesTauID;
   std::vector<TH1D> h_MuSelDrHlt;
 
-  //std::vector<TH1D> h_TauPt;
-  //std::vector<TH1D> h_TauEta;
-  //std::vector<TH1D> h_TauPhi;
-  //std::vector<TH1D> h_TauDecayMode;
-  //std::vector<TH1D> h_TauIso;
-
   std::vector<TH1D> h_TauSelPt;
   std::vector<TH1D> h_TauSelEta;
   std::vector<TH1D> h_TauSelPhi;
-  //std::vector<TH1D> h_TauSelDrHlt; // todo: not filled at the moment
   std::vector<TH1D> h_TauSelDecayMode;
   std::vector<TH1D> h_TauSelIso;
   std::vector<TH1D> h_TauSelMass;
 
-  //std::vector<TH1D> h_MuVetoDPtSelMuon;
-  //std::vector<TH1D> h_MuVetoInvM;
-  //std::vector<TH1D> h_MuVetoPtPositive;
-  //std::vector<TH1D> h_MuVetoPtNegative;
-  //std::vector<TH1D> h_MuVetoDRTau;
-  //std::vector<TH1D> h_MuVetoDeltaR;
-
-  //std::vector<TH1D> h_NMuonTriLepVeto;
-  //std::vector<TH1D> h_NElecTriLepVeto;
-
   std::vector<TH1D> h_MuCharge;
   std::vector<TH1D> h_TauCharge;
-
-  //std::vector<TH1D> h_MuTauDR;
-  //std::vector<TH1D> h_MuTauDPhi;
-  //std::vector<TH1D> h_MuTauDEta;
-  //std::vector<TH1D> h_MuTauDPt;
-  //std::vector<TH1D> h_MuTauRelDPt;
-  //std::vector<TH2D> h_MuPtVsTauPt;
 
   std::vector<TH1D> h_MetPt;
   std::vector<TH1D> h_MetPhi;
 
-  //std::vector<TH1D> h_MetLepMuDr;
-  //std::vector<TH1D> h_MetLepTauDr;
-  //std::vector<TH1D> h_MetLepNMu;
-  //std::vector<TH1D> h_MetLepNTau;
-  //std::vector<TH1D> h_MetLepNMuMinusNMu;
-  //std::vector<TH1D> h_MetLepNTauMinusNTau;
-  //std::vector<TH1D> h_MetLepDiffMET;
-  //std::vector<TH1D> h_MetLepDiffMETPhi;
-  //std::vector<TH1D> h_MetLepDiffMt;
-
   std::vector<TH1D> h_NJetsKin;
-  //std::vector<TH1D> h_JetKin1Pt;
-  //std::vector<TH1D> h_JetKin1Eta;
-  //std::vector<TH1D> h_JetKin1Phi;
-  //std::vector<TH1D> h_JetKin1IsLooseId;
-  //std::vector<TH1D> h_JetKin2IsLooseId;
-  //std::vector<TH1D> h_JetKin2Pt;
-  //std::vector<TH1D> h_JetKin2Eta;
-  //std::vector<TH1D> h_JetKin2Phi;
   std::vector<TH1D> h_NJetsId;
   std::vector<TH1D> h_Jet1Pt;
   std::vector<TH1D> h_Jet1Eta;
@@ -165,38 +101,10 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_JetsInEtaGap;
   std::vector<TH1D> h_JetsInvM;
 
-  //std::vector<TH1D> h_MtMuPlusOnly;
-  //std::vector<TH1D> h_MtMuMinusOnly;
-  //std::vector<TH1D> h_Mt1ProngOnly;
-  //std::vector<TH1D> h_Mt3ProngOnly;
-  //std::vector<TH1D> h_Mt3ProngSV;
-  std::vector<TH1D> h_Mt3ProngSVFlight;
-
-  //std::vector<TH1D> h_MetPt1ProngOnly;
-  //std::vector<TH1D> h_MetPhi1ProngOnly;
-  //std::vector<TH1D> h_MetPt3ProngOnly;
-  //std::vector<TH1D> h_MetPhi3ProngOnly;
-
-  //std::vector<TH1D> h_MetPtNoMtCut;
-  //std::vector<TH1D> h_MetPhiNoMtCut;
-  //std::vector<TH1D> h_MetPtNoMtCut1ProngOnly;
-  //std::vector<TH1D> h_MetPhiNoMtCut1ProngOnly;
-  //std::vector<TH1D> h_MetPtNoMtCut3ProngOnly;
-  //std::vector<TH1D> h_MetPhiNoMtCut3ProngOnly;
-
   std::vector<TH1D> h_QcdShapeRegion;
-
-  std::vector<TH1D> h_embeddingWeight_TauSpinner;
-  std::vector<TH1D> h_embeddingWeight_MinVisPtFilter;
-  std::vector<TH1D> h_embeddingWeight_SelEffWeight;
-  std::vector<TH1D> h_HiggsGenPtWeight;
-  std::vector<TH1D> h_HiggsGenPt;
-  std::vector<TH1D> h_HiggsMassFromSampleName;
 
   std::vector<TH1D> h_SVFitMass;
   std::vector<TH1D> h_visibleMass;
-  std::vector<TH1D> h_SVFitMassCoarse;
-  std::vector<TH1D> h_visibleMassCoarse;
 
   std::vector<TH1D> h_shape_VisM;
   std::vector<TH1D> h_shape_SVfitM;
@@ -219,10 +127,6 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_SVFitMassResol;
   std::vector<TH1D> h_visibleMassResol;
 
-  std::vector<TH1D> h_TrueMass;
-  std::vector<TH1D> h_TrueMassFull3ProngVisibleMuon;
-  std::vector<TH1D> h_TrueVisibleMass;
-
   std::vector<TH1D> h_BGM_Mt;
   std::vector<TH1D> h_BGM_MtSideband;
   std::vector<TH1D> h_BGM_MtExtrapolation;
@@ -243,18 +147,13 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_BGM_QcdSSTauIso;
   std::vector<TH1D> h_BGM_QcdEff;
 
-  std::vector<TH1D> SVFitMassResol;
-  std::vector<TH1D> visibleMassResol;
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq0;
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq1;
+  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq10;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq0;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq1;
+  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq10;
 
-  std::vector<TH1D> TrueMass;
-  std::vector<TH1D> TrueMassFull3ProngVisibleMuon;
-  std::vector<TH1D> TrueVisibleMass;
-  std::vector<TH1D> TauhPtSVFitted;
-  std::vector<TH1D> TauhEtaSVFitted;
-  std::vector<TH1D> TauhPhiSVFitted;
-  std::vector<TH1D> TauMuPtSVFitted;
-  std::vector<TH1D> TauMuEtaSVFitted;
-  std::vector<TH1D> TauMuPhiSVFitted;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;

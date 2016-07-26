@@ -14,7 +14,33 @@
 namespace objects {
 
 // default constructor
-MET::MET() {}
+MET::MET():
+	et_(0),
+	phi_(0),
+	ex_(0),
+	ey_(0),
+	significance_(0),
+	significanceXX_(0),
+	significanceXY_(0),
+	significanceYY_(0),
+	hasSignificance_(false),
+	metType_("custom")
+{}
+
+MET::MET(TString met_type, float px, float py, float sig/*= 0*/, float sigXX/*= 0*/, float sigXY/*= 0*/, float sigYY/*= 0*/){
+	ex_ = px;
+	ey_ = py;
+	et_ = sqrt(px*px + py*py);
+	phi_ = (ex_ == 0.0 || ey_ == 0.0) ? 0.0 : TMath::ATan2(ey_,ex_);
+
+	significance_   = sig;
+	significanceXX_ = sigXX;
+	significanceXY_ = sigXY;
+	significanceYY_ = sigYY;
+	hasSignificance_ = significanceXX_ || significanceXY_ || significanceYY_ || significance_;
+
+	metType_ = met_type;
+}
 
 // constructor of MET object from Ntuple_Controller and type of MET
 MET::MET(Ntuple_Controller* const Ntp, TString met_type) {

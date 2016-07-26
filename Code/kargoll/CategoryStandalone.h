@@ -3,6 +3,16 @@
  *
  *  Created on: May 8, 2015
  *      Author: kargoll
+ *
+ *	Base class similar to class "Category", but independent from HToTaumuTauh.
+ *	It allows to implement the definition of a given category
+ *	and run it, without actually discarding events, overriding plots, etc.
+ *	This allows to access the result of the standalone category from within a
+ *	different category.
+ *
+ *	With small adoptions, this class could be used to add additional plots, etc.,
+ *	to any analysis class. Have a look into Category.h to see how this could be
+ *	implemented.
  */
 
 #ifndef CATEGORYSTANDALONE_H_

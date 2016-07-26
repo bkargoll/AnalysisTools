@@ -4,6 +4,7 @@ import argparse
 import os
 import glob
 from _ctypes import sizeof
+import subprocess
 
 def getListOfSets():
     list  = [name for name in os.listdir('.') if (os.path.isdir(os.path.join('.', name)) and 'Set_' in name)]
@@ -22,6 +23,11 @@ nFiles = -1 # keep track of how many root files are found
 
 badSets = []
 
+# get files from dCache first
+print "Calling CheckandGet.sh --get ..."
+devnull = open(os.devnull, 'w')
+subprocess.call([os.getcwd()+"/CheckandGet.sh", "--get"], stdout=devnull)
+
 # Check if all Sets contain the root files
 lSets = getListOfSets()
 for set in lSets:
@@ -35,7 +41,11 @@ for set in lSets:
             nFiles = nFilesInSet
     
     if nFilesInSet == 0:
-        badSets.append(set)
+        if set in open('jobs_submitted').read():
+            print set, "is still running and will not be resubmitted"
+        else:
+            badSets.append(set)
+            
     elif nFilesInSet != nFiles:
         print "WARNING:", set, "contains", nFilesInSet, "root files, while", nFiles, "are expected. Please take care of this yourself."
 
@@ -56,6 +66,6 @@ print badSets
 
 if not args.noResubmit:
     print "Resubmit failed sets..."
-    os.system("source Submit --Submit")
+    subprocess.call([os.getcwd()+"/Submit", "--Submit"])
 else:
     print "To resubmit the jobs, run 'source Submit --Submit'"

@@ -101,10 +101,11 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --TauSpinner Option to turn on TauSpinner");
     printf("\n                                                     --SVfit Option to turn on SVfit");
     printf("\n  ");
-    printf("\n./todo.pl --GRID <Input.txt> <ListofDS.txt>        ALTERNATIVE FOR REGULAR USE");
+    printf("\n./todo.pl --GRID <Input.txt> <ListofDS.txt> --ROOTSYS \$ROOTSYS       ALTERNATIVE FOR REGULAR USE");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
     printf("\n                                                   <ListoDS.txt> list of DCache Dataset directories you want to run on.");
+    printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n                                                   Optional commands:  ");
     printf("\n                                                     --OutputDir <OutputDir> ");
     printf("\n                                                     --CodeDir <CodeDir>");
@@ -113,7 +114,6 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --NMaxMC <Max Number of MC files per job > Default value: $maxmc ");
     printf("\n                                                     --NMaxEmbed <Max Number of Embedding files per job > Default value: $maxemb ");
     printf("\n                                                     --BuildRoot <ROOT Version> builds custom version for root instead of copying lib+include");
-    printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n                                                     --GRIDSite <site> the grid site you wish to run on. Default=grid-srm.physik.rwth-aachen.de");
     printf("\n                                                     --LongQueue Option to run on CMS queue (allows for longer jobs)");
     printf("\n                                                     --TauSpinner Option to turn on TauSpinner");
@@ -470,11 +470,6 @@ if( $ARGV[0] eq "--Local" ){
 	system(sprintf("mkdir $OutputDir/workdir$set/root"));
 	system(sprintf("cd root_v$buildrootversion; ./configure --enable-python --enable-roofit --enable-minuit2 --disable-xrootd --disable-sqlite --disable-python --disable-mysql --prefix=$OutputDir/workdir$set/root; make & make install "));
     }
-    else{
-        printf("Copying local root $MYROOTSYS ");
-        system(sprintf("mkdir $OutputDir/workdir$set/root/"));
-        system(sprintf("cp -r $MYROOTSYS/* $OutputDir/workdir$set/root/"));
-    }
 
     # Finish Submit script
     system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
@@ -692,11 +687,6 @@ if( $ARGV[0] eq "--DCache" ){
 	system(sprintf("mkdir $OutputDir/workdir$set/root"));
 	system(sprintf("cd root_v$buildrootversion; ./configure --enable-python --enable-roofit --enable-minuit2 --disable-xrootd --disable-sqlite --disable-python --disable-mysql --prefix=$OutputDir/workdir$set/root; make & make install "));
     }
-    else{
-        printf("Copying local root $MYROOTSYS ");
-        system(sprintf("mkdir $OutputDir/workdir$set/root/"));
-        system(sprintf("cp -r $MYROOTSYS/* $OutputDir/workdir$set/root/"));
-    }
 
     # Finish Submit script
     system(sprintf("echo \"cd  $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit"));
@@ -777,8 +767,8 @@ if( $ARGV[0] eq "--GRID" ){
 
     # Generate Combine Input
     system(sprintf("cp $InputFile $OutputDir/workdir$set/Input.txt "));
-    system(sprintf("cd $OutputDir/workdir$set; subs '{SET}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
-    system(sprintf("cd $OutputDir/workdir$set; subs '{FileDir}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
+    system(sprintf("cd $OutputDir/workdir$set; $dir/subs '{SET}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
+    system(sprintf("cd $OutputDir/workdir$set; $dir/subs '{FileDir}' COMBINE $OutputDir/workdir$set/Input.txt; cd $dir "));
     system(sprintf("echo \"Mode: RECONSTRUCT\" >> $OutputDir/workdir$set/Input.txt"));
     system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Input.txt"));
 
@@ -823,6 +813,7 @@ if( $ARGV[0] eq "--GRID" ){
  system(sprintf("echo \"  hasdir=\\\$(srmls -recursion_depth=2 srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/ | grep /pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set/  | wc -l) \n  if [ \\\$hasdir == 0 ]; then \" >> $OutputDir/workdir$set/Submit "));
     system(sprintf("echo \"    srmmkdir srm://$gridsite:8443/pnfs/physik.rwth-aachen.de/cms/store/user/$UserIDCern/workdir$set \n  fi \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo 'fi ' >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("chmod u+x $OutputDir/workdir$set/Submit")) ;
 
     # get file list from dcache to remove old skims
     system(sprintf("echo '\n\n\nif [ \"\${1}\" == \"--Submit\" ] || [ \"\${1}\" == \"--SetupAndSubmit\" ]; then ' >> $OutputDir/workdir$set/Submit")) ;
@@ -1063,9 +1054,8 @@ if( $ARGV[0] eq "--GRID" ){
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
     printf("\nTo compile the code in the workdir: source compile --useRoot $OutputDir/workdir$set/root/ $UserDir $tauspinner $svfit");
-    printf("\nTo submit jobs to the GRID: source Submit ");
-    printf("\nTo check the status of the GRID jobs and download finished jobs: source CheckandGet.sh");
-    printf("\nTo additionally print the details of all the jobs: source CheckandGet.sh  --detailed");
+    printf("\nTo submit jobs to the GRID: source Run.sh --Submit ");
+    printf("\nTo manually submit and investigate the jobs status use Submit and CheckandGet.sh scripts.");
     printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1.sh; cd ..\n");
     
 } 

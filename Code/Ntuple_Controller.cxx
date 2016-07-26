@@ -1094,6 +1094,16 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
   return false;
 }
 
+// PFTau significance, using the reffited primary and secondary vertices
+double Ntuple_Controller::PFTau_FlightLength_significance(unsigned int i) {
+	TVector3 PVpos = PFTau_TIP_primaryVertex_pos(i);
+	TMatrixTSym<double> PVcov = PFTau_TIP_primaryVertex_cov(i);
+	TVector3 SVpos = PFTau_TIP_secondaryVertex_pos(i);
+	TMatrixTSym<double> SVcov = PFTau_TIP_secondaryVertex_cov(i);
+
+	return PFTau_FlightLength_significance(PVpos, PVcov, SVpos, SVcov);
+}
+
 // calculate flight length significance from primary and secondary vertex info
 double Ntuple_Controller::PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
   TVector3 SVPV = sv - pv;

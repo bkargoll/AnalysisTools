@@ -42,7 +42,7 @@ if [ "${1}"  == "--get" ]; then
       readfiles=0; 
     done 
 
-    cat jobs_submitted | awk '{system("glite-ce-job-status " $1 " | grep -i done | wc -l |awk \x27{sum++}END{if($1 == 1) print  \" glite-ce-job-output --dir "$2 " " $1 " ; mv " $2 "/*_CREAM*/* "$2 "; rmdir " $2 "/*_CREAM* ; echo " $1 " " $2 "  >> jobs_complete; source " $2 "/GRIDRetrieve.sh  \"}\x27 >> jobs_get ")}'
+    cat jobs_submitted | awk '{system("glite-ce-job-status " $1 " | grep -i done | wc -l |awk \x27{sum++}END{if($1 == 1) print  \" glite-ce-job-output --noint --dir "$2 " " $1 " ; mv " $2 "/*_CREAM*/* "$2 "; rmdir " $2 "/*_CREAM* ; echo " $1 " " $2 "  >> jobs_complete; source " $2 "/GRIDRetrieve.sh  \"}\x27 >> jobs_get ")}'
 
     source jobs_get 
     rm jobs_get

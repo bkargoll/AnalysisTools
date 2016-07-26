@@ -432,6 +432,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TMatrixTSym<double> PFTau_FlightLength3d_cov(unsigned int i){return  PFTau_TIP_secondaryVertex_cov(i)+PFTau_TIP_primaryVertex_cov(i);}
    TVector3 PFTau_FlightLength3d(unsigned int i){return PFTau_TIP_secondaryVertex_pos(i)-PFTau_TIP_primaryVertex_pos(i);}
    double	PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov );
+   double	PFTau_FlightLength_significance(unsigned int i);
    double   PFTau_FlightLength(unsigned int i){return PFTau_FlightLength3d(i).Mag();}
 
       // Jet Information

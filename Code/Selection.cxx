@@ -28,7 +28,8 @@ Selection::~Selection() {
 	if (ListofBadFiles.size() > 0)
 		Logger(Logger::Warning) << "Output could be comprimised!!! \n\tList of Bad Files:" << std::endl;
 	for (unsigned int i = 0; i < ListofBadFiles.size(); i++) {
-		Logger(Logger::Warning) << ListofBadFiles.at(i) << std::endl;
+		// do not use logger in this line, as this would break Run.sh script
+		std::cout << ListofBadFiles.at(i) << std::endl;
 	}
 }
 
