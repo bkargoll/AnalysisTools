@@ -73,41 +73,6 @@ void  ZeroJet3Prong::categoryConfiguration(){
 	Nminus0.at(SigmaSV) = HConfig.GetTH1D(Name+c+"_Nminus0_SigmaSV_",htitle,80,-10.,30.,hlabel,"Events");
 
 	// setup additional histograms
-	Tau3p_Plus_Pt	= HConfig.GetTH1D(Name+"_Tau3p_Plus_Pt","Tau3p_Pt"	,50,0.,100.,"p_{T}(#tau_{3p}^{+ sol.})/GeV");
-	Tau3p_Plus_Eta	= HConfig.GetTH1D(Name+"_Tau3p_Plus_Eta","Tau3p_Eta"	,50,-2.5,2.5,"#eta(#tau_{3p}^{+ sol.})");
-	Tau3p_Plus_Phi	= HConfig.GetTH1D(Name+"_Tau3p_Plus_Phi","Tau3p_Phi"	,50,-3.14159,3.14159,"#phi(#tau_{3p}^{+ sol.})");
-	Tau3p_Plus_E	= HConfig.GetTH1D(Name+"_Tau3p_Plus_E","Tau3p_E"		,50,0.,200.,"E(#tau_{3p}^{+ sol.})/GeV");
-	Tau3p_Minus_Pt	= HConfig.GetTH1D(Name+"_Tau3p_Minus_Pt","Tau3p_Pt"	,50,0.,100.,"p_{T}(#tau_{3p}^{- sol.})/GeV");
-	Tau3p_Minus_Eta	= HConfig.GetTH1D(Name+"_Tau3p_Minus_Eta","Tau3p_Eta"	,50,-2.5,2.5,"#eta(#tau_{3p}^{- sol.})");
-	Tau3p_Minus_Phi	= HConfig.GetTH1D(Name+"_Tau3p_Minus_Phi","Tau3p_Phi"	,50,-3.14159,3.14159,"#phi(#tau_{3p}^{- sol.})");
-	Tau3p_Minus_E	= HConfig.GetTH1D(Name+"_Tau3p_Minus_E","Tau3p_E"		,50,0.,200.,"E(#tau_{3p}^{- sol.})/GeV");
-	Tau3p_Zero_Pt	= HConfig.GetTH1D(Name+"_Tau3p_Zero_Pt","Tau3p_Pt"	,50,0.,100.,"p_{T}(#tau_{3p}^{0 sol.})/GeV");
-	Tau3p_Zero_Eta	= HConfig.GetTH1D(Name+"_Tau3p_Zero_Eta","Tau3p_Eta"	,50,-2.5,2.5,"#eta(#tau_{3p}^{0 sol.})");
-	Tau3p_Zero_Phi	= HConfig.GetTH1D(Name+"_Tau3p_Zero_Phi","Tau3p_Phi"	,50,-3.14159,3.14159,"#phi(#tau_{3p}^{0 sol.})");
-	Tau3p_Zero_E	= HConfig.GetTH1D(Name+"_Tau3p_Zero_E","Tau3p_E"		,50,0.,200.,"E(#tau_{3p}^{0 sol.})/GeV");
-	Tau3p_Zero_RotSignificance = HConfig.GetTH1D(Name+"_Tau3p_Zero_RotSignificance","Tau3p_Zero_RotSignificance" , 40,0.,10.,"#sigma(rotation)");
-	Tau3p_FlightLengthSignificanceDefPV  = HConfig.GetTH1D(Name+"_Tau3p_FlightLengthSignificanceDefPV","Tau3p_FlightLengthSignificanceDefPV" , 80,-10.,30,"#sigma(SV - default PV)");
-
-	Tau3p_fit_Pt	= HConfig.GetTH1D(Name+"_Tau3p_fit_Pt","Tau3p_fit_Pt"  ,50,0.,100.,"p_{T}(#tau_{3p}^{fit})/GeV");
-	Tau3p_fit_Eta	= HConfig.GetTH1D(Name+"_Tau3p_fit_Eta","Tau3p_fit_Eta",50,-2.5,2.5,"#eta(#tau_{3p}^{fit})");
-	Tau3p_fit_Phi	= HConfig.GetTH1D(Name+"_Tau3p_fit_Phi","Tau3p_fit_Phi",50,-3.14159,3.14159,"#phi(#tau_{3p}^{fit})");
-	Tau3p_fit_E		= HConfig.GetTH1D(Name+"_Tau3p_fit_E","Tau3p_fit_E"    ,50,0.,200.,"E(#tau_{3p}^{fit})/GeV");
-
-	TauMu_fit_Pt	= HConfig.GetTH1D(Name+"_TauMu_fit_Pt","TauMu_fit_Pt"  ,50,0.,100.,"p_{T}(#tau_{#mu}^{fit})/GeV");
-	TauMu_fit_Eta	= HConfig.GetTH1D(Name+"_TauMu_fit_Eta","TauMu_fit_Eta",50,-2.5,2.5,"#eta(#tau_{#mu}^{fit})");
-	TauMu_fit_Phi	= HConfig.GetTH1D(Name+"_TauMu_fit_Phi","TauMu_fit_Phi",50,-3.14159,3.14159,"#phi(#tau_{#mu}^{fit})");
-	TauMu_fit_E		= HConfig.GetTH1D(Name+"_TauMu_fit_E","TauMu_fit_E"    ,50,0.,200.,"E(#tau_{#mu}^{fit})/GeV");
-
-	EventFit_converged	= HConfig.GetTH1D(Name+"_EventFit_converged","EventFit_converged", 2, -0.5, 1.5, "Fit: converged");
-	EventFit_Chi2		= HConfig.GetTH1D(Name+"_EventFit_Chi2","EventFit_Chi2",60,0.,20.,"Fit: #chi^{2}");
-	EventFit_nIterations= HConfig.GetTH1D(Name+"_EventFit_nIterations","EventFit_nIterations",100,0.,100.,"Fit: N(iterations)");
-	EventFit_deltaCSum	= HConfig.GetTH1D(Name+"_EventFit_deltaCSum","EventFit_deltaCSum", 100, 0., 200., "Fit: #Sigma #Delta c");
-
-	EventFit_Res_Pt	= HConfig.GetTH1D(Name+"_EventFit_Res_Pt","EventFit_Res_Pt"   ,50,0.,100.,"p_{T}(X^{fit})/GeV");
-	EventFit_Res_Eta= HConfig.GetTH1D(Name+"_EventFit_Res_Eta","EventFit_Res_Eta" ,50,-10,10,"#eta(X^{fit})");
-	EventFit_Res_Phi= HConfig.GetTH1D(Name+"_EventFit_Res_Phi","EventFit_Res_Phi" ,50,-3.14159,3.14159,"#phi(X^{fit})");
-	EventFit_Res_E	= HConfig.GetTH1D(Name+"_EventFit_Res_E","EventFit_Res_E"     ,50,0.,200.,"E(X^{fit})/GeV");
-
 	svFit3pMass_PlusSol		= HConfig.GetTH1D(Name+"_svFit3pMass_PlusSol",	"svFit3pMass_PlusSol",	80, 0., 400., "m_{SVfit}(#tau_{3p}^{+},#mu)/GeV");
 	svFit3pMass_MinusSol	= HConfig.GetTH1D(Name+"_svFit3pMass_MinusSol",	"svFit3pMass_MinusSol",	80, 0., 400., "m_{SVfit}(#tau_{3p}^{-},#mu)/GeV");
 	svFit3pMass_ZeroSol		= HConfig.GetTH1D(Name+"_svFit3pMass_ZeroSol",	"svFit3pMass_ZeroSol",	80, 0., 400., "m_{SVfit}(#tau_{3p}^{0},#mu)/GeV");
@@ -165,20 +130,6 @@ void  ZeroJet3Prong::categoryConfiguration(){
 	vis3pMassResol_ZeroSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_ZeroSol",	"vis3pMassResol_ZeroSol",	50, -1., 3., "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{0},#mu)");
 	vis3pMassResol_TrueSol	= HConfig.GetTH1D(Name+"_vis3pMassResol_TrueSol",	"vis3pMassResol_TrueSol",	50, -1., 3., "#frac{m_{vis} - m_{true}}{m_{true}}(#tau_{3p}^{true},#mu)");
 
-	Tau3p_True_Pt  = HConfig.GetTH1D(Name+"_Tau3p_True_Pt","Tau3p_True_Pt"	,50,0.,100.,"p_{T}(#tau_{3p}^{true sol.})/GeV");
-	Tau3p_True_Eta = HConfig.GetTH1D(Name+"_Tau3p_True_Eta","Tau3p_True_Eta",50,-2.5,2.5,"#eta(#tau_{3p}^{true sol.})");
-	Tau3p_True_Phi = HConfig.GetTH1D(Name+"_Tau3p_True_Phi","Tau3p_True_Phi",50,-3.14159,3.14159,"#phi(#tau_{3p}^{true sol.})");
-	Tau3p_True_E   = HConfig.GetTH1D(Name+"_Tau3p_True_E","Tau3p_True_E"	,50,0.,200.,"E(#tau_{3p}^{true sol.})/GeV");
-	Tau3p_True_Pt_Resol  = HConfig.GetTH1D(Name+"_Tau3p_True_Pt_Resol","Tau3p_True_Pt_Resol"	,50, -1., 1.,"p_{T} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-	Tau3p_True_Eta_Resol = HConfig.GetTH1D(Name+"_Tau3p_True_Eta_Resol","Tau3p_True_Eta_Resol"	,50, -0.1, 0.1,"#eta resol. #tau_{3p}^{true sol.} - #tau_{gen}");
-	Tau3p_True_Phi_Resol = HConfig.GetTH1D(Name+"_Tau3p_True_Phi_Resol","Tau3p_True_Phi_Resol"	,50, -0.2,0.2,"#phi resol. #tau_{3p}^{true sol.} - #tau_{gen}");
-	Tau3p_True_E_Resol   = HConfig.GetTH1D(Name+"_Tau3p_True_E_Resol","Tau3p_True_E_Resol"		,50, -1., 1.,"E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-
-	TrueSignalMET           = HConfig.GetTH1D(Name+"_TrueSignalMET","TrueSignalMET", 50, 0., 100., "gen. E_{T}^{miss}/GeV");
-	MetPtResol              = HConfig.GetTH1D(Name+"_MetPtResol","MetPtResol", 50, -2., 2., "#frac{E_{T,reco}^{miss} - E_{T,gen}^{miss}}{E_{T,gen}^{miss}}");
-	MetPhiResol             = HConfig.GetTH1D(Name+"_MetPhiResol","MetPhiResol", 60, -3.,3., "#phi(E_{T,reco}^{miss}) - #phi(E_{T,gen}^{miss})");
-	MetPxResol              = HConfig.GetTH1D(Name+"_MetXResol","MetXResol", 50, -50., 50., "E_{x,reco}^{miss} - E_{x,gen}^{miss}");
-	MetPyResol              = HConfig.GetTH1D(Name+"_MetYResol","MetYResol", 50, -50., 50., "E_{y,reco}^{miss} - E_{y,gen}^{miss}");
 	Tau3p_Neutrino_PtResol  = HConfig.GetTH1D(Name+"_Tau3p_Neutrino_PtResol","Tau3p_Neutrino_PtResol", 50, -2., 2., "p_{T} resol. #frac{#nu_{3p}^{reco} - #nu_{3p}^{gen}}{#nu_{3p}^{gen}}");
 	Tau3p_Neutrino_PhiResol = HConfig.GetTH1D(Name+"_Tau3p_Neutrino_PhiResol","Tau3p_Neutrino_PhiResol", 50, -1., 1., "#phi resol. #nu_{3p}^{reco} - #nu_{3p}^{gen}");
 	Tau3p_Neutrino_XResol  = HConfig.GetTH1D(Name+"_Tau3p_Neutrino_XResol","Tau3p_Neutrino_XResol", 50, -50., 50., "x resol. #nu_{3p}^{reco} - #nu_{3p}^{gen}");
@@ -253,41 +204,6 @@ void  ZeroJet3Prong::categoryConfiguration(){
 }
 
 void ZeroJet3Prong::categoryExtradist(){
-	Extradist1d.push_back(&Tau3p_Plus_Pt);
-	Extradist1d.push_back(&Tau3p_Plus_Eta);
-	Extradist1d.push_back(&Tau3p_Plus_Phi);
-	Extradist1d.push_back(&Tau3p_Plus_E);
-	Extradist1d.push_back(&Tau3p_Minus_Pt);
-	Extradist1d.push_back(&Tau3p_Minus_Eta);
-	Extradist1d.push_back(&Tau3p_Minus_Phi);
-	Extradist1d.push_back(&Tau3p_Minus_E);
-	Extradist1d.push_back(&Tau3p_Zero_Pt);
-	Extradist1d.push_back(&Tau3p_Zero_Eta);
-	Extradist1d.push_back(&Tau3p_Zero_Phi);
-	Extradist1d.push_back(&Tau3p_Zero_E);
-	Extradist1d.push_back(&Tau3p_Zero_RotSignificance);
-	Extradist1d.push_back(&Tau3p_FlightLengthSignificanceDefPV);
-
-	Extradist1d.push_back(&Tau3p_fit_Pt);
-	Extradist1d.push_back(&Tau3p_fit_Eta);
-	Extradist1d.push_back(&Tau3p_fit_Phi);
-	Extradist1d.push_back(&Tau3p_fit_E);
-
-	Extradist1d.push_back(&TauMu_fit_Pt);
-	Extradist1d.push_back(&TauMu_fit_Eta);
-	Extradist1d.push_back(&TauMu_fit_Phi);
-	Extradist1d.push_back(&TauMu_fit_E);
-
-	Extradist1d.push_back(&EventFit_converged);
-	Extradist1d.push_back(&EventFit_Chi2);
-	Extradist1d.push_back(&EventFit_nIterations);
-	Extradist1d.push_back(&EventFit_deltaCSum);
-
-	Extradist1d.push_back(&EventFit_Res_Pt);
-	Extradist1d.push_back(&EventFit_Res_Eta);
-	Extradist1d.push_back(&EventFit_Res_Phi);
-	Extradist1d.push_back(&EventFit_Res_E);
-
 	Extradist1d.push_back(&svFit3pMass_PlusSol);
 	Extradist1d.push_back(&svFit3pMass_MinusSol);
 	Extradist1d.push_back(&svFit3pMass_ZeroSol);
@@ -345,20 +261,6 @@ void ZeroJet3Prong::categoryExtradist(){
 	Extradist1d.push_back(&vis3pMassResol_ZeroSol);
 	Extradist1d.push_back(&vis3pMassResol_TrueSol);
 
-	Extradist1d.push_back(&Tau3p_True_Pt);
-	Extradist1d.push_back(&Tau3p_True_Eta);
-	Extradist1d.push_back(&Tau3p_True_Phi);
-	Extradist1d.push_back(&Tau3p_True_E);
-	Extradist1d.push_back(&Tau3p_True_Pt_Resol);
-	Extradist1d.push_back(&Tau3p_True_Eta_Resol);
-	Extradist1d.push_back(&Tau3p_True_Phi_Resol);
-	Extradist1d.push_back(&Tau3p_True_E_Resol);
-
-	Extradist1d.push_back(&TrueSignalMET);
-	Extradist1d.push_back(&MetPtResol);
-	Extradist1d.push_back(&MetPhiResol);
-	Extradist1d.push_back(&MetPxResol);
-	Extradist1d.push_back(&MetPyResol);
 	Extradist1d.push_back(&Tau3p_Neutrino_PtResol);
 	Extradist1d.push_back(&Tau3p_Neutrino_PhiResol);
 	Extradist1d.push_back(&Tau3p_Neutrino_XResol);
@@ -478,10 +380,7 @@ bool ZeroJet3Prong::categorySelection(){
 	}
 	else {
 		Logger(Logger::Debug) << "Cut: SV significance" << std::endl;
-		// set sign of flight length significance by projection of tau momentum direction
-		// on fitted PV-SV direction
-		int sign = ( Ntp->PFTau_FlightLength3d(selTau).Dot( Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0 ) ? +1 : -1;
-		value_ZeroJet3Prong.at(SigmaSV) = sign * Ntp->PFTau_FlightLength_significance(selTau);
+		value_ZeroJet3Prong.at(SigmaSV) = flightLengthSig_;
 		pass_ZeroJet3Prong.at(SigmaSV) = ( value_ZeroJet3Prong.at(SigmaSV) >= cut.at(SigmaSV) );
 	}
 
@@ -491,21 +390,6 @@ bool ZeroJet3Prong::categorySelection(){
 }
 
 void ZeroJet3Prong::categoryPlotting(){
-	if (passAllBut(SigmaSV) && Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
-		// flight length significance using default vertices
-		TMatrixTSym<double> pvCov(3);
-		pvCov[0][0] = Ntp->Vtx_Cov(0)[0][0];
-		pvCov[0][1] = Ntp->Vtx_Cov(0)[0][1];
-		pvCov[0][2] = Ntp->Vtx_Cov(0)[0][2];
-		pvCov[1][1] = Ntp->Vtx_Cov(0)[1][1];
-		pvCov[1][2] = Ntp->Vtx_Cov(0)[1][2];
-		pvCov[2][2] = Ntp->Vtx_Cov(0)[2][2];
-
-		int sign = ( (Ntp->PFTau_TIP_secondaryVertex_pos(selTau)-Ntp->Vtx(0)).Dot( Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0 ) ? +1 : -1;
-		double fls = Ntp->PFTau_FlightLength_significance(Ntp->Vtx(0), pvCov, Ntp->PFTau_TIP_secondaryVertex_pos(selTau), Ntp->PFTau_TIP_secondaryVertex_cov(selTau));
-		Tau3p_FlightLengthSignificanceDefPV.at(t).Fill(sign * fls, w);
-	}
-
 	TPTRObject TPResults;
 
 	if (status){
@@ -528,50 +412,6 @@ void ZeroJet3Prong::categoryPlotting(){
 		GlobalEventFit GEF(MuonTP, A1, Phi_Res, PV, PVCov);
 		GEF.SetCorrectPt(false);
 		TPResults = GEF.getTPTRObject();
-		GEFObject Results = GEF.Fit();
-
-		// fill plots
-		if (TPResults.isAmbiguous()) {
-			Tau3p_Plus_Pt.at(t).Fill(TPResults.getTauPlus().LV().Pt(), w);
-			Tau3p_Plus_Eta.at(t).Fill(TPResults.getTauPlus().LV().Eta(), w);
-			Tau3p_Plus_Phi.at(t).Fill(TPResults.getTauPlus().LV().Phi(), w);
-			Tau3p_Plus_E.at(t).Fill(TPResults.getTauPlus().LV().E(), w);
-			Tau3p_Minus_Pt.at(t).Fill(TPResults.getTauMinus().LV().Pt(), w);
-			Tau3p_Minus_Eta.at(t).Fill(TPResults.getTauMinus().LV().Eta(), w);
-			Tau3p_Minus_Phi.at(t).Fill(TPResults.getTauMinus().LV().Phi(), w);
-			Tau3p_Minus_E.at(t).Fill(TPResults.getTauMinus().LV().E(), w);
-		}
-		else {
-			Tau3p_Zero_Pt.at(t).Fill(TPResults.getTauZero().LV().Pt(), w);
-			Tau3p_Zero_Eta.at(t).Fill(TPResults.getTauZero().LV().Eta(), w);
-			Tau3p_Zero_Phi.at(t).Fill(TPResults.getTauZero().LV().Phi(), w);
-			Tau3p_Zero_E.at(t).Fill(TPResults.getTauZero().LV().E(), w);
-
-			// rotation significance
-			Tau3p_Zero_RotSignificance.at(t).Fill(TPResults.getRotSigma(), w);
-		}
-
-		EventFit_converged.at(t).Fill(Results.Fitconverged(), w);
-		if (Results.Fitconverged()) {
-			Tau3p_fit_Pt.at(t).Fill(Results.getTauH().LV().Pt(), w);
-			Tau3p_fit_Eta.at(t).Fill(Results.getTauH().LV().Eta(), w);
-			Tau3p_fit_Phi.at(t).Fill(Results.getTauH().LV().Phi(), w);
-			Tau3p_fit_E.at(t).Fill(Results.getTauH().LV().E(), w);
-
-			TauMu_fit_Pt.at(t).Fill(Results.getTauMu().LV().Pt(), w);
-			TauMu_fit_Eta.at(t).Fill(Results.getTauMu().LV().Eta(), w);
-			TauMu_fit_Phi.at(t).Fill(Results.getTauMu().LV().Phi(), w);
-			TauMu_fit_E.at(t).Fill(Results.getTauMu().LV().E(), w);
-
-			EventFit_Chi2.at(t).Fill(Results.getChi2(), w);
-			EventFit_nIterations.at(t).Fill(Results.getNiterations(), w);
-			EventFit_deltaCSum.at(t).Fill(Results.getCsum(), w);
-
-			EventFit_Res_Pt.at(t).Fill(Results.getResonance().LV().Pt(), w);
-			EventFit_Res_Eta.at(t).Fill(Results.getResonance().LV().Eta(), w);
-			EventFit_Res_Phi.at(t).Fill(Results.getResonance().LV().Phi(), w);
-			EventFit_Res_E.at(t).Fill(Results.getResonance().LV().E(), w);
-		}
 
 		// calculate SVFit stuff for comparison
 		SVFitObject *svfObjDefault = NULL;
@@ -598,11 +438,6 @@ void ZeroJet3Prong::categoryPlotting(){
 		}
 
 		if (isMC) {
-			TrueSignalMET.at(t).Fill(trueMet.Pt(), w);
-			MetPtResol.at(t).Fill( (Ntp->MET_CorrMVAMuTau_et() - trueMet.Pt())/trueMet.Pt() , w);
-			MetPhiResol.at(t).Fill( Tools::DeltaPhi(Ntp->MET_CorrMVAMuTau_phi(),trueMet.Phi()) , w);
-			MetPxResol.at(t).Fill( Ntp->MET_CorrMVAMuTau_ex() - trueMet.Px() , w);
-			MetPyResol.at(t).Fill( Ntp->MET_CorrMVAMuTau_ey() - trueMet.Py() , w);
 			if(Ntp->MET_CorrMVAMuTau_significance_xx() != 0 && Ntp->MET_CorrMVAMuTau_significance_yy() != 0){
 				double pxPull = (Ntp->MET_CorrMVAMuTau_ex() - trueMet.Px()) / sqrt(Ntp->MET_CorrMVAMuTau_significance_xx());
 				double pyPull = (Ntp->MET_CorrMVAMuTau_ey() - trueMet.Py()) / sqrt(Ntp->MET_CorrMVAMuTau_significance_yy());
@@ -753,16 +588,6 @@ void ZeroJet3Prong::categoryPlotting(){
 						mttprojectMetOnMuRotateResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
 						mttprojectMetOnMuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::plus, selMuon, metPlus) - trueResonanceMass, w);
 
-						Tau3p_True_Pt.at(t).Fill(TPResults.getTauPlus().LV().Pt(), w);
-						Tau3p_True_Eta.at(t).Fill(TPResults.getTauPlus().LV().Eta(), w);
-						Tau3p_True_Phi.at(t).Fill(TPResults.getTauPlus().LV().Phi(), w);
-						Tau3p_True_E.at(t).Fill(TPResults.getTauPlus().LV().E(), w);
-						if (isSignalTauDecay){
-							Tau3p_True_Pt_Resol.at(t).Fill( (TPResults.getTauPlus().LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() , w);
-							Tau3p_True_Eta_Resol.at(t).Fill(TPResults.getTauPlus().LV().Eta() - trueTauP4.Eta(), w);
-							Tau3p_True_Phi_Resol.at(t).Fill(TPResults.getTauPlus().LV().Phi() - trueTauP4.Phi(), w);
-							Tau3p_True_E_Resol.at(t).Fill((TPResults.getTauPlus().LV().E() - trueTauP4.E())/trueTauP4.E(), w);
-						}
 						if (Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt() > 0.001){
 							Tau3p_Neutrino_PtResol.at(t).Fill( (TPResults.getNeutrinoPlus().LV().Pt() - Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt())/Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt(), w);
 							Tau3p_Neutrino_XResol.at(t).Fill( TPResults.getNeutrinoPlus().LV().Px() - Ntp->MCTau_invisiblePart(i_matchedMCTau).Px(), w);
@@ -876,16 +701,6 @@ void ZeroJet3Prong::categoryPlotting(){
 						mttprojectMetOnMuRotateResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,	mtt_mu3prong_projectMetOnMuAndRotate(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
 						mttprojectMetOnMuResol_vs_Tau3pEResol.at(t).Fill(tau3pEresol,		mtt_mu3prong_projectMetOnMu(TPResults, MultiProngTauSolver::minus, selMuon, metMinus) - trueResonanceMass, w);
 
-						Tau3p_True_Pt.at(t).Fill(TPResults.getTauMinus().LV().Pt(), w);
-						Tau3p_True_Eta.at(t).Fill(TPResults.getTauMinus().LV().Eta(), w);
-						Tau3p_True_Phi.at(t).Fill(TPResults.getTauMinus().LV().Phi(), w);
-						Tau3p_True_E.at(t).Fill(TPResults.getTauMinus().LV().E(), w);
-						if(isSignalTauDecay){
-							Tau3p_True_Pt_Resol.at(t).Fill( (TPResults.getTauMinus().LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() , w);
-							Tau3p_True_Eta_Resol.at(t).Fill(TPResults.getTauMinus().LV().Eta() - trueTauP4.Eta(), w);
-							Tau3p_True_Phi_Resol.at(t).Fill(TPResults.getTauMinus().LV().Phi() - trueTauP4.Phi(), w);
-							Tau3p_True_E_Resol.at(t).Fill((TPResults.getTauMinus().LV().E() - trueTauP4.E())/trueTauP4.E(), w);
-						}
 						if (Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt() > 0.001){
 							Tau3p_Neutrino_PtResol.at(t).Fill( (TPResults.getNeutrinoMinus().LV().Pt() - Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt())/Ntp->MCTau_invisiblePart(i_matchedMCTau).Pt(), w);
 							Tau3p_Neutrino_XResol.at(t).Fill( TPResults.getNeutrinoMinus().LV().Px() - Ntp->MCTau_invisiblePart(i_matchedMCTau).Px(), w);

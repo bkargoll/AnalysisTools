@@ -78,6 +78,11 @@ class HToTaumuTauh : public Selection {
 
   std::vector<TH1D> h_MetPt;
   std::vector<TH1D> h_MetPhi;
+  std::vector<TH1D> h_TrueSignalMET;
+  std::vector<TH1D> h_MetPtResol;
+  std::vector<TH1D> h_MetPhiResol;
+  std::vector<TH1D> h_MetPxResol;
+  std::vector<TH1D> h_MetPyResol;
 
   std::vector<TH1D> h_NJetsKin;
   std::vector<TH1D> h_NJetsId;
@@ -155,6 +160,64 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq1;
   std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq10;
 
+  std::vector<TH1D> h_Tau3p_FlightLengthSignificance;
+  std::vector<TH1D> h_Tau3p_Plus_Pt;
+  std::vector<TH1D> h_Tau3p_Plus_Eta;
+  std::vector<TH1D> h_Tau3p_Plus_Phi;
+  std::vector<TH1D> h_Tau3p_Plus_E;
+  std::vector<TH1D> h_Tau3p_Minus_Pt;
+  std::vector<TH1D> h_Tau3p_Minus_Eta;
+  std::vector<TH1D> h_Tau3p_Minus_Phi;
+  std::vector<TH1D> h_Tau3p_Minus_E;
+  std::vector<TH1D> h_Tau3p_Zero_Pt;
+  std::vector<TH1D> h_Tau3p_Zero_Eta;
+  std::vector<TH1D> h_Tau3p_Zero_Phi;
+  std::vector<TH1D> h_Tau3p_Zero_E;
+  std::vector<TH1D> h_Tau3p_Zero_RotSignificance;
+  std::vector<TH1D> h_Tau3p_True_Pt;
+  std::vector<TH1D> h_Tau3p_True_Eta;
+  std::vector<TH1D> h_Tau3p_True_Phi;
+  std::vector<TH1D> h_Tau3p_True_E;
+  std::vector<TH1D> h_Tau3p_False_Pt;
+  std::vector<TH1D> h_Tau3p_False_Eta;
+  std::vector<TH1D> h_Tau3p_False_Phi;
+  std::vector<TH1D> h_Tau3p_False_E;
+
+  std::vector<TH1D> h_Tau3p_Plus_Pt_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_Px_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_Py_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_Pz_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_Eta_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_E_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Pt_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Px_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Py_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Pz_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Eta_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_E_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Pt_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Px_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Py_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Pz_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Eta_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_E_Resol;
+  std::vector<TH1D> h_Tau3p_True_Pt_Resol;
+  std::vector<TH1D> h_Tau3p_True_Px_Resol;
+  std::vector<TH1D> h_Tau3p_True_Py_Resol;
+  std::vector<TH1D> h_Tau3p_True_Pz_Resol;
+  std::vector<TH1D> h_Tau3p_True_Eta_Resol;
+  std::vector<TH1D> h_Tau3p_True_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_True_E_Resol;
+  std::vector<TH1D> h_Tau3p_False_Pt_Resol;
+  std::vector<TH1D> h_Tau3p_False_Px_Resol;
+  std::vector<TH1D> h_Tau3p_False_Py_Resol;
+  std::vector<TH1D> h_Tau3p_False_Pz_Resol;
+  std::vector<TH1D> h_Tau3p_False_Eta_Resol;
+  std::vector<TH1D> h_Tau3p_False_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_False_E_Resol;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
@@ -214,6 +277,7 @@ class HToTaumuTauh : public Selection {
   double jetdEta_;
   int nJetsInGap_;
   double mjj_;
+  double flightLengthSig_;
 
   // selected objects at various stages
   std::vector<int> selectedMuonsId;
