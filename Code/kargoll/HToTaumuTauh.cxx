@@ -45,6 +45,12 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 	correctElecs = ""; // "run" = run dependent corrections, "JER" = jet energy resolution smearing
 	correctJets = "";
 
+	// uncomment to enable Tau energy scale uncertainty variations
+	// IMPORTANT: ensure to set the correct SVFit Cache file in your config when changing these lines
+	svFitSuffix = "";
+	//correctTaus += "energyUncPlus"; svFitSuffix = "TauESUp";
+	//correctTaus += "energyUncMinus"; svFitSuffix = "TauESDown";
+
 	// by default category is set to passed
 	catPassed = true;
 
@@ -353,11 +359,6 @@ void  HToTaumuTauh::Setup(){
   h_shape_SVfitM_ZLScaleUp 	= HConfig.GetTH1D(Name+"_shape_SVfitM_ZLScaleUp",	"shape_SVfitM_ZLScaleUp",	400,0.,400.,"m_{SVfit}^{ZL up}(#tau_{h},#mu)/GeV");
   h_shape_SVfitM_ZLScaleDown 	= HConfig.GetTH1D(Name+"_shape_SVfitM_ZLScaleDown",	"shape_SVfitM_ZLScaleDown",	400,0.,400.,"m_{SVfit}^{ZL down}(#tau_{h},#mu)/GeV");
 
-  h_shape_VisM_TauESUp     = HConfig.GetTH1D(Name+"_shape_VisM_TauESUp",		"shape_VisM_TauESUp",		400,0.,400.,"m_{vis}^{#tauES up}(#tau_{h},#mu)/GeV");
-  h_shape_VisM_TauESDown   = HConfig.GetTH1D(Name+"_shape_VisM_TauESDown",	"shape_VisM_TauESDown",		400,0.,400.,"m_{vis}^{#tauES down}(#tau_{h},#mu)/GeV");
-  h_shape_SVfitM_TauESUp   = HConfig.GetTH1D(Name+"_shape_SVfitM_TauESUp",	"shape_SVfitM_TauESUp",		400,0.,400.,"m_{SVfit}^{#tauES up}(#tau_{h},#mu)/GeV");
-  h_shape_SVfitM_TauESDown = HConfig.GetTH1D(Name+"_shape_SVfitM_TauESDown",	"shape_SVfitM_TauESDown",	400,0.,400.,"m_{SVfit}^{#tauES down}(#tau_{h},#mu)/GeV");
-
   h_SVFitTimeReal = HConfig.GetTH1D(Name+"_SVFitTimeReal","SVFitTimeReal",200,0.,60.,"t_{real}(SVFit)/sec");
   h_SVFitTimeCPU =  HConfig.GetTH1D(Name+"_SVFitTimeCPU","SVFitTimeCPU",200,0.,60.,"t_{CPU}(SVFit)/sec");
   h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
@@ -540,11 +541,6 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_shape_VisM_ZLScaleDown);
  Extradist1d.push_back(&h_shape_SVfitM_ZLScaleUp);
  Extradist1d.push_back(&h_shape_SVfitM_ZLScaleDown);
-
- Extradist1d.push_back(&h_shape_VisM_TauESUp    );
- Extradist1d.push_back(&h_shape_VisM_TauESDown  );
- Extradist1d.push_back(&h_shape_SVfitM_TauESUp  );
- Extradist1d.push_back(&h_shape_SVfitM_TauESDown);
 
  Extradist1d.push_back(&h_SVFitTimeReal);
  Extradist1d.push_back(&h_SVFitTimeCPU);
@@ -1143,7 +1139,7 @@ void HToTaumuTauh::doPlotting(){
 		// SVFit
 		clock->Start("SVFit");
 		// get SVFit result from cache
-		SVFitObject *svfObj = Ntp->getSVFitResult_MuTauh(svfitstorage, "CorrMVAMuTau", selMuon, selTau, 50000);
+		SVFitObject *svfObj = Ntp->getSVFitResult_MuTauh(svfitstorage, "CorrMVAMuTau", selMuon, selTau, 50000, svFitSuffix);
 		clock->Stop("SVFit");
 
 		// shape distributions for final fit
@@ -1169,6 +1165,7 @@ void HToTaumuTauh::doPlotting(){
 		h_visibleMassResol.at(t).Fill((m_Vis - m_Truth) / m_Truth, w);
 
 		// ZL shape uncertainty
+		// see Andrew's thesis, p.113 bottom
 		if (HConfig.GetID(t) == DataMCType::DY_ll || HConfig.GetID(t) == DataMCType::DY_ee || HConfig.GetID(t) == DataMCType::DY_mumu) {
 			h_shape_VisM_ZLScaleUp.at(t).Fill(1.02 * visMass);
 			h_shape_VisM_ZLScaleDown.at(t).Fill(0.98 * visMass);
@@ -1176,33 +1173,9 @@ void HToTaumuTauh::doPlotting(){
 			h_shape_SVfitM_ZLScaleDown.at(t).Fill(0.98 * svfMass);
 		}
 
-		// tau energy scale uncertainty
-		TLorentzVector tauP4Up = 1.03 * Ntp->PFTau_p4(selTau);
-		TLorentzVector tauP4Down = 0.97 * Ntp->PFTau_p4(selTau);
-		clock->Start("SVFitTauESUp");
-		SVFitObject *svfObjTauESUp = Ntp->getSVFitResult_MuTauh(svfitstorTauESUp, "CorrMVAMuTau", selMuon, selTau, 50000, "TauESUp", 1., 1.03);
-		clock->Stop("SVFitTauESUp");
-		clock->Start("SVFitTauESDown");
-		SVFitObject *svfObjTauESDown = Ntp->getSVFitResult_MuTauh(svfitstorTauESDown, "CorrMVAMuTau", selMuon, selTau, 50000, "TauESDown", 1., 0.97);
-		clock->Stop("SVFitTauESDown");
-
-		double visMass_tauESUp = (Ntp->Muon_p4(selMuon) + tauP4Up).M();
-		double visMass_tauEsDown = (Ntp->Muon_p4(selMuon) + tauP4Down).M();
-		double svfMass_tauESUp = (svfObjTauESUp->isValid()) ? svfObjTauESUp->get_mass() : -999.;
-		double svfMass_tauESDown = (svfObjTauESDown->isValid()) ? svfObjTauESDown->get_mass() : -999.;
-
-		h_shape_VisM_TauESUp.at(t).Fill(visMass_tauESUp, w);
-		h_shape_VisM_TauESDown.at(t).Fill(visMass_tauEsDown, w);
-		h_shape_SVfitM_TauESUp.at(t).Fill(svfMass_tauESUp, w);
-		h_shape_SVfitM_TauESDown.at(t).Fill(svfMass_tauESDown, w);
-
 		// timing info on mass reconstruction
 		h_SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFit"), 1); // filled w/o weight
 		h_SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFit"), 1); // filled w/o weight
-		h_SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESUp"), 1); // filled w/o weight
-		h_SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESUp"), 1); // filled w/o weight
-		h_SVFitTimeReal.at(t).Fill(clock->GetRealTime("SVFitTauESDown"), 1); // filled w/o weight
-		h_SVFitTimeCPU.at(t).Fill(clock->GetCpuTime("SVFitTauESDown"), 1); // filled w/o weight
 
 		// QCD shape uncertainty and scaling to be done on datacard level
 

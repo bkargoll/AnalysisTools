@@ -120,11 +120,6 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_shape_SVfitM_ZLScaleUp;
   std::vector<TH1D> h_shape_SVfitM_ZLScaleDown;
 
-  std::vector<TH1D> h_shape_VisM_TauESUp;
-  std::vector<TH1D> h_shape_VisM_TauESDown;
-  std::vector<TH1D> h_shape_SVfitM_TauESUp;
-  std::vector<TH1D> h_shape_SVfitM_TauESDown;
-
   std::vector<TH1D> h_SVFitTimeReal;
   std::vector<TH1D> h_SVFitTimeCPU;
 
@@ -302,8 +297,7 @@ class HToTaumuTauh : public Selection {
 
   // instances of SVFitStorage class
   SVFitStorage svfitstorage;
-  SVFitStorage svfitstorTauESUp;
-  SVFitStorage svfitstorTauESDown;
+  TString svFitSuffix;
 
   // timing information
   TBenchmark* clock;

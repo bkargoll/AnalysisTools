@@ -34,11 +34,14 @@ def SaveHist(hist):
 # Scale all bins up to value upTo of a histogram hist by scaleBy
 def ScaleHist(hist, scaleBy, upTo):
     "Scale a TH1 hist by a given amount scaleBy up to value upTo"
+    norm = hist.Integral()
     global binning, binKey
     for binEdge in takewhile(lambda b: b <= upTo, binning[binKey]): # loop only over bins < 'upTo' GeV
         if binEdge == 0: continue
         binNum = hist.FindFixBin(binEdge - 0.1)
         hist.SetBinContent(binNum, scaleBy * hist.GetBinContent(binNum))
+    # scale to keep normalization
+    hist.Scale(norm / hist.Integral())
 
 # QCD scaling
 # put in a "function" (accessing global variables) for readability
@@ -58,24 +61,28 @@ parser.add_argument('outputFolder', help="location to save the output datacards"
 parser.add_argument('--categories', nargs="+",
                     default=["zerojetlow", "zerojethigh", "onejetlow", "onejethigh", "onejetboost", "vbfloose", "vbftight"],
                     help="list of categories to be processed (default: all of them)")
-parser.add_argument('--fitVariable', default ='visibleMass') #default="shape_SVfitM")
+parser.add_argument('--fitVariable', default ='SVfitM')
 parser.add_argument('--noQCDScaling', action='store_true', help="Disable scaling QCD up by 10%% in 1-jet low and high categories for mtt<50GeV.")
 parser.add_argument('--verbose', action='store_true', help="Print more stuff")
 args = parser.parse_args()
 
 # define template structure of files, histograms, ...
 inFileTemplate = 'LOCAL_COMBINED_<CAT>_default_LumiScaled.root'
-histoTemplate = '<CAT>_default_<VAR><PROC>'
+inHistoTemplate = '<CAT>_default_shape_<VAR><PROC>'
 outFileTemplate = 'htt_<CHANNEL>.inputs-sm-<DATASET>.root'
-qcdShapeUncTemplate = 'CMS_htt_QCDShape_<CHANNEL>_<CAT>_<DATASET><UPDOWN>'
+qcdShapeUncTemplate = 'QCD_CMS_htt_QCDShape_<CHANNEL>_<CAT>_<DATASET><UPDOWN>'
+zlShapeUncTemplate = 'ZL_CMS_htt_ZLScale_<CHANNEL>_<DATASET><UPDOWN>'
 # specify some fields in templates
-histoTemplate = histoTemplate.replace('<VAR>', args.fitVariable)
+histoTemplate = inHistoTemplate.replace('<VAR>', args.fitVariable)
+inputZlShapeTemplate = inHistoTemplate.replace('<VAR>', args.fitVariable + '_ZLScale<UPDOWN>')
 outFileTemplate = outFileTemplate.replace('<CHANNEL>', 'mt').replace('<DATASET>', '8TeV')
 qcdShapeUncTemplate = qcdShapeUncTemplate.replace('<CHANNEL>', 'mutau').replace('<DATASET>', '8TeV')
+zlShapeUncTemplate = zlShapeUncTemplate.replace('<CHANNEL>', 'mutau').replace('<DATASET>', '8TeV')
+
 
 # define binning to be used in mass plots
-binning = {'nonVBF' :   array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]),#, 225, 250, 275, 300, 325, 350]),
-           'VBF'    :   array('d', [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200])}#, 250, 300, 350])}
+binning = {'nonVBF' :   array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 225, 250, 275, 300, 325, 350]),
+           'VBF'    :   array('d', [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 250, 300, 350])}
 
 # create dictionary to map output histo names against list of input histo names (processes)
 procs = {'ZTT'      :   ['MC_DY_embedded'],
@@ -152,6 +159,22 @@ for cat in args.categories:
         
         # save histogram into output file
         SaveHist(outHist)
+        
+        # ZL shape uncertainty
+        if procKey == "ZL":
+            for direction in ['Up', 'Down']:
+                if len(procs[procKey]) > 1: print "WARNING: ZL should be only 1 sample"
+                sample = procs[procKey][0]
+                histName = inputZlShapeTemplate.replace('<CAT>', cat).replace('<PROC>', sample).replace('<UPDOWN>', direction)
+                if args.verbose : print 'Loading histogram', histName
+                inHist = inFile.Get(histName)
+                inHistReb = inHist.Rebin(len(binning[binKey])-1, 'inHistReb', binning[binKey])
+                
+                outName = zlShapeUncTemplate.replace('<UPDOWN>', direction)
+                outHist = ROOT.TH1D(outName, outName, len(binning[binKey])-1, binning[binKey])
+                outHist.Sumw2()
+                outHist.Add(inHistReb)
+                SaveHist(outHist)
             
     # create QCD shape uncertainties
     histName = qcdShapeUncTemplate.replace('<CAT>', translate[cat])
