@@ -11,7 +11,5 @@ PlotStyle: style2
 # DO NOT modify the fields in curly brackets {xyz}, they are set by the framework
 InputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage/SVFitCache_2015-04-20.root
 OutputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/{DATE}/MySVFIT_{SET}_{TIME}.root 
-OutputFileSVFitTauESUp: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/TauESUp/{DATE}/MySVFIT_{SET}_{TIME}.root 
-OutputFileSVFitTauESDown: /pnfs/physik.rwth-aachen.de/cms/store/user/bkargoll/SVFitStorage_temporary/TauESDown/{DATE}/MySVFIT_{SET}_{TIME}.root 
 GRIDSite: grid-srm.physik.rwth-aachen.de
 InputNtuples: {FileDir}
