@@ -79,7 +79,7 @@ void SVFitStorage::Configure(TString datasetName, TString suffix /* ="" */){
 
 	// Specify file name of output file
 	Parameters Par; // assumes configured in Analysis.cxx
-	TString key = "OutputFileSVFit" + suffix_ + ":";
+	TString key = "OutputFileSVFit:";
 	Par.GetString(key, storageFileName_);
 	TString outputFileLocal = "MySVFIT" + suffix_ + TString::Itoa(instance,10) + ".root";
 	// Load output file

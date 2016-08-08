@@ -371,7 +371,7 @@ bool Ntuple_Controller::isGoodMuon(unsigned int i){
   //  Top Dilepton muon selection without Transverse IP cut and PT cut at 17GeV for our trigger 
   //  https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefEventSel       
   //  isGoodMuon_nooverlapremoval(i) with
-  //  ΔR(μ,jet)>0.3 where jet is any jet passing the jet requirements not applied applied       
+  //  Delta R(muon,jet)>0.3 where jet is any jet passing the jet requirements not applied applied
   if(isGoodMuon_nooverlapremoval(i)){
     unsigned int jet_idx=0;
     return !muonhasJetOverlap(i,jet_idx);
@@ -836,9 +836,9 @@ bool Ntuple_Controller::isJetID(unsigned int i, TString corr){
   //  number of constituents>1 (patJet->numberOfDaughters())
   //  NHF<0.99 (( patJet->neutralHadronEnergy() + patJet->HFHadronEnergy() ) / patJet->energy())
   //  NEF<0.99 (patJet->neutralEmEnergyFraction())
-  //  if |η|<2.4, CEF<0.99 (patJet->chargedEmEnergyFraction())
-  //  if |η|<2.4, CHF>0 (patJet->chargedHadronEnergyFraction())
-  //  if |η|<2.4, NCH>0 (patJet->chargedMultiplicity()) 
+  //  if |eta|<2.4, CEF<0.99 (patJet->chargedEmEnergyFraction())
+  //  if |eta|<2.4, CHF>0 (patJet->chargedHadronEnergyFraction())
+  //  if |eta|<2.4, NCH>0 (patJet->chargedMultiplicity())
   /////////////////////////////////////////////////////////////////////////
   // apply jet ID
   if(PFJet_p4(i,corr).Pt()<=10.) return false;
@@ -1032,6 +1032,8 @@ double Ntuple_Controller::TauSpinerGet(int SpinType){
 //
 // Options:
 //  - "scalecorr": corrects the tau energy scale depending on the decay mode (only MC and embedding).
+//	- "energyUnc": Tau energy scale uncertainty. Combine with "Plus" for 3% upwards variation, or with
+//				   "Minus" for 3% downwards variation.
 //
 
 TLorentzVector Ntuple_Controller::PFTau_p4(unsigned int i, TString corr){
@@ -1050,6 +1052,13 @@ TLorentzVector Ntuple_Controller::PFTau_p4(unsigned int i, TString corr){
 			if(!corr.Contains("down")) vec.SetPerp(vec.Perp() * 1.03);
 			else vec.SetPerp(vec.Perp() * 0.97);
 		}
+
+		if(corr.Contains("energyUnc")){
+			if(corr.Contains("Plus")) vec *= 1.03;
+			else if(corr.Contains("Minus")) vec *= 0.97;
+			else Logger(Logger::Warning) << "Correction string" << corr << " is incomplete." << std::endl;
+		}
+
 	}
 	return vec;
 }
