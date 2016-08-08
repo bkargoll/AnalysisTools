@@ -47,9 +47,9 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 
 	// uncomment to enable Tau energy scale uncertainty variations
 	// IMPORTANT: ensure to set the correct SVFit Cache file in your config when changing these lines
-	svFitSuffix = "";
-	//correctTaus += "energyUncPlus"; svFitSuffix = "TauESUp";
-	//correctTaus += "energyUncMinus"; svFitSuffix = "TauESDown";
+	//tauESShift = ""; svFitSuffix = "";
+	//tauESShift = "energyUncPlus"; svFitSuffix = "TauESUp";
+	tauESShift = "energyUncMinus"; svFitSuffix = "TauESDown";
 
 	// by default category is set to passed
 	catPassed = true;
@@ -710,8 +710,10 @@ void HToTaumuTauh::doEventSetup(){
 	// set object corrections at beginning of each event to avoid segfaults
 	// and to allow for using different corrections in different analyses
 	isSignal = ((idStripped >= 10 && idStripped <= 13) || (idStripped >= 30 && idStripped <= 35)) ? true : false;
-	if (isSignal) Ntp->SetTauCorrections(correctTaus);
-	else			Ntp->SetTauCorrections("");
+	TString c = "";
+	if (isSignal) c = correctTaus;
+	c += tauESShift;
+	Ntp->SetTauCorrections(c);
 	Ntp->SetMuonCorrections(correctMuons);
 	Ntp->SetElecCorrections(correctElecs);
 	Ntp->SetJetCorrections(correctJets);
