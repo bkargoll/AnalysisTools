@@ -7,22 +7,6 @@ from sys import stdout
 from array import array
 from itertools import takewhile
 
-# context manager to collect output from stdout
-# printouts to stdout will be collected and appended to a list
-# Usage:
-# with Capturing() as output:
-#     do_something(my_object)
-# output is now a list containing the output
-# http://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
-class Capturing(list):
-    def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
-        return self
-    def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
-        sys.stdout = self._stdout
-
 # save histogram to file
 def SaveHist(hist):
     "save histogram into output file"
@@ -92,24 +76,24 @@ inputDirs = {"inclusive"    :   baseDir + "workdirInclusive3ProngAug_05_2016",
              "vbfloose"     :   baseDir + "workdirVBFAug_05_2016",
              "vbftight"     :   baseDir + "workdirVBFAug_05_2016"
              }
-inputDirsTauESUp = {"inclusive"    :   baseDir + "workdirInclusive3Prong_TauESUpAug_06_2016",
-             "zerojetlow"   :   baseDir + "workdirZeroJet_TauESUpAug_06_2016",
-             "zerojethigh"  :   baseDir + "workdirZeroJet_TauESUpAug_06_2016",
-             "onejetlow"    :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
-             "onejethigh"   :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
-             "onejetboost"  :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
-             "vbfloose"     :   baseDir + "workdirVBF_TauESUpAug_06_2016",
-             "vbftight"     :   baseDir + "workdirVBF_TauESUpAug_06_2016"
-             }
-inputDirsTauESDown = {"inclusive"    :   baseDir + "workdirInclusive3Prong_TauESDownAug_06_2016",
-             "zerojetlow"   :   baseDir + "workdirZeroJet_TauESDownAug_06_2016",
-             "zerojethigh"  :   baseDir + "workdirZeroJet_TauESDownAug_06_2016",
-             "onejetlow"    :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
-             "onejethigh"   :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
-             "onejetboost"  :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
-             "vbfloose"     :   baseDir + "workdirVBF_TauESDownAug_07_2016",
-             "vbftight"     :   baseDir + "workdirVBF_TauESDownAug_07_2016"
-             }
+inputDirsTauESUp = { "inclusive"    :   baseDir + "workdirInclusive3Prong_TauESUpAug_06_2016",
+                     "zerojetlow"   :   baseDir + "workdirZeroJet_TauESUpAug_06_2016",
+                     "zerojethigh"  :   baseDir + "workdirZeroJet_TauESUpAug_06_2016",
+                     "onejetlow"    :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
+                     "onejethigh"   :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
+                     "onejetboost"  :   baseDir + "workdirOneJet_TauESUpAug_06_2016",
+                     "vbfloose"     :   baseDir + "workdirVBF_TauESUpAug_06_2016",
+                     "vbftight"     :   baseDir + "workdirVBF_TauESUpAug_06_2016"
+                     }
+inputDirsTauESDown = { "inclusive"    :   baseDir + "workdirInclusive3Prong_TauESDownAug_06_2016",
+                       "zerojetlow"   :   baseDir + "workdirZeroJet_TauESDownAug_06_2016",
+                       "zerojethigh"  :   baseDir + "workdirZeroJet_TauESDownAug_06_2016",
+                       "onejetlow"    :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
+                       "onejethigh"   :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
+                       "onejetboost"  :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
+                       "vbfloose"     :   baseDir + "workdirVBF_TauESDownAug_07_2016",
+                       "vbftight"     :   baseDir + "workdirVBF_TauESDownAug_07_2016"
+                     }
 
 # define binning to be used in mass plots
 binning = {'nonVBF' :   array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 225, 250, 275, 300, 325, 350]),
@@ -212,6 +196,7 @@ for cat in args.categories:
             
             outHist.Add(inHistReb)
             
+            if sample == 'Data': continue
             # tau energy scale
             inHistTauESUp = inFiles["TauESUp"].Get(histName)
             inHistRebTauESUp = inHistTauESUp.Rebin(len(binning[binKey])-1, 'inHistRebTauESUp', binning[binKey])
@@ -222,8 +207,9 @@ for cat in args.categories:
         
         # save histogram into output file
         SaveHist(outHist)
-        SaveHist(tauESUpHist)
-        SaveHist(tauESDownHist)
+        if not sample == 'Data':
+            SaveHist(tauESUpHist)
+            SaveHist(tauESDownHist)
         
         # ZL shape uncertainty
         if procKey == "ZL":
@@ -254,6 +240,3 @@ for cat in args.categories:
 
 
 print 'Results have been stored in', outFileName
-
-
-

@@ -47,9 +47,9 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
 
 	// uncomment to enable Tau energy scale uncertainty variations
 	// IMPORTANT: ensure to set the correct SVFit Cache file in your config when changing these lines
-	//tauESShift = ""; svFitSuffix = "";
+	tauESShift = ""; svFitSuffix = "";
 	//tauESShift = "energyUncPlus"; svFitSuffix = "TauESUp";
-	tauESShift = "energyUncMinus"; svFitSuffix = "TauESDown";
+	//tauESShift = "energyUncMinus"; svFitSuffix = "TauESDown";
 
 	// by default category is set to passed
 	catPassed = true;
@@ -994,8 +994,8 @@ void HToTaumuTauh::doSelection(bool runAnalysisCuts){
 		flightLengthSig_ = sign * Ntp->PFTau_FlightLength_significance(selTau);
 	}
 
-	// correction factors
-	if( !Ntp->isData() ){
+	// correction factors for MC
+	if( !Ntp->isData() && idStripped != DataMCType::DY_mutau_embedded){
 	  // apply trigger efficiencies
 	  if (selMuon != -1) w *= RSF->HiggsTauTau_MuTau_Trigger_Mu_ScaleMCtoData(Ntp->Muon_p4(selMuon));
 	  if (selTau != -1)  w *= RSF->HiggsTauTau_MuTau_Trigger_Tau_ScaleMCtoData(Ntp->PFTau_p4(selTau, "")); // no Tau energy scale here
