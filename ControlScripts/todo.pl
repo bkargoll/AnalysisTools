@@ -996,6 +996,7 @@ if( $ARGV[0] eq "--GRID" ){
 
 		    system(sprintf("echo \"dccp  dcap://grid-dcap-extern.physik.rwth-aachen.de/$DS/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 		    system(sprintf("echo \"File:  /user/scratch/$UserID/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
+		    system(sprintf("echo \"rm -rf /user/scratch/$UserID/$myfile  \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
 		    system(sprintf("echo \"File:  dcap://$dcapgridsite/$DS/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Inputgrid.txt")) ;
 		    $A++;
 		}
