@@ -239,6 +239,9 @@ class HToTaumuTauh : public Selection {
   TString correctElecs;
   TString correctJets;
 
+  // systematic shifts
+  TString tauESShift;
+
   // store if category has passed or not
   bool catPassed;
 
