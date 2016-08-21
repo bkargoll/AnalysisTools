@@ -232,6 +232,11 @@ class HToTaumuTauh : public Selection {
   // flag to use embedding
   bool useEmbedding;
 
+  // number of tau prongs: 1, 3, or 0 (i.e. all)
+  int cTau_Prongs;
+  // flight length significance cut for 3prong taus
+  int cTau_flightLength;
+
 
   // object corrections to use
   TString correctTaus;

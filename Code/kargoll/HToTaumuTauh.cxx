@@ -32,7 +32,9 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   cCat_bjetEta(2.4),
   cCat_btagDisc(0.679), // medium WP, https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP#B_tagging_Operating_Points_for_5
   cCat_splitTauPt(45.0),
-  cJetClean_dR(0.5)
+  cJetClean_dR(0.5),
+  cTau_Prongs(1), // set to 0 to accept all taus
+  cTau_flightLength(2.0)
 {
 	Logger(Logger::Verbose) << "Start." << std::endl;
 	TString trigNames[] = {"HLT_IsoMu18_eta2p1_LooseIsoPFTau20","HLT_IsoMu17_eta2p1_LooseIsoPFTau20"};
@@ -212,8 +214,8 @@ void  HToTaumuTauh::Setup(){
     	htitle.ReplaceAll("$","");
     	htitle.ReplaceAll("\\","#");
     	hlabel="Number of #tau_{ID}";
-    	Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_NTauId_",htitle,26,-0.5,25.5,hlabel,"Events"));
-    	Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_NTauId_",htitle,26,-0.5,25.5,hlabel,"Events"));
+    	Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_NTauId_",htitle,28,-2.5,25.5,hlabel,"Events"));
+    	Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_NTauId_",htitle,28,-2.5,25.5,hlabel,"Events"));
     }
     else if(i_cut==NTauIso){
     	title.at(i_cut)="Number $\\tau_{Iso} >=$";
@@ -864,6 +866,34 @@ void HToTaumuTauh::doSelection(bool runAnalysisCuts){
 	if(selectedTaus.size() == 0 && hasRelaxedIsoTau)
 	  selTau = relaxedIsoTaus.at(0); // relaxed isolation tau
 
+	// hack for the 1- or 3-prong selection: Set NTauID to -1 if selTau has wrong decayMode
+	// set NTauID to -2 if 3prong tau fails the flight length cut
+	if (cTau_Prongs != 0 && selTau != -1){
+		int nProngs;
+		if (Ntp->PFTau_hpsDecayMode(selTau) >= 10) nProngs = 3;
+		else if (Ntp->PFTau_hpsDecayMode(selTau) >= 0) nProngs = 1;
+		else Logger(Logger::Error) << "Tau with weird decay mode " << Ntp->PFTau_hpsDecayMode(selTau) << std::endl;
+
+		if (nProngs != cTau_Prongs){
+			value.at(NTauId) = -1;
+			pass.at(NTauId) = false;
+			originalPass.at(NTauId) = false;
+		}
+		else if(nProngs == 3){
+			if (Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
+				// set sign of flight length significance by projection of tau momentum direction
+				// on fitted PV-SV direction
+				int sign = (Ntp->PFTau_FlightLength3d(selTau).Dot(Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0) ? +1 : -1;
+				flightLengthSig_ = sign * Ntp->PFTau_FlightLength_significance(selTau);
+			}
+			if(flightLengthSig_ < cTau_flightLength){
+				value.at(NTauId) = -2;
+				pass.at(NTauId) = false;
+				originalPass.at(NTauId) = false;
+			}
+		}
+	}
+
 	// Tri-lepton veto
 	Logger(Logger::Debug) << "Cut: Tri-lepton veto" << std::endl;
 	for(unsigned i_mu=0;i_mu<Ntp->NMuons();i_mu++){
@@ -986,13 +1016,13 @@ void HToTaumuTauh::doSelection(bool runAnalysisCuts){
 	// calculate jet-related variables used by categories
 	calculateJetVariables(selectedJets);
 
-	// calculate flight-length significance
-	if (selTau != -1 && Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
-		// set sign of flight length significance by projection of tau momentum direction
-		// on fitted PV-SV direction
-		int sign = (Ntp->PFTau_FlightLength3d(selTau).Dot(Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0) ? +1 : -1;
-		flightLengthSig_ = sign * Ntp->PFTau_FlightLength_significance(selTau);
-	}
+	// calculate flight-length significance -> moved further up
+	//if (selTau != -1 && Ntp->PFTau_TIP_hassecondaryVertex(selTau)) {
+	//	// set sign of flight length significance by projection of tau momentum direction
+	//	// on fitted PV-SV direction
+	//	int sign = (Ntp->PFTau_FlightLength3d(selTau).Dot(Ntp->PFTau_3PS_A1_LV(selTau).Vect()) > 0) ? +1 : -1;
+	//	flightLengthSig_ = sign * Ntp->PFTau_FlightLength_significance(selTau);
+	//}
 
 	// correction factors for MC
 	if( !Ntp->isData() && idStripped != DataMCType::DY_mutau_embedded){
@@ -1242,7 +1272,7 @@ void HToTaumuTauh::doPlotting(){
 		if (Ntp->PFTau_hpsDecayMode(selTau) == 10) {
 			h_Tau3p_FlightLengthSignificance.at(t).Fill(flightLengthSig_, w);
 
-			if (flightLengthSig_ >= 3.0) {
+			if (flightLengthSig_ >= cTau_flightLength) {
 				TPTRObject TPResults;
 
 				LorentzVectorParticle A1 = Ntp->PFTau_a1_lvp(selTau);
@@ -1355,7 +1385,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_Zero_E_Resol.at(t).Fill(  (TPResults.getTauZero().LV().E() - trueTauP4.E())/trueTauP4.E() , w);
 					}
 				}
-			} // flight length significance >= 3.0
+			} // flight length significance >= cTau_flightLength
 		} // decayMode = 10
 	}
 
