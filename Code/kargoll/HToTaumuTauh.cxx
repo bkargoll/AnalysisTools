@@ -33,7 +33,7 @@ HToTaumuTauh::HToTaumuTauh(TString Name_, TString id_):
   cCat_btagDisc(0.679), // medium WP, https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP#B_tagging_Operating_Points_for_5
   cCat_splitTauPt(45.0),
   cJetClean_dR(0.5),
-  cTau_Prongs(1), // set to 0 to accept all taus
+  cTau_Prongs(3), // set to 0 to accept all taus
   cTau_flightLength(2.0)
 {
 	Logger(Logger::Verbose) << "Start." << std::endl;
@@ -431,41 +431,46 @@ void  HToTaumuTauh::Setup(){
 	h_Tau3p_False_E = HConfig.GetTH1D(Name + "_Tau3p_False_E", "Tau3p_False_E", 50, 0., 200., "E(#tau_{3p}^{false sol.})/GeV");
 
 	// 3-prong reco resolutions
-	h_Tau3p_Plus_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Pt_Resol", "Tau3p_Plus_Pt_Resol", 50, -1., 1., "p_{T} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Plus_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Px_Resol", "Tau3p_Plus_Px_Resol", 50, -1., 1., "p_{x} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Plus_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Py_Resol", "Tau3p_Plus_Py_Resol", 50, -1., 1., "p_{y} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Plus_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Pz_Resol", "Tau3p_Plus_Pz_Resol", 50, -1., 1., "p_{z} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Pt_Resol", "Tau3p_Plus_Pt_Resol", 150, -1., 2., "p_{T} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Px_Resol", "Tau3p_Plus_Px_Resol", 150, -1., 2., "p_{x} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Py_Resol", "Tau3p_Plus_Py_Resol", 150, -1., 2., "p_{y} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Pz_Resol", "Tau3p_Plus_Pz_Resol", 150, -1., 2., "p_{z} resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
 	h_Tau3p_Plus_Eta_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Eta_Resol", "Tau3p_Plus_Eta_Resol", 50, -0.1, 0.1, "#eta resol. #tau_{3p}^{plus sol.} - #tau_{gen}");
 	h_Tau3p_Plus_Phi_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_Phi_Resol", "Tau3p_Plus_Phi_Resol", 50, -0.2, 0.2, "#phi resol. #tau_{3p}^{plus sol.} - #tau_{gen}");
-	h_Tau3p_Plus_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_E_Resol", "Tau3p_Plus_E_Resol", 50, -1., 1., "E resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Minus_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Pt_Resol", "Tau3p_Minus_Pt_Resol", 50, -1., 1., "p_{T} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Minus_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Px_Resol", "Tau3p_Minus_Px_Resol", 50, -1., 1., "p_{x} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Minus_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Py_Resol", "Tau3p_Minus_Py_Resol", 50, -1., 1., "p_{y} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Minus_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Pz_Resol", "Tau3p_Minus_Pz_Resol", 50, -1., 1., "p_{z} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Plus_E_Resol", "Tau3p_Plus_E_Resol", 150, -1., 2., "E resol. #frac{#tau_{3p}^{plus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Plus_E_AbsResol = HConfig.GetTH1D(Name + "_Tau3p_Plus_E_AbsResol", "Tau3p_Plus_E_AbsResol", 150, -50., 100., "E resol. #tau_{3p}^{plus sol.} - #tau_{gen}");
+	h_Tau3p_Minus_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Pt_Resol", "Tau3p_Minus_Pt_Resol", 150, -1., 2., "p_{T} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Minus_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Px_Resol", "Tau3p_Minus_Px_Resol", 150, -1., 2., "p_{x} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Minus_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Py_Resol", "Tau3p_Minus_Py_Resol", 150, -1., 2., "p_{y} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Minus_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Pz_Resol", "Tau3p_Minus_Pz_Resol", 150, -1., 2., "p_{z} resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
 	h_Tau3p_Minus_Eta_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Eta_Resol", "Tau3p_Minus_Eta_Resol", 50, -0.1, 0.1, "#eta resol. #tau_{3p}^{minus sol.} - #tau_{gen}");
 	h_Tau3p_Minus_Phi_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_Phi_Resol", "Tau3p_Minus_Phi_Resol", 50, -0.2, 0.2, "#phi resol. #tau_{3p}^{minus sol.} - #tau_{gen}");
-	h_Tau3p_Minus_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_E_Resol", "Tau3p_Minus_E_Resol", 50, -1., 1., "E resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Zero_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Pt_Resol", "Tau3p_Zero_Pt_Resol", 50, -1., 1., "p_{T} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Zero_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Px_Resol", "Tau3p_Zero_Px_Resol", 50, -1., 1., "p_{x} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Zero_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Py_Resol", "Tau3p_Zero_Py_Resol", 50, -1., 1., "p_{y} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_Zero_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Pz_Resol", "Tau3p_Zero_Pz_Resol", 50, -1., 1., "p_{z} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Minus_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Minus_E_Resol", "Tau3p_Minus_E_Resol", 150, -1., 2., "E resol. #frac{#tau_{3p}^{minus sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Minus_E_AbsResol = HConfig.GetTH1D(Name + "_Tau3p_Minus_E_AbsResol", "Tau3p_Minus_E_AbsResol", 150, -50., 100., "E resol. #tau_{3p}^{minus sol.} - #tau_{gen}");
+	h_Tau3p_Zero_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Pt_Resol", "Tau3p_Zero_Pt_Resol", 150, -1., 2., "p_{T} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Zero_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Px_Resol", "Tau3p_Zero_Px_Resol", 150, -1., 2., "p_{x} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Zero_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Py_Resol", "Tau3p_Zero_Py_Resol", 150, -1., 2., "p_{y} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Zero_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Pz_Resol", "Tau3p_Zero_Pz_Resol", 150, -1., 2., "p_{z} resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
 	h_Tau3p_Zero_Eta_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Eta_Resol", "Tau3p_Zero_Eta_Resol", 50, -0.1, 0.1, "#eta resol. #tau_{3p}^{zero sol.} - #tau_{gen}");
 	h_Tau3p_Zero_Phi_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_Phi_Resol", "Tau3p_Zero_Phi_Resol", 50, -0.2, 0.2, "#phi resol. #tau_{3p}^{zero sol.} - #tau_{gen}");
-	h_Tau3p_Zero_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_E_Resol", "Tau3p_Zero_E_Resol", 50, -1., 1., "E resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_True_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Pt_Resol", "Tau3p_True_Pt_Resol", 50, -1., 1., "p_{T} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_True_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Px_Resol", "Tau3p_True_Px_Resol", 50, -1., 1., "p_{x} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_True_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Py_Resol", "Tau3p_True_Py_Resol", 50, -1., 1., "p_{y} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_True_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Pz_Resol", "Tau3p_True_Pz_Resol", 50, -1., 1., "p_{z} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Zero_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_Zero_E_Resol", "Tau3p_Zero_E_Resol", 150, -1., 2., "E resol. #frac{#tau_{3p}^{zero sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_Zero_E_AbsResol = HConfig.GetTH1D(Name + "_Tau3p_Zero_E_AbsResol", "Tau3p_Zero_E_AbsResol", 150, -50., 100., "E resol. #tau_{3p}^{zero sol.} - #tau_{gen}");
+	h_Tau3p_True_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Pt_Resol", "Tau3p_True_Pt_Resol", 150, -1., 2., "p_{T} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_True_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Px_Resol", "Tau3p_True_Px_Resol", 150, -1., 2., "p_{x} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_True_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Py_Resol", "Tau3p_True_Py_Resol", 150, -1., 2., "p_{y} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_True_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Pz_Resol", "Tau3p_True_Pz_Resol", 150, -1., 2., "p_{z} resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
 	h_Tau3p_True_Eta_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Eta_Resol", "Tau3p_True_Eta_Resol", 50, -0.1, 0.1, "#eta resol. #tau_{3p}^{true sol.} - #tau_{gen}");
 	h_Tau3p_True_Phi_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_Phi_Resol", "Tau3p_True_Phi_Resol", 50, -0.2, 0.2, "#phi resol. #tau_{3p}^{true sol.} - #tau_{gen}");
-	h_Tau3p_True_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_E_Resol", "Tau3p_True_E_Resol", 50, -1., 1., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_False_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Pt_Resol", "Tau3p_False_Pt_Resol", 50, -1., 1., "p_{T} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_False_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Px_Resol", "Tau3p_False_Px_Resol", 50, -1., 1., "p_{x} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_False_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Py_Resol", "Tau3p_False_Py_Resol", 50, -1., 1., "p_{y} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
-	h_Tau3p_False_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Pz_Resol", "Tau3p_False_Pz_Resol", 50, -1., 1., "p_{z} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_True_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_True_E_Resol", "Tau3p_True_E_Resol", 150, -1., 2., "E resol. #frac{#tau_{3p}^{true sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_True_E_AbsResol = HConfig.GetTH1D(Name + "_Tau3p_True_E_AbsResol", "Tau3p_True_E_AbsResol", 150, -50., 100., "E resol. #tau_{3p}^{true sol.} - #tau_{gen}");
+	h_Tau3p_False_Pt_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Pt_Resol", "Tau3p_False_Pt_Resol", 150, -1., 2., "p_{T} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_False_Px_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Px_Resol", "Tau3p_False_Px_Resol", 150, -1., 2., "p_{x} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_False_Py_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Py_Resol", "Tau3p_False_Py_Resol", 150, -1., 2., "p_{y} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_False_Pz_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Pz_Resol", "Tau3p_False_Pz_Resol", 150, -1., 2., "p_{z} resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
 	h_Tau3p_False_Eta_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Eta_Resol", "Tau3p_False_Eta_Resol", 50, -0.1, 0.1, "#eta resol. #tau_{3p}^{false sol.} - #tau_{gen}");
 	h_Tau3p_False_Phi_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_Phi_Resol", "Tau3p_False_Phi_Resol", 50, -0.2, 0.2, "#phi resol. #tau_{3p}^{false sol.} - #tau_{gen}");
-	h_Tau3p_False_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_E_Resol", "Tau3p_False_E_Resol", 50, -1., 1., "E resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_False_E_Resol = HConfig.GetTH1D(Name + "_Tau3p_False_E_Resol", "Tau3p_False_E_Resol", 150, -1., 2., "E resol. #frac{#tau_{3p}^{false sol.} - #tau_{gen}}{#tau_{gen}}");
+	h_Tau3p_False_E_AbsResol = HConfig.GetTH1D(Name + "_Tau3p_False_E_AbsResol", "Tau3p_False_E_AbsResol", 150, -50., 100., "E resol. #tau_{3p}^{false sol.} - #tau_{gen}");
 
 	if (mode == ANALYSIS) { // only apply scale factors on analysis level, not for combine
 		RSF = new ReferenceScaleFactors(runtype, false, false, true);
@@ -607,6 +612,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_Tau3p_Plus_Eta_Resol);
  Extradist1d.push_back(&h_Tau3p_Plus_Phi_Resol);
  Extradist1d.push_back(&h_Tau3p_Plus_E_Resol);
+ Extradist1d.push_back(&h_Tau3p_Plus_E_AbsResol);
  Extradist1d.push_back(&h_Tau3p_Minus_Pt_Resol);
  Extradist1d.push_back(&h_Tau3p_Minus_Px_Resol);
  Extradist1d.push_back(&h_Tau3p_Minus_Py_Resol);
@@ -614,6 +620,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_Tau3p_Minus_Eta_Resol);
  Extradist1d.push_back(&h_Tau3p_Minus_Phi_Resol);
  Extradist1d.push_back(&h_Tau3p_Minus_E_Resol);
+ Extradist1d.push_back(&h_Tau3p_Minus_E_AbsResol);
  Extradist1d.push_back(&h_Tau3p_Zero_Pt_Resol);
  Extradist1d.push_back(&h_Tau3p_Zero_Px_Resol);
  Extradist1d.push_back(&h_Tau3p_Zero_Py_Resol);
@@ -621,6 +628,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_Tau3p_Zero_Eta_Resol);
  Extradist1d.push_back(&h_Tau3p_Zero_Phi_Resol);
  Extradist1d.push_back(&h_Tau3p_Zero_E_Resol);
+ Extradist1d.push_back(&h_Tau3p_Zero_E_AbsResol);
  Extradist1d.push_back(&h_Tau3p_True_Pt_Resol);
  Extradist1d.push_back(&h_Tau3p_True_Px_Resol);
  Extradist1d.push_back(&h_Tau3p_True_Py_Resol);
@@ -628,6 +636,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_Tau3p_True_Eta_Resol);
  Extradist1d.push_back(&h_Tau3p_True_Phi_Resol);
  Extradist1d.push_back(&h_Tau3p_True_E_Resol);
+ Extradist1d.push_back(&h_Tau3p_True_E_AbsResol);
  Extradist1d.push_back(&h_Tau3p_False_Pt_Resol);
  Extradist1d.push_back(&h_Tau3p_False_Px_Resol);
  Extradist1d.push_back(&h_Tau3p_False_Py_Resol);
@@ -635,6 +644,7 @@ void  HToTaumuTauh::Store_ExtraDist(){
  Extradist1d.push_back(&h_Tau3p_False_Eta_Resol);
  Extradist1d.push_back(&h_Tau3p_False_Phi_Resol);
  Extradist1d.push_back(&h_Tau3p_False_E_Resol);
+ Extradist1d.push_back(&h_Tau3p_False_E_AbsResol);
 }
 
 void HToTaumuTauh::doEvent(){
@@ -1342,6 +1352,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_Plus_Eta_Resol.at(t).Fill(	(TPResults.getTauPlus().LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta()	, w);
 						h_Tau3p_Plus_Phi_Resol.at(t).Fill(	(TPResults.getTauPlus().LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi()	, w);
 						h_Tau3p_Plus_E_Resol.at(t).Fill(	(TPResults.getTauPlus().LV().E() - trueTauP4.E())/trueTauP4.E() 	    , w);
+						h_Tau3p_Plus_E_AbsResol.at(t).Fill(	(TPResults.getTauPlus().LV().E() - trueTauP4.E())				 	    , w);
 						h_Tau3p_Minus_Pt_Resol.at(t).Fill( (TPResults.getTauMinus().LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() 		, w);
 						h_Tau3p_Minus_Px_Resol.at(t).Fill( (TPResults.getTauMinus().LV().Px() - trueTauP4.Px())/trueTauP4.Px() 		, w);
 						h_Tau3p_Minus_Py_Resol.at(t).Fill( (TPResults.getTauMinus().LV().Py() - trueTauP4.Py())/trueTauP4.Py() 		, w);
@@ -1349,6 +1360,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_Minus_Eta_Resol.at(t).Fill((TPResults.getTauMinus().LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
 						h_Tau3p_Minus_Phi_Resol.at(t).Fill((TPResults.getTauMinus().LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
 						h_Tau3p_Minus_E_Resol.at(t).Fill(  (TPResults.getTauMinus().LV().E() - trueTauP4.E())/trueTauP4.E() 	 , w);
+						h_Tau3p_Minus_E_AbsResol.at(t).Fill((TPResults.getTauMinus().LV().E() - trueTauP4.E()) 	 , w);
 
 						h_Tau3p_True_Pt_Resol.at(t).Fill( (trueAmbiguityTau.LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() 		, w);
 						h_Tau3p_True_Px_Resol.at(t).Fill( (trueAmbiguityTau.LV().Px() - trueTauP4.Px())/trueTauP4.Px() 		, w);
@@ -1357,6 +1369,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_True_Eta_Resol.at(t).Fill((trueAmbiguityTau.LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
 						h_Tau3p_True_Phi_Resol.at(t).Fill((trueAmbiguityTau.LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
 						h_Tau3p_True_E_Resol.at(t).Fill(  (trueAmbiguityTau.LV().E() - trueTauP4.E())/trueTauP4.E() 	 , w);
+						h_Tau3p_True_E_AbsResol.at(t).Fill((trueAmbiguityTau.LV().E() - trueTauP4.E()) 	 , w);
 						h_Tau3p_False_Pt_Resol.at(t).Fill( (wrongAmbiguityTau.LV().Pt() - trueTauP4.Pt())/trueTauP4.Pt() 		, w);
 						h_Tau3p_False_Px_Resol.at(t).Fill( (wrongAmbiguityTau.LV().Px() - trueTauP4.Px())/trueTauP4.Px() 		, w);
 						h_Tau3p_False_Py_Resol.at(t).Fill( (wrongAmbiguityTau.LV().Py() - trueTauP4.Py())/trueTauP4.Py() 		, w);
@@ -1364,6 +1377,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_False_Eta_Resol.at(t).Fill((wrongAmbiguityTau.LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
 						h_Tau3p_False_Phi_Resol.at(t).Fill((wrongAmbiguityTau.LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
 						h_Tau3p_False_E_Resol.at(t).Fill(  (wrongAmbiguityTau.LV().E() - trueTauP4.E())/trueTauP4.E() 	 , w);
+						h_Tau3p_False_E_AbsResol.at(t).Fill((wrongAmbiguityTau.LV().E() - trueTauP4.E()) 	 , w);
 					}
 				} else {
 					h_Tau3p_Zero_Pt.at(t).Fill(TPResults.getTauZero().LV().Pt(), w);
@@ -1383,6 +1397,7 @@ void HToTaumuTauh::doPlotting(){
 						h_Tau3p_Zero_Eta_Resol.at(t).Fill((TPResults.getTauZero().LV().Eta() - trueTauP4.Eta())/trueTauP4.Eta(), w);
 						h_Tau3p_Zero_Phi_Resol.at(t).Fill((TPResults.getTauZero().LV().Phi() - trueTauP4.Phi())/trueTauP4.Phi(), w);
 						h_Tau3p_Zero_E_Resol.at(t).Fill(  (TPResults.getTauZero().LV().E() - trueTauP4.E())/trueTauP4.E() , w);
+						h_Tau3p_Zero_E_AbsResol.at(t).Fill((TPResults.getTauZero().LV().E() - trueTauP4.E()) , w);
 					}
 				}
 			} // flight length significance >= cTau_flightLength

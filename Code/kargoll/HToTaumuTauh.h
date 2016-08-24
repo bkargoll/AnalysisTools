@@ -185,6 +185,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_Tau3p_Plus_Eta_Resol;
   std::vector<TH1D> h_Tau3p_Plus_Phi_Resol;
   std::vector<TH1D> h_Tau3p_Plus_E_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_E_AbsResol;
   std::vector<TH1D> h_Tau3p_Minus_Pt_Resol;
   std::vector<TH1D> h_Tau3p_Minus_Px_Resol;
   std::vector<TH1D> h_Tau3p_Minus_Py_Resol;
@@ -192,6 +193,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_Tau3p_Minus_Eta_Resol;
   std::vector<TH1D> h_Tau3p_Minus_Phi_Resol;
   std::vector<TH1D> h_Tau3p_Minus_E_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_E_AbsResol;
   std::vector<TH1D> h_Tau3p_Zero_Pt_Resol;
   std::vector<TH1D> h_Tau3p_Zero_Px_Resol;
   std::vector<TH1D> h_Tau3p_Zero_Py_Resol;
@@ -199,6 +201,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_Tau3p_Zero_Eta_Resol;
   std::vector<TH1D> h_Tau3p_Zero_Phi_Resol;
   std::vector<TH1D> h_Tau3p_Zero_E_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_E_AbsResol;
   std::vector<TH1D> h_Tau3p_True_Pt_Resol;
   std::vector<TH1D> h_Tau3p_True_Px_Resol;
   std::vector<TH1D> h_Tau3p_True_Py_Resol;
@@ -206,6 +209,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_Tau3p_True_Eta_Resol;
   std::vector<TH1D> h_Tau3p_True_Phi_Resol;
   std::vector<TH1D> h_Tau3p_True_E_Resol;
+  std::vector<TH1D> h_Tau3p_True_E_AbsResol;
   std::vector<TH1D> h_Tau3p_False_Pt_Resol;
   std::vector<TH1D> h_Tau3p_False_Px_Resol;
   std::vector<TH1D> h_Tau3p_False_Py_Resol;
@@ -213,6 +217,7 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_Tau3p_False_Eta_Resol;
   std::vector<TH1D> h_Tau3p_False_Phi_Resol;
   std::vector<TH1D> h_Tau3p_False_E_Resol;
+  std::vector<TH1D> h_Tau3p_False_E_AbsResol;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
