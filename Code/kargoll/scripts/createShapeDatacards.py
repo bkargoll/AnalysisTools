@@ -67,6 +67,9 @@ tauESShapeUncTemplate = tauESShapeUncTemplate.replace('<DATASET>', '8TeV')
 # create map of categories to input folders
 
 baseDir = "/net/scratch_cms/institut_3b/kargoll/"
+subdir = 0
+# default analysis
+'''
 inputDirs = {"inclusive"    :   baseDir + "workdirInclusive3ProngAug_05_2016",
              "zerojetlow"   :   baseDir + "workdirZeroJetAug_05_2016",
              "zerojethigh"  :   baseDir + "workdirZeroJetAug_05_2016",
@@ -93,6 +96,37 @@ inputDirsTauESDown = { "inclusive"    :   baseDir + "workdirInclusive3Prong_TauE
                        "onejetboost"  :   baseDir + "workdirOneJet_TauESDownAug_07_2016",
                        "vbfloose"     :   baseDir + "workdirVBF_TauESDownAug_07_2016",
                        "vbftight"     :   baseDir + "workdirVBF_TauESDownAug_07_2016"
+                     }
+'''
+# 3-prong selection
+subdir = "/Results_3Prong" # enable for 3prong without flight length cut
+#subdir = "/Results_3Prong_FlightLength" # enable for 3prong with flight length cut
+inputDirs = {"inclusive"    :   baseDir + "workdirInclusive_3ProngOnlyAug_16_2016" + subdir,
+             "zerojetlow"   :   baseDir + "workdirZeroJet_3ProngOnlyAug_16_2016" + subdir,
+             "zerojethigh"  :   baseDir + "workdirZeroJet_3ProngOnlyAug_16_2016" + subdir,
+             "onejetlow"    :   baseDir + "workdirOneJet_3ProngOnlyAug_16_2016" + subdir,
+             "onejethigh"   :   baseDir + "workdirOneJet_3ProngOnlyAug_16_2016" + subdir,
+             "onejetboost"  :   baseDir + "workdirOneJet_3ProngOnlyAug_16_2016" + subdir,
+             "vbfloose"     :   baseDir + "workdirVBF_3ProngOnlyAug_16_2016" + subdir,
+             "vbftight"     :   baseDir + "workdirVBF_3ProngOnlyAug_16_2016" + subdir
+             }
+inputDirsTauESUp = { "inclusive"    :   baseDir + "workdirInclusive_3ProngOnly_TauESUpAug_16_2016" + subdir,
+                     "zerojetlow"   :   baseDir + "workdirZeroJet_3ProngOnly_TauESUpAug_16_2016" + subdir,
+                     "zerojethigh"  :   baseDir + "workdirZeroJet_3ProngOnly_TauESUpAug_16_2016" + subdir,
+                     "onejetlow"    :   baseDir + "workdirOneJet_3ProngOnly_TauESUpAug_17_2016" + subdir,
+                     "onejethigh"   :   baseDir + "workdirOneJet_3ProngOnly_TauESUpAug_17_2016" + subdir,
+                     "onejetboost"  :   baseDir + "workdirOneJet_3ProngOnly_TauESUpAug_17_2016" + subdir,
+                     "vbfloose"     :   baseDir + "workdirVBF_3ProngOnly_TauESUpAug_17_2016" + subdir,
+                     "vbftight"     :   baseDir + "workdirVBF_3ProngOnly_TauESUpAug_17_2016" + subdir
+                     }
+inputDirsTauESDown = { "inclusive"    :   baseDir + "workdirInclusive_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "zerojetlow"   :   baseDir + "workdirZeroJet_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "zerojethigh"  :   baseDir + "workdirZeroJet_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "onejetlow"    :   baseDir + "workdirOneJet_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "onejethigh"   :   baseDir + "workdirOneJet_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "onejetboost"  :   baseDir + "workdirOneJet_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "vbfloose"     :   baseDir + "workdirVBF_3ProngOnly_TauESDownAug_17_2016" + subdir,
+                       "vbftight"     :   baseDir + "workdirVBF_3ProngOnly_TauESDownAug_17_2016" + subdir
                      }
 
 # define binning to be used in mass plots
@@ -141,6 +175,7 @@ translate = {"inclusive"    :   "inclusive",
              }
 
 # create output root file
+folder = args.outputFolder
 if not os.path.exists(args.outputFolder):
     os.makedirs(args.outputFolder)
 outFileName = args.outputFolder + '/' + outFileTemplate

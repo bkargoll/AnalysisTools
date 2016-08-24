@@ -58,75 +58,12 @@ class HToTaumuTauh : public Selection {
 
   // Histograms
   std::vector<TH1D> h_MuSelPt;
-  std::vector<TH1D> h_MuSelEta;
-  std::vector<TH1D> h_MuSelPhi;
-  std::vector<TH1D> h_MuSelDxy;
-  std::vector<TH1D> h_MuSelDz;
-  std::vector<TH1D> h_MuSelRelIso;
-  std::vector<TH1D> h_MuSelFakesTauID;
-  std::vector<TH1D> h_MuSelDrHlt;
 
   std::vector<TH1D> h_TauSelPt;
-  std::vector<TH1D> h_TauSelEta;
-  std::vector<TH1D> h_TauSelPhi;
-  std::vector<TH1D> h_TauSelDecayMode;
-  std::vector<TH1D> h_TauSelIso;
-  std::vector<TH1D> h_TauSelMass;
-
-  std::vector<TH1D> h_MuCharge;
-  std::vector<TH1D> h_TauCharge;
 
   std::vector<TH1D> h_MetPt;
-  std::vector<TH1D> h_MetPhi;
-  std::vector<TH1D> h_TrueSignalMET;
-  std::vector<TH1D> h_MetPtResol;
-  std::vector<TH1D> h_MetPhiResol;
-  std::vector<TH1D> h_MetPxResol;
-  std::vector<TH1D> h_MetPyResol;
 
-  std::vector<TH1D> h_NJetsKin;
   std::vector<TH1D> h_NJetsId;
-  std::vector<TH1D> h_Jet1Pt;
-  std::vector<TH1D> h_Jet1Eta;
-  std::vector<TH1D> h_Jet1Phi;
-  std::vector<TH1D> h_Jet1IsB;
-  std::vector<TH1D> h_Jet2Pt;
-  std::vector<TH1D> h_Jet2Eta;
-  std::vector<TH1D> h_Jet2Phi;
-  std::vector<TH1D> h_Jet2IsB;
-
-  std::vector<TH1D> h_NBJets;
-  std::vector<TH1D> h_BJet1Pt;
-  std::vector<TH1D> h_BJet1Eta;
-  std::vector<TH1D> h_BJet1Phi;
-
-  std::vector<TH1D> h_HiggsPt;
-  std::vector<TH1D> h_HiggsPt_1JetSel;
-  std::vector<TH1D> h_HiggsPhi;
-  std::vector<TH1D> h_JetsDEta;
-  std::vector<TH1D> h_JetsInEtaGap;
-  std::vector<TH1D> h_JetsInvM;
-
-  std::vector<TH1D> h_QcdShapeRegion;
-
-  std::vector<TH1D> h_SVFitMass;
-  std::vector<TH1D> h_visibleMass;
-
-  std::vector<TH1D> h_shape_VisM;
-  std::vector<TH1D> h_shape_SVfitM;
-
-  std::vector<TH1D> h_shape_VisM_ZLScaleUp;
-  std::vector<TH1D> h_shape_VisM_ZLScaleDown;
-  std::vector<TH1D> h_shape_SVfitM_ZLScaleUp;
-  std::vector<TH1D> h_shape_SVfitM_ZLScaleDown;
-
-  std::vector<TH1D> h_SVFitTimeReal;
-  std::vector<TH1D> h_SVFitTimeCPU;
-
-  std::vector<TH1D> h_SVFitStatus;
-
-  std::vector<TH1D> h_SVFitMassResol;
-  std::vector<TH1D> h_visibleMassResol;
 
   std::vector<TH1D> h_BGM_Mt;
   std::vector<TH1D> h_BGM_MtSideband;
@@ -148,71 +85,18 @@ class HToTaumuTauh : public Selection {
   std::vector<TH1D> h_BGM_QcdSSTauIso;
   std::vector<TH1D> h_BGM_QcdEff;
 
-  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq0;
-  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq1;
-  std::vector<TH1D> h_recMinusGenTauMass_recDecayModeEq10;
-  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq0;
-  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq1;
-  std::vector<TH1D> h_recTauPtDivGenTauPt_recDecayModeEq10;
-
   std::vector<TH1D> h_Tau3p_FlightLengthSignificance;
-  std::vector<TH1D> h_Tau3p_Plus_Pt;
-  std::vector<TH1D> h_Tau3p_Plus_Eta;
-  std::vector<TH1D> h_Tau3p_Plus_Phi;
-  std::vector<TH1D> h_Tau3p_Plus_E;
-  std::vector<TH1D> h_Tau3p_Minus_Pt;
-  std::vector<TH1D> h_Tau3p_Minus_Eta;
-  std::vector<TH1D> h_Tau3p_Minus_Phi;
-  std::vector<TH1D> h_Tau3p_Minus_E;
-  std::vector<TH1D> h_Tau3p_Zero_Pt;
-  std::vector<TH1D> h_Tau3p_Zero_Eta;
-  std::vector<TH1D> h_Tau3p_Zero_Phi;
-  std::vector<TH1D> h_Tau3p_Zero_E;
-  std::vector<TH1D> h_Tau3p_Zero_RotSignificance;
-  std::vector<TH1D> h_Tau3p_True_Pt;
-  std::vector<TH1D> h_Tau3p_True_Eta;
-  std::vector<TH1D> h_Tau3p_True_Phi;
-  std::vector<TH1D> h_Tau3p_True_E;
-  std::vector<TH1D> h_Tau3p_False_Pt;
-  std::vector<TH1D> h_Tau3p_False_Eta;
-  std::vector<TH1D> h_Tau3p_False_Phi;
-  std::vector<TH1D> h_Tau3p_False_E;
 
-  std::vector<TH1D> h_Tau3p_Plus_Pt_Resol;
-  std::vector<TH1D> h_Tau3p_Plus_Px_Resol;
-  std::vector<TH1D> h_Tau3p_Plus_Py_Resol;
-  std::vector<TH1D> h_Tau3p_Plus_Pz_Resol;
-  std::vector<TH1D> h_Tau3p_Plus_Eta_Resol;
-  std::vector<TH1D> h_Tau3p_Plus_Phi_Resol;
   std::vector<TH1D> h_Tau3p_Plus_E_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Pt_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Px_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Py_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Pz_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Eta_Resol;
-  std::vector<TH1D> h_Tau3p_Minus_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Plus_E_AbsResol;
   std::vector<TH1D> h_Tau3p_Minus_E_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Pt_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Px_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Py_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Pz_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Eta_Resol;
-  std::vector<TH1D> h_Tau3p_Zero_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Minus_E_AbsResol;
   std::vector<TH1D> h_Tau3p_Zero_E_Resol;
-  std::vector<TH1D> h_Tau3p_True_Pt_Resol;
-  std::vector<TH1D> h_Tau3p_True_Px_Resol;
-  std::vector<TH1D> h_Tau3p_True_Py_Resol;
-  std::vector<TH1D> h_Tau3p_True_Pz_Resol;
-  std::vector<TH1D> h_Tau3p_True_Eta_Resol;
-  std::vector<TH1D> h_Tau3p_True_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_Zero_E_AbsResol;
   std::vector<TH1D> h_Tau3p_True_E_Resol;
-  std::vector<TH1D> h_Tau3p_False_Pt_Resol;
-  std::vector<TH1D> h_Tau3p_False_Px_Resol;
-  std::vector<TH1D> h_Tau3p_False_Py_Resol;
-  std::vector<TH1D> h_Tau3p_False_Pz_Resol;
-  std::vector<TH1D> h_Tau3p_False_Eta_Resol;
-  std::vector<TH1D> h_Tau3p_False_Phi_Resol;
+  std::vector<TH1D> h_Tau3p_True_E_AbsResol;
   std::vector<TH1D> h_Tau3p_False_E_Resol;
+  std::vector<TH1D> h_Tau3p_False_E_AbsResol;
 
   // cut values
   double cMu_dxy, cMu_dz, cMu_relIso, cMu_pt, cMu_eta, cMu_dRHltMatch;
@@ -231,6 +115,11 @@ class HToTaumuTauh : public Selection {
   bool qcdUseEfficiencyMethod;
   // flag to use embedding
   bool useEmbedding;
+
+  // number of tau prongs: 1, 3, or 0 (i.e. all)
+  int cTau_Prongs;
+  // flight length significance cut for 3prong taus
+  int cTau_flightLength;
 
 
   // object corrections to use
