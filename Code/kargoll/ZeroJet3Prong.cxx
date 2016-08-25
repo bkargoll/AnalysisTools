@@ -19,7 +19,7 @@ ZeroJet3Prong::ZeroJet3Prong(TString Name_, TString id_):
 	// run ZeroJet3Prong category
 	categoryFlag = "ZeroJet3Prong";
 
-	runSVFit_ = false;
+	runSVFit_ = true;
 }
 
 ZeroJet3Prong::~ZeroJet3Prong() {
